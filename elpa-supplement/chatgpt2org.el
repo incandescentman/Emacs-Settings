@@ -32,6 +32,7 @@
    (setq org-content (replace-regexp-in-string "￼" "" org-content))
    (setq org-content (replace-regexp-in-string " " " " org-content))
    (setq org-content (replace-regexp-in-string "\\\\\\\\" "" org-content))
+   (setq org-content (replace-regexp-in-string "\u202F" " " org-content)) ; Narrow NBSP
 
 
    (setq org-content (replace-regexp-in-string "”" "\"" org-content))

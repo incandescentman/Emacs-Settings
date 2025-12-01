@@ -1,0 +1,1830 @@
+- *2025-11-29: Fix pasteboard markdown detection for inline bold*
+- Added =\\*\\*[^*\n]+\\*\\*= pattern (weight 3) to =pasteboard--analyse-clipboard-text= for detecting inline =**bold**= markers
+- Previously, text with =**bold**= patterns but no markdown headings wasn't detected as markdown style
+- This fix ensures =pasteboard--convert-markdown-inline-emphasis= runs to convert =**bold**= → =*bold*=
+- Also enables =normalize-dashes= to convert spaced hyphens (= - =) to em-dashes (= --- =)
+
+- *2025-11-26: Documentation sync and repository cleanup*
+- Synced =CLAUDE.md= and =README.org= with recent architectural changes (Org-roam suite, LaTeX templates)
+- Updated =docs/critical-next-steps.org= with date and completion status
+- Cleaned up root directory: moved =html2org.txt= and =cosmetics.org= to archive, then deleted them after verification
+- Moved =20240425154404-emacs_additional_steps.org= to =docs/= directory
+
+- *2025-11-24: Keybinding swap, org-roam profile polish, and mc whitelist*
+- Swapped Org-mode bindings to make `s-l` insert links and moved `consult-outline` to `s-;` for muscle memory parity with other apps
+- Fixed org-roam template defaults: restored consumerist filetag, normalized indentation, and ensure the profile directory is created before syncing to avoid missing-folder errors
+- Added `org-priority-up` to the multiple-cursors allowlist so priority bumps work during multi-edit sessions
+
+- *2025-11-24: smart-return handles image Org links and local files*
+- `smart-return` now detects image targets from Org links (e.g. `[[/path/to/img.jpg]]`) and file:// URLs, passing the resolved path to the image viewer instead of erroring with "Invalid URL provided"
+- Added file URL normalization so `create-image` can display local files directly without http(s)
+- Image detection now returns the matched target string, avoiding mismatches between detection and display
+
+- *2025-11-23: Pasteboard blockquote handling and source-of-truth cleanup*
+- Blockquote cleaner now strips `>` markers entirely (single- or multi-line), handling bare `>` lines and preserving blank lines inside the quote
+- Deleted obsolete `pasteboard-copy-and-paste-functions.org`; the `.el` file is now the only source of truth with an inline note to prevent re-tangling
+- Added heading spacing guard to `pasteboard--clean-string` to insert a blank line before Org headings when pasting prose, skipping consecutive headings
+
+- *2025-11-14: Add hipster-cv LaTeX template for modern two-column CVs*
+- Created =latex-templates/hipster-cv.el= using simplehipstercv document class for modern CV layouts
+- Downloaded and installed simplehipstercv.cls and simplehipstercv.sty from GitHub (latex-ninja/simple-hipstercv) to =~/Library/texmf/tex/latex/simplehipstercv/=
+- Created =latex-templates/hipster-cv-example.org= with complete working example (Jack Sparrow pirate CV)
+- Added =latex-templates/hipster-cv-README.org= with installation instructions, usage guide, and troubleshooting
+- Template features: two-column layout with sidebar, custom commands for CV events/degrees/skill bars, 7 color themes (lighthipster, darkhipster, pastel, allblack, grey, verylight, withoutsidebar)
+- Uses paracol package for columns, fontawesome for icons, Raleway font by default
+- Verified installation with successful test compilation
+
+- *2025-11-14: Create elegant-less-whitespace LaTeX template*
+- Created new =latex-templates/elegant-less-whitespace.el= based on elegant-garamond with reduced whitespace for resumes/compact documents
+- Changes: 11pt font (down from 12pt), 1in margins (down from 1.5in), 24pt section spacing (down from 48pt), 0pt subsubsection spacing (down from 16pt), 6pt list spacing (down from 12pt)
+- Original =elegant-garamond.el= preserved with its wider spacing and 12pt font for general documents
+- Both templates use Garamond Premier Pro for main text and Helvetica Neue LT Pro for monospaced
+
+- *2025-11-14: Suppress hybrid-mode obsolete warnings at startup*
+- Added a filter in =spacemacs.d/init.el= so the new hybrid-mode release (20250814) no longer flags the legacy =hybrid-mode-*= aliases as "obsolete" every launch—Spacemacs now ignores those permanent aliases and only surfaces real user errors.
+- Wrapped the logic in =jay--filter-spacemacs-obsolete= and hooked it via =advice-add= around =spacemacs//check-obsolete-variables= once =core-obsolete= loads; restarting Emacs shows a clean startup buffer and the batch check (=emacs --batch ... (spacemacs//check-obsolete-variables)) returns =nil=.
+
+- *2025-11-20: Automate org heading spacing rules*
+- Added =scripts/org_spacing_formatter.py=, a CLI formatter that enforces the Vibecoding spacing guide (blank line before headings, none between a heading and its content, optional =--check= mode).
+- Introduced =org-fix-formatting-and-heading-spacing= in =shared-functions.org= to call the formatter on the current buffer's file: saves if modified, shells out to Python, and reverts on success.
+- Formatted =20251119235900-finding_the_game.org= via the new tool; `M-x jay/org-format-heading-spacing` now keeps Roam notes compliant without manual spacing passes.
+
+- *2025-11-12: Add roam-social and roam-parents org-roam profiles*
+- Added two new profiles in =jay-org-roam-suite/jay-org-roam-profiles.el= with their own directories (/Users/jay/Dropbox/roam-social and /Users/jay/Dropbox/roam-parents), dedicated capture templates, dailies, astro export helpers, and mode-line labels.
+- Created helper commands =jay/org-roam-switch-to-social= and =jay/org-roam-switch-to-parents= plus new astro exporters so each graph can publish via ox-astro without switching contexts.
+- Bound =s-u 3= and =s-u 4= in =jay-org-roam-suite/jay-org-roam-core.el= for one-keystroke switches, mirroring the existing work/personal bindings.
+- Updated =docs/ORG-ROAM-PROFILES-README.md=, =docs/ORG-ROAM-PROFILES-QUICKSTART.org=, and =docs/instructions.org= with mkdir instructions, quick-reference tables, muscle-memory tips, and backup guidance covering all four graphs (work, my-life, roam-social, roam-parents).
+
+* 2025-11-10: Add job application capture template to org-roam
+- Added new "job application" template (key: j) to default profile capture templates
+- Template creates files in job-applications/ directory with :job: filetag
+- Uses standard simple format (Links/Source/Title) like other templates
+- Updated jay-org-roam-suite/jay-org-roam-profiles.el:123
+
+* 2025-11-10: Keep org-roam DB on local cache and skip redundant startup syncs
+- Added startup health checks and skip flag in jay-org-roam-core so autosync only runs org-roam-db-sync when the cache is empty
+- Updated org-roam profiles to use absolute Dropbox paths and leave the default DB in ~/.cache/org-roam.db
+- Revised Dropbox .dir-locals to stop forcing CloudStorage paths; main tree now keeps DB local, my-life tree uses its own .org-roam.db
+- After running M-x org-roam-db-sync (once), org-roam-node-find immediately lists all notes and subsequent launches skip the multi-minute rebuild
+- Added cache-health probe, profile path fixes, dir-locals cleanup, and silenced jay/prevent-dropbox logging; testing instructions documented in CLI summary.
+- Removed the noisy `jay/prevent-dropbox` logging—path rewrites still happen, just silently
+
+#+TITLE: Work Log
+#+AUTHOR: Jay Dixit
+#+DATE: [2025-01-27 Mon]
+
+* 2025-11-09: Rewrite `make-directory` away from CloudStorage [PENDING VERIFICATION]
+
+** Current Status
+- org-roam still reports “Creating directory: Operation timed out, /Users/jay/Library/CloudStorage/Dropbox/roam” when autosync runs.
+- This change is unverified until I restart Emacs and see the timeout disappear; assume the bug persists for now.
+
+** Hypothesis
+- Even with `file-truename` patched, stale paths from caches or third-party helpers end up in `make-directory`.
+- When Emacs tries to create folders under `/Users/jay/Library/CloudStorage/Dropbox`, the macOS File Provider times out and org-roam logs the failure.
+
+** Changes
+1. `jay-org-roam-suite/jay-org-roam-core.el`
+   - Declare Dropbox direct vs. CloudStorage roots.
+   - Add `jay/dropbox--rewrite-cloudstorage-path` and advise `make-directory` so CloudStorage targets are transparently rewritten to `/Users/jay/Dropbox/...`.
+   - Treat already-existing rewritten directories as success to avoid spurious errors.
+2. `~/.emacs.d/crm-setup.el`
+   - Replace the remaining CloudStorage paths in CRM agenda/capture helpers to prevent reintroducing the slow mount.
+
+** Verification Plan (not yet executed)
+1. Restart Emacs (GUI) and let org-roam autosync finish; confirm no “Creating directory…” rows appear.
+2. In `*scratch*`, evaluate `(make-directory "/Users/jay/Library/CloudStorage/Dropbox/roam/test" t)` and verify the folder shows up under `/Users/jay/Dropbox/roam/test`.
+3. Delete the temporary folder.
+4. Note results back here before clearing the “PENDING” status.
+
+* 2025-11-08: Attempting to fix org-roam CloudStorage path with initialization order change [IN PROGRESS]
+
+** Current Problem
+- org-roam still accessing CloudStorage path despite file-truename advice being installed
+- Error: "org-roam skipped /Users/jay/Dropbox/roam/writing/20240531162941-poynter_talk_speech.org (Creating directory: Operation timed out, /Users/jay/Library/CloudStorage/Dropbox/roam)"
+- File path in error is CORRECT (/Users/jay/Dropbox/roam/...) but directory creation tries to use CloudStorage path
+- DEBUG message "DEBUG profiles: org-roam-directory set to..." never appeared in startup log
+
+** Root Cause Identified (via Gemini analysis)
+- Initialization order problem: org-roam-setup was being called BEFORE jay/org-roam-profiles-init
+- This means org-roam started scanning files before the profile system could set org-roam-directory correctly
+- org-roam was resolving paths to CloudStorage during this early scan
+
+** Changes Made (AWAITING VERIFICATION)
+1. Added early org-roam-directory setting at top of jay-org-roam-core.el (lines 12-15)
+   - Forward declaration of org-roam-directory variable
+   - Explicit setq to "/Users/jay/Dropbox/roam" before anything else runs
+
+2. Swapped initialization order in idle timer (lines 80-91)
+   - OLD ORDER: (require 'ol) → (org-roam-setup) → (jay/org-roam-profiles-init)
+   - NEW ORDER: (require 'ol) → (jay/org-roam-profiles-init) → (org-roam-setup)
+   - This ensures profile system sets org-roam-directory BEFORE org-roam starts scanning
+
+** Files Changed
+- jay-org-roam-suite/jay-org-roam-core.el:12-15 – Added early org-roam-directory setting
+- jay-org-roam-suite/jay-org-roam-core.el:80-91 – Swapped initialization order
+
+** Verification Steps (NOT YET TESTED)
+1. Restart Emacs completely
+2. Check for BOTH debug messages in *Messages* buffer:
+   - "DEBUG core: org-roam-directory set to /Users/jay/Dropbox/roam"
+   - "DEBUG profiles: org-roam-directory set to /Users/jay/Dropbox/roam" (should now appear)
+3. Verify NO CloudStorage timeout errors appear
+4. Check that org-roam-db-sync completes successfully
+
+** Previous Attempts (see below for history)
+- Fixed file-truename advice function signature (wrong-number-of-arguments error)
+- Added file-truename advice early in jay-org-roam-core.el
+- Added diagnostic messaging
+- All previous attempts failed because org-roam-setup was running before profile init
+
+* 2025-11-08: Fix org-roam CloudStorage path resolution with early file-truename advice [FAILED - see above]
+
+** Problem
+- Previous fixes didn't work because file-truename advice was added too late
+- org-roam-config.el had advice in :config section, which runs AFTER org-roam loads
+- By that time, org-roam had already resolved paths to CloudStorage during initialization
+- Error persisted: "Creating directory: Operation timed out, /Users/jay/Library/CloudStorage/Dropbox/roam"
+
+** Root Cause
+- org-roam internally calls file-truename on paths during initialization
+- Advice was being installed after org-roam was already loaded and had resolved paths
+- Need to install advice BEFORE org-roam loads
+
+** Solution
+- Added file-truename advice at the very beginning of jay-org-roam-core.el (lines 12-25)
+- Advice is now installed when the module loads, BEFORE org-roam initialization
+- Function: jay/prevent-dropbox-cloudstorage-resolution
+- Intercepts all file-truename calls for /Users/jay/Dropbox paths
+- Returns the path as-is without resolution to CloudStorage
+
+** Files Changed
+- jay-org-roam-suite/jay-org-roam-core.el:12-25 – Added file-truename advice at top of file
+
+** Verification Steps
+1. Restart Emacs completely
+2. Watch Messages buffer for any CloudStorage path errors
+3. Check org-roam-directory variable value
+4. Verify org-roam-db-sync completes without timeout errors
+
+** Technical Details
+- Advice function checks if path starts with /Users/jay/Dropbox
+- If yes, returns expand-file-name without calling file-truename
+- If no, calls original file-truename function
+- This prevents symlink resolution to CloudStorage while allowing normal operation for other paths
+
+* 2025-11-08: Fix org-roam CloudStorage symlink resolution [SUPERSEDED - advice added too late]
+
+** Problem
+- org-roam still timing out with "Creating directory: Operation timed out, /Users/jay/Library/CloudStorage/Dropbox/roam"
+- Previous fix attempted to use `expand-file-name` but this actually *causes* the problem
+- `expand-file-name` resolves symlinks, so `~/Dropbox/roam` → `/Users/jay/Library/CloudStorage/Dropbox/roam`
+- The CloudStorage path is a macOS File Provider path that doesn't support directory creation operations
+
+** Root Cause
+- When `~/Dropbox` is a symlink to the direct mount at `/Users/jay/Dropbox`, using `expand-file-name` follows the symlink chain
+- This causes Emacs to resolve paths through the File Provider API path instead of the direct mount
+
+** Solution
+- Replaced all `(expand-file-name "~/Dropbox/roam")` with direct absolute path `"/Users/jay/Dropbox/roam"`
+- Modified `jay/org-roam-apply-profile` to preserve absolute paths as-is instead of expanding them
+- Only use `expand-file-name` when paths are genuinely relative
+- Added a guard around `make-directory` so any attempt to create folders under `/Users/jay/Library/CloudStorage/Dropbox` is transparently rewritten to `/Users/jay/Dropbox`, preventing org-roam autosync from touching the slow File Provider mount
+
+** Files Changed
+- `org-roam-config.el:42` – Changed from `expand-file-name` to direct path
+- `jay-org-roam-suite/jay-org-roam-core.el:42` – Changed from `expand-file-name` to direct path
+- `jay-org-roam-suite/jay-org-roam-core.el:151` – Fixed fallback directory in `jay/org-roam-search-nodes`
+- `jay-org-roam-suite/jay-org-roam-profiles.el:298-308` – Modified to preserve absolute paths without expansion
+- `jay-org-roam-suite/jay-org-roam-profiles.el:325-327` – Same fix for astro-source-root-folder
+
+** Verification
+- Restart Emacs and confirm org-roam queries work without timeout errors
+- Check that `org-roam-directory` variable shows `/Users/jay/Dropbox/roam` (not CloudStorage path)
+
+** Impact
+- org-roam operations now use direct filesystem mount instead of File Provider API
+- Eliminates timeout errors during database sync and queries
+- Profile switching maintains correct paths without symlink resolution
+
+* 2025-11-08: Keep org-roam on direct Dropbox mount [SUPERSEDED - fix incomplete]
+
+** Problem
+- Even after earlier cleanup, org-roam occasionally resolved `~/Dropbox/roam` through `file-truename`, bouncing back to `/Users/jay/Library/CloudStorage/Dropbox/roam`
+- Autosync and idle queries tried to create directories under the File Provider path, hanging with "Operation timed out"
+- Profile switching reintroduced the same issue by normalizing directories with `file-truename`
+
+** Changes [Did not actually fix the issue]
+- `org-roam-config.el` – `org-roam-directory` now uses `expand-file-name` so startup keeps the direct Dropbox mount
+- `jay-org-roam-suite/jay-org-roam-core.el` – mirrored the same change both for the initial settings and for `jay/org-roam-search-nodes` fallback
+- `jay-org-roam-suite/jay-org-roam-profiles.el` – profile application stores directories exactly as declared, preventing future switches from drifting back to File Provider paths
+
+** Why This Failed
+- Using `expand-file-name` was the problem, not the solution
+- `expand-file-name` resolves symlinks, which caused the CloudStorage path resolution
+
+* 2025-11-07: Fix Dropbox File Provider paths after Dropbox reinstall
+
+** Problem
+- Emacs timing out when trying to access org-roam files
+- Old configuration referenced `/Users/jay/Library/CloudStorage/Dropbox/` (File Provider path)
+- New Dropbox setup uses direct mount at `/Users/jay/Dropbox/`
+- Operations on old paths caused "Operation timed out" errors
+
+** Files Updated - Configuration
+- `jay-org-roam-suite/jay-org-roam-profiles.el` - Fixed `:astro-source-root` for both profiles and export functions
+- `goals-agenda.el` & `goals-agenda.org` - Fixed velocity projects and master task list paths
+- `shared-functions.org` - Fixed CSS paths, org-cache-reset-roots, TypeScript SDK, ox-astro config, org-roam switching functions
+- `shared-functions.el` - Retangled from .org file (406 code blocks)
+- `spacemacs.d/init.el` - Fixed all `org-astro-known-posts-folders` paths
+- `.claude/settings.local.json` - Fixed vibecoding path and removed duplicates
+
+** Files Updated - Databases
+- `~/.cache/org-roam.db` - Updated all file paths in files, nodes, and links tables
+- `~/Dropbox/roam-life/.org-roam.db` - Updated all file paths similarly
+- `~/.emacs.d/.cache/.org-id-locations` - Replaced all old paths (thousands of entries)
+
+** Files Updated - Cache Files
+- `~/.emacs.d/.cache/undo-fu-session/*` - Removed 60 undo history files with old paths
+- `~/.emacs.d/.cache/places` - Updated recently visited file positions
+- `~/.emacs.d/.cache/bookmarks` - Fixed bookmark file paths
+- `~/.emacs.d/.cache/layouts/persp-auto-save*` - Updated 2 perspective layout files
+- `~/.emacs.d/.cache/auto-save/*` - Removed 480 auto-save files with old paths
+
+** Root Cause
+The timeout errors persisted after config file updates because Emacs caches file paths in multiple session-persistence systems:
+1. org-roam databases (SQLite)
+2. org-id-locations (ID→file mapping)
+3. undo-fu-session (undo history)
+4. places (recently visited files)
+5. bookmarks and perspective layouts
+6. auto-save snapshots
+
+All these caches had to be cleaned for org-roam to work with the new paths.
+
+** Verification
+- Searched for remaining old paths in config: none found
+- Searched cache directory: 0 CloudStorage references remaining
+- All backups created before modifications
+- Ran check-parens on tangled elisp: passed
+
+** Impact
+- Eliminates timeout errors when accessing Dropbox files
+- org-roam will correctly find notes
+- org-agenda will access velocity task list
+- All Emacs session caches now reference correct paths
+- ox-astro exports will work properly
+- All file watcher operations use correct paths
+
+* 2025-11-03: Fix consult-org-roam startup hang
+
+** Problem
+- GUI startup hit `(wrong-type-argument number-or-marker-p nil)` inside `consult-org-roam-buffer-setup`, blocking Emacs until interrupted.
+
+** Diagnosis
+- Backtrace showed `consult-buffer-sources` missing the `consult--source-buffer` entry that upstream `consult-org-roam` expects when splicing its Org-roam source.
+- Spacemacs rewrites the buffer source list during init, so the upstream insertion logic dereferenced `nil`.
+
+** Approach
+- Wrap `consult-org-roam-buffer-setup` in `search-commands.el` with a Spacemacs-aware helper that checks the buffer source list before splicing.
+- Reuse `cl-position` to find the insertion point and fall back to simple append if the default source is absent.
+
+** Solution
+- Added guarded redefinition under `with-eval-after-load 'consult-org-roam-buffer` so the safer helper replaces the upstream version without forking the package.
+- Confirmed `consult-org-roam-mode` can enable during startup without errors; batch init now exits cleanly.
+
+** Verification
+- `Emacs.app --batch --debug-init`
+- `Emacs.app --debug-init --daemon` (manual stop after successful init sequence)
+
+* 2025-11-02: Make adaptive paste emit Org-friendly Markdown tables
+
+** Summary
+- Collapsed Markdown separator rows (`| --- |`) into Org-compliant form while leaving data rows untouched
+- Ensured em-dash / triple-hyphen normalization keeps behaving the same as before
+- Started version-controlling `pasteboard-copy-and-paste-functions.el` now that it is the authoritative source
+- Defaulted `fundamental-mode` pastes to verbatim so plain buffers skip the cleaner
+
+** Changes Made
+- Added `pasteboard--tighten-markdown-table-separators` and wired it into the Markdown-cleaning branch of `pasteboard--clean-string` (`pasteboard-copy-and-paste-functions.el`)
+- Expanded the verbatim-paste branch to include `fundamental-mode`, ensuring bare buffers bypass cleaners
+- Updated `.gitignore` so `pasteboard-copy-and-paste-functions.el` is tracked; staged the file with the new helper
+- Verified the sample snippet pastes as expected: the heading demotes, separator row tightens to `|---|`, and content rows stay spaced
+
+** Verification
+- `emacs --batch pasteboard-copy-and-paste-functions.el --eval '(check-parens)'`
+- `emacs --batch --eval '(load-file "pasteboard-copy-and-paste-functions.el")' --eval '(pasteboard--clean-string "<markdown table>")'`
+
+* 2025-11-01: Enable org-roam-ui for interactive graph visualization
+
+** Summary
+- Enabled org-roam-ui package in Spacemacs configuration
+- Added keybinding (s-u u) to toggle org-roam-ui mode
+- Configuration already present in shared-functions.org with optimal settings
+
+** Changes Made
+
+*** Package Installation
+- Uncommented =org-roam-ui= in =spacemacs.d/init.el:152=
+- Package will be installed automatically on next Emacs restart
+
+*** Keybinding
+- Added =s-u u= keybinding in =org-roam-config.el:154=
+- Follows existing org-roam keybinding pattern (s-u prefix)
+
+*** Configuration
+Existing configuration in =shared-functions.org:5437-5449= includes:
+- =org-roam-ui-sync-theme t= - Syncs Emacs theme with web UI
+- =org-roam-ui-follow t= - UI follows current node
+- =org-roam-ui-update-on-save t= - Updates graph on save
+- =org-roam-ui-open-on-start t= - Auto-opens browser
+
+*** Documentation
+- Updated =README.org= to list org-roam-ui in Org-Mode Extensions section
+
+** Usage
+1. Restart Emacs to install org-roam-ui
+2. Press =s-u u= or run =M-x org-roam-ui-mode=
+3. Browser opens at =http://127.0.0.1:35901= with interactive graph
+4. Features: 3D/2D visualization, tag filtering, node navigation, theme syncing
+
+* 2025-10-30: Refactor org-roam templates to data-driven architecture
+
+** Summary
+- Converted 110+ lines of repetitive template definitions into ~55 lines of data structures
+- Enhanced `jay/roam-template` helper with comprehensive keyword argument support
+- Separated template data into two clean defconsts for better organization
+- Reduced code duplication by ~50% while maintaining full flexibility
+- Added inline usage examples to the helper docstring for future reference
+
+** Details
+
+*** Enhanced Helper Function
+Upgraded `jay/roam-template` from simple 4-parameter function to flexible keyword-based API:
+- Added keyword arguments: `:body`, `:filetags`, `:created-format`, `:type`, `:target`, `:unnarrowed`, `:props`
+- Smart defaults with override capability
+- Comprehensive docstring explaining all options
+- Included inline usage examples documenting common override patterns
+- Handles special cases (custom bodies, lambda targets, multi-tag filetags)
+
+*** Data-Driven Template Definitions
+Created two `defconst` data structures:
+- `jay/org-roam-default-template-specs` - 18 custom/bespoke templates with special cases
+- `jay/org-roam-default-factory-template-specs` - 16 standard factory templates
+
+Special cases handled elegantly via keyword args:
+- "I" template: custom body with extra newline
+- "p" template: custom body with People link
+- "W" template: multi-tag filetags (`:writers:person:`) written via explicit `:filetags` override
+- "z" template: lambda-based custom target for dynamic path
+
+*** Template Generation
+Templates now generated programmatically via `mapcar` + `apply`:
+#+begin_src elisp
+(defvar jay/org-roam-capture-templates-default
+  (append
+   (mapcar (lambda (spec) (apply #'jay/roam-template spec))
+           jay/org-roam-default-template-specs)
+   (mapcar (lambda (spec) (apply #'jay/roam-template spec))
+           jay/org-roam-default-factory-template-specs)))
+#+end_src
+
+** Benefits
+- Dramatically improved maintainability - global changes via helper function
+- Easy to scan all templates at a glance
+- Less error-prone - single source of truth for template structure
+- Preserves full flexibility for edge cases
+- Clear separation between data and logic
+- Professional-grade code organization
+
+** Files Modified
+- `jay-org-roam-suite/jay-org-roam-profiles.el` - Complete refactor of default profile templates
+- `docs/work-log.org` - This entry
+
+* 2025-10-30: Add corpus capture template
+
+** Summary
+- Added new org-roam capture template for corpus (transcripts and examples)
+- Uses key "C" for quick access
+- Creates files in `corpus/` subdirectory with `:corpus:` filetag
+
+** Details
+- Template key: "C"
+- Label: "corpus (transcripts and examples)"
+- Directory: `corpus/`
+- Filetag: `:corpus:`
+- Standard structure with Links, Source, title heading, and creation timestamp
+
+** Files Modified
+- `jay-org-roam-suite/jay-org-roam-profiles.el:194` - Added corpus template
+- `docs/work-log.org` - This entry
+
+* 2025-10-30: Fix pasteboard loading after 2025-10-26 conversion to pure elisp
+
+** Summary
+- Fixed typo in `spacemacs-new-config.el:134` that broke the pasteboard loading
+- Corrected to load `pasteboard-copy-and-paste-functions.el` directly (as intended per 2025-10-26 conversion)
+
+** Background
+On 2025-10-26, `pasteboard-copy-and-paste-functions` was intentionally converted from literate org to pure elisp (see `docs/suggested-next-steps.org`):
+- The `.org` file became documentation only
+- The `.el` file became the source of truth with rich Commentary section
+- Purpose: eliminate edit→tangle→test cycle for direct edit-test workflow
+
+** Problem
+Commit c58f78ca accidentally changed the pasteboard load line to:
+#+begin_example
+(org-babel-load-file "~/emacs/emacs-settings/pasteboard-copy-and-paste-org")
+#+end_example
+
+This was missing `-functions` and the `.org` extension, causing launch failure:
+#+begin_example
+Error: File to tangle does not exist: ~/emacs/emacs-settings/pasteboard-copy-and-paste-o...
+#+end_example
+
+** Solution
+Corrected to match the 2025-10-26 conversion intent:
+#+begin_src elisp
+(load "/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el")
+#+end_src
+
+This properly loads the pure elisp file (not the documentation-only `.org` file).
+
+** Files Modified
+- `spacemacs-new-config.el:134` - Fixed to direct `.el` load
+- `docs/work-log.org` - This entry
+
+* 2025-10-29: Add creation timestamps to org-roam capture templates
+
+** Summary
+- Added `#+CREATED:` metadata to all default profile org-roam capture templates
+- Uses clean file-level metadata format: `#+CREATED: [2025-10-29 Tue 14:35]`
+- Provides automatic creation timestamp for all new nodes in default profile
+
+** Details
+- Updated all 18 custom templates (A, a, H, g, I, l, c, d, D, E, f, M, O, p, W, k, L, z)
+- Updated `jay/roam-template` helper function to automatically add timestamps to 15 factory-generated templates (B, b, e, m, n, o, P, q, S, s, T, w, X, x, $)
+- Changed format from inline `- Created :: %<%Y-%m-%d %H:%M>` to file-level metadata `#+CREATED: [%<%Y-%m-%d %a %H:%M>]`
+- Uses inactive timestamp format `[...]` which won't trigger agenda views
+- Timestamp appears alongside `#+TITLE` and `#+FILETAGS` at the top of each new org-roam node
+
+** Rationale
+- File-level `#+KEYWORD` format is cleaner and more semantic than definition lists
+- Follows org-mode conventions for file metadata
+- Inactive timestamps are appropriate for creation dates (vs active timestamps for scheduled items)
+- Provides useful metadata for tracking note creation without cluttering the content
+
+** Files Modified
+- `jay-org-roam-suite/jay-org-roam-profiles.el` (all default profile templates + helper function)
+- `docs/work-log.org` (this entry)
+
+* 2025-10-28: Fix undo-fu keybinding error
+
+** Summary
+- Fixed "wrong-type-argument commandp undo-fu-only-undo" error on s-z (Command-Z)
+- Reverted undo system back to 'undo-fu from 'undo-redo
+
+** Problem
+After commit c3bcac40 (2025-10-26), Emacs started throwing errors when pressing s-z:
+#+begin_example
+Debugger entered--Lisp error: (wrong-type-argument commandp undo-fu-only-undo)
+  command-execute(undo-fu-only-undo)
+#+end_example
+
+The keybinding in keys.el:169 references `undo-fu-only-undo`, but commit c3bcac40 changed the undo backend from 'undo-fu to 'undo-redo, making the undo-fu functions unavailable.
+
+** Solution
+Reverted `dotspacemacs-undo-system` back to 'undo-fu in spacemacs.d/init.el:691.
+
+This aligns with the existing configuration which includes:
+- Custom undo-fu wrapper functions in shared-functions.org (undo-fu-only-redo-fail-with-heart, etc.)
+- Keybindings in keys.el for undo-fu-only-undo (s-z) and undo-fu-only-redo-fail-with-heart (s-y)
+- undo-fu-session configuration for undo history persistence
+
+** Files Modified
+- spacemacs.d/init.el (reverted undo system setting)
+- docs/work-log.org (this entry)
+
+* 2025-10-26: Major documentation rewrite for clarity
+
+** Summary
+- Completely rewrote 6 core documentation files to be clear, comprehensive, and user-friendly
+- Transformed terse technical notes into welcoming guides with examples and explanations
+- Added extensive cross-references, troubleshooting sections, and quick reference tables
+- Improved structure with clear hierarchies, real-world workflows, and best practices
+
+** Details
+- *instructions.org* (79 → 398 lines): Added "What Is This?" overview, step-by-step installation guide, workflow examples, comprehensive troubleshooting, and quick reference cards
+- *design-architecture.org* (34 → 578 lines): Expanded with data flow diagrams, loading order explanations, design rationales, troubleshooting guide, and performance considerations
+- *the-emacs-settings-approach.org* (24 → 551 lines): Detailed 8 core principles, design values, common workflows with thought processes, anti-patterns, and design tensions
+- *visual-design-philosophy.org* (35 → 466 lines): Complete rewrite with design principles, context-specific setups, component guidance, evolution principles, and quick reference
+- *backup-system.org* (27 → 494 lines): Transformed into comprehensive recovery guide with 8 detailed scenarios, prevention practices, checklists, and quick commands
+- *critical-next-steps.org* (21 → 430 lines): Expanded to prioritized roadmap with status indicators, detailed proposals with effort estimates, "Explicitly NOT Pursuing" section, and decision log
+
+** Key Improvements
+- *Structure*: Clear hierarchies with descriptive headings, scannable tables, cross-references
+- *Content*: Explain "why" not just "what", real-world scenarios, prevention and best practices
+- *Accessibility*: Welcoming to newcomers while valuable for experienced users
+- *Examples*: Workflows, use cases, code snippets, command references
+- *Troubleshooting*: Comprehensive problem/solution pairs with multiple recovery paths
+
+** Files Left As-Is
+- `codebase-wisdom.org` - Already excellent as detailed bug log with specific incidents
+- `pasteboard-architecture.org` - Already clear technical documentation
+- `ORG-ROAM-PROFILES-QUICKSTART.org` - Already user-friendly and well-structured
+
+** Philosophy
+Transformed documentation from "technical notes for experts" to "comprehensive guides that teach concepts while providing reference material". Each file now serves multiple audiences and use cases.
+
+** Files Modified
+- `docs/instructions.org`
+- `docs/design-architecture.org`
+- `docs/the-emacs-settings-approach.org`
+- `docs/visual-design-philosophy.org`
+- `docs/backup-system.org`
+- `docs/critical-next-steps.org`
+- `docs/work-log.org` (this entry)
+
+* 2025-10-24: Restore org-roam dailies properties
+
+** Summary
+- Fixed regression where `org-roam-dailies-goto-today` created notes without ID drawers
+- Centralized the journal daily template and guarded profile switching so defaults survive optional keys
+- Ensured legacy `org-roam-config.el` consumers pick up the shared template
+- Restored the `B` capture template for Business/Socratic notes under `business-socratic/`
+- Added back legacy capture templates (`a`, `H`, `c`, `d`, `D`, `E`, `f`, `k`, `L`) so long-time shortcuts keep working
+
+** Details
+- Root cause: the profile switcher unconditionally set `org-roam-dailies-capture-templates` to whatever the profile plist provided; profiles defined before 2025-10-24 lacked `:dailies-capture-templates`, so the variable became `nil`, forcing org-roam’s fallback template (no properties)
+- Added `jay/org-roam-dailies-template-default` as the single source of truth for the journal capture template and referenced it from both profiles and the core init
+- Updated `jay/org-roam-apply-profile` to resolve templates defensively and only assign when a profile supplies one, preventing future regressions when adding new profiles
+- Legacy `org-roam-config.el` now copies the shared template when available, keeping older entry points consistent
+- Brought back the business template via `jay/roam-template` so `s-u B` once again lands in `business-socratic/` with `:project:` tagging
+- Migrated the remaining legacy templates (article notes, plans, conversation, documents/deliverables, vibecoding, exercise, finances, kanban, learning) into the default profile list
+- Updated `docs/instructions.org` with guidance on where capture templates now live and how the shared daily template works
+
+** Handoff
+- Reload or eval the modified sections, then re-run `org-roam-dailies-goto-today`; new entries should include the `:PROPERTIES:` drawer with a fresh `org-id`
+- When adding a new profile, omit `:dailies-capture-templates` to inherit the shared default or bind it to a symbol/list explicitly
+
+** Files Modified
+- `jay-org-roam-suite/jay-org-roam-profiles.el` (shared template + guarded application)
+- `jay-org-roam-suite/jay-org-roam-core.el` (core init pulls from shared template)
+- `org-roam-config.el` (fallback to shared template)
+
+* 2025-10-20: Calendar + diary polish (known-good colors)
+
+** Summary
+- Locked in mint diary date highlight (`#6FCFA6`) and disabled holiday tinting
+- Released plain `s` for typing in `timeline.md`; `/` still launches Consult ripgrep
+- Documented palette so future tweaks can return to this known-good configuration
+
+** Details
+- `timeline/timeline-calendar.el`
+  - Added `my-calendar--disable-diary-highlighting` and re-used it after theme loads
+  - Cleared `calendar-holidays` so no red holiday markers leak through
+- `timeline/timeline-search.el`
+  - Updated diary hook to unbind `s` while keeping `/` mapped to `my-diary-search`
+
+** Handoff
+- Reload calendar + diary modules (`M-x load-file`) after customizing themes
+- Known-good palette: diary dates `#6FCFA6`; holidays disabled; weekdays inherit theme defaults
+
+* 2025-10-20: Astro exports follow org-roam profiles
+
+** Summary
+- Synced `org-astro-source-root-folder` with active org-roam profile so `my-life` exports pull from `/Users/jay/Library/CloudStorage/Dropbox/roam-life`
+- Added helper commands `jay/org-astro-export-from-roam` and `jay/org-astro-export-from-roam-life` for one-shot exports without switching profiles
+- Registered new `roam-life` destination in `org-astro-known-posts-folders` (string + plist forms) and mirrored it in Spacemacs customization
+
+** Details
+- `jay-org-roam-suite/jay-org-roam-profiles.el`
+  - Profile plists now carry `:astro-source-root`
+  - `jay/org-roam-apply-profile` updates `org-astro-source-root-folder` on every switch
+  - Astro export helpers ensure `ox-astro` is loaded and temporally rebind the root
+- `shared-functions.org`
+  - Added `roam-life` nickname for legacy/alist and plist-based `org-astro-known-posts-folders`
+- `spacemacs.d/init.el`
+  - Kept customization layer in sync with new destination so startup uses the same mapping
+
+** Handoff
+- After switching profiles (`s-u 1` or `s-u 2`), `org-astro-export-to-mdx` automatically reads from the correct notes tree
+- Use `M-x jay/org-astro-export-from-roam-life` when exporting a personal note without leaving the work profile
+- Documentation updated in `docs/instructions.org` under Org-roam profiles to call out the new behavior and commands
+
+* 2025-10-19: Template consolidation - Removed redundant templates.el
+
+** Summary
+- Deleted `jay-org-roam-templates.el` (was 70 lines, now obsolete)
+- All capture templates now managed exclusively in `jay-org-roam-profiles.el`
+- Removed redundant `(require 'jay-org-roam-templates)` from spacemacs-new-config.el
+- Simplified suite architecture to 3 files instead of 4
+
+** Rationale
+- Templates were defined in two places (templates.el AND profiles.el)
+- templates.el set `org-roam-capture-templates` globally, but profile system immediately overrode it
+- Created confusion about which templates were active
+- User primarily uses default profile 90% of time, making separate template file unnecessary
+
+** Files Modified
+- Deleted: `jay-org-roam-suite/jay-org-roam-templates.el`
+- Modified: `spacemacs-new-config.el` (removed templates.el require)
+- Modified: `docs/ORG-ROAM-PROFILES-README.md` (updated file list and setup instructions)
+- Modified: `docs/work-log.org` (this entry)
+
+** Final Architecture
+- `jay-org-roam-profiles.el` - Profile system + all capture templates (default & my-life)
+- `jay-org-roam-core.el` - Core org-roam setup, keybindings, profile integration
+- `jay-editor-extras.el` - Supporting utilities
+
+Clean, simple, no redundancy.
+
+* 2025-10-19: Org-roam profile switching system
+
+** Summary
+- Added multi-database profile system to org-roam suite
+- Enables seamless switching between work (default) and personal (my-life) databases
+- Each profile maintains independent directory, database, and capture templates
+- Profile persistence across sessions via cache file
+- Mode-line indicator shows current profile with click-to-switch functionality
+
+** Architecture
+- `jay-org-roam-profiles.el` (408 lines): Complete profile management system
+  - Profile definitions with plists (name, directory, db-location, templates)
+  - Safe database connection management (close old, open new)
+  - Profile persistence to `~/.cache/org-roam-current-profile`
+  - Mode-line indicator with visual feedback
+  - Quick-switch convenience functions
+
+** Profiles Defined
+- **default (Work)**: `~/Dropbox/roam/`
+  - Full work template set (accountability, AI, job hunt, people, quotes, etc.)
+  - Database in XDG cache directory
+- **my-life (Personal)**: `~/Dropbox/roam-life/`
+  - Personal templates (journal, gratitude, reflection, health, family, memories)
+  - Co-located database in roam directory
+
+** Integration
+- Integrated into `jay-org-roam-core.el` idle timer
+- Calls `jay/org-roam-profiles-init` during startup
+- Loads last-used profile or defaults to 'default
+
+** Keybindings
+- `s-u P` - Switch profile (interactive with completion)
+- `s-u C-p` - Show current profile info
+- `s-u 1` - Quick switch to default (work)
+- `s-u 2` - Quick switch to my-life (personal)
+
+** Files Modified
+- Created `jay-org-roam-suite/jay-org-roam-profiles.el`
+- Modified `jay-org-roam-suite/jay-org-roam-core.el`: Added profile integration
+- Updated `docs/lab/org-roam-database-switching.org`: Marked as implemented
+- `docs/work-log.org`: Logged this enhancement
+- `docs/instructions.org`: Added profile usage guide
+
+** Handoff
+- Mode-line shows current profile (e.g., `[Roam:Default]` or `[Roam:My]`)
+- Profile switching properly closes old DB and syncs new one
+- Each profile is completely independent - no cross-contamination
+- Template sets automatically switch with profile
+- Use `s-u 1` and `s-u 2` for muscle memory quick switches
+
+* 2025-10-19: Memoir profile polish & sync safety
+
+** Summary
+- Refined the personal vault template set around memoir storytelling use cases
+- Corrected the Mode-line/person template narrowing flag typo so capture loads cleanly
+- Restored an automatic `org-roam-db-sync` during profile switches without clearing data
+
+** Details
+- `jay-org-roam-suite/jay-org-roam-profiles.el`
+  - Reworked memoir template names/structures (stories, memories, stage bits, fragments)
+  - Fixed `:unnarrowed` plist keyword so `p` capture works again
+  - Added guarded `org-roam-db-sync` hook when changing profiles (skips on startup)
+  - Updated docstring to reflect the new behaviour
+
+** Handoff
+- Switching to `my-life` now syncs the right DB immediately while leaving existing data untouched
+- Template prompts are ready for the memoir workflow; run `s-u c p` to confirm the person sketch capture opens
+
+* 2025-10-19: Modular org-roam suite refactoring
+
+** Summary
+- Refactored monolithic `org-roam-config.el` into three focused modules
+- Created `jay-org-roam-suite/` directory with modular architecture
+- Modules are self-contained and can be loaded independently
+- Improved startup performance with maximally lazy loading strategy
+- Cleaner separation of concerns: core, templates, and editor utilities
+
+** Architecture
+- `jay-org-roam-core.el` (202 lines): Lazy-loading core with resilient DB operations
+  - Lazy-safe wrappers (`jay/with-org-roam`, `jay/bind-roam` macros)
+  - Two-phase idle setup (1s initial setup, 5s autosync)
+  - Safety wrappers for all DB operations
+  - Helper functions and keybindings
+  - Custom refile supporting regions and subtrees
+- `jay-org-roam-templates.el` (70 lines): Complete capture template library
+  - Template factory pattern for consistent template creation
+  - 20+ capture templates for different content types
+- `jay-editor-extras.el` (64 lines): Environment and editor utilities
+  - Ispell dictionary configuration
+  - PATH/shell setup for consistent exec-path
+  - XeLaTeX export pipeline
+  - Captain predicate hooks for auto-capitalization
+
+** Files Modified
+- Created `jay-org-roam-suite/jay-org-roam-core.el`
+- Created `jay-org-roam-suite/jay-org-roam-templates.el`
+- Created `jay-org-roam-suite/jay-editor-extras.el`
+- Modified `spacemacs-new-config.el`: Replaced single `org-roam-config.el` load with modular requires
+- `docs/work-log.org`: Logged this refactoring
+
+** Handoff
+- Old `org-roam-config.el` is no longer loaded but remains in repo for reference
+- All functionality migrated to new modules
+- Modules can be loaded in any order after Org-mode is available
+- The suite directory is added to load-path, allowing simple `(require 'jay-org-roam-core)` syntax
+
+* 2025-10-19: Universal argument support for adaptive copy/paste/cut
+
+** Summary
+- Added prefix argument (C-u) support to clipboard trilogy: `pasteboard-copy-adaptive`, `pasteboard-paste-adaptive`, and new `pasteboard-cut-adaptive`
+- Created `pasteboard-cut-adaptive` to complete the trilogy with consistent smart behavior
+- C-u s-c forces verbatim copy, overriding smart context detection
+- C-u s-v forces verbatim paste, overriding smart context detection
+- C-u s-x forces verbatim cut, overriding smart context detection
+- Normal s-c, s-v, and s-x continue with existing smart behavior
+- Cut function reuses copy-adaptive logic, then deletes region and handles spacing/capitalization
+
+** Files Modified
+- `pasteboard-copy-and-paste-functions.org`: Added `current-prefix-arg` checks to copy/paste functions; created new `pasteboard-cut-adaptive` function
+- `gnu-emacs-startup.org`: Updated s-x keybinding to use `pasteboard-cut-adaptive`
+- `keys.el`: Updated s-x keybinding to use `pasteboard-cut-adaptive`
+- `docs/work-log.org`: Logged this enhancement
+- `docs/instructions.org`: Updated clipboard hygiene section with C-u prefix documentation
+
+** Handoff
+- Test the new behavior: Try C-u s-v in an org buffer to verify it pastes verbatim even when smart paste would normally clean
+- Test C-u s-c in text-mode to verify it copies verbatim even when smart copy would normally clean
+- Test C-u s-x in text-mode to verify it cuts verbatim even when smart cut would normally clean and capitalize
+- The forced behavior shows "(forced)" in the message to distinguish from automatic verbatim choices
+- All three clipboard operations (cut/copy/paste) now use consistent smart detection logic
+
+* 2025-10-16: Calendar entry spacing and edit-on-empty improvements
+* 2025-10-16: Verbatim pastes honored in prog-mode saves
+* 2025-10-16: Markdown heading conversion loop fixed
+* 2025-10-17: Markdown detection fixtures linked and heading markers tracked
+
+** Summary
+- Hardened the Markdown detector so it records heading positions as live markers, preventing the skip list from drifting while we mutate the buffer.
+- Tightened the whitespace heuristics (`[ \t]` anchors) to stop blank lines from absorbing nearby headings or bullets.
+- Documented all debug fixtures with clickable org links for quick regression runs on the adaptive paste pipeline.
+- Added an opt-in inline emphasis converter (`pasteboard-convert-markdown-inline-emphasis`) that maps Markdown `*italic*`/`**bold**` to Org `/italic/`/`*bold*`, bypassing the legacy `** → *` collapse when enabled so bold survives intact.
+
+** Files Modified
+- `pasteboard-copy-and-paste-functions.org`
+- `docs/pasteboard-markdown-detection.org`
+
+** Handoff
+- Run the `debug/input-1.txt -> output-1.org` pair whenever the pasteboard pipeline changes to keep the fixture updated.
+- Consider promoting the marker upgrade into an automated ERT so the skip-line behaviour stays covered.
+
+** Summary
+- Fixed an infinite loop in `convert-markdown-headings-to-org` that left Emacs hanging when pastes ended on a blank line.
+- Verified pasting `# foo` and the Workflowy Markdown snippet both convert cleanly without warnings.
+- Escaped fenced code sections continue to be skipped during heading conversion.
+
+** Files Modified
+- `pasteboard-copy-and-paste-functions.org`
+
+** Handoff
+- If heading conversion starts freezing again, re-check the EOF guard in `convert-markdown-headings-to-org`.
+- Re-run the Workflowy Markdown sample (`debug/chatgpt-markdown-text-sample.txt`) and a simple `# foo` paste to reproduce.
+- Confirm no other save hooks reintroduce whitespace stripping when using `pasteboard-paste-verbatim`.
+
+
+** Summary
+- Updated the adaptive paste dispatcher to treat all `prog-mode` derivatives as verbatim, ensuring code snippets no longer run through whitespace cleaners.
+- Added an explicit `python-mode` check so Command-S saves keep indentation even if the buffer isn't yet recognized as `prog-mode`.
+- Hardened the Markdown heading conversion to ignore fenced code blocks and keep Org headings intact.
+- Taught `jay/save-all-buffers` to save each buffer with the whitespace scrubbers temporarily disabled, so a raw paste keeps its indentation even after `s-s`.
+
+** Files Modified
+- `pasteboard-copy-and-paste-functions.org`
+- `shared-functions.org`
+
+
+* 2025-10-16: Timeline modules split for maintainability
+
+* 2025-10-16: Pasteboard markdown detection hardened and documented
+
+** Summary
+- Fixed the adaptive paste bullet conversion so ChatGPT Markdown lists always flip `*` to `-` without touching real Org headings.
+- Added a fallback sweep after the primary conversion to catch any remaining single-asterisk bullets when Markdown is detected.
+- Captured the detection goals, heuristics, and maintenance loop in `docs/pasteboard-markdown-detection.org` for future reference.
+
+** Files Modified
+- `pasteboard-copy-and-paste-functions.org`: Corrected regexes, gathered replacements bottom-up, refreshed region bounds, and added the final conversion sweep.
+- `docs/codebase-wisdom.org`: Logged the post-mortem and checklist under “Pasteboard Markdown Bullet Detection: Regex and Retangle”.
+- `docs/pasteboard-markdown-detection.org`: New document explaining the desired behaviour and implementation details.
+
+** Summary
+- Broke the monolithic `timeline.el` into focused modules (`timeline-core`, `timeline-calendar`, `timeline-diary`, `timeline-cleanup`, `timeline-search`, `timeline-tests`).
+- Updated the main entry point to require the new modules, add load-path shims, and centralise keybindings/which-key labels.
+- Ensured the README describes the new structure and refreshed the automated test suite to load via the modular entry point.
+
+** Files Modified
+- `timeline/timeline.el`: Now re-exports the modular files and configures bindings.
+- `timeline/timeline-*.el`: New module files extracted from the original timeline.
+- `docs/work-log.org`: Logged the restructuring work.
+- `timeline/README.org`: Documented the new file layout and capabilities.
+
+** Summary
+- Hardened the blank-line helper so newly inserted diary headings never glue themselves to the preceding bullet text.
+- Taught `my-calendar-edit-diary-entry` to auto-create a heading and blank bullet when a date has no entry, landing point where you can immediately type.
+- Noted in the README that the timeline file doubles as a plain-text record of upcoming events.
+
+** Files Modified
+- `timeline/timeline.el`: Fixed blank-line logic and auto-create behavior for empty dates.
+- `timeline/README.org`: Documented the plain-text upcoming-events stance.
+- `docs/work-log.org`: Logged these improvements.
+
+* 2025-10-16: Empty entry cleanup and cancel shortcut
+
+** Summary
+- Added a before-save cleanup pass that strips empty diary stubs while skipping the entry currently being created.
+- Introduced `my-calendar-cancel-current-entry` with a visual highlight and confirmation for non-empty blocks, bound to `C-c C-k` in the diary buffer.
+
+** Files Modified
+- `timeline/timeline.el`: Implemented cleanup suspend/skip logic, the cancel command, and keybinding hook.
+- `docs/work-log.org`: Recorded this update.
+
+* 2025-10-16: Holiday coloring disabled and consult ripgrep path fix
+
+** Summary
+- Neutralized the calendar holiday face and marker so holidays no longer render in blue, even after switching themes.
+- Updated `my-diary-search` to run ripgrep from the diary directory, avoiding the "Not a directory" error when the diary path ends with the filename.
+
+** Files Modified
+- `timeline/timeline.el`: Adjusted holiday styling defaults and ripgrep invocation.
+- `docs/work-log.org`: Recorded this change.
+
+* 2025-10-16: Added diary regression tests
+
+** Summary
+- Added ERT coverage for inserting diary entries and editing empty dates to guard against spacing regressions.
+- Batch-ran the new test suite to ensure the calendar diary workflow remains error-free.
+
+** Files Modified
+- `timeline/timeline.el`: Introduced new ERT tests for diary spacing and edit-on-empty behaviour.
+- `docs/work-log.org`: Logged the test additions.
+
+* 2025-10-16: Timeline rename and assets consolidated
+
+** Summary
+- Renamed the legacy "markdown-diary" project to "timeline" across modules, docs, and calendars.
+- Moved `timeline.el`, the keybinding cheatsheet, README, and ideas notebook into `timeline/`.
+- Pointed the diary file reference to `~/Dropbox/github/timeless/data/timeline.md` in code and docs.
+- Updated load-path and `require` statements so `require 'timeline` resolves everywhere.
+- Added the new directory to `load-path` so `require 'timeline` continues to resolve.
+
+** Files Modified
+- `timeline/timeline-keybindings.org`: New location for the keybinding reference.
+- `timeline/README.org`: New location for the diary module README.
+- `timeline/timeline.el`: Calendar/diary helpers relocated.
+- `shared-functions.org`: Added `timeline/` to `load-path`.
+- `docs/work-log.org`: Logged the reorganization.
+- `timeline/timeline-ideas.org`: New scratchpad for potential enhancements.
+
+** Handoff: Next session
+- Reload `shared-functions.org` (or re-tangle) so the new load-path entry is reflected in the generated `.el`.
+- Verify `timeline.el` autoloads when starting Emacs and that `require 'timeline` resolves without warnings.
+- Sanity-check the updated README (`timeline/README.org`) renders correctly, especially the AI/LLM section formatting.
+
+* 2025-10-16: Diary search, context mode, and regression guard
+
+** Summary
+- Added `my-diary-search`, a consult-ripgrep wrapper bound to `/` and `s` in both calendar and diary buffers for instant diary-wide lookup.
+- Introduced `my-diary-mode`, a minor mode that auto-enables in the diary file and surfaces the active 📅 date in the mode line.
+- Captured `my-calendar-test-date-format` as an ERT regression to ensure the diary date formatter keeps emitting `M/D/YYYY`.
+
+** Files Modified
+- `timeline.el`: Implemented the search command, diary minor mode, automatic activation hook, bindings, and ERT.
+- `timeline/timeline-keybindings.org`: Documented the new `/` / `s` shortcuts.
+- `timeline/README.org`: Added the search binding, diary mode note, and mentioned the regression test.
+- `docs/work-log.org`: Logged this update.
+
+* 2025-10-16: Calendar navigation assist overlays
+
+** Summary
+- Added an interactive ~my-calendar-help~ popup (bound to ~?~) that displays the custom calendar diary bindings in a view-mode buffer.
+- Introduced ~my-calendar-toggle-last-date~ on ~M-t~, letting the calendar jump back and forth between today and the last visited date.
+- Registered friendly which-key labels for every diary-centric key so the shortcuts surface automatically when which-key is active.
+- Remembered the calendar origin date inside ~timeline.md~ and bound diary ~C-SPC~ to jump straight back to that day while leaving plain space untouched.
+- Added ~C-c C-c~ as a second diary shortcut for returning to the calendar, mirroring habitual Org workflow keys.
+- Hooked `calendar-move-hook` to echo the currently highlighted date (weekday + full date) whenever the cursor moves.
+
+** Files Modified
+- `timeline.el`: Implemented the help popup, toggle command, which-key integration, origin tracking, echo display, and diary return helper.
+- `timeline/timeline-keybindings.org`: Documented the new ~?~, ~M-t~, and diary-buffer ~SPC~ bindings.
+- `timeline/README.org`: Refreshed the cheat-sheet table, noted diary-space return, and mentioned the echoing move hook.
+- `docs/work-log.org`: Logged this update.
+
+* 2025-10-14: Calendar diary prompt variants, spacing, and navigation fixes
+
+** Summary
+- Split the insert helper so `c` opens a blank prompt while `C` seeds the minibuffer with the previous entry.
+- Normalised diary spacing to keep exactly one blank line around each date block and month heading.
+- Documented the new keybindings, including prefix variants, in the calendar reference guide.
+- Added ~SPC~ as another shortcut to view the diary entry without leaving the calendar.
+- Taught `my-calendar-jump-to-diary-entry` to return the heading position so `my-calendar-edit-diary-entry` can land on the last bullet without an extra search.
+- Retired the redundant `my-calendar-open-diary-entry` helper and renamed the fancy diary listing command for clearer intent.
+- Expanded `timeline/README.org` with an overview of strengths and workflow notes for the timeline/diary bridge.
+
+** Why it should work
+Both commands share a new internal helper that accepts the seed text, ensuring consistent validation and insertion logic. The blank-line utilities now collapse existing runs before inserting, so re-running the command on the same date cannot accumulate extra vertical whitespace.
+Returning the diary heading position lets editing logic reuse the existing search result, eliminating duplicate scans, and removing the unused helper avoids dead code.
+
+** Files Modified
+- `timeline.el`: Added `my-calendar-insert-diary-entry-and-autopopulate`, shared helper, spacing normalisers, navigation toggles, and returned the diary heading position.
+- `timeline/timeline-keybindings.org`: Described the `c`/`C` split, prefix behaviour, and new `SPC`/`O` bindings.
+- `docs/work-log.org`: Logged this change.
+- `timeline/README.org`: Updated the binding reference.
+
+* 2025-10-14: Calendar diary view stays focused
+
+** Summary
+- Disabled the automatic fancy diary buffer so the calendar + diary layout now stays stable.
+- Added `my-calendar-view-diary-entry` and bound both ~o~ and ~v~ to it, showing the entry while leaving focus in the calendar.
+- Promoted the fancy diary listing to ~O~ and taught ~s-.~ to close any diary listing panes before returning to the calendar.
+
+** Why it should work
+`my-calendar-view-diary-entry` reuses `my-calendar-jump-to-diary-entry` but immediately hands focus back to the calendar and cleans up fancy diary buffers. Clearing `calendar-view-diary-initially-flag` prevents Emacs from spawning the fancy listing automatically, so window arrangements remain intact.
+
+** Files Modified
+- `timeline.el`: Added the view helper, disabled automatic fancy display, tightened `s-.`, and rebound calendar keys.
+- `timeline/timeline-keybindings.org`: Documented the new `o`/`v` view shortcut and `O` fallback.
+- `docs/work-log.org`: Logged this change.
+
+** Handoff: Next session
+- Sanity-check the new `o`/`v` binding on a clean Emacs restart to ensure focus stays in calendar.
+- Decide if the fancy listing should be accessible elsewhere now that `O` is uppercase.
+
+* 2025-10-14: Calendar helpers packed into `timeline.el`
+
+** Summary
+- Moved the entire Jay Diary customization block from `shared-functions` into a standalone module `timeline.el`.
+- Replaced the inlined code with a simple `(require 'timeline)` so the functions load from one place whether or not tangling runs.
+- Copied the module into the tracked `.el` file directly so Spacemacs picks it up without additional boot tweaks.
+
+** Why it should work
+The project root is already on `load-path`, so requiring `timeline` resolves instantly. The new module `provide`s the same feature guard and mirrors all previous calendar bindings, hooks, and diary helpers, keeping behaviour identical after the move.
+
+** Files Modified
+- `shared-functions.org`: Replaced the calendar block with a `require`.
+- `shared-functions.el`: Mirrors the new requirement for runtime use.
+- `timeline.el`: New file with the full calendar implementation.
+- `docs/work-log.org`: Logged the restructuring.
+
+* 2025-10-14: Calendar diary entries sort themselves
+
+** Summary
+- Replaced the stock `calendar-insert-diary-entry` binding with `my-calendar-insert-diary-entry`, which prompts once and drops bullets into `timeline.md` in chronological order.
+- Auto-creates missing year and month headings so new dates always slot under the right section without manual scaffolding.
+- Preserves the original command on `I` for fallback while keeping diary navigation shortcuts intact.
+
+** Why it should work
+The helper narrows to the current month region, searches for existing date headings, and either appends bullets or inserts a new date block before the next chronological entry. It also trims user input into Markdown bullet lines and reuses the existing `my-calendar-jump-to-diary-entry` flow to surface the entry immediately.
+
+** Files Modified
+- `shared-functions.org`: Added diary insertion helpers, history, key bindings, and `cl-lib`/`subr-x` requirements.
+- `shared-functions.el`: Mirrored the helpers so they are available without tangling.
+- `docs/work-log.org`: Logged this change.
+
+* 2025-10-14: Calendar entry alias and spacing
+
+** Summary
+- Added ~c~ as a calendar-mode alias for ~my-calendar-insert-diary-entry~ so creating entries stays on the home row.
+- Ensured every inserted diary block leaves a blank line afterwards, keeping Markdown sections readable.
+- Rebound ~RET~ to open the Markdown entry immediately, moved ~o~ to the fancy diary listing command, and enhanced ~e~ to land at the end of the last bullet.
+
+** Files Modified
+- `timeline.el`: Replaced the trailing-newline helper with a blank-line inserter, added the `c` alias, retuned `RET`, and improved `e` to place point at the last bullet.
+- `timeline/timeline-keybindings.org`: Documented the updated keybindings.
+
+* 2025-10-14: Markdown diary refinements
+
+** Summary
+- Tightened duplicate-day handling so new bullets append exactly after the existing block and leave a single blank separator.
+- Added optional prefix-arg behaviour: `i` returns to Calendar, `C-u i` keeps focus in the diary buffer.
+- Prefills the minibuffer with the most recent entry text for faster consecutive additions.
+- Ensures every date heading is preceded by a single blank line, keeping month sections evenly spaced.
+
+** Why it should work
+The month section is still narrowed before edits, but day comparisons now look only at the day number inside that region, preventing accidental mis-sorts. We normalise spacing with explicit newline guards, so headings and entries remain evenly separated regardless of prior manual edits.
+
+** Files Modified
+- `timeline.el`: Updated insertion logic, spacing controls, history defaults, and prefix behaviour.
+- `docs/work-log.org`: Documented the tweaks.
+
+* Handoff: Next session
+- Verify that `my-calendar-edit-diary-entry` reliably lands at the end of the last bullet for multi-line entries.
+- Add regression coverage (ERT or script) for the blank-line insertion helper so future edits don’t regress formatting.
+- Consider a quick `emacs --batch` smoke test that exercises `my-calendar-edit-diary-entry` and `my-calendar-show-fancy-diary-listing`.
+
+* 2025-10-14: Show project name in mode line next to filename
+
+** Summary
+- Added helpers that derive the current project name (Projectile, project.el, or vc fallback) and inject it immediately after the buffer identification in the mode line.
+- Ensures buffers such as `CLAUDE.org` display as `CLAUDE.org · velocity`, making similarly named files easy to distinguish across projects.
+
+** Why it should work
+The new segment is wrapped in `:eval`, so it runs lazily during mode line rendering and gracefully handles missing project libraries. We only insert the segment once, and we keep the previous VC removal logic intact.
+
+** Files Modified
+- `shared-functions.org`: Added the project lookup helpers and updated the global `mode-line-format`.
+- `shared-functions.el`: Mirrors the tangled output for immediate use.
+- `docs/work-log.org`: Documented this change.
+
+* 2025-10-14: Added keybinding for custom Info manual
+
+** Summary
+- Bound `M-h i` to the `jay-info-emacs-manual` function.
+- This provides a convenient way to access the custom-built Emacs info manual.
+- The keybinding is added to `gnu-emacs-startup.org` and `gnu-emacs-startup.el`.
+
+** Why it should work
+`M-h` is already a prefix key for help commands. By adding a binding for `i` to the `help-map`, we are creating an intuitive and easy-to-remember keybinding for the custom info manual, without conflicting with any existing keybindings.
+
+** Files Modified
+- `gnu-emacs-startup.org`: Added the keybinding.
+- `gnu-emacs-startup.el`: Manually added the keybinding as tangling failed.
+- `docs/work-log.org`: Added this entry.
+
+* 2025-10-14: Added keybinding for custom Info manual
+
+** Summary
+- Bound `M-h i` to the `jay-info-emacs-manual` function.
+- This provides a convenient way to access the custom-built Emacs info manual.
+- The keybinding is added to `gnu-emacs-startup.org` and `gnu-emacs-startup.el`.
+
+** Why it should work
+`M-h` is already a prefix key for help commands. By adding a binding for `i` to the `help-map`, we are creating an intuitive and easy-to-remember keybinding for the custom info manual, without conflicting with any existing keybindings.
+
+** Files Modified
+- `gnu-emacs-startup.org`: Added the keybinding.
+- `gnu-emacs-startup.el`: Manually added the keybinding as tangling failed.
+- `docs/work-log.org`: Added this entry.
+
+* 2025-10-14: Added keybinding for custom Info manual
+
+** Summary
+- Bound `M-h i` to the `jay-info-emacs-manual` function.
+- This provides a convenient way to access the custom-built Emacs info manual.
+- The keybinding is added to `gnu-emacs-startup.org` and `gnu-emacs-startup.el`.
+
+** Why it should work
+`M-h` is already a prefix key for help commands. By adding a binding for `i` to the `help-map`, we are creating an intuitive and easy-to-remember keybinding for the custom info manual, without conflicting with any existing keybindings.
+
+** Files Modified
+- `gnu-emacs-startup.org`: Added the keybinding.
+- `gnu-emacs-startup.el`: Manually added the keybinding as tangling failed.
+- `docs/work-log.org`: Added this entry.
+
+* 2025-10-14: Added custom Info manual function
+
+** Summary
+- Created a new function `jay-info-emacs-manual` to open the custom-built Emacs info manual directly by its absolute path.
+- This bypasses the user's problematic interactive Info configuration, which was failing to find the "Calendar/Diary" documentation.
+- The function is defined in `shared-functions.org` and tangled to `shared-functions.el`.
+- The user will add their own keybinding for this function.
+
+** Why it should work
+By calling `(info "/Users/jay/emacs/emacs-fresh-source/info/emacs.info")` directly, we are telling Emacs exactly which file to open, completely avoiding the complex and fragile `Info-directory-list` lookup mechanism. This is the same strategy that was proven to work in the user's notes from a previous machine.
+
+** Files Modified
+- `shared-functions.org`: Added the `jay-info-emacs-manual` function.
+- `shared-functions.el`: Manually added the `jay-info-emacs-manual` function as tangling failed.
+- `keys.el`: Removed the temporary keybinding for `jay-info-emacs-manual`.
+- `docs/work-log.org`: Added this entry.
+
+* 2025-10-14: Updated Emacs Calendar documentation
+
+** Summary
+- Reviewed the local Emacs calendar guide (`emacs-calendar-instructions-claude.org`).
+- Compared it with the official GNU Emacs manual for the timeline/diary features.
+- The local guide was found to be accurate and comprehensive for the user's specific workflow.
+- Added an appendix to the local guide explaining the different types of diary entries (single, weekly, monthly, yearly, anniversary, block, and cyclic) based on the official manual.
+
+** Files Modified
+- `emacs-calendar-instructions-claude.org`: Added appendix with detailed explanations of diary entry types.
+- `docs/work-log.org`: Added this entry.
+
+* 2025-10-14: Calendar diary focus tweaks
+
+** Summary
+- Reworked the diary helper so `RET` in the calendar shows the fancy diary listing and keeps focus in the calendar window.
+- Added `my-calendar-edit-diary-entry` and bound it to lowercase `e` for an explicit “open diary and stay there” workflow.
+- Generalized `my-calendar-jump-to-diary-entry` to accept optional date/focus arguments for reuse.
+
+** Files Modified
+- `shared-functions.org`: Updated Jay Diary section with the new helpers and key bindings.
+- `docs/work-log.org`: Added this entry.
+
+* 2025-10-14: Calendar navigation shortcuts
+
+** Summary
+- Added intuitive bindings in `calendar-mode` so `n`/`p` move by month and `N`/`P` move by year.
+- Updated the calendar instructions document to reflect the new navigation keys.
+- Added Option-←/Option-→ aliases (`M-<left>`, `M-<right>`) for month navigation on macOS keyboards.
+- Created `my-calendar-focus-calendar-window` and bound `s-.` in `timeline.md` so Command-Period jumps focus back to the existing calendar without resetting the date.
+
+** Files Modified
+- `shared-functions.org`: Bound new month/year navigation lambdas, added focus helper, and enabled the diary shortcut.
+- `emacs-calendar-instructions-claude.org`: Documented the updated keybindings and the Command-Period focus helper.
+- `docs/work-log.org`: Added this entry.
+
+* 2025-10-16: Smart asterisk bullet detection for adaptive paste
+
+** Problem Description
+- ChatGPT responses often use leading single asterisks for unordered lists. With the 2025-10-13 change, those pastes now appeared as level-1 Org headings.
+- Simply re-enabling the old `asterisk-to-dash` helper would fix ChatGPT pastes but would again demote genuine Org headings (for example `* Timeline`) into list items.
+
+** Root Cause
+- `pasteboard--clean-string` treated all single-asterisk lines identically after converting Markdown `#` headings to Org `*`, so it could not differentiate between Markdown bullets and legitimate Org headings.
+- The adaptive paste path lacked context about the overall clipboard format (Markdown vs Org) and which lines began as Markdown headings before conversion.
+
+** Solution
+- Added `pasteboard--analyse-clipboard-text` to score clipboards for Markdown cues (hash headings, fenced code, ordered lists, etc.) and capture the original line numbers of `#` headings.
+- Introduced `pasteboard--text-contains-markdown-headings-p` as a quick ChatGPT-specific signal so the cleanup kicks in whenever `##`/`###` headings appear, even if other cues are absent.
+- Introduced a contextual `pasteboard--convert-asterisk-bullets-to-dashes` that only rewrites single-asterisk lines when surrounded by list-like neighbours and not present in the preserved heading line set.
+- When the heuristic classifies the clipboard as Markdown, we now run the new conversion plus the dash normalizer and optional code-block translator inside a narrowed region; otherwise we leave existing Org intact.
+- Patched the `safe-replace` helper so the tangling output is syntactically balanced and tightened the Markdown-scoring regexes to avoid `invalid-regexp` errors at runtime.
+- Added `jay/add-current-display-to-notch-list-and-save` so you can persistently add the current monitor to the notch-hiding list and refresh the tab bar guard in one command.
+
+** Files Modified
+- `pasteboard-copy-and-paste-functions.org`: Added the clipboard analyser, bullet conversion helpers, and updated `pasteboard--clean-string` to use them.
+- `shared-functions.org`: Added a persistent helper for saving the active display to `jay/notch-display-identifiers`.
+- `docs/work-log.org`: Added this entry.
+
+** Expected Results After Reload
+- ChatGPT bullet lists paste as proper `- ` items while real Org headings remain untouched.
+- Org-centric clipboards skip the Markdown-specific cleanup, preventing unintended demotions.
+- Downstream dash/code-block normalization is still available when pasting Markdown-heavy content.
+- ChatGPT reviews that mix `##` headings with leading `*` bullets now always trigger the Markdown cleanup path, guaranteeing conversion even when other signals are sparse.
+
+** Follow-up Ideas
+- Capture edge cases where the heuristic returns “unknown” and consider exposing a manual override.
+- Extend detection with language-model metadata (e.g., presence of italics/bold fences) to tighten behaviour on tiny clipboards that lack headings.
+
+*** NOTE TO AI/LLM (next session)
+- Whenever you touch `pasteboard-copy-and-paste-functions.org`, immediately `org-babel-tangle` or `org-babel-load-file` so the `.el` stays in sync. Don’t leave the old tangled file lying around.
+- Run `emacs --batch pasteboard-copy-and-paste-functions.el --eval '(check-parens)'` (or `byte-compile-file`) before restarting. It catches missing parens right away.
+- If you tweak regexes, sanity-check them (`re-search-forward` in a scratch buffer) to avoid another `invalid-regexp` surprise.
+- TL;DR: edit → tangle → `check-parens` every time. It’s faster than hunting mismatched parens after the fact.
+
+* 2025-10-13: Disabled asterisk-to-dash conversion in pasteboard-paste-adaptive
+
+** Problem Description
+When pasting text with markdown-style bullet lists using asterisks (e.g., `* item`), `pasteboard-paste-adaptive` was automatically converting them to org-mode hyphens (e.g., `- item`). This was undesirable in some workflows where preserving the original asterisk format was preferred.
+
+** Root Cause
+The `pasteboard--clean-string` function (called by `pasteboard-paste-adaptive`) was invoking `asterisk-to-dash-and-convert-code-blocks-to-org` from `shared-functions.org`, which performed the following conversions:
+- `\n* ` → `\n- ` (newline + asterisk + space → newline + dash + space)
+- `^  \* ` → `  - ` (line-start + two spaces + asterisk → two spaces + dash)
+
+This automatic conversion was part of the markdown-to-org normalization pipeline.
+
+** Solution
+Commented out the call to `asterisk-to-dash-and-convert-code-blocks-to-org` in `pasteboard--clean-string` while preserving the code with clear instructions for re-enabling if needed:
+
+#+BEGIN_SRC emacs-lisp
+;; DISABLED 2025-10-13: Asterisk-to-dash conversion
+;; This was converting markdown-style bullet asterisks to org-mode hyphens.
+;; To re-enable: uncomment the lines below
+;; (save-restriction
+;;   (narrow-to-region (point-min) (point-max))
+;;   (goto-char (point-min))
+;;   (when (fboundp 'asterisk-to-dash-and-convert-code-blocks-to-org)
+;;     (asterisk-to-dash-and-convert-code-blocks-to-org)))
+#+END_SRC
+
+The function `asterisk-to-dash-and-convert-code-blocks-to-org` remains available in `shared-functions.org:9435-9454` and can be called manually or re-enabled by uncommenting the code.
+
+** Files Modified
+- `pasteboard-copy-and-paste-functions.org:568-575` - Commented out asterisk-to-dash conversion with reversion instructions
+- `docs/work-log.org` - Added this entry
+
+** Expected Results After Reload
+- Text pasted via `pasteboard-paste-adaptive` will preserve asterisks in bullet lists
+- Other markdown conversions (headings, blockquotes, links, smart quotes) continue to work normally
+- The conversion can be easily re-enabled by uncommenting 5 lines of code
+
+** Reverting This Change
+To restore the asterisk-to-dash conversion:
+1. Edit `pasteboard-copy-and-paste-functions.org` line 568-575
+2. Uncomment the `(save-restriction ...)` block
+3. Retangle the file or reload Emacs
+
+** Git Commits
+- `e1d4b3e2` - "Comment out asterisk-to-dash conversion in pasteboard-paste-adaptive"
+
+* 2025-10-13: Hardened adaptive paste for Org headings and folds
+* 2025-10-14: Unified DONE keyword styling in narrowed buffers
+
+** Problem Description
+- Cycling a TODO to DONE inside an Org subtree narrowed by `org-narrow-to-subtree` showed the keyword with the default black-on-white face instead of the light green used elsewhere.
+- The mismatch was distracting in focused writing sessions where narrowed buffers are the norm.
+
+** Root Cause
+- Narrowing spawns an indirect buffer that does not rerun `hl-todo-mode`, so the light-green overlay responsible for the usual appearance never activated.
+- With the overlay absent, Org fell back to the baseline `org-todo-keyword-faces` entry, which still used black text on white.
+
+* 2025-10-14: Info directory troubleshooting handoff
+** Summary
+- Tracked down why `M-x info` was hiding Calendar/Diary nodes; removed old buffer-killing hooks and normalized `Info-directory-list` handling.
+- Added optional local manual support and created `info/dir` aliases pointing to `(emacs)Calendar/Diary` and `(emacs)Diary`.
+- Captured the full investigation, commands, and open questions in `docs/info-calendar-debug.org` for follow-up.
+
+** Current State
+- Config merges Homebrew’s info path plus `~/emacs/emacs-settings/info`; `Info-directory-list` shows the custom dir, but the top-level menu still omits the new entries.
+- Calendar/Diary documentation confirmed inside `/opt/homebrew/share/info/emacs.info.gz` via `rg`.
+- Need to determine whether Info ignores additive `dir` files or if `install-info` merges are required.
+- Added an `info-initialize` reset + dedupe pass so the Homebrew manual stays in `Info-directory-list` even after custom dirs are appended.
+- Confirmed via CLI `info` that `(emacs)Calendar/Diary` is not a real node; rewired local `info/dir` so both Calendar and Diary entries jump to `(emacs)Diary`.
+- Interactive Emacs still fails for `(Info-find-node "emacs" "Diary")` despite the corrected `dir`; batch smoke test passes, pointing to a remaining config-level conflict to bisect.
+- Keep in mind:
+
+- Culled unused top-level files (`CHANGE-LOG.org`, `astro-ts-mode.el.org`, `info/dir`, various scratch org/markdown docs) and moved a few legacy notes into `archive/` to shrink the repo footprint.
+
+  - Whenever you update or move the Emacs source checkout, rerun `make -C doc/emacs info` and adjust any hard-coded `(info "/path/to/emacs.info")` helpers.
+  - Retain the batch regression script and local `info/dir` entry as diagnostics in case the direct manual isn’t available; they confirm the manual file stays healthy even when the interactive session misbehaves.
+
+** Next Steps
+1. Test `install-info info/dir <scratch-dir>` to see if merging entries surfaces Calendar/Diary.
+2. Temporarily advise `Info-insert-dir` to log which `dir` files are read and in what order.
+3. Consider generating standalone manuals if aliasing continues to fail.
+
+** Files & Commits
+- `shared-functions.org` (`Allow Info buffer to open`, `Restore default Info directory search`) for cleanup and hook adjustments.
+- `spacemacs.d/init.el`, `spacemacs.d/init-working.el` synced with new Info lookup logic.
+- New notes: `docs/info-calendar-debug.org`, `info/dir`.
+- New regression script: `scripts/check-info-calendar.el` validates all Calendar submenu nodes via batch Info runs.
+
+** Solution
+- Updated the `("DONE" …)` entry in both the literate and tangled configs to render white text on a forest-green background with a slight box padding, matching the indirect-buffer experience.
+- Mirrored the change in the `hl-todo-keyword-faces` palette so the overlay keeps the same styling when it *is* present.
+
+** Files Modified
+- `shared-functions.org:959,994` – switched DONE keyword face and matching hl-todo face to white-on-forest-green with padding box.
+- `shared-functions.el:639,670` – tangled output reflects the same face adjustments.
+
+** Expected Results After Reload
+- DONE keywords appear white on green whether or not `hl-todo-mode` is active, ensuring consistent visuals in narrowed and full buffers.
+
+** Follow-up: Display-aware notch hiding
+
+- Added `jay/notch-display-identifiers` defcustom to extend the notch-hiding tab-bar logic beyond the built-in Retina panel.
+- Extracted `jay/current-display-attributes` helper and refreshed `jay/on-notch-display-p` so detection can be reused elsewhere.
+- Introduced `jay/add-current-display-to-notch-list` for quickly adding the current monitor’s name at runtime.
+- Both `shared-functions.org` and the tangled `shared-functions.el` now reflect the new helpers.
+
+* 2025-10-14: Display-aware notch hiding for tab bar
+
+** Problem Description
+- The tab-bar notch guard only activated on the built-in Retina panel, leaving fullscreen external monitors (with a real or improvised notch) uncovered.
+- Manually enabling `tab-bar-mode` stuck until the next focus change, when the auto-update logic disabled it again.
+
+** Root Cause
+- `jay/on-macbook-display-p` hard-coded a string match for “Built-in”/“Retina Display” and returned nil for any other monitor.
+- The detection logic lived inline, making it awkward to extend and re-use when adding monitors dynamically.
+
+** Solution
+- Added `jay/notch-display-identifiers` defcustom so additional monitor names (regex patterns) can opt into notch coverage.
+- Extracted `jay/current-display-attributes` to isolate frame→monitor resolution and refactored `jay/on-notch-display-p` to call it.
+- Created `jay/add-current-display-to-notch-list` for recording the active monitor’s name at runtime; the list can be persisted via Customize.
+
+** Files Modified
+- `shared-functions.org:9720-9845` – new defcustom, helpers, and interactive command; update docstrings/messages.
+- `shared-functions.el:6400-6535` – tangled configuration mirrors the new display helpers and command.
+- `docs/work-log.org` – logged the change.
+
+** Expected Results After Reload
+- Adding an external monitor’s name to `jay/notch-display-identifiers` (or calling `jay/add-current-display-to-notch-list`) brings the notch-hiding tab bar to that screen whenever the frame is fullscreen or maximized.
+- `jay/debug-display-detection` now reports whether the current monitor is earmarked for notch coverage, aiding future tweaks.
+
+* 2025-10-11: Fixed ispell warnings and duplicate org-roam loading
+
+** Problem Description
+Two issues were present during Emacs startup:
+1. Ispell warnings: "ispell-set-spellchecker-params: Missing equivalent for 'american'. Skipping." and "Missing equivalent for 'english'. Skipping."
+2. Duplicate org-roam initialization: org-roam-config.el was being loaded twice, causing duplicate "⮡ enabling org-roam autosync …" messages and redundant processing
+
+** Root Cause
+
+*** Ispell Warnings
+While the filesystem had symlinks for "american" and "english" dictionaries pointing to "en_US-large", the ispell configuration in `local-config.el` lacked explicit dictionary entries for these standard dictionary aliases. When ispell.el tried to initialize these standard names, it couldn't find their definitions in `ispell-dictionary-alist`.
+
+*** Duplicate org-roam Loading
+The file `org-roam-config.el` was being loaded in two places:
+1. In `spacemacs-new-config.el:149` (intentional, correct location)
+2. In `shared-functions.org:5435` / `shared-functions.el:3622` (redundant)
+
+This caused org-roam to initialize twice during startup, wasting cycles and producing duplicate log messages.
+
+** Solution
+
+*** Fixed ispell Warnings
+Added dictionary entries for "american" and "english" in `spacemacs.d/init.el` in the `dotspacemacs/user-init` function (lines 893-900):
+
+#+BEGIN_SRC emacs-lisp
+;; Add dictionary entries for standard aliases to suppress warnings
+(with-eval-after-load 'ispell
+  (add-to-list 'ispell-dictionary-alist
+               '("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8))
+  (add-to-list 'ispell-dictionary-alist
+               '("american" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US-large") nil utf-8))
+  (add-to-list 'ispell-dictionary-alist
+               '("english" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US-large") nil utf-8)))
+#+END_SRC
+
+These entries map the standard aliases to the existing `en_US-large` dictionary, matching the symlinks in `~/Library/Spelling/`.
+
+**Debugging note**: Initially tried adding these entries to `local-config.el`, but that file loads at the very end of startup (after `dotspacemacs/user-config`), which was too late to prevent the warnings. Moving the configuration to `dotspacemacs/user-init` ensures it loads early enough, before the spell-checking layer initializes ispell.
+
+*** Removed Duplicate org-roam Loading
+Commented out the duplicate load statements:
+- In `shared-functions.org:5436`: Changed `(load "/Users/jay/emacs/emacs-settings/org-roam-config.el")` to a comment with explanation
+- In `shared-functions.el:3623`: Applied the same change to the tangled output
+
+The file continues to load once from `spacemacs-new-config.el`, which is the correct location.
+
+** Files Modified
+- `spacemacs.d/init.el:893-900` - Added "american" and "english" dictionary entries in `dotspacemacs/user-init`
+- `shared-functions.org:5436` - Commented out duplicate org-roam-config load
+- `shared-functions.el:3623` - Commented out duplicate org-roam-config load
+- `local-config.el:423-427` - Initially tried here, but removed (kept en_GB/en_US entries that were already working)
+
+** Expected Results After Restart
+- No more "Missing equivalent for 'american'" or "Missing equivalent for 'english'" warnings
+- Only one instance of "⮡ enabling org-roam autosync …" message
+- Faster startup due to eliminating redundant org-roam initialization
+- Cleaner startup log with less duplicate processing messages
+
+** Technical Notes
+- The ispell configuration uses `with-eval-after-load` to ensure dictionary setup happens after ispell is loaded
+- Configuration placed in `dotspacemacs/user-init` function ensures early loading before spell-checking layer initialization
+- The dictionary entries use the same pattern structure as existing entries (character classes, apostrophe handling, UTF-8 encoding)
+- The symlinks in ~/Library/Spelling/ were already correct; only the elisp configuration was missing
+- The auto-tangle configuration in `/Users/jay/gnulisp/spacemacs-new-config.el` will keep shared-functions.org and .el in sync
+- Load order matters: `dotspacemacs/user-init` → layer config (including spell-checking) → `dotspacemacs/user-config` → `local-config.el`
+
+* 2025-10-11: Fixed file-notify errors with Dropbox sync
+
+** Problem Description
+When editing files in Dropbox from iPhone, the sync would cause file-notify errors in Emacs:
+- "Undo-Fu-Session discarding: file length mismatch"
+- Debugger errors with "(void-function nil)" from file-notify callbacks
+- org-element parsing interruptions
+
+** Root Cause
+Dropbox performs atomic file replacement during sync (creates temp file, writes, then renames). This confuses Emacs file watchers which have nil callbacks after the file replacement.
+
+** Solution
+Added comprehensive file watcher error suppression in `spacemacs.d/init.el:931-962`:
+
+*** 1. Disabled file notifications globally
+#+BEGIN_SRC emacs-lisp
+(setq auto-revert-use-notify nil        ; Don't use file system events
+      auto-revert-avoid-polling nil     ; Use polling instead
+      auto-revert-interval 2)           ; Check every 2 seconds
+#+END_SRC
+
+*** 2. Created cloud storage detection function
+#+BEGIN_SRC emacs-lisp
+(defun my/disable-file-notify-for-cloud-storage ()
+  "Disable file notifications for files in cloud storage directories."
+  (when (and buffer-file-name
+             (or (string-match-p "Dropbox" buffer-file-name)
+                 (string-match-p "iCloud" buffer-file-name)
+                 (string-match-p "OneDrive" buffer-file-name)
+                 (string-match-p "CloudStorage" buffer-file-name)))
+    (setq-local auto-revert-use-notify nil)
+    (setq-local buffer-stale-function
+                (lambda (&optional _noconfirm)
+                  (not (verify-visited-file-modtime (current-buffer)))))))
+#+END_SRC
+
+*** 3. Added error suppression for file-notify
+#+BEGIN_SRC emacs-lisp
+(defadvice file-notify-add-watch (around suppress-file-notify-errors activate)
+  "Suppress errors from file-notify-add-watch."
+  (condition-case nil
+      ad-do-it
+    (error nil)))
+#+END_SRC
+
+*** 4. Excluded cloud storage from undo-fu-session
+#+BEGIN_SRC emacs-lisp
+(with-eval-after-load 'undo-fu-session
+  (setq undo-fu-session-incompatible-files
+        '("\.gpg$" "/Dropbox/" "/CloudStorage/" "/iCloud/" "\.org_archive$")))
+#+END_SRC
+
+** Files Modified
+- `spacemacs.d/init.el:925-962` - Added comprehensive file watcher error suppression
+
+** Related Configuration
+- LSP file watchers already disabled: `lsp-enable-file-watchers nil` (line 927)
+- macOS 15.5 deadlock workaround (lines 908-911)
+- Git polling disabled for macOS (line 938-939)
+- TRAMP SSH fixes for Sonoma/Sequoia (lines 941-943)
+
+** Testing
+- Verified no errors when iPhone edits sync via Dropbox
+- Auto-revert still works via polling (2 second intervals)
+- Cloud storage files automatically detected and handled
+
+* 2025-10-11: Removed unused packages to improve startup time
+
+** Session: Package Cleanup for Performance
+Task: Identify and remove unused packages to reduce Emacs launch time
+
+** Packages Removed
+
+*** First Round - Definitely Unused (8 packages)
+- `bind-key` - Keybinding helper (redundant with use-package)
+- `bui` - Buffer UI library (unused dependency)
+- `change-inner` - Text object manipulation (unused)
+- `consult-ag` - Duplicate search functionality
+- `rspec-mode` - Ruby testing (not doing Ruby development)
+- `sudo-edit` - Edit files as sudo (unused)
+- `sync-recentf` - Recentf syncing (unused)
+- `visible-mark` - Mark visualization (unused)
+
+*** Second Round - Heavy/Slow Loading (2 packages)
+- `org-ql` (~50-100ms) - Query language with parsing overhead (unused)
+- `quelpa-use-package` (~100-300ms) - Builds packages from source (unused)
+
+** Expected Impact
+- **Total startup time improvement**: ~150-400ms from removing these 10 packages
+- Removed packages that had zero usage references in the codebase
+- Focused on slowest-loading packages first for maximum impact
+
+## Analysis Method
+Created script to search codebase for package usage patterns:
+- Searched for `(require 'package)` and `(use-package package)` patterns
+- Cross-referenced installed packages vs. actual usage
+- Identified heavy/slow-loading packages by known load times
+
+## Additional Candidates for Future Cleanup
+Identified but not yet removed (awaiting testing):
+- `org-contrib` (~100-200ms) - ox-extra is now in org core
+- `counsel`/`counsel-fd`/`counsel-projectile` (~100-180ms total) - Redundant with compleseus/vertico
+- `consult-projectile` (~30-70ms)
+- `with-editor` (~30-60ms) - Magit dependency, but magit is excluded
+- `projectile-ripgrep` (~20-40ms)
+- Various other unused packages with minimal load time impact
+
+** Files Modified
+- `spacemacs.d/init.el:88-200` - Removed 10 packages from `dotspacemacs-additional-packages`
+
+** Next Steps
+- Test Emacs startup and verify no missing package warnings
+- Monitor for any broken functionality
+- Consider removing additional unused packages if first round succeeds
+
+* 2025-10-11: Hardened local configuration dictionary and PATH setup
+
+** Problem Description
+- `my/fix-ispell-contraction` was defined in `local-emacs-config/local-config.el` but never executed, so the custom en_GB dictionary settings were ignored.
+- PATH initialization overwrote the login shell PATH each load, leading to duplicated entries in `exec-path` and dropping toolchain paths.
+
+** Solution
+- Wrapped the dictionary setup in `(with-eval-after-load 'ispell ...)` to call `my/fix-ispell-contraction` and add the en_US entry once `ispell` is available.
+- Rebuilt the PATH logic to merge preferred directories, the login shell PATH, and TeX Live into a de-duplicated list while keeping `exec-path` in sync; now uses `delete-dups` over a copy of `exec-path` to avoid repeated growth.
+
+** Files Modified
+- `local-emacs-config/local-config.el` – dictionary hook and PATH handling improvements
+
+* 2025-10-10: Fixed pasteboard-paste-adaptive demoting bug in org-roam buffers
+
+** Problem Description
+When pasting markdown-formatted text into an org-roam buffer using `pasteboard-paste-adaptive`, bold text at the beginning of lines was being incorrectly "demoted" with extra asterisks, turning `*"How to Take Smart Notes"*` into `**"How to Take Smart Notes"*`.
+
+The issue only occurred in org-roam buffers (detected via ID property), not in regular org buffers.
+
+** Example of the Bug
+
+*** Clipboard content (markdown):
+#+BEGIN_EXAMPLE
+## **The Definitive Book**
+
+**"How to Take Smart Notes" by Sönke Ahrens** is the essential guide...
+#+END_EXAMPLE
+
+*** Expected result after paste (org):
+#+BEGIN_EXAMPLE
+*** *The Definitive Book*
+
+*"How to Take Smart Notes" by Sönke Ahrens* is the essential guide...
+#+END_EXAMPLE
+
+*** Actual buggy result in org-roam:
+#+BEGIN_EXAMPLE
+*** *The Definitive Book*
+
+**"How to Take Smart Notes" by Sönke Ahrens* is the essential guide...
+#+END_EXAMPLE
+
+Note the incorrect double asterisk at the beginning of the second line.
+
+** Root Cause Analysis
+
+The bug was in the `pasteboard--demote-headings-in-string` function which is called when pasting into org-roam buffers to demote headings by one level (so they become sub-headings).
+
+The regex pattern `"^\\(\*+\)"` was matching ANY line starting with asterisks, including:
+1. Actual org headings: `** Heading text`
+2. Bold text at line start: `*"How to Take Smart Notes"*`
+
+When the function found `*"How to...` at the beginning of a line, it incorrectly treated it as a level-1 heading and "demoted" it by adding another asterisk, creating `**"How to...`.
+
+** Solution
+
+Changed the regex pattern from `"^\\(\*+\)"` to `"^\\(\*+\) "` (added space requirement).
+
+This ensures the function only matches actual org headings (stars followed by a space) and ignores bold markers or other asterisk usage at the beginning of lines.
+
+*** Before (buggy):
+#+BEGIN_SRC emacs-lisp
+(while (re-search-forward "^\\(\*+\)" nil t)
+  (let ((stars (match-string 1)))
+    (replace-match (concat "*" stars) t t)))
+#+END_SRC
+
+*** After (fixed):
+#+BEGIN_SRC emacs-lisp
+(while (re-search-forward "^\\(\*+\) " nil t)
+  (let ((stars (match-string 1)))
+    (replace-match (concat "*" stars " ") t t)))
+#+END_SRC
+
+** Files Modified
+- `pasteboard-copy-and-paste-functions.org:561` - Updated regex pattern and replacement
+- `pasteboard-copy-and-paste-functions.el:498-500` - Manually updated compiled version
+
+** Testing Verification
+
+Tested with the exact clipboard content that was failing:
+- Pasting in regular org buffer: Correctly converts markdown bold `**text**` to org bold `*text*`
+- Pasting in org-roam buffer: Correctly demotes headings while preserving bold formatting
+- Bold text at line start no longer incorrectly demoted
+
+** Key Learnings
+
+1. **Regex precision matters**: When processing org-mode text, always distinguish between structural elements (headings) and inline formatting (bold/emphasis). Org headings require a space after the stars.
+
+2. **Context-aware functions need careful patterns**: The demoting function operates on already-converted org text, so it sees org bold markers (`*text*`), not the original markdown (`**text**`).
+
+3. **Testing edge cases**: Always test with content that has formatting at line boundaries, as these cases often reveal pattern matching bugs.
+
+4. **Order of operations**: The paste flow is:
+   - Convert markdown to org (including `**` → `*`)
+   - THEN demote headings if in org-roam
+   - The bug occurred in step 2, operating on already-converted text
+
+** Related Functions in the Paste Pipeline
+- `pasteboard-paste-adaptive` - Main adaptive paste function
+- `pasteboard--clean-string` - Normalizes and converts markdown to org
+- `convert-markdown-headings-to-org` - Converts `#` to `*`
+- `replace-smart-quotes` - Handles bold conversion via replacement pairs
+- `pasteboard--demote-headings-in-string` - Demotes org headings (where bug was)
+
+** Notes for Future Debugging
+If similar issues occur, check:
+1. What format is the text in at each stage of processing?
+2. Are patterns distinguishing between structural and inline elements?
+3. Test with formatting at line starts/ends
+4. Consider the order of transformations
+
+* 2025-10-06: Pomodoro timer setup and documentation reorganization
+
+** Session: Pomodoro Timer Fixes and Refinement
+Time: Afternoon session
+Task: Fix broken pomodoro timer functions and organize documentation
+
+** Accomplished
+
+*** Initial Fix - Pomodoro Timer Loading
+- Fixed "Symbol's function definition is void: pomidor" error
+- Added pomidor package loading to `spacemacs.d/init.el:912-915` in `dotspacemacs/user-config`
+- Created two timer variants for testing:
+  - `jd-org-today-and-book-orgpomodoro` (org-pomodoro)
+  - `jd-org-today-and-book-pomidor` (pomidor)
+- Updated keybinding `C-c C-x po` to use `pomidor-stop`
+
+*** Refinement After Testing
+- Renamed `jd-org-today-and-book` to use org-pomodoro by default
+- Created `pomidor-start` function as the pomidor variant
+- Added `pomodoro-stop` wrapper function for `org-pomodoro-kill` in `shared-functions.org:1347-1350`
+
+*** Documentation Improvements
+- Renamed `docs/change-log.org` → `docs/work-log.org` to align with documentation standards
+- Updated `CLAUDE.md` to reference work-log.org
+- Moved debugging insights from `docs/pasteboard-architecture.org` to `docs/codebase-wisdom.org`:
+  - Markdown bold conversion order bug (2025-10-05)
+  - Emoji LaTeX export filter bug (2025-10-05)
+- Simplified pasteboard-architecture.org to focus on architecture rather than debugging details
+
+*** Other Changes
+- Removed `inhibit-message` wrapper from `org-roam-db-sync` to make save-place operations visible
+
+** Files Modified
+- `spacemacs.d/init.el` - Added pomidor package loading
+- `shared-functions.org` - Refactored pomodoro functions, added pomodoro-stop wrapper
+- `keys.el` - Updated pomidor-stop keybinding
+- `org-roam-config.el` - Removed message suppression
+- `docs/work-log.org` - Renamed from change-log.org
+- `docs/codebase-wisdom.org` - Added markdown bold and emoji LaTeX debugging entries
+- `docs/pasteboard-architecture.org` - Simplified and cross-referenced codebase-wisdom
+- `CLAUDE.md` - Updated documentation link
+
+** Git Commits
+1. "Fix pomodoro timer loading and rename change-log to work-log"
+2. "Refine pomodoro setup and move debugging insights to codebase-wisdom"
+
+** Notes
+- User prefers pomidor timer interface for visual feedback
+- org-pomodoro is default for main workflow functions
+- Both timer systems now available: `jd-org-today-and-book` (org-pomodoro) and `pomidor-start` (pomidor)
+- Documentation now follows vibecoding/how-to-document.org standards with work-log.org and proper separation between architecture docs and debugging wisdom
+
+** Next Steps
+- Monitor save-place messages during org-roam operations
+- Test both timer variants in actual workflow
+
+* 2025-10-03: Fixed smart-return link following by removing ARCHIVE tag
+
+** Problem
+Pressing RET on org links stopped following them after the 2025-10-02 cache stabilization commit.
+
+** Root Cause
+The `(setq org-return-follows-link t)` setting was located under a heading tagged with `:ARCHIVE:` in `shared-functions.org`. Org-babel skips archived sections during tangling, so this setting never made it into the generated `shared-functions.el` file.
+
+** Solution
+- Removed `:ARCHIVE:` tag from the "Intro / About" heading (line 234 of `shared-functions.org`)
+- Fixed malformed comment syntax in `smart-return.el` (line 53) where closing parenthesis was missing
+
+** Files Modified
+- `shared-functions.org:234` - Removed `:ARCHIVE:` tag
+- `smart-return.el:53` - Fixed comment syntax
+
+* 2025-10-03: Fixed region deletion bug in my/delete-backward-and-capitalize
+
+* 2025-10-06: Harden gnu-emacs batch startup and begin shared-functions reorg
+
+** Context
+Running `emacs --batch -L . --load gnu-emacs-startup.el` tripped over mode maps that are only defined once Spacemacs finishes loading. At the same time, the top of `shared-functions.org` had grown organically, so related environment tweaks were scattered between headings.
+
+** Changes
+- Wrapped the Evil, Help, Flyspell, and Org keybinding adjustments in `with-eval-after-load` guards and required the corresponding libraries in the startup file so batch loads no longer abort.
+- Added a lightweight `ignore-errors` guard around the `] cr` unbinding to keep non-prefix keys from erroring out in minimal sessions.
+- Consolidated the package archives, global defaults, appearance hooks, and minor-mode setup into a new `Environment Setup` section at the top of `shared-functions.org` to make the bootstrap flow easier to skim.
+- Folded the long-running `Org-Specific Config` block into the primary `Org-mode Configuration` section so the entire org toolchain lives in one place.
+- Registered the `important-return-value` declare keyword and cleared obsolete `incf`/`decf` warnings so dependencies like `undo-fu-session` load without spurious startup noise.
+
+** Files Modified
+- `gnu-emacs-startup.org`
+- `gnu-emacs-startup.el`
+- `shared-functions.org`
+
+* 2025-10-06: Renamed raw paste helper to pasteboard-paste-verbatim
+
+** Context
+The clipboard helpers used `pasteboard-copy-verbatim` for copying but `pasteboard-paste-raw` for the matching paste, which made the pair harder to discover and remember.
+
+** Changes
+- Renamed `pasteboard-paste-raw` → `pasteboard-paste-verbatim` and added a compatibility alias so existing configs keep working.
+- Updated keymaps (`keys.el`, `gnu-emacs-startup.org`, `shared-functions.org`) and docs to reference the new name.
+- Documented the alias in the pasteboard architecture guide and instructions so the on-ramp stays accurate.
+
+** Files Modified
+- `pasteboard-copy-and-paste-functions.org`
+- `keys.el`
+- `gnu-emacs-startup.org`
+- `shared-functions.org`
+- `docs/pasteboard-architecture.org`
+- `docs/org-element-cache-fix.org`
+- `docs/instructions.org`
+
+** Problem
+When selecting all text in a buffer (or any region) and calling `my/delete-backward-and-capitalize`, the function would fail to delete the entire highlighted text.
+
+** Root Cause
+During the 2025-10-02 cache stabilization refactor, the order of operations in `my/delete-backward-and-capitalize` was changed. The function would:
+1. Check if at an org heading (`at-heading`)
+2. Capture region boundaries (`region-beg`, `region-end`)
+3. Execute heading cleanup logic (`kill-line 0`, `insert " "`)
+4. Try to delete the region using now-invalid boundaries
+
+The heading cleanup at step 3 would modify the buffer, invalidating the region boundaries captured in step 2.
+
+** Solution
+Modified the `let*` binding to check `has-region` first, then only set `at-heading` to true when there is no active region:
+
+#+BEGIN_SRC emacs-lisp
+(let* ((has-region (use-region-p))
+       (at-heading (and (not has-region) (looking-back-safe "^[*]+ ")))
+       ...)
+#+END_SRC
+
+This ensures the heading cleanup logic never runs when a region is active, preventing buffer modification before region deletion.
+
+** Files Modified
+- `spacecraft-mode.org:1027-1028` - Reordered `let*` bindings to prevent heading logic from invalidating region boundaries
+
+* 2025-01-27: Fixed org-inline-tags font-lock highlighting
+
+* 2025-10-02: Stabilised org-element cache interactions
+
+** Summary
+- Wrapped high-frequency editing commands (`smart-return`, `smart-space`, and `my/delete-backward-and-capitalize`) in `combine-after-change-calls` transactions so Org’s cache only re-syncs once per keystroke
+- Reworked pasteboard helpers to pre-process text in temp buffers before insertion and added reusable clipboard utilities
+- Guarded the pasteboard cleaner’s narrowing step with refreshed `(point-min)/(point-max)` bounds so Markdown conversions no longer raise `args-out-of-range`
+- Added a focus-in hook that force-resets the element cache for Dropbox-synchronised org-roam buffers to avoid stale offsets after external edits
+- Verified the previous org-element cache warnings no longer reproduce with the hardened helpers
+- Restored the `convert-markdown-links-to-org-mode` helper so the new pasteboard pipeline can safely normalise Markdown links before insertion
+
+** Notes
+- Batch compiled/tangled the touched modules to ensure they load cleanly in isolation
+- `shared-functions.el` still expects optional packages (vertico, projectile, ox-twbs); run inside a full config before evaluating the new cache reset hook
+
+** Problem
+The org-inline-tags feature was defined but tags like #todo, #review, #inlinetags were not appearing in the configured orange color. They remained the same color as surrounding text.
+
+** Struggles & Difficulties Encountered
+
+*** 1. Initial Font-Lock Function Approach Failed
+- First attempted to use a function `org-inline-tags--composed-face` in the font-lock rule
+- Font-lock expected either a face name or a properly structured face expression, not a function call that returns a face
+- The function was never actually being called by the font-lock system
+
+*** 2. Conflict with Existing Org-Mode Font-Lock Rules
+- Encountered error: "No match 2 in highlight (2 'org-headline-done prepend)"
+- Our font-lock pattern was somehow interfering with org-mode's existing font-lock rules
+- The error suggested font-lock was trying to access match group 2 that didn't exist in our pattern
+
+*** 3. Partial Fontification Issue
+- Even after fixing the errors, tags would only turn orange when typing a space after them
+- Existing tags in the buffer were not being fontified
+- Font-lock was only applying to newly typed text, not retroactively to existing content
+
+** Solution
+
+The final working solution combined two approaches:
+
+*** 1. Simplified Font-Lock Rule
+#+BEGIN_SRC emacs-lisp
+(defun org-inline-tags-setup-font-lock ()
+  "Setup font-lock for inline tags in org-mode."
+  (font-lock-add-keywords
+   nil
+   '(("\\(#\\w+\(?:-\\w+\)*\\)"
+      (1 'org-inline-tags-face t)))
+   t))
+#+END_SRC
+
+- Used a simple direct face name instead of a function
+- Match group 1 captures just the tag content
+- The `t` flag overwrites any existing face (instead of `prepend` which was causing conflicts)
+
+*** 2. Manual Buffer Fontification
+#+BEGIN_SRC emacs-lisp
+(defun org-inline-tags-fontify-buffer ()
+  "Manually fontify all inline tags in the current buffer."
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (while (re-search-forward "#\\w+\(?:-\\w+\)*" nil t)
+      (let ((start (match-beginning 0))
+            (end (match-end 0)))
+        (put-text-property start end 'face 'org-inline-tags-face)
+        (put-text-property start end 'font-lock-face 'org-inline-tags-face)))))
+#+END_SRC
+
+- Manually searches through buffer and applies face properties
+- Sets both `face` and `font-lock-face` properties to ensure persistence
+- Called immediately when enabling the mode to fontify existing tags
+
+** Key Learnings
+
+1. **Font-lock expects specific structures**: Can't just pass a function that returns a face; must use either a face name directly or a matcher function that follows font-lock conventions
+
+2. **Existing font-lock rules can conflict**: When adding keywords to modes with complex font-lock setups like org-mode, conflicts with existing patterns are common
+
+3. **Font-lock doesn't retroactively apply**: Need to manually fontify existing buffer content or force a complete refontification
+
+4. **Both `face` and `font-lock-face` properties may be needed**: Setting both ensures the highlighting persists through various buffer operations
+
+** Files Modified
+- `/Users/jay/emacs/emacs-settings/shared-functions.org` (org-inline-tags section starting at line 7171)
