@@ -1,10 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
-* 2025-12-01: Add narrow no-break space (U+202F) to html2org-clipboard
-- Added ~\u202F~ replacement to ~chatgpt2org.el~ (which ~html2org-clipboard~ aliases)
-- This character was causing issues when pasting from Instagram DMs (appeared as invisible space before "PM" in timestamps)
-- Already handled in ~pasteboard-copy-and-paste-functions.el~ via ~smart-quotes-replacement-pairs~ and ~replace-weird-spaces~, but ~html2org-clipboard~ uses a separate code path
+* 2025-12-01: Add invisible space handling to html2org-clipboard
+- Added ~\u202F~ (narrow no-break space) replacement to ~chatgpt2org.el~
+- Added ~\u200B~ (zero-width space) removal to ~chatgpt2org.el~
+- These characters were causing issues when pasting from Instagram DMs
+- Already handled in ~pasteboard-copy-and-paste-functions.el~ via ~smart-quotes-replacement-pairs~ and ~replace-weird-spaces~, but ~html2org-clipboard~ uses a separate code path via ~chatgpt2org~
 
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.
