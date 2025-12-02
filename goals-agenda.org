@@ -1,7 +1,4 @@
-Perfect. Let's build this agenda view properly.
 ** The Agenda Configuration
-
-Add this to your Emacs config (probably `~/.emacs.d/init.el` or wherever you keep your org-mode config):
 
 #+begin_SRC emacs-lisp 
 ;; ============================================================================
@@ -9,11 +6,11 @@ Add this to your Emacs config (probably `~/.emacs.d/init.el` or wherever you kee
 ;; ============================================================================
 
 ;; First, set up the projects directory
-(setq jay-projects-dir "~/Dropbox/github/velocity/projects/")
+(setq jay-projects-dir "~/Library/CloudStorage/Dropbox/github/velocity/projects/")
 
 ;; Make sure org-agenda knows to look in the projects directory
 (setq org-agenda-files
-      (list "~/Dropbox/github/velocity/data/20250519215301-master-task-list.org"
+      (list "~/Library/CloudStorage/Dropbox/github/velocity/goals/20250519215301-master-task-list.org"
             jay-projects-dir))
 
 ;; Custom agenda command: Daily Action Menu
@@ -134,30 +131,4 @@ SCHEDULED: <2025-10-31 Thu>
 
 - Resources
 - [[Links to relevant files]]
-#+end_src 
-
-** Create Your Projects Directory
-
-Run this in your terminal:
-
-#+begin_src bash
-mkdir -p ~/Dropbox/github/velocity/projects
-#+end_src 
-
-** Test It Right Now
-
-*Step 1:* Create a test project file to make sure the agenda works.
-
-Want me to create one for you based on your Narratively webinar project? I can make a real one so you can test the whole system immediately.
-
-*Step 2:* Add the elisp config above to your Emacs init file.
-
-*Step 3:* Reload your config:
-- `M-x eval-buffer` (if you're in your init.el)
-- Or restart Emacs
-
-*Step 4:* Test the agenda:
-- Press `C-c a d`
-- You should see your daily action menu
-
-Should I create that first project file for Narratively so you can test this right now? 
+#+end_src

@@ -1,3 +1,9 @@
+- *2025-12-02: Goals system documentation cleanup*
+- Updated =goals-agenda.org=: removed obsolete setup instructions (directory creation, first-time setup steps), kept elisp code and usage reference
+- Fixed velocity paths in =goals-agenda.org=: projects dir now =~/Library/CloudStorage/Dropbox/github/velocity/projects/=, master task list now in =goals/= not =data/=
+- Fixed keybindings in =velocity/goals-system/complete-user-guide.org=: changed =C-c a d= to =s-k a d= to match actual config
+- Added cross-reference headers to both Jay-facing guides: =goals-instructions-for-Jay.org= (complete reference) and =complete-user-guide.org= (quick reference)
+
 - *2025-11-29: Fix pasteboard markdown detection for inline bold*
 - Added =\\*\\*[^*\n]+\\*\\*= pattern (weight 3) to =pasteboard--analyse-clipboard-text= for detecting inline =**bold**= markers
 - Previously, text with =**bold**= patterns but no markdown headings wasn't detected as markdown style
