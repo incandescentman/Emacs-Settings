@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2025-12-06: Fix paths and display settings
+- Updated ~goals-agenda.el~ to use CloudStorage paths (~~/Library/CloudStorage/Dropbox/~)
+- Changed master task list path from ~data/~ to ~goals/~ subdirectory
+- Added "DELL U3223QE" to ~jay/notch-display-identifiers~ for external monitor support
+
 * 2025-12-06: Improve double-line-breaks-in-region function
 - Rewrote ~double-line-breaks-in-region~ in ~shared-functions.org~ to fix several issues:
   - Now normalizes Windows (~\r\n~) and old Mac (~\r~) line endings first
