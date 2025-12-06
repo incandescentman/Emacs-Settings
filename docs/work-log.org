@@ -1,6 +1,14 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2025-12-06: Improve double-line-breaks-in-region function
+- Rewrote ~double-line-breaks-in-region~ in ~shared-functions.org~ to fix several issues:
+  - Now normalizes Windows (~\r\n~) and old Mac (~\r~) line endings first
+  - Collapses 3+ consecutive newlines to exactly 2
+  - Only doubles single newlines, leaving existing double breaks unchanged
+  - Fixed boundary handling so newlines at region start/end are processed
+- Added keybinding ~s-k d l~ in ~gnu-emacs-startup.org~
+
 * 2025-12-01: Add invisible space handling to html2org-clipboard
 - Added ~\u202F~ (narrow no-break space) replacement to ~chatgpt2org.el~
 - Added ~\u200B~ (zero-width space) removal to ~chatgpt2org.el~

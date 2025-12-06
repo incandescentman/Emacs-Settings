@@ -2789,12 +2789,28 @@ Handy way of getting back to previous places.
 * double-line-breaks-in-region
 #+BEGIN_SRC emacs-lisp
 (defun double-line-breaks-in-region (begin end)
+  "Replace single line breaks with double line breaks in region.
+Normalizes Windows/Mac line endings first. Collapses 3+ newlines
+to exactly 2, and leaves existing double breaks unchanged."
   (interactive "r")
-  (xah-replace-pairs-region begin end
- '(
- ["\r" "\n\n"]
-["\n" "\n\n"]
-)))
+  (save-excursion
+    (save-restriction
+      (narrow-to-region begin end)
+      (goto-char (point-min))
+      ;; Normalize Windows line endings
+      (while (search-forward "\r\n" nil t)
+        (replace-match "\n"))
+      ;; Normalize old Mac line endings
+      (while (search-forward "\r" nil t)
+        (replace-match "\n"))
+      (goto-char (point-min))
+      ;; Collapse 3+ newlines to 2
+      (while (re-search-forward "\n\\{3,\\}" nil t)
+        (replace-match "\n\n"))
+      (goto-char (point-min))
+      ;; Replace single newlines with double
+      (while (re-search-forward "\n\\([^\n]\\)" nil t)
+        (replace-match "\n\n\\1")))))
 #+END_SRC
 
 * xah-replace-pairs

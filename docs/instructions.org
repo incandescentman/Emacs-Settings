@@ -85,6 +85,14 @@ The clipboard system automatically cleans up text from the web:
 - Use =C-u Cmd-v= to paste without any modifications
 - Fundamental or scratch buffers (`fundamental-mode`) already default to raw paste; switch to =text-mode= if you want cleaners there
 
+** Text Manipulation
+
+| Key         | Command                        | What It Does                                    |
+|-------------+--------------------------------+-------------------------------------------------|
+| =Cmd-k d l= | =double-line-breaks-in-region= | Double all single line breaks in selected region |
+
+=double-line-breaks-in-region= is useful for converting single-spaced text to double-spaced paragraphs. It normalizes line endings, collapses 3+ newlines to exactly 2, and only doubles single newlines (leaving existing paragraph breaks unchanged).
+
 ** Org-Roam Profiles
 
 Switch between completely separate note databases:

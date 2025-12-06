@@ -486,6 +486,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "s-k m b") 'menu-bar-mode)
 
 (define-key key-minor-mode-map (kbd "s-k d c") 'org-table-delete-column)
+(define-key key-minor-mode-map (kbd "s-k d l") 'double-line-breaks-in-region)
 (define-key key-minor-mode-map (kbd "s-k i c") 'org-table-insert-column)
 (define-key key-minor-mode-map (kbd "s-k i r") 'org-table-insert-row)
 
