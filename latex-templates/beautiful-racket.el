@@ -83,6 +83,48 @@
 
 \\usepackage{microtype} %  Improve the overall typography and appearance of your document by enabling micro-typographic features, such as character protrusion and font expansion:
 
+% Tufte-style typography enhancements
+\\usepackage{ragged2e} % Better ragged right with hyphenation
+\\setlength{\\RaggedRightRightskip}{0pt plus 0.08\\hsize}
+
+\\usepackage{textcase} % Provides \\MakeTextUppercase/\\MakeTextLowercase that handle math and commands properly
+
+% Letterspacing for small caps (Tufte style)
+\\usepackage{letterspace}
+\\renewcommand{\\textsc}[1]{\\textls[50]{\\scshape #1}}
+\\newcommand{\\smallcaps}[1]{\\textls[50]{\\scshape\\MakeTextLowercase{#1}}}
+\\newcommand{\\allcaps}[1]{\\textls[200]{\\MakeTextUppercase{#1}}}
+
+% Tufte-style font size definitions (10pt base with 14pt baseline)
+\\makeatletter
+\\renewcommand\\normalsize{%
+   \\@setfontsize\\normalsize\\@xpt{14}%
+   \\abovedisplayskip 10\\p@ \\@plus2\\p@ \\@minus5\\p@
+   \\abovedisplayshortskip \\z@ \\@plus3\\p@
+   \\belowdisplayshortskip 6\\p@ \\@plus3\\p@ \\@minus3\\p@
+   \\belowdisplayskip \\abovedisplayskip
+   \\let\\@listi\\@listI}
+\\normalbaselineskip=14pt
+\\normalsize
+\\renewcommand\\small{%
+   \\@setfontsize\\small\\@ixpt{12}%
+   \\abovedisplayskip 8.5\\p@ \\@plus3\\p@ \\@minus4\\p@
+   \\abovedisplayshortskip \\z@ \\@plus2\\p@
+   \\belowdisplayshortskip 4\\p@ \\@plus2\\p@ \\@minus2\\p@
+   \\belowdisplayskip \\abovedisplayskip}
+\\renewcommand\\footnotesize{%
+   \\@setfontsize\\footnotesize\\@viiipt{10}%
+   \\abovedisplayskip 6\\p@ \\@plus2\\p@ \\@minus4\\p@
+   \\abovedisplayshortskip \\z@ \\@plus\\p@
+   \\belowdisplayshortskip 3\\p@ \\@plus\\p@ \\@minus2\\p@
+   \\belowdisplayskip \\abovedisplayskip}
+\\renewcommand\\large{\\@setfontsize\\large\\@xipt{15}}
+\\renewcommand\\Large{\\@setfontsize\\Large\\@xiipt{16}}
+\\renewcommand\\LARGE{\\@setfontsize\\LARGE\\@xivpt{18}}
+\\renewcommand\\huge{\\@setfontsize\\huge\\@xxpt{30}}
+\\renewcommand\\Huge{\\@setfontsize\\Huge{24}{36}}
+\\makeatother
+
 
 \\hyphenpenalty=1000
 \\tolerance=1000

@@ -9,7 +9,8 @@
 - Added paragraph spacing inside quotes using ~before upper={\setlength{\parskip}{1em}}~
 - Set font to ~\footnotesize~ with ~\raggedright~ alignment
 - Fixed deprecated ~org-latex-to-pdf-process~ → ~org-latex-pdf-process~ in ~beautiful-racket.el~
-- Created ~beautiful-racket-tufte.el~ with Tufte-style typography enhancements:
+- Renamed original to ~beautiful-racket-classic.el~, promoted Tufte version to ~beautiful-racket.el~
+- ~beautiful-racket.el~ now includes Tufte-style typography enhancements:
   - Letterspacing for small caps via ~letterspace~ package (~\textsc~, ~\smallcaps~, ~\allcaps~)
   - ~ragged2e~ package for better ragged right with hyphenation
   - ~textcase~ package for ~\MakeTextUppercase~/~\MakeTextLowercase~
