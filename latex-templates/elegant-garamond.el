@@ -150,32 +150,39 @@
   \\setlist[itemize,\\arabic{level}]{label=\\raisedtinybullet}
 }
 
+% Define custom colors for quote environment
+\\definecolor{powderblue}{HTML}{f5f7ff}
+\\definecolor{stormybluegrey}{HTML}{708090}
+\\definecolor{moonrockgrey}{HTML}{5D5D5D}
+
 % Quote Environment Customization Using tcolorbox
 \\tcbset{
   myquote/.style={
-    colback=azure,
-    colframe=spacegrey,
-    colupper=black,
+    colback=powderblue,
+    colframe=stormybluegrey,
+    colupper=moonrockgrey,
     boxrule=0.5pt,
     rounded corners,
-    fontupper=\\singlespacing\\fontsize{11}{13}\\selectfont\\sffamily,
     width=0.8\\textwidth,
-    left=0pt,
-    right=0pt,
-    boxalign=center,
-    halign=flush left,
+    left=1em,
+    right=1em,
     before skip=1em,
     after skip=1em,
-    parskip=1em
+    before upper={\\setlength{\\parskip}{1em}\\footnotesize\\raggedright},
+    breakable,
+    pad at break*=1em,
+    vfill before first
   }
 }
 
 \\renewenvironment{quote}
 {%
-  \\begin{tcolorbox}[myquote]
+  \\begin{center}%
+  \\begin{tcolorbox}[myquote]%
 }
 {%
-  \\end{tcolorbox}
+  \\end{tcolorbox}%
+  \\end{center}%
 }
 
 % Subtitle environments for different heading levels
