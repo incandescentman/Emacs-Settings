@@ -16,6 +16,8 @@
   - ~textcase~ package for ~\MakeTextUppercase~/~\MakeTextLowercase~
   - Tufte-style font size definitions (10pt/14pt baseline)
   - Fixed ~\makeatletter~/~\makeatother~ wrapping for font redefinitions
+  - Added ~\newthought~ command for Tufte-style paragraph openers
+  - Commented out ~\textbf~ redefinition that was causing bold to render as italic
 
 * 2025-12-06: Fix paths and display settings
 - Updated ~goals-agenda.el~ to use CloudStorage paths (~~/Library/CloudStorage/Dropbox/~)

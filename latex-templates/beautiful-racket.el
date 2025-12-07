@@ -77,9 +77,10 @@
 % \\usepackage{magaz}
 
 
-%Define Bold face
-\\DeclareTextFontCommand{\\textbf}{\\sffamily\\bfseries}
-\\DeclareTextFontCommand{\\textit}{\\itshape}
+% Optional: Redefine bold to use sans-serif bold (uncomment if desired)
+% Note: This may cause bold to render as italic if the sans font lacks a bold variant
+% \\DeclareTextFontCommand{\\textbf}{\\sffamily\\bfseries}
+% \\DeclareTextFontCommand{\\textit}{\\itshape}
 
 \\usepackage{microtype} %  Improve the overall typography and appearance of your document by enabling micro-typographic features, such as character protrusion and font expansion:
 
@@ -94,6 +95,13 @@
 \\renewcommand{\\textsc}[1]{\\textls[50]{\\scshape #1}}
 \\newcommand{\\smallcaps}[1]{\\textls[50]{\\scshape\\MakeTextLowercase{#1}}}
 \\newcommand{\\allcaps}[1]{\\textls[200]{\\MakeTextUppercase{#1}}}
+
+% Tufte-style newthought command - starts a new section with small caps
+\\newskip\\tufteskipamount
+\\tufteskipamount=1.0\\baselineskip plus 0.5ex minus 0.2ex
+\\newcommand{\\tuftebreak}{\\par\\ifdim\\lastskip<\\tufteskipamount
+  \\removelastskip\\penalty-100\\vspace{\\tufteskipamount}\\fi}
+\\newcommand{\\newthought}[1]{\\tuftebreak\\noindent\\textsc{#1}}
 
 % Tufte-style font size definitions (10pt base with 14pt baseline)
 \\makeatletter

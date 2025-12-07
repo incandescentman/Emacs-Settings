@@ -239,6 +239,39 @@ Many files are =.org= files containing code blocks:
 3. Write your code
 4. Tangle with =C-c C-v t=
 
+* LaTeX Templates
+
+Custom LaTeX templates are in =latex-templates/=. Use them by adding =#+LATEX_CLASS: template-name= to your org file.
+
+** beautiful-racket
+
+A Tufte-inspired template with enhanced typography:
+
+- Letterspaced small caps (=\textsc=, =\smallcaps=, =\allcaps=)
+- Better ragged right with hyphenation (=ragged2e=)
+- Tufte-style font size definitions (10pt/14pt baseline)
+
+*** newthought Command
+
+Start a new section with small caps opening words (Tufte style):
+
+#+BEGIN_EXAMPLE
+@@latex:\newthought{In his later books}@@ Tufte starts each section
+with a bit of vertical space, a non-indented paragraph, and sets the
+first few words in small caps.
+#+END_EXAMPLE
+
+** elegant-garamond
+
+The default template (=org-latex-default-class=). Features:
+- Garamond Premier Pro font
+- Styled quote blocks (powder blue background, centered)
+- Clean section headings
+
+** beautiful-racket-classic
+
+The original beautiful-racket template without Tufte enhancements.
+
 * Troubleshooting
 
 ** Emacs won't start / error on startup
