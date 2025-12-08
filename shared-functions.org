@@ -2317,12 +2317,13 @@ Useful for working with files and references:
 (defun jay/save-all-buffers ()
   "Silently save every buffer that is visiting a file.
 If the file does not yet exist on disk, create it without
-confirmation.  Non–file‑visiting buffers are ignored."
+confirmation.  Non–file‑visiting buffers and .mdx files are ignored."
   (interactive)
-  (let ((confirm-nonexistent-file-or-buffer nil)) ; suppress “create file?” prompt
+  (let ((confirm-nonexistent-file-or-buffer nil)) ; suppress "create file?" prompt
     (dolist (buf (buffer-list))
       (with-current-buffer buf
-        (when buffer-file-name
+        (when (and buffer-file-name
+                   (not (string-suffix-p ".mdx" buffer-file-name)))
           (when (or (buffer-modified-p)
                     (not (file-exists-p buffer-file-name)))
             (let* ((jay--skip-hooks '(cleanup-buffer-safe

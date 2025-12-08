@@ -381,6 +381,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 (define-key key-minor-mode-map (kbd "<s-backspace>") 'kill-region)
 
 (define-key key-minor-mode-map (kbd "C-\\") 'palimpsest-move-region-to-bottom)
+(define-key key-minor-mode-map (kbd "C-M-\\") 'palimpsest-move-region-to-top)
 
 (define-key key-minor-mode-map (kbd "C-'") 'palimpsest-move-region-to-bottom)
 ;; TODO learn this key binding!!
