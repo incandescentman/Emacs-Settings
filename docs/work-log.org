@@ -15,8 +15,6 @@
   - ~gemini-how-to-improv.org~, ~advanced-principles.org~, ~in-person-principles.org~
   - ~index.org~, ~nyc-locations-master.org~
 - Created ~/Users/jay/Dropbox/social/journal/~ directory for dailies
-- Changed ~s-K~ keybinding from ~org-cut-subtree~ to ~tr-toggle-transclusion~
-- Freed up ~s-M~ keybinding (now available)
 - Removed blue background shading from transcluded content in ~shared-functions.org~
 
 * 2025-12-07: Update quote environment in elegant-garamond LaTeX template

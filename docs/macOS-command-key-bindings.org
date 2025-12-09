@@ -32,10 +32,10 @@ This document lists all keybindings that use the "s-" prefix (macOS Command key)
 | ~s-i~ | ~imenu~ | Navigate with imenu |
 | ~s-I~ | ~clone-indirect-buffer-new-window-and-focus~ | Clone buffer indirectly |
 | ~s-j~ | ~org-todo~ | Toggle TODO state |
-| ~s-K~ | ~tr-toggle-transclusion~ | Toggle org-transclusion |
+| ~s-K~ | ~org-cut-subtree~ | Cut org subtree |
 | ~s-L~ | ~org-mac-link-chrome-insert-frontmost-url~ | Insert Chrome URL link |
 | ~s-m~ | ~mc/mark-all-like-this~ | Mark all like current selection |
-| ~s-M~ | /available/ | (unbound) |
+| ~s-M~ | ~tr-toggle-transclusion~ | Toggle transclusion |
 | ~s-o~ | ~move-or-copy-region-to-other-window~ | Move/copy region to other window |
 | ~s-O~ | ~reveal-in-finder~ | Show file in Finder |
 | ~s-P~ | ~projectile-find-file~ | Find file in project |

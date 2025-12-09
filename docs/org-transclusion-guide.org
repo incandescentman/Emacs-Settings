@@ -13,7 +13,7 @@ Think of it as a "portal" to another document that appears inline in your curren
 
 | Keybinding   | Command                            | Description                              |
 |--------------+------------------------------------+------------------------------------------|
-| =s-K=        | =tr-toggle-transclusion=           | Expand/collapse transclusion             |
+| =s-M=        | =tr-toggle-transclusion=           | Expand/collapse transclusion             |
 | =S-s-<down>= | =tr-insert-transclusion-match-level= | Insert new transclusion with level match |
 | =s-u t=      | =org-transclusion-make-from-link=  | Convert link to transclusion             |
 
@@ -44,7 +44,7 @@ If you already have an org-roam or org link:
 
 ** Expanding and Collapsing
 
-Press =s-K= to toggle:
+Press =s-M= to toggle:
 
 - On a =#+transclude:= line → expands the transclusion (shows content)
 - Inside expanded transclusion → collapses it (hides content)
@@ -209,7 +209,7 @@ A line like this appears:
 
 ** Step 4: Expand to Verify
 
-Press =s-K= on the =#+transclude:= line.
+Press =s-M= on the =#+transclude:= line.
 
 The content from the source heading now appears inline, with a yellow fringe indicator.
 
@@ -219,7 +219,7 @@ The content from the source heading now appears inline, with a yellow fringe ind
 2. Save the source file
 3. Sync org-roam database (=M-x org-roam-db-sync=)
 4. Insert transclusion in destination (=S-s-<down>=)
-5. Expand to verify (=s-K=)
+5. Expand to verify (=s-M=)
 
 * Troubleshooting
 
