@@ -1,6 +1,21 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2025-12-09: Org-transclusion documentation and social profile setup
+- Created ~/docs/org-transclusion-guide.org~ with comprehensive documentation:
+  - Quick reference for keybindings (~s-M~, ~S-s-<down>~, ~s-u t~)
+  - Step-by-step walkthrough for transcluding headings between files
+  - Commands reference for power-pack functions (~tr-toggle-transclusion~, etc.)
+  - Troubleshooting section
+- Updated ~roam-social~ profile in ~jay-org-roam-profiles.el~:
+  - Changed directory from ~/Users/jay/Dropbox/roam-social~ to ~/Users/jay/Dropbox/social~
+  - Points to existing social principles files instead of empty roam-social directory
+- Added org-roam frontmatter (ID + title + filetags) to 8 files in ~/Users/jay/Dropbox/social~:
+  - ~social-principles-streamlined.org~, ~conan-examples.org~, ~find-the-game.org~
+  - ~gemini-how-to-improv.org~, ~advanced-principles.org~, ~in-person-principles.org~
+  - ~index.org~, ~nyc-locations-master.org~
+- Created ~/Users/jay/Dropbox/social/journal/~ directory for dailies
+
 * 2025-12-07: Update quote environment in elegant-garamond LaTeX template
 - Styled quote environment to match ~beautiful-racket~ template:
   - Powder blue background (#f5f7ff), stormy blue-grey frame (#708090), moon rock grey text (#5D5D5D)
