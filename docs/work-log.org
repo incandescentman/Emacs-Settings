@@ -3,7 +3,7 @@
 
 * 2025-12-09: Org-transclusion documentation and social profile setup
 - Created ~/docs/org-transclusion-guide.org~ with comprehensive documentation:
-  - Quick reference for keybindings (~s-M~, ~S-s-<down>~, ~s-u t~)
+  - Quick reference for keybindings (~s-K~, ~S-s-<down>~, ~s-u t~)
   - Step-by-step walkthrough for transcluding headings between files
   - Commands reference for power-pack functions (~tr-toggle-transclusion~, etc.)
   - Troubleshooting section
@@ -15,6 +15,9 @@
   - ~gemini-how-to-improv.org~, ~advanced-principles.org~, ~in-person-principles.org~
   - ~index.org~, ~nyc-locations-master.org~
 - Created ~/Users/jay/Dropbox/social/journal/~ directory for dailies
+- Changed ~s-K~ keybinding from ~org-cut-subtree~ to ~tr-toggle-transclusion~
+- Freed up ~s-M~ keybinding (now available)
+- Removed blue background shading from transcluded content in ~shared-functions.org~
 
 * 2025-12-07: Update quote environment in elegant-garamond LaTeX template
 - Styled quote environment to match ~beautiful-racket~ template:

@@ -7847,6 +7847,10 @@ Only required if Emacs < 29.3.
  :foreground "yellow"
  :background "yellow")
 
+;; Remove the blue background shading from transcluded content
+(with-eval-after-load 'org-transclusion
+  (set-face-attribute 'org-transclusion nil :background 'unspecified))
+
 (load "/Users/jay/emacs/external-packages/org-transclusion-power-pack/org-transclusion-power-pack.el")
 
 #+end_src
