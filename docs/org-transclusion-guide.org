@@ -1,0 +1,251 @@
+:PROPERTIES:
+:ID: org-transclusion-guide
+:END:
+#+title: Org Transclusion Guide
+
+* What is Org Transclusion?
+
+Org transclusion lets you embed live content from one org file into another. Unlike copying text, transclusions stay synchronized—edit the source and all transclusions update automatically.
+
+Think of it as a "portal" to another document that appears inline in your current buffer.
+
+* Quick Reference
+
+| Keybinding | Command                            | Description                              |
+|------------+------------------------------------+------------------------------------------|
+| =s-M=        | =tr-toggle-transclusion=             | Expand/collapse transclusion             |
+| =S-s-<down>= | =tr-insert-transclusion-match-level= | Insert new transclusion with level match |
+| =s-u t=      | =org-transclusion-make-from-link=    | Convert link to transclusion             |
+
+* Basic Workflow
+
+** Creating a Transclusion
+
+*** Method 1: Insert Fresh (Recommended)
+
+1. Position cursor where you want the transclusion
+2. Press =S-s-<down>=
+3. Select an org-roam node from the minibuffer
+4. A =#+transclude:= line appears with the correct heading level
+
+*** Method 2: Convert Existing Link
+
+If you already have an org-roam or org link:
+
+1. Place cursor on the link
+2. Run =M-x tr-convert-link-to-transclusion=
+   - Or =M-x tr-convert-link-to-transclusion-match-level= to auto-set level
+
+*** Method 3: Duplicate a Link
+
+1. Place cursor on any org link
+2. Press =s-u t=
+3. A =#+transclude:= line is created below the link
+
+** Expanding and Collapsing
+
+Press =s-M= to toggle:
+
+- On a =#+transclude:= line → expands the transclusion (shows content)
+- Inside expanded transclusion → collapses it (hides content)
+
+Expanded transclusions show a yellow fringe indicator on the left margin.
+
+** Editing Transcluded Content
+
+When a transclusion is expanded:
+
+- Edits to the transcluded text propagate to the source file
+- The source file is modified but not automatically saved
+- Use =org-transclusion-open-source= to jump to the source
+
+* The Level Parameter
+
+The =:level= parameter controls heading hierarchy:
+
+#+begin_example
+#+transclude: [[id:abc123][My Note]] :level 2
+#+end_example
+
+This means top-level headings in the source become level-2 headings in the transclusion.
+
+** Why Level Matters
+
+Without =:level=, transcluded headings keep their original levels, which can break your document structure.
+
+Example: You're in a level-2 section and transclude a file with level-1 headings. Those level-1 headings would appear "above" your current section in the hierarchy.
+
+** Auto-Matching Level
+
+=S-s-<down>= (=tr-insert-transclusion-match-level=) automatically calculates the correct level based on your current position.
+
+* Commands Reference
+
+** Toggle Commands
+
+- =tr-toggle-transclusion= — Smart toggle based on context
+- =tr-toggle-transclusion-other-window= — Toggle and show source in other window
+- =tr-toggle-transclusion-indirect-buffer= — Toggle in a cloned indirect buffer
+
+** Insert Commands
+
+- =tr-insert-transclusion= — Insert transclusion (no level matching)
+- =tr-insert-transclusion-match-level= — Insert with auto level matching
+
+** Convert Commands
+
+- =tr-convert-link-to-transclusion= — Convert link at point to transclusion
+- =tr-convert-link-to-transclusion-match-level= — Convert with level matching
+
+** Expand/Collapse Aliases
+
+- =tr-expand= — Alias for =org-transclusion-add=
+- =tr-collapse= — Alias for =org-transclusion-remove=
+- =tr-expand-all= — Alias for =org-transclusion-add-all=
+
+* Transclusion Syntax
+
+A transclusion line looks like:
+
+#+begin_example
+#+transclude: [[id:some-uuid][Note Title]] :level 2
+#+end_example
+
+** Available Options
+
+| Option            | Description                                       |
+|-------------------+---------------------------------------------------|
+| =:level N=          | Set heading level offset                          |
+| =:only-contents=    | Exclude the headline, include only body           |
+| =:exclude-elements= | Skip certain org elements (e.g., property-drawer) |
+| =:expand-links=     | Expand relative links to absolute                 |
+
+** Default Behavior
+
+Your config excludes property drawers automatically:
+#+begin_example elisp
+(setq org-transclusion-exclude-elements '(property-drawer))
+#+end_example
+
+* Visual Indicators
+
+- *Yellow fringe* — Marks the left edge of transcluded content
+- *Read-only appearance* — Transcluded text has a subtle visual distinction
+
+* Tips and Tricks
+
+** Transclude a Specific Heading
+
+Link directly to a heading using its ID:
+
+#+begin_example
+#+transclude: [[id:heading-uuid][Specific Heading]]
+#+end_example
+
+** Transclude Part of a File
+
+Use a search link to transclude from a specific location:
+
+#+begin_example
+#+transclude: [[file:notes.org::*Some Heading]]
+#+end_example
+
+** Bulk Operations
+
+- =tr-expand-all= — Expand all transclusions in current buffer
+- =org-transclusion-remove-all= — Collapse all transclusions
+
+** Viewing Source
+
+When inside an expanded transclusion:
+- =org-transclusion-open-source= — Open source file at transcluded location
+- =tr-toggle-transclusion-other-window= — Shows source in split window
+
+* Walkthrough: Transcluding a Heading from Another File
+
+This example shows how to transclude a specific heading from one org file into another.
+
+** Scenario
+
+You want to include the section "Example: The Uber Exchange" from =social-principles.org= into =conan-examples.org=.
+
+** Step 1: Ensure the Source Heading Has an ID
+
+The heading you want to transclude needs an org ID.
+
+1. Open the source file
+2. Navigate to the heading you want to transclude
+3. Press =s-u h= (or =M-x org-id-get-create=)
+
+This adds a =:PROPERTIES:= drawer with an =:ID:=:
+
+#+begin_example
+***** Example: The Uber Exchange (Conan & Sona)
+:PROPERTIES:
+:ID: 98d60be4-43d2-40cb-974e-c2938e40646d
+:END:
+#+end_example
+
+4. Save the file
+
+** Step 2: Sync the Org-Roam Database
+
+Org-roam needs to index the new ID before you can find it.
+
+Run: =M-x org-roam-db-sync=
+
+** Step 3: Insert the Transclusion
+
+1. Open the destination file
+2. Position cursor where you want the transclusion
+3. Press =S-s-<down>= (=tr-insert-transclusion-match-level=)
+4. Search for the heading (e.g., "Uber Exchange") and select it
+
+A line like this appears:
+
+#+begin_example
+#+transclude: [[id:98d60be4-43d2-40cb-974e-c2938e40646d][Example: The Uber Exchange (Conan & Sona)]] :level 3
+#+end_example
+
+** Step 4: Expand to Verify
+
+Press =s-M= on the =#+transclude:= line.
+
+The content from the source heading now appears inline, with a yellow fringe indicator.
+
+** Summary
+
+1. Add ID to source heading (=s-u h=)
+2. Save the source file
+3. Sync org-roam database (=M-x org-roam-db-sync=)
+4. Insert transclusion in destination (=S-s-<down>=)
+5. Expand to verify (=s-M=)
+
+* Troubleshooting
+
+** Transclusion Won't Expand
+
+- Verify the link target exists
+- Check that the ID is valid (=M-x org-id-goto=)
+- Ensure org-roam database is synced (=M-x org-roam-db-sync=)
+
+** Wrong Heading Levels
+
+Use =:level N= parameter or =tr-insert-transclusion-match-level= to fix hierarchy.
+
+** Edits Not Saving
+
+Transcluded edits modify the source buffer but don't auto-save. Save the source file manually or use =save-some-buffers=.
+
+** "No valid element" Message
+
+The power-pack handles this gracefully by falling back to the entire buffer. This usually means the link points to a location without a clear org element.
+
+* Architecture Notes
+
+Your setup includes the *org-transclusion-power-pack* which provides:
+
+1. *Improved error handling* — Falls back gracefully when elements aren't found
+2. *Property drawer fix* — Automatically climbs out of property drawers to find the correct heading
+3. *User-friendly aliases* — =tr-= prefixed commands for discoverability
+4. *Level matching* — Automatic heading level calculation
