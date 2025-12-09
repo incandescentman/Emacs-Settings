@@ -56,13 +56,13 @@
      :mode-line-label "Life")
 
     (roam-social
-     :name "Roam Social (Relationships)"
-     :directory "/Users/jay/Dropbox/roam-social"
-     :db-location "/Users/jay/Dropbox/roam-social/.org-roam.db"
+     :name "Social (Relationships)"
+     :directory "/Users/jay/Dropbox/social"
+     :db-location "/Users/jay/Dropbox/social/.org-roam.db"
      :dailies-directory "journal/"
      :capture-templates jay/org-roam-capture-templates-social
      :dailies-capture-templates jay/org-roam-dailies-template-default
-     :astro-source-root "/Users/jay/Dropbox/roam-social"
+     :astro-source-root "/Users/jay/Dropbox/social"
      :mode-line-label "Social")
 
     (roam-parents
