@@ -9584,8 +9584,16 @@ Uses `customize-save-variable` so the setting survives restarts, then refreshes 
 * hunspell exclude large buffers
 #+begin_src emacs-lisp
 (defun my/skip-flyspell-on-large-buffers ()
-  (when (> (buffer-size) (* 1 1024 1024)) ; >1 MB
-    (flyspell-mode -1)))
+  "Disable flyspell for large buffers (>5MB) or exported message conversations."
+  (when (and flyspell-mode  ; only act when the mode is already on
+             (or (> (buffer-size) (* 5 1024 1024))  ; >5 MB
+                 ;; Disable for exported message conversations (read-only, informal text)
+                 (string-match-p "exported-text-conversations" (or buffer-file-name ""))))
+    ;; Remove the hook locally before disabling to avoid re-entering it
+    (remove-hook 'flyspell-mode-hook #'my/skip-flyspell-on-large-buffers t)
+    (flyspell-mode -1)
+    ;; Re-add the hook locally for this buffer
+    (add-hook 'flyspell-mode-hook #'my/skip-flyspell-on-large-buffers nil t)))
 (add-hook 'flyspell-mode-hook #'my/skip-flyspell-on-large-buffers)
 #+end_src
 
