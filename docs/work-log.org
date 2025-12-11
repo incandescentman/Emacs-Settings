@@ -1,6 +1,17 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2025-12-11: Fix flyspell infinite recursion bug
+- Fixed critical infinite recursion bug in ~flyspell-lazy-check-pending~ function in ~shared-functions.org~
+  - Bug occurred when processing large files (200MB+) in fundamental mode
+  - Added conditional return using ~(cl-return-from flyspell-lazy-check-pending nil)~
+  - Only applies fix when idle timer is nil to avoid disrupting normal operations
+  - Prevents Emacs from hanging with "Lisp nesting exceeds max-lisp-eval-depth" errors
+- Updated keybindings in ~gnu-emacs-startup.org~:
+  - Reverted ~s-K~ back to ~org-cut-subtree~ (was ~kill-region~)
+  - Reverted ~s-M~ back to ~tr-toggle-transclusion~ (was ~capitalize-region-or-word~)
+  - These changes better support org-transclusion workflow
+
 * 2025-12-09: Org-transclusion documentation and social profile setup
 - Created ~/docs/org-transclusion-guide.org~ with comprehensive documentation:
   - Quick reference for keybindings (~s-K~, ~S-s-<down>~, ~s-u t~)
