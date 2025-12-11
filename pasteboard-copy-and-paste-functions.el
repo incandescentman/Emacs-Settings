@@ -448,14 +448,14 @@ With prefix argument (C-u), force verbatim copy."
                    (save-excursion
                      (goto-char (region-beginning))
                      (looking-at-p "\\s-*\\([({[]\\|[#;]\\|https?://\\)")))
-             (cons "verbatim (heuristic)" #'pasteboard-copy-verbatim))
+              (cons "verbatim (heuristic)" #'pasteboard-copy-verbatim))
              (t
-              (cons "clean (default)" #'pasteboard-copy-and-replace-em-dashes-in-clipboard)))
+              (cons "clean (default)" #'pasteboard-copy-and-replace-em-dashes-in-clipboard))))
            (choice (car result))
            (handler (cdr result)))
       (when handler
         (call-interactively handler))
-      (message "Copied text %s" choice)))))
+      (message "Copied text %s" choice))))
 
 (defun pasteboard-copy ()
   "Copy region to OS X system pasteboard."
@@ -595,7 +595,8 @@ Otherwise, demote from point to the end of the buffer."
       (set-marker end-marker nil))))
 
 (defun convert-markdown-to-org-code-blocks-simple ()
-  "Statefully convert Markdown fences to Org src blocks, even when unlabeled."
+  "Statefully convert Markdown fences to Org src blocks, even when unlabeled.
+Adds blank line before #+begin_src and after #+end_src for readability."
   (interactive)
   (let ((inhibit-read-only t)
         (inside-block nil))
@@ -609,15 +610,15 @@ Otherwise, demote from point to the end of the buffer."
            ;; Opening fence with language
            ((and (not inside-block) has-lang)
             (setq inside-block t)
-            (replace-match (format "%s#+begin_src %s" indent lang) t))
+            (replace-match (format "\n%s#+begin_src %s" indent lang) t))
            ;; Closing fence
            (inside-block
             (setq inside-block nil)
-            (replace-match (format "%s#+end_src" indent) t))
+            (replace-match (format "%s#+end_src\n" indent) t))
            ;; Opening fence without language
            (t
             (setq inside-block t)
-            (replace-match (format "%s#+begin_src" indent) t)))))
+            (replace-match (format "\n%s#+begin_src" indent) t)))))
       ;; Handle accidental backticks in language specification
       (goto-char (point-min))
       (while (re-search-forward "^\\([[:space:]]*\\)#\\+begin_src[[:space:]]+`\\([^[:space:]]+\\)" nil t)
