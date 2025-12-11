@@ -9334,36 +9334,6 @@ Prerequisites outside Emacs (run in your project or globally):
   npm install -D typescript                    # if you didn't enable TS at project creation
 ------------------------------------------------------------------
 
-** ChatGPT conversion
-
-#+begin_src emacs-lisp
-
-(defun convert-markdown-to-org-code-blocks-simple ()
-  "Simple version that replaces based on presence/absence of language specifier."
-  (interactive)
-  (let ((inhibit-read-only t))
-    (save-excursion
-      ;; First pass: Replace opening fences (those with language specifiers)
-      (goto-char (point-min))
-      (while (re-search-forward "^\\([[:space:]]*\\)\\(````?\\)\\([[:alnum:]]+\\)[[:space:]]*$" nil t)
-        (replace-match "\\1#+begin_src \\3" t))
-
-      ;; Second pass: Replace closing fences (those without language specifiers)
-      (goto-char (point-min))
-      (while (re-search-forward "^\\([[:space:]]*\\)\\(````?\\)[[:space:]]*$" nil t)
-        (replace-match "\\1#+end_src \n" t))
-
-      ;; Handle backticks in language specification
-      (goto-char (point-min))
-      (while (re-search-forward "^\\([[:space:]]*\\)#\\+begin_src[[:space:]]+`\\([[:alnum:]]+\\)" nil t)
-        (replace-match "\\1#+begin_src \\2" t)))))
-
-;; Optional: Create keybindings
-;; (global-set-key (kbd "C-c m o") 'convert-markdown-to-org-code-blocks)
-;; (global-set-key (kbd "C-c m s") 'convert-markdown-to-org-code-blocks-simple)
-;; (global-set-key (kbd "C-c m S") 'convert-markdown-to-org-code-blocks-stateful)
-#+end_src
-
 * Notch Management
 #+begin_src emacs-lisp
 ;; Display-aware tab bar management to hide hardware notches (built-in or external).

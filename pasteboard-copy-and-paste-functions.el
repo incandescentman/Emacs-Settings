@@ -407,64 +407,55 @@ Single-asterisk italics become `/italic/` and double-asterisk bold becomes `*bol
   "Smart copy to macOS pasteboard: choose verbatim vs. cleaned text.
 With prefix argument (C-u), force verbatim copy."
   (interactive)
-  ;; If prefix arg, force verbatim
   (if current-prefix-arg
       (progn
         (call-interactively #'pasteboard-copy-verbatim)
         (message "Copied text verbatim (forced)"))
-      ;; Otherwise, smart copy
-      (let* ((result
-              (cond
-               ;; ------------------------------------------ verbatim buckets ------------------------------------------
-               ;; 1) Messages buffer - ALWAYS verbatim
-               ((string= (buffer-name) "*Messages*")
-                (cons "verbatim (Messages buffer)" #'pasteboard-copy-verbatim))
-
-               ;; 2) Shell / Elisp / Web / Markdown / Backtrace
-               ((or (eq major-mode 'sh-mode)
-                    (eq major-mode 'emacs-lisp-mode)
-                    (eq major-mode 'web-mode)
-                    (eq major-mode 'markdown-mode)
-                    (eq major-mode 'gfm-mode)
-                    (derived-mode-p 'markdown-mode)
-                    (derived-mode-p 'backtrace-mode))
-                (cons "verbatim (mode match)" #'pasteboard-copy-verbatim))
-
-               ;; 3) Org buffer **with** org-config-files-local-mode enabled
-               ((and (eq major-mode 'org-mode)
-                     (bound-and-true-p org-config-files-local-mode))
-                (cons "verbatim (org-local)" #'pasteboard-copy-verbatim))
-
-               ;; 4) Any file ending in .mdx
-               ((and buffer-file-name
-                     (string-match-p "\\.mdx\\'" buffer-file-name))
-                (cons "verbatim (.mdx)" #'pasteboard-copy-verbatim))
-
-               ;; 5) Any programming mode
-               ((derived-mode-p 'prog-mode)
-                (cons "verbatim (prog)" #'pasteboard-copy-verbatim))
-
-               ;; ------------------------------------------ clean buckets ------------------------------------------
-               ;; 6) Org or generic text (when org-config-files-local-mode is off)
-               ((or (eq major-mode 'text-mode)
-                    (and (eq major-mode 'org-mode)
-                         (not (bound-and-true-p org-config-files-local-mode))))
-                (cons "clean" #'pasteboard-copy-and-replace-em-dashes-in-clipboard))
-
-               ;; ---------------------------------------- heuristic fallback --------------------------------------
-               ((and (use-region-p)
-                     (save-excursion
-                       (goto-char (region-beginning))
-                       (looking-at-p "\\s-*\\([({[]\\|[#;]\\|https?://\\)")))
-                (cons "verbatim (heuristic)" #'pasteboard-copy-verbatim))
-
-               (t
-                (cons "clean (default)" #'pasteboard-copy-and-replace-em-dashes-in-clipboard))))
-             (choice (car result))
-             (handler (cdr result)))
-        (when handler
-          (call-interactively handler))
-        (message "Copied text %s" choice))))
+    (let* ((result
+            (cond
+             ;; ------------------------------------------ verbatim buckets ------------------------------------------
+             ;; 1) Messages buffer - ALWAYS verbatim
+             ((string= (buffer-name) "*Messages*")
+              (cons "verbatim (Messages buffer)" #'pasteboard-copy-verbatim))
+             ;; 2) Shell / Elisp / Web / Markdown / Backtrace
+             ((or (eq major-mode 'sh-mode)
+                  (eq major-mode 'emacs-lisp-mode)
+                  (eq major-mode 'web-mode)
+                  (eq major-mode 'markdown-mode)
+                  (eq major-mode 'gfm-mode)
+                  (derived-mode-p 'markdown-mode)
+                  (derived-mode-p 'backtrace-mode))
+              (cons "verbatim (mode match)" #'pasteboard-copy-verbatim))
+             ;; 3) Org buffer **with** org-config-files-local-mode enabled
+             ((and (eq major-mode 'org-mode)
+                   (bound-and-true-p org-config-files-local-mode))
+              (cons "verbatim (org-local)" #'pasteboard-copy-verbatim))
+             ;; 4) Any file ending in .mdx
+             ((and buffer-file-name
+                   (string-match-p "\\.mdx\\'" buffer-file-name))
+              (cons "verbatim (.mdx)" #'pasteboard-copy-verbatim))
+             ;; 5) Any programming mode
+             ((derived-mode-p 'prog-mode)
+              (cons "verbatim (prog)" #'pasteboard-copy-verbatim))
+             ;; ------------------------------------------ clean buckets ------------------------------------------
+             ;; 6) Org or generic text (when org-config-files-local-mode is off)
+             ((or (eq major-mode 'text-mode)
+                  (and (eq major-mode 'org-mode)
+                       (not (bound-and-true-p org-config-files-local-mode))))
+              (cons "clean" #'pasteboard-copy-and-replace-em-dashes-in-clipboard))
+             ;; ---------------------------------------- heuristic fallback --------------------------------------
+             ((and (use-region-p)
+                   (save-excursion
+                     (goto-char (region-beginning))
+                     (looking-at-p "\\s-*\\([({[]\\|[#;]\\|https?://\\)")))
+             (cons "verbatim (heuristic)" #'pasteboard-copy-verbatim))
+             (t
+              (cons "clean (default)" #'pasteboard-copy-and-replace-em-dashes-in-clipboard)))
+           (choice (car result))
+           (handler (cdr result)))
+      (when handler
+        (call-interactively handler))
+      (message "Copied text %s" choice)))))
 
 (defun pasteboard-copy ()
   "Copy region to OS X system pasteboard."
@@ -602,6 +593,35 @@ Otherwise, demote from point to the end of the buffer."
       (while (re-search-forward "\\[\\([^][]+\\)\\](\\([^()]+\\))" end-marker t)
         (replace-match "[[\\2][\\1]]" t))
       (set-marker end-marker nil))))
+
+(defun convert-markdown-to-org-code-blocks-simple ()
+  "Statefully convert Markdown fences to Org src blocks, even when unlabeled."
+  (interactive)
+  (let ((inhibit-read-only t)
+        (inside-block nil))
+    (save-excursion
+      (goto-char (point-min))
+      (while (re-search-forward "^\\([[:space:]]*\\)```+\\([[:space:]]*\\([[:alnum:]._+-]*\\)?\\)[[:space:]]*$" nil t)
+        (let* ((indent (match-string 1))
+               (lang   (match-string 3))
+               (has-lang (and lang (> (length lang) 0))))
+          (cond
+           ;; Opening fence with language
+           ((and (not inside-block) has-lang)
+            (setq inside-block t)
+            (replace-match (format "%s#+begin_src %s" indent lang) t))
+           ;; Closing fence
+           (inside-block
+            (setq inside-block nil)
+            (replace-match (format "%s#+end_src" indent) t))
+           ;; Opening fence without language
+           (t
+            (setq inside-block t)
+            (replace-match (format "%s#+begin_src" indent) t)))))
+      ;; Handle accidental backticks in language specification
+      (goto-char (point-min))
+      (while (re-search-forward "^\\([[:space:]]*\\)#\\+begin_src[[:space:]]+`\\([^[:space:]]+\\)" nil t)
+        (replace-match "\\1#+begin_src \\2" t)))))
 
 (defun pasteboard--text-contains-markdown-headings-p (text)
   "Return non-nil if TEXT includes Markdown heading markers (##, ###, etc.)."

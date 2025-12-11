@@ -1,3 +1,8 @@
+- *2025-12-03: Pasteboard markdown fence converter relocated and fixed*
+- Moved `convert-markdown-to-org-code-blocks-simple` out of `shared-functions.org` into `pasteboard-copy-and-paste-functions.el` (source of truth), so paste-clean pipeline owns the helper it calls
+- Rewrote the converter to toggle fences statefully (handles unlabeled ``` blocks) to stop the duplicated `#+end_src` output seen in Org pastes
+- Retangled `shared-functions.org` after removing the stale definition and reran `check-parens` on both `shared-functions.el` and `pasteboard-copy-and-paste-functions.el` to confirm structure
+
 - *2025-12-02: Goals system documentation cleanup*
 - Updated =goals-agenda.org=: removed obsolete setup instructions (directory creation, first-time setup steps), kept elisp code and usage reference
 - Fixed velocity paths in =goals-agenda.org=: projects dir now =~/Library/CloudStorage/Dropbox/github/velocity/projects/=, master task list now in =goals/= not =data/=
