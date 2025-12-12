@@ -1634,8 +1634,7 @@ different → different
 #+BEGIN_SRC emacs-lisp
 (use-package web-mode
   :defer t
-  :hook ((web-mode . rainbow-mode)
-         (web-mode . rspec-mode))
+  :hook ((web-mode . rainbow-mode))
   :custom (web-mode-markup-indent-offset 2))
 #+END_SRC
 
