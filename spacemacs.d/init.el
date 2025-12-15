@@ -789,27 +789,21 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
   ;; (setq debug-on-error t)
 
-  (add-to-list 'native-comp-eln-load-path "~/.cache/emacs/aot")
+  ;; Native compilation settings (only when Emacs has native-comp support)
+  ;; macOS cask build currently disables native-comp for stability
+  (when (boundp 'native-comp-eln-load-path)
+    (add-to-list 'native-comp-eln-load-path "~/.cache/emacs/aot")
+    (setq package-native-compile t)
+    (setq native-comp-jit-compilation t
+          native-comp-deferred-compilation t)
+    ;; Silence native-comp warnings
+    (setq native-comp-async-report-warnings-errors 'silent))
 
-
-  ;; In ~/.emacs.d/early-init.el
-
-  (setq package-native-compile t)
-
-  ;; user-init, ONE copy only:
-  (setq native-comp-jit-compilation t
-        native-comp-deferred-compilation t
-        gc-cons-threshold (* 64 1024 1024)
-        gc-cons-percentage 0.1
-        )
-
+  ;; GC tuning (applies to all builds)
+  (setq gc-cons-threshold (* 64 1024 1024)
+        gc-cons-percentage 0.1)
 
   (setq dotspacemacs-elpa-quickstart t)
-  ;; Silence native-comp warnings
-  (setq native-comp-async-report-warnings-errors 'silent)
-
-  ;; Or if you want to see only errors, not warnings:
-  ;; (setq native-comp-async-report-warnings-errors nil)
 
   ;; Silence byte-compiler warnings
   (setq byte-compile-warnings '(not obsolete))

@@ -1,6 +1,13 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2025-12-15: Guard native-comp settings for non-native-comp Emacs builds
+- Fixed "Symbol's value as variable is void: native-comp-eln-load-path" error on startup
+- Wrapped all native-comp settings in ~spacemacs.d/init.el~ with ~(when (boundp 'native-comp-eln-load-path) ...)~
+- Settings guarded: ~native-comp-eln-load-path~, ~package-native-compile~, ~native-comp-jit-compilation~, ~native-comp-deferred-compilation~, ~native-comp-async-report-warnings-errors~
+- Moved GC tuning (~gc-cons-threshold~, ~gc-cons-percentage~) outside the guard since those apply to all builds
+- Current macOS Emacs cask build lacks native-comp support; these settings will auto-activate when switching to a native-comp build in the future
+
 * 2025-12-11: Fix flyspell infinite recursion bug
 - Fixed critical infinite recursion bug in ~flyspell-lazy-check-pending~ function in ~shared-functions.org~
   - Bug occurred when processing large files (200MB+) in fundamental mode
