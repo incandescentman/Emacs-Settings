@@ -1845,3 +1845,7 @@ The final working solution combined two approaches:
 - Added a descriptive docstring to the `jd-org-current-time` function.
 - Deleted the obsolete `html2org-clipboard-and-unfill-paragraph` function.
 - Refactored `defadvice isearch-exit` to modernize the code, moving logic into `my-goto-match-beginning` and removing the deprecated `defadvice` block.
+
+* 2025-12-16 Tuesday (continued)
+- Refactored `defadvice` blocks to `advice-add` for `recentf-save-list`, `configuration-layer/update-packages`, and `sp-show--pair-function`.
+- Added/Updated docstrings for `new-buffer`, `new-lisp-buffer`, `org-new-scratch-buffer`, `conditionally-disable-abbrev`, and `cycle-hyphenation-or-toggle-item`.

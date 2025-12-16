@@ -715,12 +715,14 @@ Aquamacs:
 ;; open new buffers without prompting me for a filename global counter to ensure every new buffer will be unique:
 
 (defun new-buffer ()
+ "Open a new unique buffer in org-mode without prompting for a filename."
  (interactive)
  (setq new-buffer-count (+ new-buffer-count 1))
  (switch-to-buffer (concat "buffer" (int-to-string new-buffer-count)))
  (org-mode))
 
 (defun new-lisp-buffer ()
+ "Open a new unique buffer in emacs-lisp-mode without prompting for a filename."
  (interactive)
  (setq new-buffer-count (+ new-buffer-count 1))
  (switch-to-buffer (concat "buffer" (int-to-string new-buffer-count)))
@@ -743,6 +745,7 @@ Aquamacs:
 *** Create new buffer as org-mode subtree in current file
 #+BEGIN_SRC emacs-lisp
 (defun org-new-scratch-buffer ()
+  "Create a new scratch buffer as an Org-mode subtree with a timestamp."
   (interactive)
   (insert "* oh hi there! " (format-time-string "%F %l:%M%P\n\n"))
 ;; (org-tree-to-indirect-buffer 'current-window)
@@ -754,7 +757,7 @@ Aquamacs:
 *** Disable autocorrect in minibuffer
 #+BEGIN_SRC emacs-lisp
 (defun conditionally-disable-abbrev ()
-  ""
+  "Disable `abbrev-mode` if the current command starts with 'smex-'."
   (if (string-match "smex-" (format "%s" this-command))
       (abbrev-mode -1)))
 
@@ -781,6 +784,7 @@ read-file-name-completion-ignore-case t)
 ** cycle-hyphenation-or-toggle-item
 #+BEGIN_SRC emacs-lisp
 (defun cycle-hyphenation-or-toggle-item ()
+  "Toggle list item if region is active, otherwise cycle hyphenation."
   (interactive)
   (if (region-active-p)
       (call-interactively 'org-toggle-item)
@@ -6797,17 +6801,23 @@ Smart jump to beginning / end of lines.
 
 * debug recentf
 #+begin_src emacs-lisp
-(defadvice recentf-save-list (around debug-recentf-save-list activate)
- (message "Saving recentf list...")
- ad-do-it
- (message "Saved recentf list"))
+(defun jay/recentf-save-list-debug (orig-fun &rest args)
+  "Log messages before and after saving recentf list."
+  (message "Saving recentf list...")
+  (apply orig-fun args)
+  (message "Saved recentf list"))
+
+(advice-add 'recentf-save-list :around #'jay/recentf-save-list-debug)
 
 (defun my-update-recentf ()
+  "Backup recentf file to cache directory."
  (copy-file "/Users/jay/emacs/recentf/recentf" "/Users/jay/.emacs.d/.cache/recentf" t))
 
-(defadvice configuration-layer/update-packages
-  (before my-update-recentf-before-update-packages activate)
- (copy-file "/Users/jay/emacs/recentf/recentf" "/Users/jay/.emacs.d/.cache/recentf" t))
+(defun jay/backup-recentf-before-update (&rest args)
+  "Backup recentf file before updating packages."
+  (my-update-recentf))
+
+(advice-add 'configuration-layer/update-packages :before #'jay/backup-recentf-before-update)
 
 #+end_src
 
@@ -8114,11 +8124,13 @@ Hmm maybe look at this too: [[http://stackoverflow.com/questions/23297422/org-mo
   (remove-hook 'org-mode-hook #'show-smartparens-mode)
 
   ;; Suppress smartparens errors in org-mode (especially with nested quotes/text properties)
-  (defadvice sp-show--pair-function (around sp-show-safe activate)
+  (defun jay/sp-show-safe (orig-fun &rest args)
     "Suppress errors from sp-show--pair-function in problematic contexts."
     (condition-case nil
-        ad-do-it
-      (error nil))))
+        (apply orig-fun args)
+      (error nil)))
+
+  (advice-add 'sp-show--pair-function :around #'jay/sp-show-safe))
 
 ; or more drastically:
 ; (remove-hook 'post-command-hook 'sp-show--pair-function)
