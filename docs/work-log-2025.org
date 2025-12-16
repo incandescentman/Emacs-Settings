@@ -1849,3 +1849,6 @@ The final working solution combined two approaches:
 * 2025-12-16 Tuesday (continued)
 - Refactored `defadvice` blocks to `advice-add` for `recentf-save-list`, `configuration-layer/update-packages`, and `sp-show--pair-function`.
 - Added/Updated docstrings for `new-buffer`, `new-lisp-buffer`, `org-new-scratch-buffer`, `conditionally-disable-abbrev`, and `cycle-hyphenation-or-toggle-item`.
+
+* 2025-12-16 Tuesday (continued)
+- Modernized `eval-after-load` to `with-eval-after-load` for `org-list` and `org-src`.
