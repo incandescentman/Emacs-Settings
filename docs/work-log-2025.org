@@ -1855,3 +1855,9 @@ The final working solution combined two approaches:
 
 * 2025-12-16 Tuesday (continued)
 - Modernized deprecated Org export variables: `org-export-latex-*` to `org-latex-*`. Removed obsolete `org-export-html-inline-image-extensions`.
+
+* 2025-12-16 Tuesday (continued)
+- Refactoring anonymous lambdas in hooks to named functions (`jay/disable-auto-fill`, `jay/disable-abbrev`) for better debugging and modularity.
+
+* 2025-12-16 Tuesday (continued)
+- Refactored anonymous lambdas to named functions (`jay/disable-auto-fill`, `jay/disable-abbrev`) in `shared-functions.org`.

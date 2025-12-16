@@ -609,10 +609,14 @@ Also, change the alert sound. Instead of beeping or flashing, Emacs could play a
 is this still necessary?
 
 #+BEGIN_SRC emacs-lisp
-(auto-fill-mode -1) ; turn off fill mode, which adds random line breaks in my text files:
-(add-hook 'text-mode-hook  #'(lambda () (auto-fill-mode -1)))
-(add-hook 'markdown-mode-hook  #'(lambda () (auto-fill-mode -1)))
-(add-hook 'message-mode-hook  #'(lambda () (auto-fill-mode -1)))
+(defun jay/disable-auto-fill ()
+  "Turn off auto-fill-mode."
+  (auto-fill-mode -1))
+
+(auto-fill-mode -1) ; turn off fill mode globally
+(add-hook 'text-mode-hook  #'jay/disable-auto-fill)
+(add-hook 'markdown-mode-hook  #'jay/disable-auto-fill)
+(add-hook 'message-mode-hook  #'jay/disable-auto-fill)
 #+END_SRC
 
 *** Disable double spacing between sentences
@@ -635,16 +639,20 @@ is this still necessary?
 (setq locate-command "mdfind")
 #+END_SRC
 
-*** Automatically open files in their correct modes
+*** Disable Abbrev Mode
 #+BEGIN_SRC emacs-lisp
-(add-hook 'emacs-lisp-mode-hook (lambda () (abbrev-mode -1)))
-(add-hook 'css-mode-hook (lambda () (abbrev-mode -1)))
-(add-hook 'html-mode-hook (lambda () (abbrev-mode -1)))
-(add-hook 'html-helper-mode-hook (lambda () (abbrev-mode -1)))
-(add-hook 'eshell-mode-hook (lambda () (abbrev-mode -1)))
-(add-hook 'shell-mode-hook (lambda () (abbrev-mode -1)))
-(add-hook 'shell-script-mode-hook (lambda () (abbrev-mode -1)))
-(add-hook 'term-mode-hook (lambda () (abbrev-mode -1)))
+(defun jay/disable-abbrev ()
+  "Turn off abbrev-mode."
+  (abbrev-mode -1))
+
+(add-hook 'emacs-lisp-mode-hook #'jay/disable-abbrev)
+(add-hook 'css-mode-hook #'jay/disable-abbrev)
+(add-hook 'html-mode-hook #'jay/disable-abbrev)
+(add-hook 'html-helper-mode-hook #'jay/disable-abbrev)
+(add-hook 'eshell-mode-hook #'jay/disable-abbrev)
+(add-hook 'shell-mode-hook #'jay/disable-abbrev)
+(add-hook 'shell-script-mode-hook #'jay/disable-abbrev)
+(add-hook 'term-mode-hook #'jay/disable-abbrev)
 #+END_SRC
 
 *** Typography
