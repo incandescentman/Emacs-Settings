@@ -126,7 +126,7 @@ I should probably eventually break these out of custom-set-variables and organiz
 (setq smex-prompt-string "I love you. ")
 
 ;; Org Export Settings
-(setq org-export-latex-image-default-option "width=20.5cm"
+(setq org-latex-image-default-option "width=20.5cm"
       org-export-time-stamp-file nil
       org-export-with-clocks t
       org-html-head-include-default-style nil
@@ -284,8 +284,6 @@ I should probably eventually break these out of custom-set-variables and organiz
  (setq org-export-date-timestamp-format "%Y-%m-%d %I:%M%p")
  (setq org-export-date-timestamp-format "%B %d, %Y")
 
- (setq org-export-html-inline-image-extensions (quote ("png" "jpeg" "jpg" "gif" "svg" "tif" "gif")))
-
 ;; (setq org-latex-inline-image-rules (quote (("file" . "\\.\\(pdf\\|jpeg\\|gif\\|jpg\\|png\\|ps\\|eps\\|tikz\\|pgf\\|svg\\)\\'"))))
 
 (setq org-latex-default-class "elegant-garamond")
@@ -293,17 +291,17 @@ I should probably eventually break these out of custom-set-variables and organiz
 (setq org-latex-inline-image-rules '(("file" . "\\.\\(pdf\\|jpeg\\|jpg\\|png\\|ps\\|eps\\|tikz\\|pgf\\|svg\\|gif\\)\\'")))
 
 ;; (setq org-export-html-style-include-default t)
- (setq org-export-latex-date-format "%d %B %Y.")
- (setq org-export-latex-emphasis-alist (quote (("*" "\\textit{%s}" nil) ("/" "\\textit{%s}" nil) ("_" "\\underline{%s}" nil) ("+" "\\st{%s}" nil) ("=" "\\verb" t) ("~" "\\verb" t))))
-;; (setq org-export-latex-emphasis-alist (quote (("*" "\\emph{%s}" nil) ("/" "\\textit{%s}" nil) ("_" "\\underline{%s}" nil) ("+" "\\st{%s}" nil) ("=" "\\verb" t) ("~" "\\verb" t))))
-;; (setq org-export-latex-verbatim-wrap (quote ("\\begin{quote}" . "\\end{quote}")))
+ (setq org-latex-date-format "%d %B %Y.")
+ (setq org-latex-emphasis-alist (quote (("*" "\\textit{%s}" nil) ("/" "\\textit{%s}" nil) ("_" "\\underline{%s}" nil) ("+" "\\st{%s}" nil) ("=" "\\verb" t) ("~" "\\verb" t))))
+;; (setq org-latex-emphasis-alist (quote (("*" "\\emph{%s}" nil) ("/" "\\textit{%s}" nil) ("_" "\\underline{%s}" nil) ("+" "\\st{%s}" nil) ("=" "\\verb" t) ("~" "\\verb" t))))
+;; (setq org-latex-verbatim-wrap (quote ("\\begin{quote}" . "\\end{quote}")))
  (setq org-export-with-clocks t)
  (setq org-export-with-section-numbers nil)
 (setq org-export-with-planning nil)
 (setq org-export-allow-bind-keywords t)
 ;; (setq org-export-blocks-witheld (quote (hidden)) t)
 (setq org-export-date-timestamp-format "%Y%m%d %I:%M%p")
-(setq org-export-latex-emphasis-alist (quote    (("*" "\\emph{%s}" nil)
+(setq org-latex-emphasis-alist (quote    (("*" "\\emph{%s}" nil)
      ("/" "\\textit{%s}" nil)
      ("_" "\\underline{%s}" nil)
      ("+" "\\st{%s}" nil)

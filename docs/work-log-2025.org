@@ -1852,3 +1852,6 @@ The final working solution combined two approaches:
 
 * 2025-12-16 Tuesday (continued)
 - Modernized `eval-after-load` to `with-eval-after-load` for `org-list` and `org-src`.
+
+* 2025-12-16 Tuesday (continued)
+- Modernized deprecated Org export variables: `org-export-latex-*` to `org-latex-*`. Removed obsolete `org-export-html-inline-image-extensions`.
