@@ -1,6 +1,23 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2025-12-17: Rename functions for clarity and add new-buffer-in-new-pane
+- Added ~new-buffer-in-new-pane~ function: splits window left and creates new org buffer
+- Updated ~clone-indirect-buffer-new-window-and-focus~ to narrow both panes to subtree
+- Renamed ~remove-links/jay~ → ~remove-hyperlink-at-point~
+- Renamed 8 functions to use descriptive names instead of author prefixes:
+  - ~dcaps-to-scaps~ → ~fix-double-capitals~
+  - ~ap/org-count-words~ → ~org-count-words-in-subtree~
+  - ~ndk/checkbox-list-complete~ → ~org-checkbox-list-complete~
+  - ~endless/replace-apostrophe~ → ~replace-curly-apostrophe~
+  - ~endless/replace-quote~ → ~replace-curly-quotes~
+  - ~xah-convert-entities-to-html-chars-region~ → ~html-entities-to-chars~
+  - ~xah-convert-html-chars-to-entities-region~ → ~html-chars-to-entities~
+  - ~er-google~ → ~google-search-region~
+- Updated keybindings:
+  - ~M-t~ now bound to ~mw-thesaurus-lookup-dwim~
+  - ~s-T~ now bound to ~new-buffer-in-new-pane~
+
 * 2025-12-15: Guard native-comp settings for non-native-comp Emacs builds
 - Fixed "Symbol's value as variable is void: native-comp-eln-load-path" error on startup
 - Wrapped all native-comp settings in ~spacemacs.d/init.el~ with ~(when (boundp 'native-comp-eln-load-path) ...)~

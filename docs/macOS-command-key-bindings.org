@@ -136,7 +136,7 @@ The ~s-k~ prefix is used for a custom keymap with many sub-commands:
 | Keybinding | Function | Description |
 |------------|----------|-------------|
 | ~s-k r t~ | ~org-render-table-at-point~ | Render org table |
-| ~s-k r l~ | ~remove-links/jay~ | Remove links |
+| ~s-k r l~ | ~remove-hyperlink-at-point~ | Remove links |
 | ~s-k r b~ | ~revert-buffer~ | Reload buffer from disk |
 | ~s-k r e~ | ~set-rectangular-region-anchor~ | Set rectangular selection |
 | ~s-k s h~ | ~sh-mode~ | Switch to shell script mode |

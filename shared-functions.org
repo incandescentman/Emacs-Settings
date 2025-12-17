@@ -1156,9 +1156,9 @@ Mark heading done when all checkboxes are checked. See [[http://thread.gmane.org
 
 #+BEGIN_SRC emacs-lisp
 (with-eval-after-load 'org-list
-  (add-hook 'org-checkbox-statistics-hook #'ndk/checkbox-list-complete))
+  (add-hook 'org-checkbox-statistics-hook #'org-checkbox-list-complete))
 
-(defun ndk/checkbox-list-complete ()
+(defun org-checkbox-list-complete ()
   (save-excursion
     (org-back-to-heading t)
     (let ((beg (point)) end)
@@ -2126,7 +2126,7 @@ A useful function: remove a hyperlink but leave the link description:
 
 ** new
 #+begin_src emacs-lisp
-(defun remove-links/jay (beg end)
+(defun remove-hyperlink-at-point (beg end)
   "Replace an Org bracket link at point with its description (or address if no description).
 If a region is active, do this for *all* bracket links in the region.
 
@@ -2621,22 +2621,22 @@ _j_ ^✜^ _;_   _r_eplace  _,_ unmark _o_: quit
              "['\x2019]" nil ("-B") nil utf-8)))
 
 ;;; Don't send ’ to the subprocess.
-(defun endless/replace-apostrophe (args)
+(defun replace-curly-apostrophe (args)
   (cons (replace-regexp-in-string
          "’" "'" (car args))
         (cdr args)))
 (advice-add #'ispell-send-string :filter-args
-            #'endless/replace-apostrophe)
+            #'replace-curly-apostrophe)
 
 ;;; Convert ' back to ’ from the subprocess.
-(defun endless/replace-quote (args)
+(defun replace-curly-quotes (args)
   (if (not (derived-mode-p 'org-mode))
       args
     (cons (replace-regexp-in-string
            "'" "’" (car args))
           (cdr args))))
 (advice-add #'ispell-parse-output :filter-args
-            #'endless/replace-quote)
+            #'replace-curly-quotes)
 #+END_SRC
 
 
@@ -2787,7 +2787,7 @@ to exactly 2, and leaves existing double breaks unchanged."
 )
 #+BEGIN_SRC emacs-lisp
 
-(defun xah-convert-entities-to-html-chars-region (begin end)
+(defun html-entities-to-chars (begin end)
   (interactive "r")
   (xah-replace-pairs-region begin end
  '(
@@ -2796,7 +2796,7 @@ to exactly 2, and leaves existing double breaks unchanged."
  [">" "&gt;"]
  )))
 
-(defun xah-convert-html-chars-to-entities-region (begin end)
+(defun html-chars-to-entities (begin end)
  (interactive "r")
  (xah-replace-pairs-region begin end
  '(
@@ -2839,7 +2839,7 @@ The trick is to not use different colored delimiters! The reason I need the rain
 Source: [[http://endlessparentheses.com/fixing-double-capitals-as-you-type.html?source%3Drss][Fixing DOuble CApitals as you type · Endless Parentheses]]
 
 #+BEGIN_SRC emacs-lisp
-(defun dcaps-to-scaps ()
+(defun fix-double-capitals ()
   "Convert word in DOuble CApitals to Single Capitals."
   (interactive)
   (and (= ?w (char-syntax (char-before)))
@@ -2851,7 +2851,7 @@ Source: [[http://endlessparentheses.com/fixing-double-capitals-as-you-type.html?
                 (looking-at "\\b[[:upper:]]\\{2\\}[[:lower:]]"))
               (capitalize-word 1)))))
 
-(add-hook 'post-self-insert-hook #'dcaps-to-scaps nil 'local)
+(add-hook 'post-self-insert-hook #'fix-double-capitals nil 'local)
 
 (define-minor-mode dubcaps-mode
   "Toggle `dubcaps-mode'.  Converts words in DOuble CApitals to
@@ -2859,8 +2859,8 @@ Single Capitals as you type."
   :init-value nil
   :lighter (" DC")
   (if dubcaps-mode
-      (add-hook 'post-self-insert-hook #'dcaps-to-scaps nil 'local)
-    (remove-hook 'post-self-insert-hook #'dcaps-to-scaps 'local)))
+      (add-hook 'post-self-insert-hook #'fix-double-capitals nil 'local)
+    (remove-hook 'post-self-insert-hook #'fix-double-capitals 'local)))
 
 #+END_SRC
 
@@ -4466,7 +4466,7 @@ ounts lines, words, and characters in the region or the subtree at point. It pri
 
 #+BEGIN_SRC emacs-lisp
 
-(defun ap/org-count-words ()
+(defun org-count-words-in-subtree ()
   "If region is active, count words in it; otherwise count words in current subtree."
   (interactive)
   (if (use-region-p)
@@ -5862,7 +5862,7 @@ PREFIX >1 ⇒ dirs only,  PREFIX <0 ⇒ files only,  none ⇒ both."
 
 (define-key key-minor-mode-map (kbd "M-g M-g") 'google-this)
 
-(defun er-google ()
+(defun google-search-region ()
  "Google the selected region if any, display a query prompt otherwise."
  (interactive)
  (browse-url
