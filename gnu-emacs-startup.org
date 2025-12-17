@@ -694,7 +694,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 ;; (define-key key-minor-mode-map (kbd "C-M-*") 'org-toggle-todo-subheading)
 
 
-(define-key key-minor-mode-map (kbd "M-t") 'titlecase-dwim)
+(define-key key-minor-mode-map (kbd "M-t") 'mw-thesaurus-lookup-dwim)
 
 (define-key key-minor-mode-map (kbd "M--") 'cycle-hyphenation-or-toggle-item)
 
@@ -741,7 +741,7 @@ Eventually replace these with this? https://github.com/noctuid/general.el
 
 (define-key key-minor-mode-map (kbd "s-B") 'consult-buffer)
 (define-key key-minor-mode-map (kbd "C-s-SPC") 'cape-emoji)
-(define-key key-minor-mode-map (kbd "s-T") 'mw-thesaurus-lookup-dwim)
+(define-key key-minor-mode-map (kbd "s-T") 'new-buffer-in-new-pane)
 (define-key key-minor-mode-map (kbd "s-D") 'define-word-at-point)
 
 ;; For extracting content from my browser

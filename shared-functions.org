@@ -6958,17 +6958,17 @@ This tells Emacs to simply insert a "<" whenever you press that key, bypassing a
 ** clone-indirect-buffer-new-window-and-focus
 #+begin_src emacs-lisp
 (defun clone-indirect-buffer-new-window-and-focus ()
-  "Clone the current buffer to another window and KEEP focus in the new window."
+  "Clone the current buffer to another window, narrowing both panes to subtree."
   (interactive)
-  ;; This will automatically create and select the new indirect buffer in another window
-  (clone-indirect-buffer-other-window nil t)
-
-  ;; Narrow if you wish:
-  (when (derived-mode-p 'org-mode)
-    (org-narrow-to-subtree))
-  ;; Because clone-indirect-buffer-other-window already selects the new buffer,
-  ;; you don't need to do anything else to maintain focus there.
-)
+  (let ((original-window (selected-window)))
+    ;; Narrow the original window first (while we're still in it)
+    (when (derived-mode-p 'org-mode)
+      (org-narrow-to-subtree))
+    ;; Clone to new window (this moves focus to the new window)
+    (clone-indirect-buffer-other-window nil t)
+    ;; Narrow the new clone as well
+    (when (derived-mode-p 'org-mode)
+      (org-narrow-to-subtree))))
 #+end_src
 
 
@@ -7731,6 +7731,17 @@ Note: The duplicate word removal is invoked only once to avoid redundancy."
  (split-window-right size)
  (other-window 1))
 
+#+end_src
+
+* new-buffer-in-new-pane
+#+begin_src emacs-lisp
+(defun new-buffer-in-new-pane ()
+  "Split window left and open a new org-mode buffer."
+  (interactive)
+  (split-window-left)
+  (setq new-buffer-count (+ new-buffer-count 1))
+  (switch-to-buffer (concat "buffer" (int-to-string new-buffer-count)))
+  (org-mode))
 #+end_src
 
 * export to PDF and prepend cover page
