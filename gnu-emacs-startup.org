@@ -1363,17 +1363,36 @@ The last line sets the path to where saveplace stores your position data. Change
 * clone subtree
 #+BEGIN_SRC emacs-lisp
 (defun org-clone-subtree ()
+  "Clone the current subtree and modify the clone's heading.
+If the heading ends with a number, increment it (e.g., 'draft 1' -> 'draft 2').
+Otherwise, append ' (clone)' to the heading.
+Adds an empty line before the cloned subtree."
   (interactive)
   (org-clone-subtree-with-time-shift 1)
   (save-excursion
     (org-goto-sibling)
+    ;; Add empty line before the clone
+    (beginning-of-line)
+    (insert "\n")
     ;; Adapted from http://orgmode.org/worg/org-hacks.html#orgheadline10.
     (when (org-at-heading-p)
       (let ((hl-text (nth 4 (org-heading-components))))
         (when hl-text
           (beginning-of-line)
-          (search-forward hl-text (point-at-eol))
-          (replace-match (format "%s (clone)" hl-text) nil t))))))
+          (let* ((start (search-forward hl-text (point-at-eol)))
+                 (end start)
+                 (beg (- start (length hl-text)))
+                 (new-text
+                  (if (string-match "\\(.*[^0-9]\\)\\([0-9]+\\)\\s-*$" hl-text)
+                      ;; Heading ends with a number - increment it
+                      (let ((prefix (match-string 1 hl-text))
+                            (num (string-to-number (match-string 2 hl-text))))
+                        (format "%s%d" prefix (1+ num)))
+                    ;; No trailing number - add "(clone)"
+                    (format "%s (clone)" hl-text))))
+            (delete-region beg end)
+            (goto-char beg)
+            (insert new-text)))))))
 #+END_SRC
 
 * fountain
