@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2025-12-20: Fix pasteboard-paste-clean stripping double line breaks
+- Fixed ~pasteboard--strip-trailing-whitespace~ in ~pasteboard-copy-and-paste-functions.el~
+- Changed regex from ~[[:space:]]+$~ to ~[ \t]+$~
+- The ~[[:space:]]~ character class in Emacs includes newlines, causing blank lines to be stripped
+- The fix uses ~[ \t]~ to match only horizontal whitespace (spaces and tabs), preserving paragraph breaks
+
 * 2025-12-17: Rename functions for clarity and add new-buffer-in-new-pane
 - Added ~new-buffer-in-new-pane~ function: splits window left and creates new org buffer
 - Updated ~clone-indirect-buffer-new-window-and-focus~ to narrow both panes to subtree

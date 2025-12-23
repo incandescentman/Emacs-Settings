@@ -156,6 +156,7 @@ Additional keyword ARGS allow callers to override pieces of the template:
      :filetags ":writers:person:")
     ("k" "kanban" "kanban" "kanban")
     ("L" "Learning, lectures, and classes" "lectures" "learning")
+    ("u" "approved language" "approved-language" "language")
     ("z" "CRM (custom path)" "" "crm"
      :body "- Links ::\nSource ::\n\n\n* ${title}\n%?"
      :target (file+head (lambda ()

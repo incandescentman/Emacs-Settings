@@ -337,6 +337,16 @@ buffer."
   (pasteboard--strip-cite-markers beg end)
   (message "Removed cite markers"))
 
+(defun pasteboard--strip-trailing-whitespace (beg end)
+  "Remove trailing whitespace from all lines between BEG and END.
+Text copied from terminal UIs (e.g., Claude Code transcript panels) often has
+lines padded with spaces to a fixed width.  This creates awkward formatting
+when pasted into Org files.  Stripping trailing whitespace normalises the text."
+  (save-excursion
+    (goto-char beg)
+    (while (re-search-forward "[ \t]+$" end t)
+      (replace-match "" t t))))
+
 (defun pasteboard--ensure-blank-line-before-headings (beg end)
   "Ensure there is a blank line before any Org heading between BEG and END."
   (save-excursion
@@ -840,6 +850,9 @@ Transforms lines like \"| --- | --- |\" into \"|---|---|\" while leaving data ro
                       (normalize-dashes))
                     (when (fboundp 'convert-markdown-to-org-code-blocks-simple)
                       (convert-markdown-to-org-code-blocks-simple)))))
+              ;; Strip trailing whitespace last (after all content transforms) to
+              ;; clean up fixed-width padding from terminal UI copies.
+              (pasteboard--strip-trailing-whitespace (point-min) (point-max))
               (pasteboard--ensure-blank-line-before-headings (point-min) (point-max))
               (buffer-string))
           (when heading-markers
