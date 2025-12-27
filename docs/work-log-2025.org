@@ -1,3 +1,7 @@
+- *2025-12-26: Restore Org emphasis fontification with safe dash boundaries*
+- Rebuilt Org emphasis regex after customizing =org-emphasis-regexp-components= in =spacemacs-new-config.el= so inline emphasis re-fontifies in prose buffers
+- Allowed em/en dashes only on the pre-side of the emphasis boundary to avoid breaking fontification while supporting dash-adjacent emphasis
+
 - *2025-12-03: Pasteboard markdown fence converter relocated and fixed*
 - Moved `convert-markdown-to-org-code-blocks-simple` out of `shared-functions.org` into `pasteboard-copy-and-paste-functions.el` (source of truth), so paste-clean pipeline owns the helper it calls
 - Rewrote the converter to toggle fences statefully (handles unlabeled ``` blocks) to stop the duplicated `#+end_src` output seen in Org pastes
