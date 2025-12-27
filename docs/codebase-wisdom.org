@@ -2,6 +2,35 @@
 #+DATE: 2025-09-24
 #+DESCRIPTION: Debugging post-mortems and prevention checklists.
 
+* Org Emphasis Regex: Must Rebuild After Changing Components
+  Date: 2025-12-26
+
+** The Bug
+Org emphasis (~*bold*~, ~/italic/~) stopped being fontified in some buffers. Inline emphasis like ~this *word* here~ wouldn't render, though emphasis on its own line sometimes worked.
+
+** The Truth
+Setting ~org-emphasis-regexp-components~ alone does nothing—org caches the compiled regex at load time. The variable is just data; ~org-set-emph-re~ must be called to rebuild ~org-emph-re~ from it.
+
+** Why This Was Tricky
+- Evaluating the setq interactively followed by ~org-set-emph-re~ worked fine, making it seem like the config was correct
+- The cached regex persisted across buffer switches, so the problem appeared file-specific
+- Restarting Emacs loaded the setq but never rebuilt the regex, so emphasis silently failed
+
+** The Fix
+Call ~org-set-emph-re~ after org loads:
+#+begin_src elisp
+(setq org-emphasis-regexp-components
+      '("-[:space:]('\"{" "-[:space:].,:!?;'\")}\\[" "[:space:]" "." 1))
+(with-eval-after-load 'org
+  (org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components))
+#+end_src
+
+** Lessons Learned / Prevention Checklist
+- Org caches expensive regexes at load time; changing the source variable requires an explicit rebuild call
+- When a setq "works interactively but not on restart," suspect a missing initialization hook
+- Always pair ~org-emphasis-regexp-components~ changes with ~org-set-emph-re~
+- For emphasis issues, check ~org-emph-re~ value—if it doesn't match your components, the rebuild never happened
+
 * Pasteboard Markdown Bullet Detection: Regex and Retangle
 * Markdown Heading Loop: Marker Guards
   Date: 2025-10-16

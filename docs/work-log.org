@@ -1,6 +1,18 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2025-12-26: Fix org-emphasis-regexp-components not taking effect
+- Fixed org emphasis (bold, italic) not being fontified in some buffers
+- Root cause: Setting ~org-emphasis-regexp-components~ alone doesn't rebuild the cached regex
+- Added explicit call to ~org-set-emph-re~ after org loads in ~spacemacs-new-config.el~:
+  #+begin_src elisp
+  (setq org-emphasis-regexp-components
+        '("-[:space:]('\"{" "-[:space:].,:!?;'\")}\\[" "[:space:]" "." 1))
+  (with-eval-after-load 'org
+    (org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components))
+  #+end_src
+- Key insight: Org caches the compiled emphasis regex; you must call ~org-set-emph-re~ to rebuild it after changing components
+
 * 2025-12-20: Fix pasteboard-paste-clean stripping double line breaks
 - Fixed ~pasteboard--strip-trailing-whitespace~ in ~pasteboard-copy-and-paste-functions.el~
 - Changed regex from ~[[:space:]]+$~ to ~[ \t]+$~

@@ -275,6 +275,12 @@
         ("+"
          (:strike-through t)))))
 
+;; Explicit default for org emphasis regex (safeguard)
+(setq org-emphasis-regexp-components
+      '("-[:space:]('\"{" "-[:space:].,:!?;'\")}\\[" "[:space:]" "." 1))
+(with-eval-after-load 'org
+  (org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components))
+
 (setq org-adapt-indentation nil)
 
 ;; disable smooth scrolling
