@@ -137,6 +137,52 @@ awk '/^;;/{n++} !/^;;/{if(n>10) print FILENAME":"NR-n"-"NR; n=0}' *.el
 
 * Medium Priority (Planned)
 
+** [PLANNED] Create "Known Good" Recovery System
+
+*Why it matters*:
+- If a config change breaks Emacs, no easy way to revert
+- Manual git checkout requires remembering which commit worked
+- Should be automatic and foolproof
+
+*Proposal*:
+Create =safe-emacs= wrapper script that:
+1. Launches Emacs with timeout check (~10 seconds)
+2. If successful boot → =git tag -f known-good=
+3. If crash → prompt "Revert to last known-good config?"
+
+*Implementation*:
+#+BEGIN_SRC sh
+#!/bin/bash
+# ~/bin/safe-emacs
+
+cd ~/emacs/emacs-settings
+
+# Try to launch Emacs, timeout after 10s to check if it stays up
+timeout 10 emacs "$@" &
+PID=$!
+sleep 10
+
+if kill -0 $PID 2>/dev/null; then
+    # Still running after 10s = success
+    git tag -f known-good HEAD
+    wait $PID
+else
+    # Crashed
+    echo "Emacs failed to start. Revert to known-good? (y/n)"
+    read answer
+    if [ "$answer" = "y" ]; then
+        git checkout known-good
+        emacs "$@"
+    fi
+fi
+#+END_SRC
+
+*Also add*:
+- Alias =emacs= to =safe-emacs= in shell config
+- Document in =recovery-guide.org=
+
+*Effort*: ~2 hours
+
 ** [PLANNED] Document Function Dependencies
 
 *Why it matters*:
