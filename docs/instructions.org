@@ -23,10 +23,10 @@ Key features:
 
 2. *Create the Spacemacs symlink*
    #+BEGIN_SRC sh
-   ln -s ~/emacs/emacs-settings/init.el ~/.spacemacs
+   ln -s ~/emacs/emacs-settings/spacemacs.d ~/.spacemacs.d
    #+END_SRC
 
-   Note: This links Spacemacs' config file to =init.el= in this repo.
+   Note: This links Spacemacs' config directory to =spacemacs.d/= in this repo.
 
 3. *Install external dependencies* (macOS)
    #+BEGIN_SRC sh
@@ -51,11 +51,11 @@ Key features:
 ** File Structure
 
 Key files you'll interact with:
-- =init.el= - Main Spacemacs configuration (symlinked to =~/.spacemacs=)
+- =spacemacs.d/init.el= - Main Spacemacs configuration (=/Users/jay/emacs/emacs-settings/spacemacs.d/init.el=)
 - =shared-functions.org= - Most custom functions (9,983 lines, auto-tangles to =.el=)
-- =pasteboard-copy-and-paste-functions.org= - Clipboard magic
+- =pasteboard-copy-and-paste-functions.el= - Clipboard magic (pure elisp, edit directly)
 - =fonts-and-themes.org= - Visual appearance
-- =spacemacs.d/= - Additional Spacemacs layers and config
+- =spacemacs.d/= - Spacemacs config directory (symlinked from =~/.spacemacs.d=)
 - =docs/= - Documentation (including this file)
 
 * Essential Features
@@ -203,6 +203,7 @@ This config uses *literate programming* - you edit =.org= files which generate =
 3. Restart Emacs or reload: =SPC f e R=
 
 Files with =#+auto_tangle: t= header tangle automatically on save.
+Note: =pasteboard-copy-and-paste-functions.el= is pure elisp and does not tangle.
 
 * Search and Navigation
 
@@ -279,7 +280,7 @@ The original beautiful-racket template without Tufte enhancements.
 The config is complex. To debug:
 1. Check =*Messages*= buffer for errors
 2. Look for mentions of missing files or functions
-3. Try temporarily renaming =~/.spacemacs= to test vanilla Spacemacs
+3. Try temporarily renaming =~/.spacemacs.d= to test vanilla Spacemacs
 
 ** Packages are missing
 
@@ -302,7 +303,7 @@ Or within Emacs: =SPC f e R= (reload) or =SPC f e U= (update packages)
    (byte-recompile-directory "~/emacs/emacs-settings" 0)
    #+END_SRC
 
-2. Check =init.el= for unused layers (comment them out)
+2. Check =spacemacs.d/init.el= for unused layers (comment them out)
 
 3. Profile startup with =emacs --timed-requires=
 
@@ -350,7 +351,7 @@ Global keybindings live in:
 - =keys.el= - Global overrides
 - =jay-osx.el= - macOS-specific (defines =key-minor-mode-map=)
 
-Spacemacs keybindings: edit =init.el= in the =dotspacemacs/user-config= section.
+Spacemacs keybindings: edit =spacemacs.d/init.el= in the =dotspacemacs/user-config= section.
 
 ** Safe Testing
 
@@ -436,9 +437,9 @@ Always *incarnadine red* (deep crimson) - distinctive but not jarring. All theme
 
 | File                                     | Purpose                          |
 |------------------------------------------+----------------------------------|
-| =init.el=                                | Spacemacs main config            |
+| =spacemacs.d/init.el=                    | Spacemacs main config            |
 | =shared-functions.org=                   | Most custom functions            |
-| =pasteboard-copy-and-paste-functions.org= | Clipboard magic                 |
+| =pasteboard-copy-and-paste-functions.el= | Clipboard magic                  |
 | =fonts-and-themes.org=                   | Appearance settings              |
 | =docs/instructions.org=                  | This file!                       |
 

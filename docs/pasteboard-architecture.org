@@ -31,7 +31,7 @@
   9. Ensure a blank line before headings unless the previous line is also a heading (keeps `*`/`**` sequences tight)
 
 ** Adaptive Paste Decision Tree
-`pasteboard-paste-adaptive` chooses paste behavior based on context (line 566-613):
+`pasteboard-paste-adaptive` chooses paste behavior based on context (see =pasteboard-copy-and-paste-functions.el=):
 
 *** 1. URL + Active Region → Bracket Link
 - If clipboard contains URL (`https://` or `www.`) AND region is active
@@ -69,14 +69,14 @@ For unmatched modes, inspect characters around point:
 When `pasteboard-paste-adaptive` detects an org-roam buffer (by checking for `:ID:` property at buffer start), it applies an additional transformation to maintain proper heading hierarchy:
 
 ** Detection
-- Function: `is-org-roam-buffer-p()` (line 505 in pasteboard-copy-and-paste-functions.org)
+- Function: `is-org-roam-buffer-p()` (in =pasteboard-copy-and-paste-functions.el=)
 - Checks if buffer is in `org-mode`
 - Looks for pattern: `^:PROPERTIES:\n:ID: ...\n:END:` at beginning of file
 
 ** Demotion Behavior
 When pasting into an org-roam buffer AND the cleaned text contains org headings:
 - All headings are automatically demoted by one level
-- Function: `pasteboard--demote-headings-in-string` (line 556)
+- Function: `pasteboard--demote-headings-in-string` (in =pasteboard-copy-and-paste-functions.el=)
 - Pattern: `^\\(\\*+\\) ` (note the required space after asterisks)
 - Transformation: `** Heading` → `*** Heading`
 

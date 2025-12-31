@@ -1,0 +1,181 @@
+#+TITLE: Emacs Recovery Guide
+#+DATE: 2025-12-31
+#+DESCRIPTION: What to do when Emacs won't start
+
+* Quick Reference
+
+| Level | Problem | Command |
+|-------+---------+---------|
+| 1 | See what's wrong | =emacs --debug-init= |
+| 2 | Config problem | Rename =~/.spacemacs.d= |
+| 3 | Package problem | =rm -rf ~/.emacs.d/elpa= |
+| 4 | Spacemacs problem | =emacs -Q= |
+| 5 | Everything broken | Re-clone Spacemacs |
+
+* Your Setup Structure
+
+#+begin_example
+~/.emacs.d → ~/emacs/spacemacs           (Spacemacs core)
+~/.spacemacs → ~/starship/init.el        (symlink chain)
+~/starship → ~/emacs/emacs-settings/spacemacs.d
+~/.emacs.d/elpa/                         (496 packages, 293MB)
+#+end_example
+
+* Level 1: Debug Mode
+
+*When to use*: Emacs crashes or shows errors on startup.
+
+#+begin_src sh
+emacs --debug-init
+#+end_src
+
+This shows the Emacs debugger when an error occurs. Look for:
+- File names (which config file failed)
+- Function names (what was being called)
+- "void-function" or "void-variable" errors (missing dependency)
+
+* Level 2: Bypass Your Config
+
+*When to use*: Debug mode shows error in your config files.
+
+#+begin_src sh
+# Temporarily disable your config
+mv ~/.spacemacs ~/.spacemacs.bak
+mv ~/.spacemacs.d ~/.spacemacs.d.bak
+
+# Start Emacs (will use vanilla Spacemacs)
+emacs
+
+# If it works, the problem is in your config
+# Restore when done:
+mv ~/.spacemacs.bak ~/.spacemacs
+mv ~/.spacemacs.d.bak ~/.spacemacs.d
+#+end_src
+
+* Level 3: Nuke Packages
+
+*When to use*: Package conflicts, "package not found", or corruption.
+
+#+begin_src sh
+# Delete all installed packages
+rm -rf ~/.emacs.d/elpa
+
+# Restart Emacs (will reinstall everything)
+emacs
+#+end_src
+
+This takes 5-10 minutes as Spacemacs re-downloads ~500 packages.
+
+* Level 4: Bypass Spacemacs Entirely
+
+*When to use*: Spacemacs itself is broken, or you need a working Emacs immediately.
+
+** Option A: Completely Vanilla
+#+begin_src sh
+emacs -Q
+#+end_src
+
+This starts Emacs with NO configuration at all. Useful for:
+- Verifying Emacs itself works
+- Emergency file editing
+- Ruling out all config issues
+
+** Option B: Minimal Config (if you create one)
+#+begin_src sh
+emacs -Q -l ~/emacs/emacs-settings/minimal-init.el
+#+end_src
+
+* Level 5: Nuclear - Fresh Spacemacs
+
+*When to use*: Nothing else works, Spacemacs core is corrupted.
+
+#+begin_src sh
+# 1. Backup current state
+cd ~/emacs
+mv spacemacs spacemacs.broken
+
+# 2. Fresh clone of Spacemacs
+git clone https://github.com/syl20bnr/spacemacs ~/emacs/spacemacs
+
+# 3. Verify symlink still works
+ls -la ~/.emacs.d
+# Should show: ~/.emacs.d -> /Users/jay/emacs/spacemacs
+
+# 4. Start Emacs (will bootstrap fresh)
+emacs
+#+end_src
+
+Your config (in =emacs-settings/spacemacs.d=) is preserved. Only Spacemacs core is replaced.
+
+* Batch Syntax Check
+
+Check config files for syntax errors without launching GUI:
+
+#+begin_src sh
+# Check for unbalanced parentheses
+emacs --batch ~/emacs/emacs-settings/spacemacs.d/init.el --eval '(check-parens)'
+
+# Try to load a file
+emacs --batch -l ~/emacs/emacs-settings/shared-functions.el 2>&1 | head -20
+
+# Byte-compile to find warnings
+emacs --batch --eval '(byte-compile-file "~/emacs/emacs-settings/shared-functions.el")'
+#+end_src
+
+* Common Error Patterns
+
+** "Symbol's function definition is void: X"
+- Missing package or function
+- Try: =rm -rf ~/.emacs.d/elpa && emacs=
+
+** "Cannot open load file: X"
+- File doesn't exist or path is wrong
+- Check symlinks: =ls -la ~/.spacemacs=
+
+** "Wrong number of arguments"
+- Package version mismatch
+- Try: Nuke packages (Level 3)
+
+** Infinite loop / hang on startup
+#+begin_src sh
+# Start with debug, interrupt with C-g when it hangs
+emacs --debug-init
+# Then check *Backtrace* buffer
+#+end_src
+
+** "Recursive load" error
+- Circular dependency in config
+- Check recent changes to config files
+
+* Prevention
+
+** Before Major Changes
+#+begin_src sh
+cd ~/emacs/emacs-settings
+git stash  # Save current state
+# Make changes
+# If broken:
+git stash pop  # Restore
+#+end_src
+
+** Quick Sanity Check
+#+begin_src sh
+# After editing config, verify syntax
+emacs --batch -l ~/.spacemacs.d/init.el --eval '(message "OK")' 2>&1
+#+end_src
+
+* File Locations
+
+| What | Path |
+|------+------|
+| Spacemacs core | =~/emacs/spacemacs= |
+| Your config | =~/emacs/emacs-settings/spacemacs.d/init.el= |
+| Packages | =~/.emacs.d/elpa/= |
+| Backups | =~/emacs/backup/per-save/= |
+| This guide | =~/emacs/emacs-settings/docs/recovery-guide.org= |
+
+* Related Documentation
+
+- =backup-system.org= - Full backup and recovery procedures
+- =instructions.org= - General troubleshooting
+- =codebase-wisdom.org= - Lessons from past debugging sessions

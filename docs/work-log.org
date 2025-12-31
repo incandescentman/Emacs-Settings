@@ -1,6 +1,13 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2025-12-31: Create recovery guide and minimal init
+- Created ~docs/recovery-guide.org~ with 5-level escalation path for when Emacs won't start
+- Created ~minimal-init.el~ escape hatch for bypassing Spacemacs entirely
+  - Usage: ~emacs -Q -l ~/emacs/emacs-settings/minimal-init.el~
+  - Provides basic org-mode, macOS keybindings, dark theme
+  - No packages, no complexity - emergency editing only
+
 * 2025-12-31: Backup system audit
 - Audited backup system and found critical issues:
   - 1,906 unpushed commits to GitHub (fixed with this push)

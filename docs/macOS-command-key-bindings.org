@@ -61,7 +61,6 @@ This document lists all keybindings that use the "s-" prefix (macOS Command key)
 | ~s-_~ | ~olivetti-shrink~ | Shrink olivetti mode margins |
 | ~s-=~ | ~embiggen-text~ | Increase font size |
 | ~s--~ | ~ensmallen-text~ | Decrease font size |
-| ~s->~ | ~org-mark-subtree~ | Mark org subtree |
 | ~s-<~ | ~load-shared-functions~ | Load shared functions |
 | ~s->~ | ~load-gnu-startup~ | Reload GNU startup config |
 | ~s-?~ | ~load-spacecraft-mode~ | Load spacecraft mode |

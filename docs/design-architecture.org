@@ -11,7 +11,7 @@ This document explains how the Emacs configuration is organized, how different p
 Think of this configuration as three layers:
 
 1. *Foundation*: Spacemacs provides the base (layers, package management, keybindings)
-2. *Custom Modules*: Org files that tangle to Elisp (clipboard integration, themes, utilities)
+2. *Custom Modules*: Org files that tangle to Elisp (themes, utilities) plus pure elisp modules like pasteboard integration
 3. *Integration*: macOS-specific features, external tools (ripgrep, hunspell), custom workflows
 
 * Architecture Components
@@ -19,7 +19,7 @@ Think of this configuration as three layers:
 ** Core Structure
 
 *** Spacemacs Layer
-- *File*: =init.el= (symlinked to =~/.spacemacs=)
+- *File*: =spacemacs.d/init.el= (=/Users/jay/emacs/emacs-settings/spacemacs.d/init.el=)
 - *Purpose*: Configures Spacemacs layers and basic settings
 - *What it loads*:
   - org layer (with org-roam support)
@@ -35,7 +35,6 @@ These are the heart of the customization. Each =.org= file contains documentatio
 | Org File                                  | Generated File        | Purpose                           |
 |-------------------------------------------+-----------------------+-----------------------------------|
 | =shared-functions.org=                    | =shared-functions.el= | Core utilities (9,983 lines)      |
-| =pasteboard-copy-and-paste-functions.org= | =pasteboard-*.el=     | Clipboard cleaning and integration |
 | =gnu-emacs-startup.org=                   | =gnu-emacs-startup.el= | Alternative startup config        |
 | =fonts-and-themes.org=                    | =fonts-and-themes.el= | Appearance functions              |
 | =spacecraft-mode.org=                     | =spacecraft-mode.el=  | Distraction-free writing mode     |
@@ -45,6 +44,8 @@ These are the heart of the customization. Each =.org= file contains documentatio
 2. Press =C-c C-v t= to "tangle" (extract code blocks → =.el= file)
 3. Emacs loads the =.el= file on startup
 4. Optional: Byte-compile =.el= → =.elc= for faster startup
+
+Note: =pasteboard-copy-and-paste-functions.el= is now pure elisp and does not tangle.
 
 *** Platform Integration
 
@@ -75,7 +76,7 @@ Understanding the loading sequence helps debug issues:
 #+BEGIN_SRC
 1. Emacs starts
 2. Loads ~/.emacs.d/init.el (Spacemacs core)
-3. Reads ~/.spacemacs (symlinked to ~/emacs/emacs-settings/init.el)
+3. Reads ~/.spacemacs.d/init.el (symlinked to /Users/jay/emacs/emacs-settings/spacemacs.d/init.el)
 4. Spacemacs loads layers (org, auto-completion, etc.)
 5. Loads spacemacs-new-config.el
 6. Loads jay-osx.el (provides key-minor-mode-map)
@@ -382,23 +383,23 @@ This config uses these Spacemacs layers:
 ** 2025-10-11: File Watcher Suppression
 - *Problem*: Dropbox sync caused file-notify errors
 - *Solution*: Disabled file watchers for cloud storage, use polling instead
-- *Files changed*: =init.el= (file-notify suppression)
+- *Files changed*: =spacemacs.d/init.el= (file-notify suppression)
 
 ** 2025-09-24: Clipboard Table Handling
 - *Problem*: Markdown tables lost separators during paste
 - *Solution*: Preserve =|---|---| patterns in =normalize-dashes=
-- *Files changed*: =pasteboard-copy-and-paste-functions.org=
+- *Files changed*: =pasteboard-copy-and-paste-functions.el=
 
 ** 2025-09-24: Emoji Preservation
 - *Problem*: Zero-width joiners stripped, breaking compound emoji
 - *Solution*: Exclude zero-width joiners from whitespace normalization
-- *Files changed*: =pasteboard-copy-and-paste-functions.org=
+- *Files changed*: =pasteboard-copy-and-paste-functions.el=
 
 ** 2025-09-05: Deprecation Fixes
 - Updated =org-bracket-link-regexp= → =org-link-bracket-re=
 - Fixed =plusp= → =(> arg 0)=
 - Removed duplicate function definitions
-- *Files changed*: =shared-functions.org=, =init.el=
+- *Files changed*: =shared-functions.org=, =spacemacs.d/init.el=
 
 * Performance Considerations
 
@@ -421,7 +422,7 @@ emacs --timed-requires
 
 *Large files*:
 - =shared-functions.el=: ~316KB
-- =init.el=: ~50KB
+- =spacemacs.d/init.el=: ~50KB
 - =gnu-emacs-startup.el=: ~46KB
 
 *Not a problem*: Emacs handles this fine. The byte-compiled versions load quickly.
@@ -449,7 +450,7 @@ emacs --timed-requires
 
 1. Choose location:
    - General utility → =shared-functions.org=
-   - Clipboard-related → =pasteboard-copy-and-paste-functions.org=
+  - Clipboard-related → =pasteboard-copy-and-paste-functions.el=
    - Theme/appearance → =fonts-and-themes.org=
 
 2. Add in a =#+BEGIN_SRC emacs-lisp= block
@@ -464,13 +465,13 @@ emacs --timed-requires
 
 1. Create =new-module.org= with =#+auto_tangle: t= header
 
-2. Add to loading sequence in =init.el= or =gnu-emacs-startup.el=
+2. Add to loading sequence in =spacemacs.d/init.el= or =gnu-emacs-startup.el=
 
 3. Test loading order (make sure dependencies load first)
 
 ** Adding a Spacemacs Layer
 
-1. Edit =init.el=
+1. Edit =spacemacs.d/init.el=
 
 2. Find =dotspacemacs-configuration-layers=
 
@@ -489,7 +490,7 @@ emacs --timed-requires
 *Cause*: Module A uses something from Module B, but B loads after A
 
 *Solution*:
-1. Find loading order in =init.el= or =gnu-emacs-startup.el=
+1. Find loading order in =spacemacs.d/init.el= or =gnu-emacs-startup.el=
 2. Move Module B earlier
 3. Or use =(require 'module-b)= at top of Module A
 
@@ -498,7 +499,7 @@ emacs --timed-requires
 *Symptom*: "Cannot find file" or "Package not available"
 
 *Solution*:
-1. Check =dotspacemacs-additional-packages= in =init.el=
+1. Check =dotspacemacs-additional-packages= in =spacemacs.d/init.el=
 2. Check layer configuration
 3. Try =SPC f e R= (reload) or =SPC f e U= (update packages)
 

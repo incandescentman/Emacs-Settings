@@ -266,8 +266,8 @@ git commit -m "Restore accidentally deleted file"
 
 3. *Verify symlink*:
    #+BEGIN_SRC sh
-   ls -l ~/.spacemacs
-   # Should point to ~/emacs/emacs-settings/init.el
+   ls -l ~/.spacemacs.d
+   # Should point to /Users/jay/emacs/emacs-settings/spacemacs.d
    #+END_SRC
 
 4. *Restart Emacs*

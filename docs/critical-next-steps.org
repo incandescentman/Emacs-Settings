@@ -24,12 +24,12 @@ Status indicators:
 
 ** [COMPLETED] 2025-10-26: Removed init-working.el backup
 - Deleted =spacemacs.d/init-working.el= (old backup from Oct 14)
-- Active config (=~/.spacemacs.d/init.el=) is newer with better features
+- Active config (=/Users/jay/emacs/emacs-settings/spacemacs.d/init.el=) is newer with better features
 - Eliminated confusion between two similar files
 - *Savings:* 1 redundant file removed
 
 ** [COMPLETED] 2025-10-26: Converted pasteboard to pure elisp
-- Converted =pasteboard-copy-and-paste-functions.org= to documentation only
+- Removed =pasteboard-copy-and-paste-functions.org=
 - Source of truth is now =pasteboard-copy-and-paste-functions.el= (pure elisp)
 - Added rich Commentary section with usage examples
 - Removed auto-tangling overhead
@@ -90,7 +90,7 @@ Status indicators:
 
 *Why it matters*:
 Two complete startup systems create massive duplication:
-- Spacemacs: =~/.spacemacs.d/init.el= (1,255 lines) - ACTIVE
+- Spacemacs: =/Users/jay/emacs/emacs-settings/spacemacs.d/init.el= (1,255 lines) - ACTIVE
 - GNU Emacs: =gnu-emacs-startup.el= (1,342 lines) - UNUSED
 
 Settings must be synchronized across both, leading to drift and maintenance burden.
@@ -207,7 +207,7 @@ Keybindings scattered across:
 
 *Why it matters*:
 Org settings spread across:
-- =~/.spacemacs.d/init.el= (performance settings)
+- =/Users/jay/emacs/emacs-settings/spacemacs.d/init.el= (performance settings)
 - =shared-functions.org= (org-mode settings)
 - =org-roam-config.el=
 - =org-visual-style.el=

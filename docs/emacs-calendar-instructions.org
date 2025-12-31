@@ -48,7 +48,7 @@ When you launch the calendar, the window shows the current month centered, with 
 * Diary Integration
 
 ** Custom Configuration
-- Diary file: ~/Users/jay/Dropbox/github/timeless/data/timeline.md~
+- Diary file: =/Users/jay/Dropbox/github/timeless/data/timeline.md=
 - Comment syntax: ~#~ ... (no closing delimiter)
 - Week starts: Monday (~calendar-week-start-day 1~) - the weekend is treated as a unit
 - Format: Entries are expected in ~M/D/YYYY~ format (no leading zeros required)
@@ -218,7 +218,7 @@ If ~o~ shows this message, the date string doesn't exist in your diary file. The
 
 ** Diary not showing entries
 Check that:
-1. ~diary-file~ points to correct file: ~/Users/jay/Dropbox/github/timeless/data/timeline.md~
+1. ~diary-file~ points to correct file: =/Users/jay/Dropbox/github/timeless/data/timeline.md=
 2. Dates in diary file use ~M/D/YYYY~ format (no leading zeros required)
 3. File is accessible and not locked
 4. Buffer is saved - calendar won't detect unsaved changes immediately
@@ -249,7 +249,7 @@ Ensure ~calendar-mode-map~ customizations are loaded:
 
 Configuration sources:
 - ~shared-functions.org:8479-8525~ - Calendar and diary configuration code
-- ~~/Dropbox/github/timeless/data/timeline.md~ - Diary content (Markdown format)
+- =/Users/jay/Dropbox/github/timeless/data/timeline.md= - Diary content (Markdown format)
 - ~jay-custom-color-themes/leuven-jay.el~ - Theme faces affecting calendar colors
 
 * Appendix: Diary Entry Types
