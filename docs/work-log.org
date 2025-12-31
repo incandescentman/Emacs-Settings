@@ -8,6 +8,8 @@
 - Archived unused code:
   - Moved unused `my-org-export-change-options` examples to new file `shared-functions-archive.org`.
 - Verified `chatgpt2org` alias points to existing `elpa-supplement/chatgpt2org.el`.
+- Replaced hardcoded `~/Dropbox` paths with `jay/dropbox-dir` variable for portability.
+- Optimized `buffer-stack-filter-regexp` using `regexp-opt` for better readability and performance.
 
 * 2025-12-26: Fix org-emphasis-regexp-components not taking effect
 - Fixed org emphasis (bold, italic) not being fontified in some buffers

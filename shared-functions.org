@@ -15,6 +15,8 @@ I should probably eventually break these out of custom-set-variables and organiz
 ;; -*- lexical-binding: t -*-
 
 ;; General Settings
+(defvar jay/dropbox-dir "~/Dropbox" "Base directory for Dropbox.")
+
 (setq user-full-name "Jay Dixit"
       abbrev-all-caps nil
       blink-cursor-mode -1
@@ -47,7 +49,7 @@ I should probably eventually break these out of custom-set-variables and organiz
       cua-mode nil)
 
 ;; Deft Settings
-(setq deft-directory "~/Dropbox/writing/notationaldata/")
+(setq deft-directory (concat jay/dropbox-dir "/writing/notationaldata/"))
 
 ;; Edit Server Settings
 
@@ -70,7 +72,7 @@ I should probably eventually break these out of custom-set-variables and organiz
       org-catch-invisible-edits 'smart
       org-ctrl-k-protect-subtree t
       org-custom-properties '(">")
-      org-default-notes-file "~/Dropbox/writing/notationaldata/notes.txt"
+      org-default-notes-file (concat jay/dropbox-dir "/writing/notationaldata/notes.txt")
       org-display-custom-times nil
       org-drawers '("PROPERTIES" "CLOCK" "LOGBOOK" "RESULTS" "SOURCE")
       org-edit-src-content-indentation 4
@@ -1033,7 +1035,7 @@ Don't delete headings unless I specifically say so. So i.e. when I hit delete, d
 '(org-priority-faces nil)
 '(org-provide-checkbox-statistics t)
 
-(defvar my-org-directory "~/Dropbox/writing/notationaldata/")
+(defvar my-org-directory (concat jay/dropbox-dir "/writing/notationaldata/"))
 (defvar my-org-default-notes-file (concat my-org-directory "notes.txt"))
 
 (setq org-directory my-org-directory)
@@ -1061,7 +1063,7 @@ Don't delete headings unless I specifically say so. So i.e. when I hit delete, d
         ("n" "note" entry (file org-default-notes-file)
 	       "* %? :NOTE:\n%U\n%a\n  %i" :prepend t :kill-buffer t :clock-in t :clock-resume t)
 
-        ("b" "book" entry (file "~/Dropbox/writing/book/book-capture.txt")
+        ("b" "book" entry (file (concat jay/dropbox-dir "/writing/book/book-capture.txt"))
 	       "\n\n\n\n* %U\n\n%?\n\n\n" :prepend t :kill-buffer t)
 
 	      ("v" "visualness and visual actions" entry (file "visual-actions.txt")
@@ -1079,13 +1081,13 @@ Don't delete headings unless I specifically say so. So i.e. when I hit delete, d
 	      ("h" "historical interest" entry (file "historical-lifestream.txt")
 	       "\n\n* %U\n  %i\n %?\n" :prepend t :kill-buffer t)
 
-	      ("P" "pages" entry (file "~/Dropbox/writing/notationaldata/pages.txt")
+	      ("P" "pages" entry (file (concat jay/dropbox-dir "/writing/notationaldata/pages.txt"))
 	       "\n\n\n\n* %U\n\n%?\n\n\n" :prepend t :kill-buffer t)
 
 	      ("s" "storytelling and writing" entry (file "/Users/jay/Dropbox/writing/writing-teacher/writing-teacher-stuff/teaching-writing-and-storytelling.txt")
 	       "\n\n\n\n* %U\n\n%?" :prepend t :kill-buffer t)
 
-	      ("F" "Funny" entry (file "~/Dropbox/writing/notationaldata/funny.txt")
+	      ("F" "Funny" entry (file (concat jay/dropbox-dir "/writing/notationaldata/funny.txt"))
 	       "\n\n\n\n* %U\n\n%?\n" :prepend t :kill-buffer t)
 
         ("M" "Memorize" entry
@@ -1406,7 +1408,7 @@ do shell script "echo " & (quoted form of archivedTasks) & "|tr -d \"\\t\"|/usr/
 
 ** Define my default directory:
 #+BEGIN_SRC emacs-lisp
-(setq default-directory "~/Dropbox/writing/" )
+(setq default-directory (concat jay/dropbox-dir "/writing/") )
 #+END_SRC
 
 * Backups
@@ -1532,10 +1534,26 @@ Defines ~ibuffer-do-replace-string~:
 ;; the above I don't think works or at least I don't know how to add to it
 
 ;; The below definitely works.
+(defvar buffer-stack-ignored-names
+  '("April" "Help" "helpful" "minibuf" "echo" "conversion" "converting"
+    "agenda" "server" "Messages" "tex" "Output" "autoload" "Customize"
+    "address" "clock" "Backtrace" "Completions" "grep" "Calendar"
+    "archive" "Compile-Log" "tramp" "helm" "Alerts" "Minibuf" "Agenda"
+    "Echo" "gnugol" "RNC" "ediff" "widget" "melpa" "git" "hydra"
+    "which" "fontification" "Helm" "popwin" "Custom" "Warnings" "tags"
+    "hours" "guide-key" "scratch" "vc" "Compile" "mm" "nntpd"
+    "spacemacs" "Gnorb" "quelpa" "eldoc" "tar" "wordnik" "escape"
+    "trace" "debug" "emacs" "Re-Builder" "Ilist" "orgmode" "todo"
+    "loaddefs" "gnu" "elpa" "version" "alert" "counsel" "consult"
+    "*info*" "*affe*" "pixel" "org-roam" "width" "jka" "123244"
+    "Org parse" "EGLOT" "later" "spacing")
+  "List of buffer names or substrings to ignore in buffer-stack.")
+
 (defun buffer-stack-filter-regexp (buffer)
   "Non-nil if buffer is in buffer-stack-tracked."
-  (not (or (string-match "April\\|Help\\|helpful\\|minibuf\\|echo\\|conversion\\|converting\\|agenda\\|server\\|Messages\\|tex\\|Output\\|autoload\\|Customize\\|address\\|clock\\|Backtrace\\|Completions\\|grep\\|Calendar\\|archive\\|Compile-Log\\|tramp\\|helm\\|Alerts\\|Minibuf\\|Agenda\\|Echo\\|gnugol\\|RNC\\|ediff\\|widget\\|melpa\\|git\\|hydra\\|which\\|fontification\\|Helm\\|popwin\\|Custom\\|Warnings\\|tags\\|hours\\|gnugol\\|guide-key\\|scratch\\|vc\\|Compile\\|mm\\|nntpd\\|spacemacs\\|Gnorb\\|quelpa\\|eldoc\\|tar\\|wordnik\\|escape\\|trace\\|debug\\|emacs\\|Re-Builder\\|Ilist\\|orgmode\\|todo\\|loaddefs\\|gnu\\|elpa\\|version\\|alert\\|counsel\\|consult\\|*info*\\|*affe*\\|pixel\\|org-roam\\|width\\|jka\\|123244\\|ediff\\|Org parse\\|EGLOT\\|later\\|spacing" (buffer-name buffer))
-     (member buffer buffer-stack-untracked))))
+  (let ((ignore-regex (regexp-opt buffer-stack-ignored-names)))
+    (not (or (string-match ignore-regex (buffer-name buffer))
+             (member buffer buffer-stack-untracked)))))
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 
 #+END_SRC
