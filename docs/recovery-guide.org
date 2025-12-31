@@ -2,24 +2,54 @@
 #+DATE: 2025-12-31
 #+DESCRIPTION: What to do when Emacs won't start
 
+* First: Two-Command Triage
+
+Run these first to diagnose the problem:
+
+#+begin_src sh
+# 1. See the error
+emacs --debug-init
+
+# 2. Check config syntax (no GUI needed)
+emacs --batch ~/emacs/emacs-settings/spacemacs.d/init.el --eval '(check-parens)'
+#+end_src
+
 * Quick Reference
 
-| Level | Problem           | Command                |
-|-------+-------------------+------------------------|
-|     1 | See what's wrong  | =emacs --debug-init=     |
-|     2 | Config problem    | Rename =~/.spacemacs.d=  |
-|     3 | Package problem   | =rm -rf ~/.emacs.d/elpa= |
-|     4 | Spacemacs problem | =emacs -Q=               |
-|     5 | Everything broken | Re-clone Spacemacs     |
+| Level | Problem           | Command                              |
+|-------+-------------------+--------------------------------------|
+|     1 | See what's wrong  | =emacs --debug-init=                 |
+|     2 | Config problem    | Rename =~/.spacemacs= AND =~/.spacemacs.d= |
+|     3 | Package problem   | =rm -rf ~/.emacs.d/elpa=             |
+|     4 | Spacemacs problem | =emacs -Q= or =emacs-min=            |
+|     5 | Everything broken | Re-clone Spacemacs                   |
+
+* Shell Aliases (add to ~/.zshrc)
+
+#+begin_src sh
+# Minimal Emacs - bypasses Spacemacs entirely
+alias emacs-min='emacs -Q -l ~/emacs/emacs-settings/minimal-init.el'
+
+# Check symlink health
+alias emacs-check='ls -ld ~/.emacs.d ~/.spacemacs ~/.spacemacs.d ~/starship'
+#+end_src
 
 * Your Setup Structure
 
 #+begin_example
-~/.emacs.d → ~/emacs/spacemacs           (Spacemacs core)
-~/.spacemacs → ~/starship/init.el        (symlink chain)
-~/starship → ~/emacs/emacs-settings/spacemacs.d
-~/.emacs.d/elpa/                         (496 packages, 293MB)
+~/.emacs.d      → ~/emacs/spacemacs                        (Spacemacs core)
+~/.spacemacs    → ~/starship/init.el                       (config entrypoint)
+~/.spacemacs.d  → ~/emacs/emacs-settings/spacemacs.d       (config directory)
+~/starship      → ~/emacs/emacs-settings/spacemacs.d       (convenience alias)
+~/.emacs.d/elpa/                                           (packages)
 #+end_example
+
+*Canonical config file*: =~/emacs/emacs-settings/spacemacs.d/init.el=
+
+*Verify symlinks are healthy*:
+#+begin_src sh
+ls -ld ~/.emacs.d ~/.spacemacs ~/.spacemacs.d ~/starship
+#+end_src
 
 * Level 1: Debug Mode
 *When to use*: Emacs crashes or shows errors on startup.
@@ -130,7 +160,10 @@ emacs --batch --eval '(byte-compile-file "~/emacs/emacs-settings/shared-function
 
 ** "Cannot open load file: X"
 - File doesn't exist or path is wrong
-- Check symlinks: =ls -la ~/.spacemacs=
+- Check all symlinks in the chain:
+  #+begin_src sh
+  ls -ld ~/.emacs.d ~/.spacemacs ~/.spacemacs.d ~/starship
+  #+end_src
 
 ** "Wrong number of arguments"
 - Package version mismatch
@@ -164,58 +197,50 @@ git stash pop  # Restore
 emacs --batch -l ~/.spacemacs.d/init.el --eval '(message "OK")' 2>&1
 #+end_src
 
-* Future: "Known Good" Auto-Recovery
+* "Known Good" Fallback System
 
-*Status*: Planned (not yet implemented)
+A simple manual system using git tags and worktrees. No automation needed.
 
-A wrapper script that automatically tags successful boots and offers rollback when config breaks.
+** Setup (One Time)
 
-** How It Will Work
-1. Launch Emacs with timeout check (~10 seconds)
-2. If successful boot → =git tag -f known-good=
-3. If crash → prompt "Revert to last known-good config?"
-
-** Proposed Script: =safe-emacs=
 #+begin_src sh
-#!/bin/bash
-# ~/bin/safe-emacs
-
 cd ~/emacs/emacs-settings
 
-# Try to launch Emacs, check if it stays up for 10s
-/opt/homebrew/bin/emacs "$@" &
-PID=$!
-sleep 10
+# 1. Tag your current working state
+git tag -f known-good HEAD
 
-if kill -0 $PID 2>/dev/null; then
-    # Still running after 10s = success
-    git tag -f known-good HEAD 2>/dev/null
-    wait $PID
-else
-    # Crashed
-    echo "Emacs failed to start. Revert to known-good? (y/n)"
-    read answer
-    if [ "$answer" = "y" ]; then
-        git checkout known-good
-        /opt/homebrew/bin/emacs "$@"
-    fi
-fi
+# 2. Create a worktree with the known-good config
+git worktree add ~/emacs/emacs-settings-known-good known-good
 #+end_src
 
-** Setup (when implemented)
-1. Save script to =~/bin/safe-emacs=
-2. =chmod +x ~/bin/safe-emacs=
-3. Add alias to =~/.zshrc=: =alias emacs='~/bin/safe-emacs'=
+** When Config Breaks
 
-** Manual Fallback (works now)
+If your current config won't launch, boot from the known-good worktree:
+
 #+begin_src sh
-# Tag current working state
+SPACEMACSDIR=~/emacs/emacs-settings-known-good/spacemacs.d emacs
+#+end_src
+
+This launches Emacs with your last-known-working config, without touching your broken working tree. You can then debug the broken config.
+
+** After Fixing / After Successful Changes
+
+Move the tag forward and update the worktree:
+
+#+begin_src sh
 cd ~/emacs/emacs-settings
 git tag -f known-good HEAD
 
-# If things break later, revert
+# Update the worktree to match
+cd ~/emacs/emacs-settings-known-good
 git checkout known-good
 #+end_src
+
+** Why This Works
+- *No automation to break*: Just git commands you run manually
+- *Safe*: The worktree is separate from your working tree
+- *No stash needed*: Your uncommitted changes stay untouched
+- *Easy to maintain*: Just move the tag when things work
 
 * File Locations
 
