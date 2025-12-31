@@ -4,13 +4,13 @@
 
 * Quick Reference
 
-| Level | Problem | Command |
-|-------+---------+---------|
-| 1 | See what's wrong | =emacs --debug-init= |
-| 2 | Config problem | Rename =~/.spacemacs.d= |
-| 3 | Package problem | =rm -rf ~/.emacs.d/elpa= |
-| 4 | Spacemacs problem | =emacs -Q= |
-| 5 | Everything broken | Re-clone Spacemacs |
+| Level | Problem           | Command                |
+|-------+-------------------+------------------------|
+|     1 | See what's wrong  | =emacs --debug-init=     |
+|     2 | Config problem    | Rename =~/.spacemacs.d=  |
+|     3 | Package problem   | =rm -rf ~/.emacs.d/elpa= |
+|     4 | Spacemacs problem | =emacs -Q=               |
+|     5 | Everything broken | Re-clone Spacemacs     |
 
 * Your Setup Structure
 
@@ -22,8 +22,8 @@
 #+end_example
 
 * Level 1: Debug Mode
-
 *When to use*: Emacs crashes or shows errors on startup.
+
 
 #+begin_src sh
 emacs --debug-init
@@ -164,15 +164,68 @@ git stash pop  # Restore
 emacs --batch -l ~/.spacemacs.d/init.el --eval '(message "OK")' 2>&1
 #+end_src
 
+* Future: "Known Good" Auto-Recovery
+
+*Status*: Planned (not yet implemented)
+
+A wrapper script that automatically tags successful boots and offers rollback when config breaks.
+
+** How It Will Work
+1. Launch Emacs with timeout check (~10 seconds)
+2. If successful boot → =git tag -f known-good=
+3. If crash → prompt "Revert to last known-good config?"
+
+** Proposed Script: =safe-emacs=
+#+begin_src sh
+#!/bin/bash
+# ~/bin/safe-emacs
+
+cd ~/emacs/emacs-settings
+
+# Try to launch Emacs, check if it stays up for 10s
+/opt/homebrew/bin/emacs "$@" &
+PID=$!
+sleep 10
+
+if kill -0 $PID 2>/dev/null; then
+    # Still running after 10s = success
+    git tag -f known-good HEAD 2>/dev/null
+    wait $PID
+else
+    # Crashed
+    echo "Emacs failed to start. Revert to known-good? (y/n)"
+    read answer
+    if [ "$answer" = "y" ]; then
+        git checkout known-good
+        /opt/homebrew/bin/emacs "$@"
+    fi
+fi
+#+end_src
+
+** Setup (when implemented)
+1. Save script to =~/bin/safe-emacs=
+2. =chmod +x ~/bin/safe-emacs=
+3. Add alias to =~/.zshrc=: =alias emacs='~/bin/safe-emacs'=
+
+** Manual Fallback (works now)
+#+begin_src sh
+# Tag current working state
+cd ~/emacs/emacs-settings
+git tag -f known-good HEAD
+
+# If things break later, revert
+git checkout known-good
+#+end_src
+
 * File Locations
 
-| What | Path |
-|------+------|
-| Spacemacs core | =~/emacs/spacemacs= |
-| Your config | =~/emacs/emacs-settings/spacemacs.d/init.el= |
-| Packages | =~/.emacs.d/elpa/= |
-| Backups | =~/emacs/backup/per-save/= |
-| This guide | =~/emacs/emacs-settings/docs/recovery-guide.org= |
+| What           | Path                                           |
+|----------------+------------------------------------------------|
+| Spacemacs core | =~/emacs/spacemacs=                              |
+| Your config    | =~/emacs/emacs-settings/spacemacs.d/init.el=     |
+| Packages       | =~/.emacs.d/elpa/=                               |
+| Backups        | =~/emacs/backup/per-save/=                       |
+| This guide     | =~/emacs/emacs-settings/docs/recovery-guide.org= |
 
 * Related Documentation
 
