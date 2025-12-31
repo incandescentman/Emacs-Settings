@@ -1,20 +1,39 @@
-#+TITLE: Critical Next Steps
+#+TITLE: Critical Next Steps & Simplification Roadmap
 #+DATE: 2025-11-26
-#+DESCRIPTION: Technical debt, improvements, and future roadmap
+#+DESCRIPTION: Technical debt, improvements, simplification plan, and future roadmap
 
 * Overview
 
 This document tracks:
 - Active technical debt that should be addressed
 - Planned improvements and why they matter
+- Simplification opportunities with implementation details
 - Stretch goals for future consideration
 - Things explicitly NOT being pursued (and why)
 
 Status indicators:
 - *[ACTIVE]* - Currently important, should address soon
 - *[PLANNED]* - Scoped and ready to implement
+- *[COMPLETED]* - Done
 - *[OPTIONAL]* - Would be nice, but not critical
 - *[TABLED]* - Decided not to pursue (for now)
+
+*Progress:* 2 of 9 major simplifications completed (22%)
+
+* Completed Simplifications
+
+** [COMPLETED] 2025-10-26: Removed init-working.el backup
+- Deleted =spacemacs.d/init-working.el= (old backup from Oct 14)
+- Active config (=~/.spacemacs.d/init.el=) is newer with better features
+- Eliminated confusion between two similar files
+- *Savings:* 1 redundant file removed
+
+** [COMPLETED] 2025-10-26: Converted pasteboard to pure elisp
+- Converted =pasteboard-copy-and-paste-functions.org= to documentation only
+- Source of truth is now =pasteboard-copy-and-paste-functions.el= (pure elisp)
+- Added rich Commentary section with usage examples
+- Removed auto-tangling overhead
+- *Savings:* No more edit-tangle-test cycle, direct edit-test workflow
 
 * High Priority (Active)
 
@@ -67,19 +86,67 @@ Status indicators:
 
 *Effort*: ~4-6 hours initial setup, ~30 minutes per new test
 
-*Status*: Not started
+** [ACTIVE] Eliminate the Dual Boot Path
+
+*Why it matters*:
+Two complete startup systems create massive duplication:
+- Spacemacs: =~/.spacemacs.d/init.el= (1,255 lines) - ACTIVE
+- GNU Emacs: =gnu-emacs-startup.el= (1,342 lines) - UNUSED
+
+Settings must be synchronized across both, leading to drift and maintenance burden.
+
+*Recommendation*:
+1. Choose Spacemacs (currently active)
+2. Delete =gnu-emacs-startup.el= and =gnu-emacs-startup.org=
+3. Archive to git history if needed later
+
+*Savings:* ~1,400 lines, eliminates dual-maintenance burden
+
+*Implementation*:
+#+begin_src bash
+# Commit current state first
+git add gnu-emacs-startup.{el,org}
+git commit -m "Archive: GNU Emacs standalone config (moving to Spacemacs-only)"
+
+# Remove files
+rm gnu-emacs-startup.{el,org}
+#+end_src
+
+** [ACTIVE] Remove Commented/Dead Code
+
+*Why it matters*:
+Docs note "large blocks of commented-out code" throughout config.
+
+*Examples found*:
+- =spacemacs-new-config.el:23-36= (debugging code)
+- Commented =use-package= blocks throughout
+- Disabled layers in init files
+
+*Implementation*:
+#+begin_src bash
+# Find commented use-package blocks
+grep -n "^;; (use-package\|^;;  (load" *.el
+
+# Find large commented blocks (10+ consecutive lines)
+awk '/^;;/{n++} !/^;;/{if(n>10) print FILENAME":"NR-n"-"NR; n=0}' *.el
+
+# After review, delete entire commented blocks
+#+end_src
+
+*Savings:* ~300-500 lines, improved readability
+
+* Medium Priority (Planned)
 
 ** [PLANNED] Document Function Dependencies
 
 *Why it matters*:
 - Some functions depend on others being loaded first
 - Loading order bugs are hard to debug
-- New users (or future-you) don't know what depends on what
+- Dependencies are implicit (no documentation)
 
 *Current problem*:
 - =key-minor-mode-map= must load before functions that use it
 - =shared-functions.el= must load before modules that call its functions
-- Dependencies are implicit (no documentation)
 
 *Proposal*:
 Add dependency comments at top of each major file:
@@ -96,207 +163,137 @@ Add dependency comments at top of each major file:
 ;; Must load BEFORE: (none)
 #+END_SRC
 
-*Next steps*:
-1. Map out actual dependencies (draw a graph if needed)
-2. Add comments to each file
-3. Update loading sequence documentation in =design-architecture.org=
-4. Consider adding =(require)= statements to make dependencies explicit
-
 *Effort*: ~2-3 hours
-
-*Status*: Planned, not started
-
-** [OPTIONAL] Standardize Function Naming
-
-*Why it matters*:
-- Easier to find related functions
-- Clearer what's user-facing vs. internal
-- Reduces naming collisions
-
-*Current state*:
-- Mix of prefixes: =jay/...=, =my-...=, =pasteboard-...=, =org-...=
-- Some consistency, but not enforced
-- Internal helpers have various naming patterns
-
-*Proposed conventions*:
-| Prefix           | Usage                                  | Example                    |
-|------------------+----------------------------------------+----------------------------|
-| =jay/=           | User-facing interactive commands       | =jay/delete-and-capitalize= |
-| =pasteboard-=    | Public clipboard functions             | =pasteboard-paste-clean=   |
-| =pasteboard--=   | Internal clipboard helpers (2 dashes)  | =pasteboard--clean-string= |
-| =org-...=        | Org-mode specific                      | =org-roam-capture=         |
-| =my-=            | Generic utilities (refactor to =jay/=) | =my-org-files-list=        |
-
-*Double-dash convention*: Internal/private functions use =--= (Emacs convention)
-
-*Next steps*:
-1. Inventory all function names (=rg "defun"=)
-2. Categorize as public vs. internal
-3. Rename in batches (use =replace-all= parameter in Edit tool)
-4. Test thoroughly (breaking change!)
-
-*Effort*: ~6-8 hours (need to update all call sites)
-
-*Status*: Optional (working fine as-is, but would be cleaner)
-
-* Medium Priority (Planned)
 
 ** [PLANNED] Add Deprecation Tracking
 
 *Why it matters*:
 - Emacs and Org-mode deprecate functions regularly
-- Warnings accumulate
-- Eventually things break
-
-*Current state*:
-- Fix deprecations when noticed
-- No systematic tracking
-- Some known but unfixed (documented in CLAUDE.md)
+- Warnings accumulate, eventually things break
 
 *Proposal*:
-1. Create =docs/deprecations.org=:
-   #+BEGIN_EXAMPLE
-   * Active Deprecation Warnings
-   ** org-bracket-link-regexp → org-link-bracket-re
-   Status: FIXED (2025-09-05)
-
-   ** shift-select-mode
-   Status: FIXED (2025-10-06)
-
-   ** TODO: cl-return vs return
-   Status: TODO - Low priority, still works
-   #+END_EXAMPLE
-
+1. Create =docs/deprecations.org= to track warnings
 2. Run =emacs --batch --eval "(byte-compile-file \"file.el\")"= to find warnings
-
-3. Track in deprecations.org with priority
-
-4. Fix high-priority before each major Emacs/Spacemacs upgrade
-
-*Next steps*:
-1. Byte-compile all files, capture warnings
-2. Create deprecations.org
-3. Prioritize by impact
-4. Fix critical ones first
+3. Fix high-priority before each major Emacs/Spacemacs upgrade
 
 *Effort*: ~3-4 hours initial, ~1 hour per major update
 
-*Status*: Planned
+** [PLANNED] Unify Keybinding Configuration
+
+*Why it matters*:
+Keybindings scattered across:
+- =keys.el= (376 lines)
+- =jay-osx.el= (defines =key-minor-mode-map=)
+- =gnu-emacs-startup.el= (global-set-key calls)
+- =shared-functions.org= (* Keybindings section)
+
+*Recommendation:* Consolidate into =keys.el= only, organized by feature:
+#+begin_src emacs-lisp
+;;; keys.el --- All keybindings in one place -*- lexical-binding: t -*-
+
+;; === Window Management ===
+(global-set-key (kbd "s-1") 'delete-other-windows)
+
+;; === Org Mode ===
+(with-eval-after-load 'org
+  (define-key org-mode-map (kbd "M-RET") 'org-meta-return))
+
+(provide 'keys)
+#+end_src
+
+*Benefits:* Single source of truth for all keybindings
+
+** [PLANNED] Consolidate Org-Mode Settings
+
+*Why it matters*:
+Org settings spread across:
+- =~/.spacemacs.d/init.el= (performance settings)
+- =shared-functions.org= (org-mode settings)
+- =org-roam-config.el=
+- =org-visual-style.el=
+- =org-yt.el=
+
+*Recommendation:* Create unified =org-config.el= that loads all org modules.
+
+** [PLANNED] Fix Structural Issues
+
+*Problems identified*:
+- Missing =lexical-binding= declarations
+- Deprecated functions (=org-bracket-link-regexp= → =org-link-bracket-re=)
+- Inconsistent quote styles
+- Mixed indentation
+
+*Implementation*:
+#+begin_src bash
+# 1. Find files missing lexical-binding
+grep -L "lexical-binding: t" ~/emacs/emacs-settings/*.el
+
+# 2. Add to each file (must be first line):
+# -*- lexical-binding: t -*-
+
+# 3. Find deprecated org variables
+grep -r "org-bracket-link-regexp" ~/emacs/emacs-settings/
+#+end_src
+
+* Optional Improvements
 
 ** [OPTIONAL] Profile Startup Time
 
-*Why it matters*:
-- Startup is ~5-8 seconds (acceptable but could be better)
-- Don't know where time is spent
-- Optimization is guesswork
-
-*Current state*:
-- No profiling data
-- Assumed slow areas: large files, many packages
-- Some deferred loading, but not systematic
+*Current*: Startup is ~5-8 seconds (acceptable but could be better)
 
 *Proposal*:
-1. Run Emacs with profiling:
-   #+BEGIN_SRC sh
-   emacs --debug-init --timed-requires
-   #+END_SRC
+#+BEGIN_SRC sh
+emacs --debug-init --timed-requires
+#+END_SRC
 
-2. Identify slowest loads
+Identify top 5 slowest items, estimate potential gains, decide if worth optimizing.
 
-3. Consider:
-   - More aggressive deferred loading
-   - Lazy autoloads
-   - Moving non-essential config to separate file
-   - Byte-compilation verification
+*Status*: Startup is acceptable, optimization is premature
 
-4. Document findings in =performance.org=
+** [OPTIONAL] Convert Remaining Literate Org Files to Pure Elisp
 
-*Next steps*:
-1. Profile current startup
-2. Identify top 5 slowest items
-3. Estimate potential gains
-4. Decide if worth optimizing (maybe it's fine!)
+*Current state*: 3 auto-tangling org files remain:
+- =shared-functions.org= (324KB) - Keep as literate (too large/complex)
+- =spacecraft-mode.org= (40KB) - Candidate for conversion
+- =fonts-and-themes.org= (13KB) - Candidate for conversion
 
-*Effort*: ~2-3 hours investigation, varies for fixes
+*Benefits*: Eliminates tangling errors, faster edit-test cycle
 
-*Status*: Optional (startup is acceptable, optimization is premature)
+** [OPTIONAL] Use Package Manager Instead of Vendored Code
 
-** [OPTIONAL] Document All Hydras
+*Problem:* Large vendored files clutter the config:
+- =dired+.el= (868KB)
+- =highlight-tail.el= (48KB)
+- =poetry_JD.el=, =forecast.el=, =ox-koma-letter.el=
 
-*Why it matters*:
-- Hydras provide quick access to commands
-- Forget what's available after time away
-- No central reference
+*Recommendation*: Check MELPA availability or move to =vendor/= subdirectory.
 
-*Current state*:
-- Hydras defined in =hydras.org= and tangled to =hydras.el=
-- No documentation beyond code
-- Need to read code to discover available hydras
+** [OPTIONAL] Optimize Loading with use-package
 
-*Proposal*:
-1. Generate hydra inventory:
-   #+BEGIN_SRC sh
-   cd ~/emacs/emacs-settings
-   rg "defhydra" hydras.org
-   #+END_SRC
+*Problem:* Many packages loaded eagerly in =dotspacemacs-additional-packages=.
 
-2. Document in =instructions.org= or separate =hydras-reference.org=:
-   #+BEGIN_EXAMPLE
-   * Available Hydras
-   ** Window Management (=SPC w=)
-   - =w= - Split window
-   - =d= - Delete window
-   - ...
+*Improved approach*:
+#+begin_src emacs-lisp
+(use-package org-transclusion
+  :defer t
+  :after org
+  :commands org-transclusion-mode)
+#+end_src
 
-   ** Font Adjustment (=F8=)
-   - =j= - Increase size
-   - =k= - Decrease size
-   - ...
-   #+END_EXAMPLE
-
-3. Add cheat sheet
-
-*Next steps*:
-1. List all hydras
-2. Document purpose and entry keybinding
-3. List available options in each
-4. Add examples
-
-*Effort*: ~2-3 hours
-
-*Status*: Optional, tabled (solo user, low priority)
+*Benefit:* Faster startup time
 
 * Stretch Goals (Future)
 
 ** [IDEA] Package Critical Helpers as Reusable Modules
-
-*Why*:
-- Share useful functions across machines
-- Contribute back to community
-- Force cleaner interfaces
 
 *What to package*:
 - Pasteboard integration (as =pasteboard-mode=)
 - Smart capitalization functions
 - Org-roam profile switching (as =org-roam-profiles=)
 
-*Steps*:
-1. Extract to separate repo
-2. Add package metadata
-3. Write README
-4. Publish to MELPA (optional)
-5. Use as dependency in main config
-
-*Effort*: Significant (~10-20 hours per package)
-
-*Status*: Stretch goal, low priority
+*Effort:* Significant (~10-20 hours per package)
 
 ** [IDEA] Automated Linting
-
-*Why*:
-- Catch errors before runtime
-- Enforce consistent style
-- Reduce bugs
 
 *Tools to consider*:
 - =checkdoc= - Documentation string checker
@@ -304,125 +301,81 @@ Add dependency comments at top of each major file:
 - =elisp-lint= - General linting
 - =relint= - Regexp linter
 
-*Implementation*:
-1. Add to pre-commit hook
-2. Fix existing warnings
-3. Enforce going forward
-
-*Effort*: ~6-8 hours setup, ongoing maintenance
-
-*Status*: Stretch goal
-
-** [IDEA] Mobile Integration
-
-*Why*:
-- Access notes on phone
-- Capture ideas on the go
-- Sync org-roam to mobile
-
-*Options to explore*:
-- Orgzly (Android org-mode app)
-- beorg (iOS org-mode app)
-- Dropbox sync (already in place)
-- Org-roam mobile setup
-
-*Challenges*:
-- Org-roam database sync
-- Two-way sync conflicts
-- Mobile UI limitations
-
-*Effort*: Significant (~15-20 hours research + setup)
-
-*Status*: Interesting but not urgent
+*Effort:* ~6-8 hours setup, ongoing maintenance
 
 * Explicitly NOT Pursuing
 
 ** Multi-Platform Support
-
-*Why not*:
-- Primary platform is macOS
-- Pasteboard functions are macOS-specific
-- Cross-platform would dilute integration depth
-- Better to optimize for one platform
-
-*Could change if*:
-- Start using Linux regularly
-- Share with Linux users
-- Community interest
+*Why not*: Primary platform is macOS. Pasteboard functions are macOS-specific. Cross-platform would dilute integration depth. Better to optimize for one platform.
 
 ** IDE-Like Features
-
-*Why not*:
-- This is a writing environment, not a development IDE
-- LSP, debugging, etc. are out of scope
-- Focus is org-mode and writing
-- Spacemacs provides basic code editing
-
-*Philosophy*: Write-first, code-second
+*Why not*: This is a writing environment, not a development IDE. Focus is org-mode and writing.
 
 ** Org-Mode Alternatives
-
-*Why not*:
-- Deeply invested in org-mode
-- 10+ years of org-roam notes
-- Markdown mode would fragment workflow
-- Org-mode is the canonical format (philosophy)
-
-*Could change if*:
-- Org-mode development stops
-- Superior alternative emerges
-- Unlikely
+*Why not*: Deeply invested in org-mode. 10+ years of org-roam notes. Org-mode is the canonical format.
 
 ** Perfect Consistency
+*Why not*: "Perfect is the enemy of good." Refactoring for aesthetics = busywork. Incremental improvement is fine.
 
-*Why not*:
-- "Perfect is the enemy of good"
-- Refactoring for aesthetics = busywork
-- Working code is valuable
-- Incremental improvement is fine
+*Philosophy*: Pragmatism over purity.
 
-*Philosophy*: Pragmatism over purity
+* Progress Tracking
 
-* Tracking and Review
-
-** Monthly Review
-
-Check this document monthly:
-- [ ] Are high-priority items progressing?
-- [ ] Any new critical issues to add?
-- [ ] Can anything move from active → planned → done?
-- [ ] Are stretch goals still relevant?
-
-** After Major Changes
-
-Update this document after:
-- Fixing significant bugs
-- Adding major features
-- Spacemacs/Emacs upgrades
-- Discovering new technical debt
-
-** Version Milestones
-
-Consider these completion criteria:
-- *v2.0*: All [ACTIVE] items resolved
-- *v2.5*: All [PLANNED] items resolved
-- *v3.0*: Selected stretch goals completed
+| Change                         | Lines Saved  | Complexity Reduction | Status      |
+|--------------------------------+--------------+----------------------+-------------|
+| Remove init-working.el backup  | 1 file       | *                    | DONE        |
+| Convert pasteboard to pure .el | Workflow     | ***                  | DONE        |
+| Remove GNU Emacs dual boot     | ~1,400       | *****                | Pending     |
+| Consolidate config loads       | ~200         | ***                  | Pending     |
+| Remove commented code          | ~300-500     | ****                 | Pending     |
+| Fix deprecated functions       | ~50          | ** (stability++)     | Pending     |
+| Unify keybindings              | ~100         | ****                 | Pending     |
+| Defer package loading          | ~0           | **                   | Pending     |
+| Consolidate org settings       | ~150         | ****                 | Pending     |
+|--------------------------------+--------------+----------------------+-------------|
+| *TOTAL*                        | *~2,200*     | *Much easier*        | 2/9 done    |
 
 * Decision Log
 
-Record major decisions here:
+** 2025-12-31: Major documentation consolidation
+*Reason*: Reduced docs/ from 14+ files to 11. Merged redundant files, extracted key lessons to codebase-wisdom.org, deleted obsolete incident logs.
+
+** 2025-11-26: Merged documentation files
+*Reason*: =critical-next-steps.org= and =suggested-next-steps.org= were redundant. Combined into single roadmap document.
+
+** 2025-11-26: Completed Major Documentation Overhaul
+*Reason*: Significant rewrite of core documentation files to improve clarity.
 
 ** 2025-10-26: Tabled "Document Hydras"
 *Reason*: Solo user, hydras are discoverable enough, low ROI
 
-**2025-10-26: Prioritized Regression Tests
+** 2025-10-26: Prioritized Regression Tests
 *Reason*: Clipboard bugs have cost hours of debugging multiple times
 
 ** 2025-10-26: Decided NOT to Pursue Multi-Platform
 *Reason*: macOS integration is a core value, would dilute focus
 
-** 2025-11-26: Completed Major Documentation Overhaul
-*Reason*: Significant rewrite of core documentation files (`instructions.org`, `design-architecture.org`, etc.) to improve clarity, comprehensiveness, and user-friendliness. Updated `CLAUDE.md` and `README.org` to reflect codebase changes and new architectural components (e.g., Org Roam profiles, LaTeX templates).
+* Quick Wins You Can Do Right Now
+
+#+begin_src bash
+# 1. Count commented code
+grep -c "^;; (" ~/emacs/emacs-settings/*.el | grep -v ":0$"
+
+# 2. Find files missing lexical-binding
+for f in ~/emacs/emacs-settings/*.el; do
+  grep -q "lexical-binding: t" "$f" || echo "$f"
+done
+
+# 3. Profile current startup time
+emacs --eval '(message "Startup time: %s" (emacs-init-time))' --kill
+#+end_src
+
+* Monthly Review Checklist
+
+- [ ] Are high-priority items progressing?
+- [ ] Any new critical issues to add?
+- [ ] Can anything move from active → planned → done?
+- [ ] Are stretch goals still relevant?
 
 * Related Documentation
 

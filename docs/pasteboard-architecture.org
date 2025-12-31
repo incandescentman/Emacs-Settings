@@ -150,6 +150,32 @@ The pasteboard system must handle these correctly:
 | `**Bold at line start**`  | `*Bold at line start*`    | Bold only      |
 | `Regular **bold** text`   | `Regular *bold* text`     | Inline bold    |
 
+* Markdown Detection Heuristics
+
+** Goal
+Detect when clipboard text is Markdown using `* ` for unordered lists, convert to hyphens (`- `) for Org buffers, while preserving genuine Org headings.
+
+** Detection Logic
+=pasteboard--analyse-clipboard-text= scores signals:
+- *Markdown signals*: `^#` headings, `- `/`* ` bullets, ordered lists, blockquotes, fenced code, inline links, `**bold**`
+- *Org signals*: `#+` directives, TODO keywords, property drawers, multi-star headings
+
+Style selection:
+- =md-score >= org-score + 2= → Markdown
+- =org-score >= md-score + 2= → Org
+- Edge cases handle "all Markdown, no Org" and "many asterisk bullets, zero Org traits"
+
+** Conversion Workflow
+1. Headings convert first (=convert-markdown-headings-to-org=)
+2. Smart quotes, weird-space cleanup, blockquotes, links
+3. If style is markdown: =pasteboard--convert-asterisk-bullets-to-dashes=
+4. Final sweep converting remaining `* ` to `- `
+
+** Reference Fixtures
+Located in =debug/=:
+- =chatgpt-markdown-text-sample.txt= - ChatGPT output
+- =org-mode-text-sample.txt= - Pure org (should stay unchanged)
+
 * Lessons Learned
 - Treat each sanitizer as a suspect when formats break; add fixtures before altering their logic.
 - Keep macOS-specific shell invocations isolated so Linux builds can fall back to `xclip` in the future.

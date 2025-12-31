@@ -394,6 +394,29 @@ See =docs/= folder for detailed documentation:
 - Org-roam manual: https://www.orgroam.com/manual.html
 - This config's CLAUDE.md - AI assistant context (good overview)
 
+* Visual Design
+
+** Fonts
+- *Georgia*: Primary writing font (serif, beautiful on screen)
+- *JetBrains Mono*: Code font (monospaced, ligature support)
+- *Hack*: Alternative code font
+
+** Themes
+| Command           | Effect                        |
+|-------------------+-------------------------------|
+| =whiteboard=      | Clean white, maximum contrast |
+| =spacemacs-light= | Softer whites, still readable |
+| =matrix=          | Green-on-black cyberpunk      |
+
+** Font Sizes
+| Command       | Size | Use Case            |
+|---------------+------+---------------------|
+| =large-type=  |  350 | Presentations       |
+| =medium-type= |  180 | Comfortable writing |
+
+** Cursor
+Always *incarnadine red* (deep crimson) - distinctive but not jarring. All theme functions restore this automatically.
+
 * Quick Reference Card
 
 ** Most-Used Commands

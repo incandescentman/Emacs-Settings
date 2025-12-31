@@ -553,6 +553,26 @@ See =critical-next-steps.org= for planned improvements, but key architectural go
 4. Optional: Split =shared-functions.org= if it becomes unwieldy
 5. Consider use-package for cleaner package configuration
 
+* Core Philosophy (Condensed)
+
+** Writing First, Coding Second
+This is primarily a *writing environment*, not a development environment. Typography matters, clipboard integration is crucial, org-mode is central.
+
+** Literate Programming
+Code and documentation live together. Future-you needs to understand past-you's decisions.
+
+** macOS Integration
+Deep platform integration (pbcopy/pbpaste, Command key) enhances workflow. Tradeoff: less portable, but much more useful on primary platform.
+
+** Org-Mode Centrality
+Org-mode is the canonical format for everything: notes, tasks, documentation, code, journal entries.
+
+** Convenience Over Purity
+Pragmatism beats elegance. One large file instead of dozens of modules. Some copy-pasted code when abstraction is harder to read. "Good enough" beats "perfect but unfinished."
+
+** Adaptive Behavior
+Functions detect context and do the right thing. =pasteboard-paste-adaptive= cleans in org buffers, pastes raw in code. Fewer commands to remember.
+
 * Resources
 
 ** Understanding the Code

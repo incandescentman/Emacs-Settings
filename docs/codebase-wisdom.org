@@ -292,6 +292,45 @@ Change patterns from `"^\\(\\*+\\)"` to `"^\\(\\*+\\) "` when matching actual or
 - Test with bold/italic text at line boundaries - common edge case for pattern bugs
 - Document whether functions expect markdown input or org input
 
+* Symlink Deletion: Never Use Trailing Slash with rm -rf
+  Date: 2025-10-05
+
+** The Bug
+Running =rm -rf ~/.emacs.d.backup/= deleted the entire live Spacemacs installation because the "backup" was actually a symlink pointing to =/Users/jay/emacs/spacemacs=.
+
+** The Truth
+=rm -rf <symlink>/= (with trailing slash) forces traversal into the target directory. The command dereferenced the symlink and removed the actual Spacemacs core.
+
+** The Fix
+- Use =unlink symlink= or =rm symlink= (no trailing slash) when removing symlinks
+- Always run =ls -ld= or =readlink= before deleting anything that might be a symlink
+- Keep a symlink map for quick audits
+
+** Lessons Learned / Prevention Checklist
+- Before deleting "backup" folders, confirm they are not symlinks into production
+- Omit trailing slashes when removing symlinks
+- After maintenance, launch Emacs briefly to verify Spacemacs initializes
+
+* Info Directory Issues: Build From Source
+  Date: 2025-10-14
+
+** The Bug
+Info nodes (Calendar/Diary) couldn't be found despite correct =Info-directory-list= configuration.
+
+** The Truth
+The interactive Spacemacs environment pollutes =Info-directory-list= with duplicates, making the entire Info directory lookup system unreliable. Custom =info+.el= packages can also interfere.
+
+** The Fix
+Bypass the broken directory system entirely:
+1. Clone GNU Emacs source
+2. Build the manual: =make -C doc/emacs info=
+3. Open directly: =(info "/path/to/built/emacs.info")=
+
+** Lessons Learned / Prevention Checklist
+- When Info is broken, the problem is usually environment pollution, not the info files
+- Batch scripts work when interactive sessions don't = environment issue
+- Sometimes bypassing a broken system is faster than fixing it
+
 * Emoji in LaTeX Export: Filter at the Right Level
   Date: 2025-10-05
 
