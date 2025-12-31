@@ -379,33 +379,7 @@ Turn this on if I'm creating documents that I want to export to both HTML and La
 
 Note: disable this when trying to export to org-html-themes!
 
-#+BEGIN_EXAMPLE emacs-lisp
-(defun my-org-export-change-options (plist backend)
-  (cond
-   ((equal backend 'html)
-    (plist-put plist :with-toc nil)
-    (plist-put plist :section-numbers nil))
-   ((equal backend 'latex)
-(plist-put plist :with-toc t) ; yes TOC in LaTeX
-;; (plist-put plist :with-toc nil); no TOC in latex
-    (plist-put plist :section-numbers t)))
-  plist)
-(add-to-list 'org-export-filter-options-functions 'my-org-export-change-options)
-#+END_EXAMPLE
 
-#+begin_EXAMPLE emacs-lisp
-(defun my-org-export-change-options (backend)
-  (cond
-   ((equal backend 'html)
-    (setq org-html-with-toc nil)
-    (setq org-html-section-numbers nil))
-   ((equal backend 'latex)
-    (setq org-latex-with-toc nil)
-    (setq org-latex-section-numbers t)))
-  nil)
-
-(add-to-list 'org-export-before-processing-hook 'my-org-export-change-options)
-#+END_EXAMPLE
 
 #+begin_src emacs-lisp
 (defun my-org-export-change-options (plist backend)
@@ -1247,53 +1221,18 @@ Source: [[http://stackoverflow.com/questions/6997387/how-to-archive-all-the-done
 
 ** org-levels
 #+BEGIN_SRC emacs-lisp
- (defun org-show-level-1 ()
-  (interactive)
- (org-content 1))
+ (defun org-show-level (n)
+  (interactive "nLevel: ")
+  (org-content n))
 
- (defun org-show-level-2 ()
-  (interactive)
- (org-content 2))
-
- (defun org-show-level-3 ()
-  (interactive)
- (org-content 3))
-
- (defun org-show-level-4 ()
-  (interactive)
- (org-content 4))
-
- (defun org-show-level-5 ()
-  (interactive)
- (org-content 5))
-
- (defun org-show-level-6 ()
-  (interactive)
- (org-content 6))
-
- (defun org-show-level-7 ()
-  (interactive)
- (org-content 7))
-
- (defun org-show-level-8 ()
-  (interactive)
- (org-content 8))
-
- (define-key key-minor-mode-map (kbd "C-s-1") 'org-show-level-1)
-
- (define-key key-minor-mode-map (kbd "C-s-2") 'org-show-level-2)
-
- (define-key key-minor-mode-map (kbd "C-s-3") 'org-show-level-3)
-
- (define-key key-minor-mode-map (kbd "C-s-4") 'org-show-level-4)
-
- (define-key key-minor-mode-map (kbd "C-s-5") 'org-show-level-5)
-
- (define-key key-minor-mode-map (kbd "C-s-6") 'org-show-level-6)
-
- (define-key key-minor-mode-map (kbd "C-s-7") 'org-show-level-7)
-
- (define-key key-minor-mode-map (kbd "C-s-8") 'org-show-level-8)
+ (define-key key-minor-mode-map (kbd "C-s-1") (lambda () (interactive) (org-show-level 1)))
+ (define-key key-minor-mode-map (kbd "C-s-2") (lambda () (interactive) (org-show-level 2)))
+ (define-key key-minor-mode-map (kbd "C-s-3") (lambda () (interactive) (org-show-level 3)))
+ (define-key key-minor-mode-map (kbd "C-s-4") (lambda () (interactive) (org-show-level 4)))
+ (define-key key-minor-mode-map (kbd "C-s-5") (lambda () (interactive) (org-show-level 5)))
+ (define-key key-minor-mode-map (kbd "C-s-6") (lambda () (interactive) (org-show-level 6)))
+ (define-key key-minor-mode-map (kbd "C-s-7") (lambda () (interactive) (org-show-level 7)))
+ (define-key key-minor-mode-map (kbd "C-s-8") (lambda () (interactive) (org-show-level 8)))
 
 (define-key key-minor-mode-map (kbd "C-s-0") 'show-all)
 (define-key key-minor-mode-map (kbd "C-s-a") 'show-all)

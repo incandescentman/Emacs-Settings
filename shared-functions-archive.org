@@ -1,0 +1,35 @@
+# Shared Functions Archive
+
+This file contains unused or deprecated code moved from `shared-functions.org`.
+
+## Unused `my-org-export-change-options` examples
+
+Moved on 2025-12-31.
+
+#+BEGIN_EXAMPLE emacs-lisp
+(defun my-org-export-change-options (plist backend)
+  (cond
+   ((equal backend 'html)
+    (plist-put plist :with-toc nil)
+    (plist-put plist :section-numbers nil))
+   ((equal backend 'latex)
+(plist-put plist :with-toc t) ; yes TOC in LaTeX
+;; (plist-put plist :with-toc nil); no TOC in latex
+    (plist-put plist :section-numbers t)))
+  plist)
+(add-to-list 'org-export-filter-options-functions 'my-org-export-change-options)
+#+END_EXAMPLE
+
+#+begin_EXAMPLE emacs-lisp
+(defun my-org-export-change-options (backend)
+  (cond
+   ((equal backend 'html)
+    (setq org-html-with-toc nil)
+    (setq org-html-section-numbers nil))
+   ((equal backend 'latex)
+    (setq org-latex-with-toc nil)
+    (setq org-latex-section-numbers t)))
+  nil)
+
+(add-to-list 'org-export-before-processing-hook 'my-org-export-change-options)
+#+END_EXAMPLE

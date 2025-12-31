@@ -1,6 +1,14 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2025-12-31: Refactor shared-functions.org and archive unused code
+- Refactored `org-show-level-X` functions in `shared-functions.org`:
+  - Replaced repetitive definitions for levels 1-8 with a single `org-show-level` function taking an argument.
+  - Updated keybindings to use lambda functions calling `org-show-level`.
+- Archived unused code:
+  - Moved unused `my-org-export-change-options` examples to new file `shared-functions-archive.org`.
+- Verified `chatgpt2org` alias points to existing `elpa-supplement/chatgpt2org.el`.
+
 * 2025-12-26: Fix org-emphasis-regexp-components not taking effect
 - Fixed org emphasis (bold, italic) not being fontified in some buffers
 - Root cause: Setting ~org-emphasis-regexp-components~ alone doesn't rebuild the cached regex
