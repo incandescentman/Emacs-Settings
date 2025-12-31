@@ -30,8 +30,8 @@ Think of it as layered protection:
 #+BEGIN_SRC emacs-lisp
 ;; In shared-functions.el
 (setq version-control t          ; Use numbered backups
-      kept-new-versions 50       ; Keep 50 newest
-      kept-old-versions 10       ; Keep 10 oldest
+      kept-new-versions 9        ; Keep 9 newest
+      kept-old-versions 2        ; Keep 2 oldest
       delete-old-versions t      ; Auto-delete in between
       backup-directory-alist     ; Save to backup folder
         '(("." . "~/emacs/backup/per-save")))
@@ -89,18 +89,14 @@ git reset --hard <commit-hash>
 
 ** Cloud Sync (Dropbox)
 
-*What*: Dropbox automatically syncs =~/emacs/emacs-settings= if in Dropbox folder.
+*What*: Dropbox syncs org-roam directories (=~/Dropbox/roam/=, etc.) but NOT =emacs-settings=.
 
-*Features*:
+*Note*: The =emacs-settings= repo is at =~/emacs/emacs-settings= (not in Dropbox). It relies on Git/GitHub for offsite backup, not Dropbox sync.
+
+*For org-roam files*:
 - Automatic sync across devices
 - Web interface for recovery
 - Dropbox file history (30 days to 1 year depending on plan)
-
-*Access*:
-1. Go to dropbox.com
-2. Browse to emacs-settings
-3. Right-click any file → "Version history"
-4. Restore previous version
 
 ** Time Machine (macOS)
 
@@ -322,52 +318,21 @@ cd ~/emacs/emacs-settings
 4. Select the good version
 5. Click "Restore"
 
-* Related Scripts
+* Manual Recovery Commands
 
-** nuclear-recovery.sh (If Exists)
-
-*Purpose*: Creates full =.emacs.d= snapshot before wiping caches.
-
-*Usage*:
+** Nuclear Package Reinstall
 #+BEGIN_SRC sh
-cd ~/emacs/emacs-settings
-./nuclear-recovery.sh
+# Backup config first
+cd ~/emacs && tar czf emacs-settings-backup.tar.gz emacs-settings
+
+# Delete packages and restart
+rm -rf ~/.emacs.d/elpa && emacs
 #+END_SRC
 
-*What it does*:
-1. Creates timestamped backup of =~/.emacs.d=
-2. Deletes package caches
-3. Prints backup location
-4. Prompts to restart Emacs
-
-** recover-spacemacs.sh (If Exists)
-
-*Purpose*: Targeted recovery for ELPA packages.
-
-*Usage*:
+** Test Emacs Startup
 #+BEGIN_SRC sh
-./recover-spacemacs.sh
+emacs --debug-init
 #+END_SRC
-
-*What it does*:
-1. Backs up current package state
-2. Removes problematic packages
-3. Forces package reinstall
-
-** safe-emacs-test.sh (If Exists)
-
-*Purpose*: Launch scratch Emacs without touching main session.
-
-*Usage*:
-#+BEGIN_SRC sh
-./safe-emacs-test.sh
-#+END_SRC
-
-*Why useful*:
-- Test changes without affecting main config
-- Verify backups work
-- Validate restored configs
-- Experiment safely
 
 * Prevention Best Practices
 
