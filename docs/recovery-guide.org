@@ -12,6 +12,13 @@ You launched Emacs and one of these happened:
 
 This guide walks you through diagnosing and fixing the problem, from simple to nuclear.
 
+* How This Works
+
+1. Run =emacs-debug= in Terminal
+2. Read the error in the backtrace
+3. Match it to the Quick Reference table → pick the fix
+4. If you just need Emacs NOW: run =emacs-known-good=
+
 * Step 1: See the Error
 
 Open Terminal and run:
