@@ -275,12 +275,28 @@
         ("+"
          (:strike-through t)))))
 
-;; Explicit default for org emphasis regex (safeguard)
-(setq org-emphasis-regexp-components
-      '("-—–[:space:]('\"{" "-[:space:].,:!?;'\")}\\[" "[:space:]" "." 1))
-;; Org caches emphasis regex on load; rebuild it after tweaking components.
+;; Org emphasis regex - must survive org reloads and space-doc resets
+;; Define the desired components once
+(defvar jay/org-emphasis-regexp-components
+  '("-—–[:space:]('\"{" "-[:space:].,:!?;'\")}\\[" "[:space:]" "." 1)
+  "Jay's custom org-emphasis-regexp-components.")
+
+(defun jay/apply-org-emphasis-settings ()
+  "Apply custom org emphasis settings. Survives org reloads."
+  (setq org-emphasis-regexp-components jay/org-emphasis-regexp-components)
+  (when (fboundp 'org-set-emph-re)
+    (org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components)))
+
+;; Apply on org load AND on every org-mode buffer (survives resets)
 (with-eval-after-load 'org
-  (org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components))
+  (jay/apply-org-emphasis-settings))
+(add-hook 'org-mode-hook #'jay/apply-org-emphasis-settings)
+
+;; Reapply after Spacemacs/space-doc helpers override emphasis settings.
+(with-eval-after-load 'core-funcs
+  (advice-add 'spacemacs/prettify-org-buffer :after #'jay/apply-org-emphasis-settings))
+(with-eval-after-load 'space-doc
+  (advice-add 'spacemacs//space-doc-alternative-emphasis :after #'jay/apply-org-emphasis-settings))
 
 (setq org-adapt-indentation nil)
 

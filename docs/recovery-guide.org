@@ -2,39 +2,67 @@
 #+DATE: 2025-12-31
 #+DESCRIPTION: What to do when Emacs won't start
 
-* First: Two-Command Triage
+* When to Use This Guide
 
-Run these first to diagnose the problem:
+You launched Emacs and one of these happened:
+- It crashed immediately
+- It hung on startup (spinning forever)
+- It opened but showed errors
+- It opened but something is badly broken
+
+This guide walks you through diagnosing and fixing the problem, from simple to nuclear.
+
+* Step 1: See the Error
+
+Open Terminal and run:
 
 #+begin_src sh
-# 1. See the error
-emacs --debug-init
-
-# 2. Check config syntax (no GUI needed)
-emacs --batch ~/emacs/emacs-settings/spacemacs.d/init.el --eval '(check-parens)'
+/Applications/Emacs.app/Contents/MacOS/Emacs --debug-init
 #+end_src
+
+This launches Emacs with the debugger enabled. When it hits an error, you'll see a =*Backtrace*= buffer showing:
+- Which file failed (e.g., =shared-functions.el=)
+- Which function crashed (e.g., =void-function xyz=)
+- The call stack leading to the error
+
+*If Emacs hangs instead of erroring*: Press =C-g= repeatedly to interrupt, then check the =*Backtrace*= buffer.
+
+*If you can't even get that far*: Skip to Step 4 (bypass Spacemacs entirely).
 
 * Quick Reference
 
-| Level | Problem           | Command                              |
-|-------+-------------------+--------------------------------------|
-|     1 | See what's wrong  | =emacs --debug-init=                 |
-|     2 | Config problem    | Rename =~/.spacemacs= AND =~/.spacemacs.d= |
-|     3 | Package problem   | =rm -rf ~/.emacs.d/elpa=             |
-|     4 | Spacemacs problem | =emacs -Q= or =emacs-min=            |
-|     5 | Everything broken | Re-clone Spacemacs                   |
+| Step | When                             | Action                                                    |
+|------+----------------------------------+-----------------------------------------------------------|
+|    1 | Start here                       | =/Applications/Emacs.app/Contents/MacOS/Emacs --debug-init= |
+|    2 | Error is in your config files    | Temporarily rename config                                 |
+|    3 | "package not found" / corruption | =rm -rf ~/.emacs.d/elpa=                                    |
+|    4 | Spacemacs itself is broken       | =/Applications/Emacs.app/Contents/MacOS/Emacs -Q= or =emacs-min=  |
+|    5 | Nothing else works               | Re-clone Spacemacs                                        |
 
-* Shell Aliases (add to ~/.zshrc)
+* Shell Aliases
+
+These are defined in =jay-scripts.sh=:
 
 #+begin_src sh
-# Minimal Emacs - bypasses Spacemacs entirely
-alias emacs-min='emacs -Q -l ~/emacs/emacs-settings/minimal-init.el'
+# Standard GUI launchers
+alias Emacs="open -a /Applications/Emacs.app/Contents/MacOS/Emacs"
+alias em="open -a /Applications/Emacs.app/Contents/MacOS/Emacs"
 
-# Check symlink health
-alias emacs-check='ls -ld ~/.emacs.d ~/.spacemacs ~/.spacemacs.d ~/starship'
+# Recovery launchers (use explicit path so flags work)
+alias emacs-known-good='SPACEMACSDIR=/Users/jay/emacs/emacs-settings-known-good/spacemacs.d /Applications/Emacs.app/Contents/MacOS/Emacs'
+alias emacs-min='/Applications/Emacs.app/Contents/MacOS/Emacs -Q -l /Users/jay/emacs/emacs-settings/minimal-init.el'
 #+end_src
 
-* Your Setup Structure
+*Why these use explicit paths*: Your =em= alias uses =open -a= which can't pass flags like =--debug-init=. For debug/vanilla runs, use the Emacs.app binary directly.
+
+** Direct Commands (no alias required)
+#+begin_src sh
+/Applications/Emacs.app/Contents/MacOS/Emacs --debug-init
+/Applications/Emacs.app/Contents/MacOS/Emacs -Q
+ls -ld ~/.emacs.d ~/.spacemacs ~/.spacemacs.d ~/starship
+#+end_src
+
+* Your Setup (Reference)
 
 #+begin_example
 ~/.emacs.d      → ~/emacs/spacemacs                        (Spacemacs core)
@@ -51,196 +79,122 @@ alias emacs-check='ls -ld ~/.emacs.d ~/.spacemacs ~/.spacemacs.d ~/starship'
 ls -ld ~/.emacs.d ~/.spacemacs ~/.spacemacs.d ~/starship
 #+end_src
 
-* Level 1: Debug Mode
-*When to use*: Emacs crashes or shows errors on startup.
+* Step 2: Bypass Your Config
 
-
-#+begin_src sh
-emacs --debug-init
-#+end_src
-
-This shows the Emacs debugger when an error occurs. Look for:
-- File names (which config file failed)
-- Function names (what was being called)
-- "void-function" or "void-variable" errors (missing dependency)
-
-* Level 2: Bypass Your Config
-
-*When to use*: Debug mode shows error in your config files.
+*Try this if*: the debug launch showed an error in one of your config files (e.g., =init.el=, =shared-functions.el=).
 
 #+begin_src sh
-# Temporarily disable your config
+# Temporarily move your config out of the way
 mv ~/.spacemacs ~/.spacemacs.bak
 mv ~/.spacemacs.d ~/.spacemacs.d.bak
 
-# Start Emacs (will use vanilla Spacemacs)
-emacs
+# Launch Emacs - it will use vanilla Spacemacs defaults
+open -a /Applications/Emacs.app
+#+end_src
 
-# If it works, the problem is in your config
-# Restore when done:
+If Emacs works now, the problem is in your config. Restore and debug:
+
+#+begin_src sh
 mv ~/.spacemacs.bak ~/.spacemacs
 mv ~/.spacemacs.d.bak ~/.spacemacs.d
 #+end_src
 
-* Level 3: Nuke Packages
+* Step 3: Nuke Packages
 
-*When to use*: Package conflicts, "package not found", or corruption.
+*Try this if*: You see errors like "package not found", "wrong number of arguments", or package corruption after a Homebrew/Emacs upgrade.
 
 #+begin_src sh
-# Delete all installed packages
 rm -rf ~/.emacs.d/elpa
-
-# Restart Emacs (will reinstall everything)
-emacs
+open -a /Applications/Emacs.app
 #+end_src
 
-This takes 5-10 minutes as Spacemacs re-downloads ~500 packages.
+Spacemacs will re-download all ~500 packages. Takes 5-10 minutes.
 
-* Level 4: Bypass Spacemacs Entirely
+* Step 4: Bypass Spacemacs Entirely
 
-*When to use*: Spacemacs itself is broken, or you need a working Emacs immediately.
+*Try this if*: Spacemacs itself seems broken, or you just need a working Emacs right now.
 
-** Option A: Completely Vanilla
 #+begin_src sh
-emacs -Q
+/Applications/Emacs.app/Contents/MacOS/Emacs -Q  # Emacs with zero config
+emacs-min                                        # Emacs with minimal-init.el
 #+end_src
 
-This starts Emacs with NO configuration at all. Useful for:
+=emacs-vanilla= is useful for:
 - Verifying Emacs itself works
 - Emergency file editing
-- Ruling out all config issues
+- Ruling out all config/Spacemacs issues
 
-** Option B: Minimal Config (if you create one)
-#+begin_src sh
-emacs -Q -l ~/emacs/emacs-settings/minimal-init.el
-#+end_src
+* Step 5: Nuclear - Fresh Spacemacs
 
-* Level 5: Nuclear - Fresh Spacemacs
-
-*When to use*: Nothing else works, Spacemacs core is corrupted.
+*Try this if*: Nothing else worked. Spacemacs core itself is corrupted.
 
 #+begin_src sh
-# 1. Backup current state
 cd ~/emacs
 mv spacemacs spacemacs.broken
-
-# 2. Fresh clone of Spacemacs
 git clone https://github.com/syl20bnr/spacemacs ~/emacs/spacemacs
-
-# 3. Verify symlink still works
-ls -la ~/.emacs.d
-# Should show: ~/.emacs.d -> /Users/jay/emacs/spacemacs
-
-# 4. Start Emacs (will bootstrap fresh)
-emacs
+open -a /Applications/Emacs.app
 #+end_src
 
-Your config (in =emacs-settings/spacemacs.d=) is preserved. Only Spacemacs core is replaced.
+Your config (in =emacs-settings/spacemacs.d=) is untouched. Only Spacemacs core is replaced.
 
-* Batch Syntax Check
+* Appendix: Batch Syntax Check
 
-Check config files for syntax errors without launching GUI:
+If you edited a config file and want to check for syntax errors without launching the full GUI:
 
 #+begin_src sh
 # Check for unbalanced parentheses
-emacs --batch ~/emacs/emacs-settings/spacemacs.d/init.el --eval '(check-parens)'
+/Applications/Emacs.app/Contents/MacOS/Emacs --batch ~/emacs/emacs-settings/spacemacs.d/init.el --eval '(check-parens)'
 
-# Try to load a file
-emacs --batch -l ~/emacs/emacs-settings/shared-functions.el 2>&1 | head -20
-
-# Byte-compile to find warnings
-emacs --batch --eval '(byte-compile-file "~/emacs/emacs-settings/shared-functions.el")'
+# Try to load a file (shows first 20 lines of output)
+/Applications/Emacs.app/Contents/MacOS/Emacs --batch -l ~/emacs/emacs-settings/shared-functions.el 2>&1 | head -20
 #+end_src
 
-* Common Error Patterns
+These run headless (no window) so they're fast.
 
-** "Symbol's function definition is void: X"
-- Missing package or function
-- Try: =rm -rf ~/.emacs.d/elpa && emacs=
+* Appendix: Common Error Patterns
 
-** "Cannot open load file: X"
-- File doesn't exist or path is wrong
-- Check all symlinks in the chain:
-  #+begin_src sh
-  ls -ld ~/.emacs.d ~/.spacemacs ~/.spacemacs.d ~/starship
-  #+end_src
+| Error Message                          | Likely Cause             | Try                   |
+|----------------------------------------+--------------------------+-----------------------|
+| "Symbol's function definition is void" | Missing package          | Step 3 (nuke elpa)    |
+| "Cannot open load file"                | Bad path or symlink      | =emacs-check=           |
+| "Wrong number of arguments"            | Package version mismatch | Step 3 (nuke elpa)    |
+| "Recursive load"                       | Circular dependency      | Check recent changes  |
+| Hangs on startup                       | Infinite loop            | =emacs-debug=, then C-g |
 
-** "Wrong number of arguments"
-- Package version mismatch
-- Try: Nuke packages (Level 3)
+* Appendix: Prevention Tips
 
-** Infinite loop / hang on startup
-#+begin_src sh
-# Start with debug, interrupt with C-g when it hangs
-emacs --debug-init
-# Then check *Backtrace* buffer
-#+end_src
-
-** "Recursive load" error
-- Circular dependency in config
-- Check recent changes to config files
-
-* Prevention
-
-** Before Major Changes
-#+begin_src sh
-cd ~/emacs/emacs-settings
-git stash  # Save current state
-# Make changes
-# If broken:
-git stash pop  # Restore
-#+end_src
-
-** Quick Sanity Check
-#+begin_src sh
-# After editing config, verify syntax
-emacs --batch -l ~/.spacemacs.d/init.el --eval '(message "OK")' 2>&1
-#+end_src
-
-* "Known Good" Fallback System
-
-A simple manual system using git tags and worktrees. No automation needed.
-
-** Setup (One Time)
+Before making risky config changes:
 
 #+begin_src sh
 cd ~/emacs/emacs-settings
+git stash                    # Save uncommitted changes
+# ... make your changes ...
+# If broken: git stash pop   # Restore
+#+end_src
 
-# 1. Tag your current working state
+* Appendix: "Known Good" Fallback
+
+If you have a known-good worktree set up, you can boot from it:
+
+#+begin_src sh
+emacs-known-good
+#+end_src
+
+** Setting Up the Known-Good Worktree
+
+#+begin_src sh
+cd ~/emacs/emacs-settings
 git tag -f known-good HEAD
-
-# 2. Create a worktree with the known-good config
 git worktree add ~/emacs/emacs-settings-known-good known-good
 #+end_src
 
-** When Config Breaks
-
-If your current config won't launch, boot from the known-good worktree:
-
-#+begin_src sh
-SPACEMACSDIR=~/emacs/emacs-settings-known-good/spacemacs.d emacs
-#+end_src
-
-This launches Emacs with your last-known-working config, without touching your broken working tree. You can then debug the broken config.
-
-** After Fixing / After Successful Changes
-
-Move the tag forward and update the worktree:
+** Updating After Successful Changes
 
 #+begin_src sh
 cd ~/emacs/emacs-settings
 git tag -f known-good HEAD
-
-# Update the worktree to match
-cd ~/emacs/emacs-settings-known-good
-git checkout known-good
+cd ~/emacs/emacs-settings-known-good && git checkout known-good
 #+end_src
-
-** Why This Works
-- *No automation to break*: Just git commands you run manually
-- *Safe*: The worktree is separate from your working tree
-- *No stash needed*: Your uncommitted changes stay untouched
-- *Easy to maintain*: Just move the tag when things work
 
 * File Locations
 

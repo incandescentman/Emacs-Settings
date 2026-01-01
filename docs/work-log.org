@@ -1,6 +1,23 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2025-12-31: Make org-emphasis-regexp-components survive resets
+- Previous fix (2025-12-26) only applied settings once at org load time
+- Problem: Spacemacs functions like ~spacemacs/prettify-org-buffer~ and ~space-doc-mode~ were resetting the emphasis regex
+- Solution in ~spacemacs-new-config.el~:
+  1. Store settings in ~jay/org-emphasis-regexp-components~ defvar
+  2. Create ~jay/apply-org-emphasis-settings~ function to reapply
+  3. Hook into ~org-mode-hook~ to reapply on every org buffer
+  4. Add ~:after~ advice on ~spacemacs/prettify-org-buffer~ and ~spacemacs//space-doc-alternative-emphasis~
+- Now emphasis settings survive org reloads, new buffers, and Spacemacs overrides
+
+* 2025-12-31: Update recovery-guide.org for GUI Emacs
+- All commands now use explicit ~/Applications/Emacs.app/Contents/MacOS/Emacs~ path
+- Added recovery aliases to ~jay-scripts.sh~: ~emacs-debug~, ~emacs-vanilla~, ~emacs-check~
+- Restructured guide with clear "When to Use" intro and "Try this if" context for each step
+- Quick reference table now shows when to use each step, not just what to do
+- Moved technical details to appendices (batch syntax check, error patterns, prevention)
+
 * 2025-12-31: Sync recovery docs and source-of-truth references
 - Updated Spacemacs path references to =/Users/jay/emacs/emacs-settings/spacemacs.d/init.el= and =~/.spacemacs.d= symlink guidance
 - Switched pasteboard documentation to the pure elisp source (=pasteboard-copy-and-paste-functions.el=) and removed stale .org references
