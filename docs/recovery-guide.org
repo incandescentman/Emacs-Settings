@@ -17,7 +17,7 @@ This guide walks you through diagnosing and fixing the problem, from simple to n
 Open Terminal and run:
 
 #+begin_src sh
-/Applications/Emacs.app/Contents/MacOS/Emacs --debug-init
+emacs-debug
 #+end_src
 
 This launches Emacs with the debugger enabled. When it hits an error, you'll see a =*Backtrace*= buffer showing:
@@ -31,13 +31,13 @@ This launches Emacs with the debugger enabled. When it hits an error, you'll see
 
 * Quick Reference
 
-| Step | When                             | Action                                                    |
-|------+----------------------------------+-----------------------------------------------------------|
-|    1 | Start here                       | =/Applications/Emacs.app/Contents/MacOS/Emacs --debug-init= |
-|    2 | Error is in your config files    | Temporarily rename config                                 |
-|    3 | "package not found" / corruption | =rm -rf ~/.emacs.d/elpa=                                    |
-|    4 | Spacemacs itself is broken       | =/Applications/Emacs.app/Contents/MacOS/Emacs -Q= or =emacs-min=  |
-|    5 | Nothing else works               | Re-clone Spacemacs                                        |
+| Step | When                             | Action                          |
+|------+----------------------------------+---------------------------------|
+|    1 | Start here                       | =emacs-debug=                   |
+|    2 | Error is in your config files    | Temporarily rename config       |
+|    3 | "package not found" / corruption | =rm -rf ~/.emacs.d/elpa=        |
+|    4 | Spacemacs itself is broken       | =emacs-vanilla= or =emacs-min=  |
+|    5 | Nothing else works               | Re-clone Spacemacs              |
 
 * Shell Aliases
 
@@ -49,18 +49,14 @@ alias Emacs="open -a /Applications/Emacs.app/Contents/MacOS/Emacs"
 alias em="open -a /Applications/Emacs.app/Contents/MacOS/Emacs"
 
 # Recovery launchers (use explicit path so flags work)
+alias emacs-debug='/Applications/Emacs.app/Contents/MacOS/Emacs --debug-init'
+alias emacs-vanilla='/Applications/Emacs.app/Contents/MacOS/Emacs -Q'
+alias emacs-check='ls -ld ~/.emacs.d ~/.spacemacs ~/.spacemacs.d ~/starship'
 alias emacs-known-good='SPACEMACSDIR=/Users/jay/emacs/emacs-settings-known-good/spacemacs.d /Applications/Emacs.app/Contents/MacOS/Emacs'
 alias emacs-min='/Applications/Emacs.app/Contents/MacOS/Emacs -Q -l /Users/jay/emacs/emacs-settings/minimal-init.el'
 #+end_src
 
-*Why these use explicit paths*: Your =em= alias uses =open -a= which can't pass flags like =--debug-init=. For debug/vanilla runs, use the Emacs.app binary directly.
-
-** Direct Commands (no alias required)
-#+begin_src sh
-/Applications/Emacs.app/Contents/MacOS/Emacs --debug-init
-/Applications/Emacs.app/Contents/MacOS/Emacs -Q
-ls -ld ~/.emacs.d ~/.spacemacs ~/.spacemacs.d ~/starship
-#+end_src
+*Why these use explicit paths*: Your =em= alias uses =open -a= which can't pass flags like =--debug-init=. These aliases invoke the Emacs.app binary directly.
 
 * Your Setup (Reference)
 
@@ -115,8 +111,8 @@ Spacemacs will re-download all ~500 packages. Takes 5-10 minutes.
 *Try this if*: Spacemacs itself seems broken, or you just need a working Emacs right now.
 
 #+begin_src sh
-/Applications/Emacs.app/Contents/MacOS/Emacs -Q  # Emacs with zero config
-emacs-min                                        # Emacs with minimal-init.el
+emacs-vanilla  # Emacs with zero config
+emacs-min      # Emacs with minimal-init.el
 #+end_src
 
 =emacs-vanilla= is useful for:
