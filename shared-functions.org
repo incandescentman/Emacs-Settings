@@ -9682,22 +9682,33 @@ After evaluating your init-file you can use links analog to the example:
 
 ** reload ox-astro
 #+begin_src emacs-lisp
- (defun ox-astro-reload ()
-    "Fully reload ox-astro and its modules without restarting Emacs."
-    (interactive)
-    (let ((features '(ox-astro
-                      ox-astro-table-handlers
-                      ox-astro-image-handlers
-                      ox-astro-pdf-handlers
-                      ox-astro-handlers
-                      ox-astro-helpers
-                      ox-astro-metadata
-                      ox-astro-config)))
-      (dolist (feat features)
-        (when (featurep feat)
-          (ignore-errors (unload-feature feat t)))))
-    (load (expand-file-name "ox-astro.el" "/Users/jay/Dropbox/github/ox-astro") nil nil t)
-    (message "ox-astro reloaded successfully"))
+
+   (defun ox-astro-reload ()
+      "Fully reload ox-astro and its modules without restarting Emacs."
+      (interactive)
+      (let ((repo "/Users/jay/Dropbox/github/ox-astro"))
+        (add-to-list 'load-path repo)
+        (setq load-prefer-newer t)
+        (dolist (feat '(ox-astro-table-handlers
+                        ox-astro-image-handlers
+                        ox-astro-pdf-handlers
+                        ox-astro-handlers
+                        ox-astro-helpers
+                        ox-astro-metadata
+                        ox-astro-config
+                        ox-astro))
+          (when (featurep feat)
+            (ignore-errors (unload-feature feat t))))
+        (load-file (expand-file-name "ox-astro.el" repo))
+        (dolist (feat '(ox-astro-config
+                        ox-astro-helpers
+                        ox-astro-metadata
+                        ox-astro-image-handlers
+                        ox-astro-pdf-handlers
+                        ox-astro-table-handlers
+                        ox-astro-handlers))
+          (require feat nil t))
+        (message "ox-astro reloaded successfully"))))
 #+end_src
 
 
