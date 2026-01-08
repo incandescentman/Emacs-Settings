@@ -268,6 +268,12 @@ Additional keyword ARGS allow callers to override pieces of the template:
      "- Links ::\n- Date :: %<%Y-%m-%d>\n\n* ${title}\n\n%?\n\n"
      :target (file+head "fragments/%<%Y%m%d%H%M%S>-${slug}.org"
                         "#+TITLE: ${title}\n#+FILETAGS: :fragment:")
+     :unnarrowed t)
+
+   '("l" "life lesson / insight" plain
+     "- Links ::\n- Date :: %<%Y-%m-%d>\n- Source :: \n- Context :: \n\n* ${title}\n\n** The Insight\n\n%?\n\n** How I Learned This\n\n** How to Apply It\n\n"
+     :target (file+head "lessons/%<%Y%m%d%H%M%S>-${slug}.org"
+                        "#+TITLE: ${title}\n#+FILETAGS: :lesson:insight:")
      :unnarrowed t))
   "Capture templates for the my-life (storytelling/memoir) profile.")
 
