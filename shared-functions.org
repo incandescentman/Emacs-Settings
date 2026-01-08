@@ -6915,17 +6915,58 @@ This tells Emacs to simply insert a "<" whenever you press that key, bypassing a
 ** clone-indirect-buffer-new-window-and-focus
 #+begin_src emacs-lisp
 (defun clone-indirect-buffer-new-window-and-focus ()
-  "Clone the current buffer to another window, narrowing both panes to subtree."
+  "Clone to other window, narrow clone to current subtree, and narrow original to the previous subtree.
+
+Result: two windows, each narrowed to a different Org subtree.
+Focus ends in the new (cloned) window, with point where you invoked the command."
   (interactive)
-  (let ((original-window (selected-window)))
-    ;; Narrow the original window first (while we're still in it)
-    (when (derived-mode-p 'org-mode)
-      (org-narrow-to-subtree))
-    ;; Clone to new window (this moves focus to the new window)
+  (unless (derived-mode-p 'org-mode)
+    (user-error "This command is intended for Org buffers"))
+
+  (let* ((orig-win   (selected-window))
+         (orig-buf   (current-buffer))
+         (orig-pt    (point))
+         (cur-head   (save-excursion
+                       (save-restriction
+                         (widen)
+                         (org-back-to-heading t)
+                         (point))))
+         (prev-head  (save-excursion
+                       (save-restriction
+                         (widen)
+                         (goto-char cur-head)
+                         (ignore-errors
+                           (outline-previous-heading)
+                           (point)))))
+         clone-win)
+
+    ;; Make sure the clone doesn't inherit any current narrowing.
+    (widen)
+
+    ;; Create and select the cloned indirect buffer in the other window.
     (clone-indirect-buffer-other-window nil t)
-    ;; Narrow the new clone as well
-    (when (derived-mode-p 'org-mode)
-      (org-narrow-to-subtree))))
+    (setq clone-win (selected-window))
+
+    ;; In the clone: narrow to the subtree we started in, keep original point.
+    (widen)
+    (goto-char cur-head)
+    (org-narrow-to-subtree)
+    (goto-char orig-pt)
+
+    ;; In the original: go to the subtree *before* the one we started in, and narrow.
+    (with-current-buffer orig-buf
+      (widen)
+      (if prev-head
+          (goto-char prev-head)
+        (goto-char cur-head))          ;; fallback if there is no previous heading
+      (org-narrow-to-subtree)
+      (set-window-point orig-win (point)))
+
+    ;; Keep focus in the clone window.
+    (select-window clone-win)
+
+    (unless prev-head
+      (message "No previous heading found; original window narrowed to the current subtree."))))
 #+end_src
 
 
@@ -9694,6 +9735,9 @@ After evaluating your init-file you can use links analog to the example:
                         ox-astro-pdf-handlers
                         ox-astro-handlers
                         ox-astro-helpers
+                        ox-astro-transcode
+                        ox-astro-export-helpers
+                        ox-astro-helpers-core
                         ox-astro-metadata
                         ox-astro-config
                         ox-astro))
@@ -9701,6 +9745,9 @@ After evaluating your init-file you can use links analog to the example:
             (ignore-errors (unload-feature feat t))))
         (load-file (expand-file-name "ox-astro.el" repo))
         (dolist (feat '(ox-astro-config
+                        ox-astro-helpers-core
+                        ox-astro-export-helpers
+                        ox-astro-transcode
                         ox-astro-helpers
                         ox-astro-metadata
                         ox-astro-image-handlers
@@ -9708,7 +9755,7 @@ After evaluating your init-file you can use links analog to the example:
                         ox-astro-table-handlers
                         ox-astro-handlers))
           (require feat nil t))
-        (message "ox-astro reloaded successfully"))))
+        (message "ox-astro reloaded successfully")))
 #+end_src
 
 
