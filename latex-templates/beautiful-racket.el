@@ -150,9 +150,11 @@
 \\setcounter{secnumdepth}{0}
 
 
-\\usepackage[font={small,tt}]{caption}
+\\usepackage[font={large,bf}]{caption}
 
 \\usepackage{booktabs} % Customized table styles: If you plan to use tables in your document, you might want to consider customizing their appearance with the `booktabs` package for professional-looking tables
+\\usepackage{tabularx} % Tables with auto-wrapping columns that fit page width
+\\renewcommand{\\tabularxcolumn}[1]{>{\\raggedright\\arraybackslash}p{#1}} % Ragged right in table cells
 
 % Use the fancyhdr package to customize the headers and footers of your document for a professional appearance
 
@@ -192,11 +194,11 @@
 \\usepackage{xspace}
 
 % Subtitle environments for different heading levels
-% For section - using Large (which is appropriate for 12pt base document)
+% For section - larger italic, no hyphenation, ragged right
 \\newenvironment{subtitle}%
 {%
 \\vspace{-0.5\\baselineskip}
-\\large\\itshape
+\\Large\\itshape\\raggedright\\hyphenpenalty=10000\\exhyphenpenalty=10000
 }%
 {%
 \\par\\bigskip
@@ -264,6 +266,7 @@
 
 \\usepackage{tocloft}
 \\renewcommand{\\cftsecleader}{\\cftdotfill{\\cftdotsep}}
+\\tocloftpagestyle{empty} % Suppress page number on TOC page
 \\usepackage[normalem]{ulem}
 
 
@@ -476,7 +479,7 @@
 
                \\titleformat*{\\subsubsection}{\\ttfamily\\scshape\\fontsize{18}{16}\\raggedright\\ttfamily}\\color{spacegrey}
 
-               \\titleformat*{\\paragraph}{\\ttfamily\\bfseries\\fontsize{19}{12}\\raggedright}
+               \\titleformat*{\\paragraph}{\\ttfamily\\fontseries{sb}\\fontsize{13}{12}\\selectfont\\raggedright}
                \\titleformat*{\\subparagraph}{\\sffamily\\fontsize{16}{12}\\raggedright\\ttfamily\\bfseries}
 
                \\DeclareTextFontCommand{\\nonsection}{\\sffamily\\fontsize{19}{19}\\raggedright\\sffamily\\textlf}
@@ -554,7 +557,18 @@
 
 
 
+               \\usepackage{xurl} % Better URL line breaking
                \\usepackage[breaklinks=true,linktocpage,xetex]{hyperref}
+
+               % Endnotes for Works Cited sections
+               \\usepackage{endnotes}
+               \\let\\footnote=\\endnote
+               % Remove the heading (we use org heading instead) and suppress page header
+               \\renewcommand{\\enoteheading}{\\thispagestyle{plain}}
+               % Numbered list with hanging indent and space between entries
+               \\renewcommand{\\enoteformat}{\\noindent\\hangindent=2em\\makebox[2em][l]{\\theenmark.}}
+               \\renewcommand{\\enotesize}{\\normalsize}
+               \\AtEndDocument{\\ifnum\\value{endnote}>0\\theendnotes\\fi}
                \\hypersetup{colorlinks, citecolor=elegantblue,filecolor=elegantblue,linkcolor=elegantblue,urlcolor=elegantblue}
 
                \\renewcommand\\maketitle{}

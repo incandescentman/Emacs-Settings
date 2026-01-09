@@ -1,0 +1,223 @@
+:PROPERTIES:
+:ID:       20260109T150000.000000
+:END:
+#+title: Beautiful Racket LaTeX Template Documentation
+#+DESCRIPTION: Documentation for the beautiful-racket org-mode LaTeX export template
+#+filetags: :latex:documentation:
+
+* Overview
+
+The ~beautiful-racket~ template is a custom LaTeX class for org-mode export, designed for professional document production with Tufte-inspired typography.
+
+Template location: ~/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el~
+
+* Usage
+
+To use this template, add to your org file's export settings:
+
+#+begin_example
+#+LaTeX_CLASS: beautiful-racket
+#+end_example
+
+* Tables
+
+** Preferred Format
+
+Use this format for tables that may have wide content:
+
+#+begin_example
+#+ATTR_LATEX: :booktabs t :environment tabularx :width \textwidth :align lXXX
+| \textbf{Header1} | \textbf{Header2} | \textbf{Header3} | \textbf{Header4} |
+|------------------+------------------+------------------+------------------|
+| Data             | Data             | Data             | Data             |
+#+end_example
+
+** Table Attributes
+
+| Attribute               | Purpose                                              |
+|-------------------------+------------------------------------------------------|
+| ~:booktabs t~           | Professional horizontal rules (toprule/midrule/bottomrule) |
+| ~:environment tabularx~ | Auto-wrapping columns that fit page width            |
+| ~:width \textwidth~     | Table spans full text width                          |
+| ~:align lXXX~           | Column alignment specification                       |
+
+** Column Alignment
+
+- ~l~, ~c~, ~r~ - Fixed-width columns (left, center, right aligned)
+- ~X~ - Wrapping column that expands to fill available width
+
+Use fixed columns for short content (Year, numbers, short labels).
+Use ~X~ columns for longer text that should wrap.
+
+Examples:
+- ~lXXX~ - First column fixed, next three wrap
+- ~lXlX~ - Alternating fixed and wrapping
+- ~lXX~ - Three columns: fixed, wrap, wrap
+
+** Header Formatting
+
+- Use ~\textbf{Header Text}~ for bold headers
+- Add separator line ~|---+---+---|~ after header row
+- The separator triggers booktabs ~\midrule~
+
+** Template Features for Tables
+
+The template includes:
+- ~tabularx~ package for auto-wrapping tables
+- Ragged right alignment in X columns (prevents awkward justification)
+- ~booktabs~ package for professional table rules
+
+* URLs and Links
+
+** Long URL Handling
+
+The template includes the ~xurl~ package which allows URLs to break at more points, preventing overflow in bibliographies and references.
+
+Configuration in template:
+#+begin_example
+\usepackage{xurl}
+\usepackage[breaklinks=true,linktocpage,xetex]{hyperref}
+#+end_example
+
+** Link Colors
+
+All links use ~elegantblue~ color (#4380b9):
+- Citations
+- File links
+- Internal links
+- URLs
+
+* Typography
+
+** Fonts (XeTeX)
+
+When compiled with XeTeX:
+- Roman: Garamond Premier Pro
+- Sans: TeX Gyre Pagella
+- Mono: TeX Gyre Heros
+
+** Tufte-Style Features
+
+- ~\newthought{text}~ - Start a new section with small caps
+- ~\smallcaps{text}~ - Letterspaced small caps
+- ~\allcaps{text}~ - Letterspaced all caps
+- 10pt base font with 14pt baseline (generous leading)
+
+** Spacing
+
+- No paragraph indentation
+- 12pt paragraph skip
+- 1.2 line stretch (one-half spacing)
+
+* Page Layout
+
+- Paper: 8.5" x 11" (US Letter)
+- Horizontal margins: 1.5"
+- Top margin: 0.5" (includes header)
+- Bottom margin: 1"
+
+* Headers and Footers
+
+- Left header: Configurable via ~\leftheader~ token
+- Right header: Current section name (small caps)
+- Center footer: Page number
+- No header rule
+
+* Headings
+
+** Section Hierarchy
+
+| Level         | Style                          |
+|---------------+--------------------------------|
+| Section       | 40pt, monospace, small caps    |
+| Subsection    | 24pt, sans-serif               |
+| Subsubsection | 18pt, monospace, small caps    |
+| Paragraph     | 13pt, monospace, semibold      |
+| Subparagraph  | 16pt, monospace, bold          |
+
+** Custom Environments
+
+- ~subtitle~ - Huge italic text below section headings (no hyphenation, ragged right)
+- ~subsubtitle~ - Normal italic text below subsection headings
+- ~tagline~ - Italic intro text with adjusted margins
+
+* Block Quotes
+
+Block quotes are styled with:
+- Powder blue background (#f5f7ff)
+- Stormy blue-grey border (#708090)
+- Moon rock grey text (#5D5D5D)
+- Rounded corners
+- 80% text width, centered
+- Breakable across pages
+
+* Code Listings
+
+Code blocks use:
+- Monospace font, small size
+- Single frame border
+- Line breaking enabled
+- Red arrow indicator for wrapped lines
+
+* Packages Included
+
+Key packages loaded by this template:
+
+| Package    | Purpose                                    |
+|------------+--------------------------------------------|
+| booktabs   | Professional table rules                   |
+| tabularx   | Auto-width table columns                   |
+| xurl       | Better URL line breaking                   |
+| hyperref   | Clickable links                            |
+| microtype  | Micro-typographic enhancements             |
+| tcolorbox  | Styled block quotes                        |
+| titlesec   | Heading customization                      |
+| fancyhdr   | Header/footer customization                |
+| csquotes   | Smart quote handling                       |
+| fontspec   | Font selection (XeTeX)                     |
+| endnotes   | Works Cited / bibliography at end          |
+
+* Endnotes / Works Cited
+
+The template includes built-in support for endnotes, useful for Works Cited sections in research documents.
+
+** How It Works
+
+- Inline references: Use org-mode footnote syntax ~[fn:1]~ in body text
+- Footnote definitions: Place at end under ~** Works Cited~ heading
+- Export: References appear as superscript numbers; definitions print at document end
+
+** Formatting
+
+- Numbered list with hanging indent (not superscript footnote style)
+- Normal body text size
+- No duplicate heading (use your own ~** Works Cited~ org heading)
+- Page header suppressed on Works Cited page
+
+** Example
+
+#+begin_example
+Some text with a reference.[fn:1] More text.[fn:2]
+
+** Works Cited
+
+[fn:1] Author, "Title," Publication, date, [[url][Link]]
+
+[fn:2] Another source...
+#+end_example
+
+* Changelog
+
+** 2026-01-09
+- Added ~tabularx~ package for auto-wrapping table columns
+- Added ragged right alignment for tabularx X columns
+- Added ~xurl~ package for better URL line breaking
+- Updated ~subtitle~ environment: ~\huge~, ragged right, no hyphenation
+- Updated ~\paragraph~ heading: 13pt semibold monospace
+- Added ~endnotes~ package for Works Cited sections
+- Table captions: large, bold font
+
+* See Also
+
+- [[file:/Users/jay/Dropbox/roam/CLAUDE.md][CLAUDE.md]] - Contains quick reference for table formatting
+- Org-mode LaTeX export documentation
