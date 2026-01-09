@@ -181,9 +181,9 @@
 
 \\renewcommand{\\subsectionmark}[1]{\\markboth{#1}{}} % for subsections in the headers instead of sections
 % \\renewcommand{\\sectionmark}[1]{\\markboth{#1}{}}
-\\lhead{\\scshape\\href{\\the\\leftheaderurl}{\\the\\leftheader}}
+\\lhead{\\mbox{\\small\\scshape\\href{\\the\\leftheaderurl}{\\the\\leftheader}}}
 \\chead{}
-\\rhead{{\\scshape{\\leftmark}}} % Add section heading
+\\rhead{\\mbox{\\small\\scshape{\\leftmark}}} % Add section heading
 % \\rhead{\\@title: {{\\leftmark}}}
 \\lfoot{}
 \\cfoot{\\thepage} % Add page numbers
@@ -198,7 +198,7 @@
 \\newenvironment{subtitle}%
 {%
 \\vspace{-0.5\\baselineskip}
-\\Large\\itshape\\raggedright\\hyphenpenalty=10000\\exhyphenpenalty=10000
+\\fontsize{18pt}{22pt}\\selectfont\\itshape\\raggedright\\hyphenpenalty=10000\\exhyphenpenalty=10000
 }%
 {%
 \\par\\bigskip
