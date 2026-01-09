@@ -118,10 +118,12 @@ When compiled with XeTeX:
 
 * Headers and Footers
 
-- Left header: Configurable via ~\leftheader~ token
-- Right header: Current section name (small caps)
+- Left header: Configurable via ~\leftheader~ token (small caps, small font)
+- Right header: Current section name (small caps, small font)
 - Center footer: Page number
 - No header rule
+- TOC page: No page number
+- Headers wrapped in ~\mbox{}~ to prevent list interpretation when section titles start with numbers like "2."
 
 * Headings
 
@@ -137,7 +139,7 @@ When compiled with XeTeX:
 
 ** Custom Environments
 
-- ~subtitle~ - Huge italic text below section headings (no hyphenation, ragged right)
+- ~subtitle~ - 18pt italic text below section headings (no hyphenation, ragged right)
 - ~subsubtitle~ - Normal italic text below subsection headings
 - ~tagline~ - Italic intro text with adjusted margins
 
@@ -208,11 +210,17 @@ Some text with a reference.[fn:1] More text.[fn:2]
 
 * Changelog
 
+** 2026-01-09 (continued)
+- Fixed header indentation: wrap in ~\mbox{}~ to prevent list interpretation of "2." etc.
+- Subtitle font size: 18pt (between ~\Large~ and ~\huge~)
+- Headers: use ~\small~ font size
+- TOC page: suppress page number via ~\tocloftpagestyle{empty}~
+
 ** 2026-01-09
 - Added ~tabularx~ package for auto-wrapping table columns
 - Added ragged right alignment for tabularx X columns
 - Added ~xurl~ package for better URL line breaking
-- Updated ~subtitle~ environment: ~\huge~, ragged right, no hyphenation
+- Updated ~subtitle~ environment: ragged right, no hyphenation
 - Updated ~\paragraph~ heading: 13pt semibold monospace
 - Added ~endnotes~ package for Works Cited sections
 - Table captions: large, bold font
