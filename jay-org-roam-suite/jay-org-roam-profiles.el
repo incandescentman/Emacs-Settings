@@ -182,7 +182,8 @@ Additional keyword ARGS allow callers to override pieces of the template:
     ("X" "exemplars" "exemplars" "exemplars")
     ("x" "cuts" "cuts" "cuts")
     ("$" "consumerist" "consumerist" "consumerist")
-    ("r" "social / relationships" "social" "social"))
+    ("r" "social / relationships" "social" "social")
+    ("R" "recipe" "recipes" "recipe"))
   "Factory-style template specs that also lean on `jay/roam-template`.")
 
 ;; DEFAULT PROFILE TEMPLATES (Your current work setup)

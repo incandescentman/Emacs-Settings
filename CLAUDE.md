@@ -155,6 +155,7 @@ The following documentation files provide detailed information about various asp
 6. Add a tiny batch smoke-test (`emacs --batch --load ~/.emacs.d/init.el --eval "(with-temp-buffer (org-mode) (message \"shift %S\" org-support-shift-select))"`) after tweaking startup; this catches regressions like the `shift-select-mode` autoload failure before they land.
 
 ### Guidance for AI/LLM Editing Sessions
+- **Don't ask, just do**: When Jay provides a file path, READ IT FIRST before asking questions. If he says "here's an error" or "look at this" with a path, just read the file—don't ask what it is or request more context.
 - When touching any literate Org file (e.g., `pasteboard-copy-and-paste-functions.org`), delete the stale tangled `.el`, retangle immediately, and run `emacs --batch <file.el> --eval '(check-parens)'` before restarting.
 - Treat regex tweaks with extra caution: smoke-test them in a scratch buffer (`re-search-forward`) to avoid `invalid-regexp` surprises.
 - Keep the edit loop tight—edit → tangle → `check-parens` (or byte-compile)—to catch structural errors before they reach Spacemacs startup.
