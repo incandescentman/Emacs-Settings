@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-01-15: Move search/completion stack into search-commands.org
+- Moved isearch, ivy/swiper, consult, orderless/vertico/embark, counsel, and related helpers out of =shared-functions.org=
+- Consolidated search utilities (rg/deadgrep, consult-locate, counsel-fd, consult ripgrep advice, org heading search) into =search-commands.org=
+- Removed redundant mini vertico stanza from projectile section after the move
+
 * 2026-01-15: Document optional shared-functions.org split candidates
 - Noted low-coupling extraction options in =docs/design-architecture.org=:
   keybindings/key-chord, search/completion, org-roam stubs, UI/appearance, and web-research helpers

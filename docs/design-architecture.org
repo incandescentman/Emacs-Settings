@@ -341,6 +341,7 @@ This config uses these Spacemacs layers:
 - Org-roam + org-roam-ui config stubs
 - UI/appearance + font/frame logic (move to =fonts-and-themes.org=)
 - Web research/html2org helpers (move near pasteboard module)
+Note: Search/completion now lives in =search-commands.org= as the first extraction.
 
 ** Why Literate Programming (Not Just .el Files)?
 

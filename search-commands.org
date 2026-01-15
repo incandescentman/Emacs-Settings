@@ -354,3 +354,540 @@ This function provides a user-friendly way to search and open files from two dif
 
 (setq counsel-find-file-ignore-regexp "\\.html")
 #+end_src
+
+* Searching for things
+** isearch
+*** isearch settings
+#+BEGIN_SRC emacs-lisp
+(defun my-isearch-word-at-point ()
+  (interactive)
+  (call-interactively 'isearch-forward-regexp))
+
+(defun my-isearch-yank-word-hook ()
+  (when (equal this-command 'my-isearch-word-at-point)
+    (let ((string (concat "\\<"
+			  (buffer-substring-no-properties
+			   (progn (skip-syntax-backward "w_") (point))
+			   (progn (skip-syntax-forward "w_") (point)))
+			  "\\>")))
+      (if (and isearch-case-fold-search
+	       (eq 'not-yanks search-upper-case))
+	  (setq string (downcase string)))
+      (setq isearch-string string
+	    isearch-message
+	    (concat isearch-message
+		    (mapconcat 'isearch-text-char-description
+			       string ""))
+	    isearch-yank-flag t)
+      (isearch-search-and-update))))
+
+(add-hook 'isearch-mode-hook 'my-isearch-yank-word-hook)
+
+;; (global-set-key "\C-cw" 'my-isearch-word-at-point)
+#+END_SRC
+
+*** Position of the Cursor after Searching
+Note that when you type ‘C-r’, isearch goes backwards. When you search
+backwards, find something, and then end the search, for example by hitting
+‘RET’, point is at the beginning of the string you searched. When you search
+forwards, point is not necessarily at the end of the string you were searching
+for, but only after the last character that you typed – bad usability! That
+means that you cannot predict point based on the string you are searching for
+(and thinking about). You must predict point based on the numbers of characters
+you typed. Here is how to change that in your InitFile, courtesy of
+AdrianKubala:
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'isearch-mode-end-hook 'my-goto-match-beginning)
+
+(defun my-goto-match-beginning ()
+  "After isearch, move point to the beginning of the match and recenter the view."
+  (when (and isearch-forward isearch-other-end)
+    (goto-char isearch-other-end)
+    (recenter-top-bottom)))
+
+(defun isearch-from-buffer-start ()
+  (interactive)
+  (push-mark)
+  (goto-char (point-min))
+  (isearch-forward))
+#+END_SRC
+
+** projectile
+#+BEGIN_SRC emacs-lisp
+(use-package projectile
+:defer t
+  :diminish projectile-mode
+  :init
+  (projectile-mode +1)
+
+  :custom
+  (projectile-completion-system 'default) ;; Vertico integrates via default
+  (projectile-enable-caching t)
+
+  (projectile-globally-ignored-file-suffixes '("docx" "jpg" "png" "tmp" "tex" "html" "pdf" "pptx" "tmp"))
+
+  (projectile-globally-ignored-directories
+   '(".idea" ".eunit" ".git" ".hg" ".fslckout" ".bzr" "_darcs" ".tox" ".svn" ".tmp" "archived-work" "images" "excel-mindnode-omni" "archive"))
+
+  (projectile-globally-ignored-files '("TAGS" ".DS_Store" ".projectile" ".dropbox"))
+
+  :bind-keymap
+  ("C-c p" . projectile-command-map)
+
+  :bind
+  (:map projectile-mode-map
+        ("s-o" . nil)))
+#+END_SRC
+
+** isearch
+
+*** isearch arrow keys
+  Here's very convenient keys for isearch. Put it in your emacs init.
+
+#+BEGIN_SRC emacs-lisp
+
+(progn
+  ;; set arrow keys in isearch. left/right is backward/forward, up/down is history. press Return to exit
+;;  (define-key isearch-mode-map (kbd "<up>") 'isearch-ring-retreat )
+;; (define-key isearch-mode-map (kbd "<down>") 'isearch-ring-advance )
+  (define-key isearch-mode-map (kbd "<tab>") 'isearch-ring-advance )
+  (define-key isearch-mode-map (kbd "<S-tab>") 'isearch-repeat-backward) ; single key, useful
+
+;  (define-key isearch-mode-map (kbd "<right>") 'isearch-repeat-forward) ; single key, useful
+ )
+
+#+END_SRC
+
+  when in isearch, the arrow keys will:
+
+  → next occurrence.
+  ← previous occurrence.
+  ↑ previous search term.
+  ↓ next search term.
+  Enter ↵ exit isearch.
+
+  This way, searching forward/backward is just one single key press, no key combination.
+
+  This is especially useful with a command that searches current word. See: Emacs: isearch Current Word.
+
+
+** searching
+
+*** swiper
+**** ivy
+#+BEGIN_EXAMPLE emacs-lisp
+(use-package ivy
+
+ :config
+ (ivy-add-actions t
+    '(("W" kill-new "save to kill ring")
+     ("I" insert "insert in buffer")))
+(define-key ivy-minibuffer-map (kbd "SPC") 'insert-space)
+(define-key ivy-minibuffer-map (kbd "s-v") 'pasteboard-paste-verbatim)
+(setq ivy-height 25)
+(setq ivy-display-style 'fancy)
+
+)
+#+END_EXAMPLE
+
+**** swiper
+#+BEGIN_EXAMPLE emacs-lisp
+;; (global-set-key (kbd "C-s") 'swiper)
+(setq ivy-re-builders-alist
+ '((t . ivy--regex-plus)))
+
+(define-key key-minor-mode-map (kbd "C-7") 'swiper-mc)
+
+#+END_EXAMPLE
+
+**** swiper hydra
+#+BEGIN_EXAMPLE emacs-lisp
+(defun ivy-dired-mark (arg)
+ (interactive "p")
+ (dotimes (_i arg)
+  (with-selected-window swiper--window
+   (dired-mark 1))
+  (ivy-next-line 1)
+  (ivy--exhibit)))
+
+(defun ivy-dired-unmark (arg)
+ (interactive "p")
+ (dotimes (_i arg)
+  (with-selected-window swiper--window
+   (dired-unmark 1))
+  (ivy-next-line 1)
+  (ivy--exhibit)))
+
+(defun ivy-replace ()
+ (interactive)
+ (let ((from (with-selected-window swiper--window
+        (move-beginning-of-line nil)
+        (when (re-search-forward
+            (ivy--regex ivy-text) (line-end-position) t)
+         (match-string 0)))))
+  (if (null from)
+    (user-error "No match")
+   (let ((rep (read-string (format "Replace [%s] with: " from))))
+    (with-selected-window swiper--window
+     (undo-boundary)
+     (replace-match rep t t))))))
+
+(defun ivy-undo ()
+ (interactive)
+ (with-selected-window swiper--window
+  (undo)))
+
+(defhydra hydra-ivy (:hint nil
+           :color pink)
+ "
+^^^^^^     ^Actions^  ^Dired^   ^Quit^
+^^^^^^--------------------------------------------
+^ ^ _l_ ^ ^   _._ repeat  _m_ark   _i_: cancel
+_j_ ^✜^ _;_   _r_eplace  _,_ unmark _o_: quit
+^ ^ _k_ ^ ^   _u_ndo
+"
+ ;; arrows
+ ("j" ivy-beginning-of-buffer)
+ ("k" ivy-next-line)
+ ("l" ivy-previous-line)
+ (";" ivy-end-of-buffer)
+ ;; actions
+ ("." hydra-repeat)
+ ("r" ivy-replace)
+ ("u" ivy-undo)
+ ;; dired
+ ("m" ivy-dired-mark)
+ ("," ivy-dired-unmark)
+ ;; exit
+ ("o" keyboard-escape-quit :exit t)
+ ("i" nil))
+
+(define-key ivy-minibuffer-map (kbd "C-o") 'hydra-ivy/body)
+
+#+END_EXAMPLE
+
+** searching
+
+*** Tell isearch that curly apostrophes are the same as straight ones
+ Source: [[http://endlessparentheses.com/ispell-and-apostrophes.html][Ispell and Apostrophes in Emacs]]
+
+#+BEGIN_SRC emacs-lisp
+ ;;; Tell ispell.el that ’ can be part of a word.
+(setq ispell-local-dictionary-alist
+      `((nil "[[:alpha:]]" "[^[:alpha:]]"
+             "['\x2019]" nil ("-B") nil utf-8)))
+
+;;; Don't send ’ to the subprocess.
+(defun replace-curly-apostrophe (args)
+  (cons (replace-regexp-in-string
+         "’" "'" (car args))
+        (cdr args)))
+(advice-add #'ispell-send-string :filter-args
+            #'replace-curly-apostrophe)
+
+;;; Convert ' back to ’ from the subprocess.
+(defun replace-curly-quotes (args)
+  (if (not (derived-mode-p 'org-mode))
+      args
+    (cons (replace-regexp-in-string
+           "'" "’" (car args))
+          (cdr args))))
+(advice-add #'ispell-parse-output :filter-args
+            #'replace-curly-quotes)
+#+END_SRC
+
+
+* ignore case in searches
+#+BEGIN_SRC emacs-lisp
+(defun ignore-case-in-searches ()
+ (interactive)
+ (setq case-fold-search t)
+ )
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(defun isearch-forward-ignore-case ()
+(interactive)
+(ignore-case-in-searches)
+(isearch-forward)
+)
+#+END_SRC
+
+* consult
+#+begin_src emacs-lisp
+;; Example configuration for Consult
+(use-package consult
+:defer t
+ :after (consult-eglot)
+ ;; Replace bindings. Lazily loaded due by `use-package'.
+ :bind (
+;; ("C-s s" . consult-line)
+;; 	 ("C-s e" . consult-eglot-symbols)
+;; 	 ("C-s r" . consult-ripgrep)
+;; ("s-G" . consult-ripgrep)
+;; 	 ("C-s f" . consult-find)
+;; 	 ("C-s l" . consult-flymake)
+;; 	 ("C-s n" . consult-focus-lines)
+;; 	 ("C-s I" . consult-project-imenu)
+;; 	 ("C-s o" . consult-outline)
+;; 	 ("C-s b" . consult-bookmark)
+;; 	 ("C-s m" . consult-man)
+
+   )
+
+ ;; Enable automatic preview at point in the *Completions* buffer. This nt when you use the default completion UI.
+ :hook (completion-list-mode . consult-preview-at-point-mode)
+
+ ;; The :init configuration is always executed (Not lazy)
+ :init
+
+ (global-unset-key (kbd "C-s"))
+
+ ;; Optionally configure the register formatting. This improves the register
+ ;; preview for `consult-register', `consult-register-load',
+ ;; `consult-register-store' and the Emacs built-ins.
+ (setq register-preview-delay 0.5
+    register-preview-function #'consult-register-format)
+
+ ;; Optionally tweak the register preview window.
+ ;; This adds thin lines, sorting and hides the mode line of the window.
+ (advice-add #'register-preview :override #'consult-register-window)
+
+ ;; Use Consult to select xref locations with preview
+ (setq xref-show-xrefs-function #'consult-xref
+    xref-show-definitions-function #'consult-xref)
+
+ ;; Configure other variables and modes in the :config section,
+ ;; after lazily loading the package.
+ :config
+
+ ;; Optionally configure preview. The default value
+ ;; is 'any, such that any key triggers the preview.
+ ;; (setq consult-preview-key 'any)
+ ;; (setq consult-preview-key (kbd "M-."))
+ ;; (setq consult-preview-key (list (kbd "<S-down>") (kbd "<S-up>")))
+ ;; For some commands and buffer sources it is useful to configure the
+ ;; :preview-key on a per-command basis using the `consult-customize' macro.
+ (consult-customize
+  consult-theme
+  :preview-key '(:debounce 0.2 any)
+  consult-ripgrep consult-git-grep consult-grep
+  consult-bookmark consult-recent-file consult-xref
+  consult--source-bookmark consult--source-recent-file
+  consult--source-project-recent-file
+  ;; :preview-key (kbd "M-."))
+
+  ;; Optionally configure the narrowing key.
+  ;; Both < and C-+ work reasonably well.
+  (setq consult-narrow-key "<") ;; (kbd "C-+")
+
+  ;; Optionally make narrowing help available in the minibuffer.
+  ;; You may want to use `embark-prefix-help-command' or which-key instead.
+  ;; (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help)
+
+  ;; By default `consult-project-function' uses `project-root' from project.el.
+  ;; Optionally configure a different project root function.
+  ;; There are multiple reasonable alternatives to chose from.
+ ;;;; 1. project.el (the default)
+  ;; (setq consult-project-function #'consult--default-project--function)
+ ;;;; 2. projectile.el (projectile-project-root)
+  ;; (autoload 'projectile-project-root "projectile")
+  ;; (setq consult-project-function (lambda (_) (projectile-project-root)))
+ ;;;; 3. vc.el (vc-root-dir)
+  ;; (setq consult-project-function (lambda (_) (vc-root-dir)))
+ ;;;; 4. locate-dominating-file
+  ;; (setq consult-project-function (lambda (_) (locate-dominating-file "." ".git")))
+  ))
+
+(key-chord-define-global "SS" 'consult-line)
+
+#+end_src
+
+* orderless
+#+begin_src emacs-lisp
+(use-package orderless
+
+ :defer t
+ :ensure t
+ :custom
+ (completion-styles '(orderless))
+ (completion-category-overrides '((command (styles . (partial-completion))))))
+  #+end_SRC
+
+* vertico
+#+begin_src emacs-lisp
+(use-package marginalia
+:defer t
+:ensure t
+ :delight
+ :custom
+ (marginalia-max-relative-age 0)
+ (marginalia-align 'right)
+ :init
+ (marginalia-mode))
+
+ (use-package vertico
+:defer t
+:ensure t
+   :init
+ (vertico-mode)
+
+ ;; Different scroll margin
+ ;; (setq vertico-scroll-margin 0)
+
+ ;; Show more candidates
+ ;; (setq vertico-count 20)
+
+ (setq vertico-resize t)
+
+ ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
+ ;; (setq vertico-cycle t)
+ )
+#+end_SRC
+
+* embark
+#+begin_EXAMPLE emacs-lisp
+
+(use-package embark
+:defer t
+ :ensure t
+
+ :bind
+ (("s-e" . embark-act)     ;; pick some comfortable binding
+  ("C-;" . embark-dwim)    ;; good alternative: M-.
+  ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+
+ :init
+
+ ;; Optionally replace the key help with a completing-read interface
+ (setq prefix-help-command #'embark-prefix-help-command)
+
+ ;; Show the Embark target at point via Eldoc. You may adjust the Eldoc
+ ;; strategy, if you want to see the documentation from multiple providers.
+ (add-hook 'eldoc-documentation-functions #'embark-eldoc-first-target)
+ ;; (setq eldoc-documentation-strategy #'eldoc-documentation-compose-eagerly)
+
+ :config
+
+ ;; Hide the mode line of the Embark live/completions buffers
+ (add-to-list 'display-buffer-alist
+        '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+         nil
+         (window-parameters (mode-line-format . none)))))
+
+;; Consult users will also want the embark-consult package.
+(use-package embark-consult
+:defer t
+ :ensure t ; only need to install it, embark loads it after consult if found
+ :hook
+ (embark-collect-mode . consult-preview-at-point-mode))
+#+END_EXAMPLE
+
+* consult ripgrep
+Avoid recentering errors. Works!
+#+begin_src emacs-lisp
+(defun consult-recenter-advice (orig-fn &rest args)
+ "Advice for `recenter' to avoid errors when the window is not displaying the current buffer."
+ (when (eq (window-buffer) (current-buffer))
+  (apply orig-fn args)))
+
+(advice-add 'recenter :around #'consult-recenter-advice)
+#+end_src
+
+* consult git grep
+#+begin_src emacs-lisp
+;; (setq consult-git-grep-args )
+#+end_src
+
+* rg
+#+begin_src emacs-lisp
+
+;; (rg-enable-default-bindings)
+#+end_src
+
+* deadgrep
+#+begin_src emacs-lisp
+(use-package deadgrep
+  :defer)
+(define-key key-minor-mode-map (kbd "s-k d g") 'deadgrep-current-directory)
+#+end_src
+
+* search recently used directories
+#+begin_src emacs-lisp
+
+ (defun timu/search-org-files ()
+  "Grep for a string in the `~/org' using `rg'."
+  (interactive)
+(consult-ripgrep "~/org" ""))
+
+ (defun timu/search-project-files ()
+  "Grep for a string in the `~/projects' using `rg'."
+  (interactive)
+(consult-ripgrep "~/projects" ""))
+
+#+end_src
+
+* org headings
+#+begin_src emacs-lisp
+
+(defun timu/org-go-to-heading (&optional arg)
+
+"Go to an outline heading with `consult-org-heading'. Also move the heading to the top of the buffer with `evil-scroll-line-to-top'"
+
+  (interactive)
+
+(consult-org-heading)
+(evil-scroll-line-to-top arg))
+
+#+end_src
+
+* counsel-fd
+** Usage
+~M-x counsel-fd-dired-jump~ to jump to a subdirectory under current
+directory
+
+~M-x counsel-fd-file-jump~ to jump to a file under current directory
+
+#+begin_src emacs-lisp
+(use-package counsel-fd
+  :defer t)
+#+end_src
+
+* consult-locate
+Maybe to replace fasd?
+
+#+begin_src emacs-lisp
+(setq consult-locate-args "fasd -t -l -R")
+(define-key key-minor-mode-map (kbd "C-x C-l") 'consult-locate)
+#+end_src
+
+* counsel
+#+begin_src emacs-lisp
+(use-package counsel :defer t)
+#+end_src
+
+* embark vertico
+#+begin_src emacs-lisp
+(with-eval-after-load 'vertico
+(define-key key-minor-mode-map (kbd "C-M-S-s-o") 'embark-act)
+;; (define-key vertico-map (kbd "M-o") 'embark-act)
+)
+
+#+end_src
+
+* isearch-forward-word-at-point
+#+begin_src emacs-lisp
+(defun isearch-forward-word-at-point ()
+  "Search forward for the next occurrence of the word at point.
+If invoked again, move to the next instance of the word."
+  (interactive)
+  (let ((word (thing-at-point 'word t)))  ;; Get word at point, non-nil for empty words
+    (if (not word)
+        (message "No word at point")
+      (if (eq last-command this-command)
+          (isearch-repeat-forward)  ;; Continue searching if repeated
+        (progn
+          (isearch-forward nil 1)
+          (isearch-yank-string word))))))
+#+end_src
