@@ -1,6 +1,9 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-01-15: Corrective note on commit instruction misunderstanding
+- Added a corrective note acknowledging a mistaken response about committing all changes when asked
+
 * 2026-01-15: Move search/completion stack into search-commands.org
 - Moved isearch, ivy/swiper, consult, orderless/vertico/embark, counsel, and related helpers out of =shared-functions.org=
 - Consolidated search utilities (rg/deadgrep, consult-locate, counsel-fd, consult ripgrep advice, org heading search) into =search-commands.org=
