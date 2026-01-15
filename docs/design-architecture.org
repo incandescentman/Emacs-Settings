@@ -335,6 +335,13 @@ This config uses these Spacemacs layers:
 
 *Decision*: For a personal config, convenience trumps modularity. Could split if working with a team.
 
+*If splitting ever becomes necessary*, start with low-coupling blocks:
+- Keybindings + key-chord setup (move to =keys.el= / =key-chord.org=)
+- Search/completion stack (isearch, swiper, consult, rg, deadgrep)
+- Org-roam + org-roam-ui config stubs
+- UI/appearance + font/frame logic (move to =fonts-and-themes.org=)
+- Web research/html2org helpers (move near pasteboard module)
+
 ** Why Literate Programming (Not Just .el Files)?
 
 *Pros*:

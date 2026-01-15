@@ -1,6 +1,10 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-01-15: Document optional shared-functions.org split candidates
+- Noted low-coupling extraction options in =docs/design-architecture.org=:
+  keybindings/key-chord, search/completion, org-roam stubs, UI/appearance, and web-research helpers
+
 * 2025-12-31: Make org-emphasis-regexp-components survive resets
 - Previous fix (2025-12-26) only applied settings once at org load time
 - Problem: Spacemacs functions like ~spacemacs/prettify-org-buffer~ and ~space-doc-mode~ were resetting the emphasis regex
