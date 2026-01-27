@@ -312,6 +312,75 @@
     ("<C-s-left>"    . work-on-book)
 
     ;; =================================================================
+    ;; Migrated Bindings (gnu-emacs-startup/shared-functions)
+    ;; =================================================================
+    ("<s-S-return>"  . smart-org-insert-todo-heading-dwim)
+    ("<C-i>"         . italicize-region-or-point)
+    ("<M-S-backspace>" . backward-kill-sexp)
+    ("<M-s-return>"  . org-inlinetask-insert-task)
+    ("C-M-\\"        . palimpsest-move-region-to-top)
+    ("C-o"           . embolden-or-bold)
+    ("C-s-SPC"       . cape-emoji)
+    ("C-s-k"         . kill-unwanted-buffers)
+    ("C-s-0"         . show-all)
+    ("C-s-1"         . (lambda () (interactive) (org-show-level 1)))
+    ("C-s-2"         . (lambda () (interactive) (org-show-level 2)))
+    ("C-s-3"         . (lambda () (interactive) (org-show-level 3)))
+    ("C-s-4"         . (lambda () (interactive) (org-show-level 4)))
+    ("C-s-5"         . (lambda () (interactive) (org-show-level 5)))
+    ("C-s-6"         . (lambda () (interactive) (org-show-level 6)))
+    ("C-s-7"         . (lambda () (interactive) (org-show-level 7)))
+    ("C-s-8"         . (lambda () (interactive) (org-show-level 8)))
+    ("C-s-a"         . show-all)
+    ("C-s-k"         . org-cut-subtree)
+    ("C-8"           . endless/mc-map)
+    ("M-%"           . eval-expression)
+    ("M-:"           . query-replace)
+    ("M-("           . backward-word)
+    ("M-)"           . forward-word)
+    ("M-C-N"         . outline-next-visible-heading)
+    ("M-C-P"         . outline-previous-visible-heading)
+    ("M-N"           . org-forward-heading-same-level)
+    ("M-P"           . org-backward-heading-same-level)
+    ("M-n"           . org-next-visible-heading)
+    ("M-p"           . org-previous-visible-heading)
+    ("M-g M-g"       . google-this)
+    ("M-o"           . embolden-or-bold)
+    ("M-s-b"         . embolden-region-or-point)
+    ("M-s-k"         . org-cut-subtree)
+    ("M-s-t"         . mw-thesaurus-lookup-at-point)
+    ("M-w"           . kill-to-buffer-end-or-beginning)
+    ("M-{"           . org-backward-heading-same-level)
+    ("M-}"           . org-forward-heading-same-level)
+    ("s-;"           . consult-outline)
+    ("s-("           . org-velocity)
+    ("s-5"           . point-stack-push)
+    ("s-6"           . point-stack-pop)
+    ("s-7"           . point-stack-forward-stack-pop)
+    ("s-8"           . search-open-buffers)
+    ("s-j"           . org-todo)
+    ("s-p"           . org-export-dispatch)
+    ("s-{"           . path-copy-path-to-clipboard)
+    ("s-}"           . path-copy-path-to-clipboard)
+    ("s-k bl"        . blue-light)
+    ("s-k cf"        . customize-face)
+    ("s-k cw"        . count-words)
+    ("s-k d l"       . double-line-breaks-in-region)
+    ("s-k dd"        . delete-duplicate-lines-keep-blanks)
+    ("s-k e m"       . expand-outreach-snippet-paste-copy-all-and-submit-ChatGPT)
+    ("s-k f e"       . restore-frame-to-external-minotaur-two-thirds-size-and-position)
+    ("s-k f l"       . restore-frame-to-laptop-two-thirds-size-and-position)
+    ("s-k g c"       . goto-char)
+    ("s-k kb"        . keybinding-read-and-insert)
+    ("s-k mk"        . keybinding-read-and-insert)
+    ("s-k rr"        . replace-regexp)
+    ("] ]"           . insert-right-bracket)
+    ("] ci"          . load-spacemacs-config)
+    ("] cr"          . load-roam-config)
+    ("] cs"          . load-search-config)
+    ("] i t"         . org-inlinetask-insert-task)
+
+    ;; =================================================================
     ;; Load Functions & Docs
     ;; =================================================================
     ("s-k l a"       . jay-load-latex)
@@ -346,6 +415,21 @@
     ("M-u"           . endless/upcase)
     ("M-U"           . caps-lock-mode)
     ("M-SPC"         . insert-space)
+    ("s-1"           . delete-other-windows)
+    ("s-2"           . split-window-vertically)
+    ("s-3"           . split-window-left)
+    ("s-9"           . sticky-window-keep-window-visible)
+    ("s-k"           . s-k-prefix)
+    ("C-a"           . mwim-beginning)
+    ("C-e"           . mwim-end)
+    ("C-x m"         . endless/mc-map)
+    ("C-c C-c"       . pasteboard-copy)
+    ("C-c C-!"       . (lambda () (interactive) (save-some-buffers t) (kill-emacs)))
+    ("C-c <mouse-3>" . right-click-context-menu)
+    ("C-c v"         . projectile-ag)
+    ("C-x C-b"       . ibuffer)
+    ("<C-wheel-up>"  . (lambda () (interactive) (scroll-up-command)))
+    ("<C-wheel-down>" . (lambda () (interactive) (scroll-down-command)))
     ))
 
 (defconst my/minibuffer-bindings
@@ -353,6 +437,16 @@
     ("s-x"           . pasteboard-cut)
     ("s-c"           . copy-minibuffer-contents)
     ("s-a"           . copy-minibuffer-contents)))
+
+(defun my/install-minibuffer-escape-keys ()
+  "Ensure C-g always aborts in minibuffer maps."
+  (dolist (map '(minibuffer-local-map
+                 minibuffer-local-ns-map
+                 minibuffer-local-completion-map
+                 minibuffer-local-must-match-map
+                 minibuffer-local-isearch-map))
+    (when (boundp map)
+      (define-key (symbol-value map) (kbd "C-g") #'minibuffer-keyboard-quit))))
 
 
 ;;;; 3. Keybinding Installation
@@ -371,6 +465,7 @@
   ;; Install minibuffer keybindings
   (dolist (binding my/minibuffer-bindings)
     (define-key minibuffer-local-map (kbd (car binding)) (cdr binding)))
+  (my/install-minibuffer-escape-keys)
 
   (define-key help-map (kbd "i") 'jay-info-emacs-manual)
 
@@ -384,7 +479,24 @@
 ;; Run it once after init
 (add-hook 'after-init-hook #'my/install-global-keys)
 
-;;;; 4. Mode-local bindings (lazy loading)
+;;;; 4. Prefix map bindings
+(when (boundp 'endless/mc-map)
+  (define-key endless/mc-map "i" #'mc/insert-numbers)
+  (define-key endless/mc-map "h" #'mc-hide-unmatched-lines-mode)
+  (define-key endless/mc-map "a" #'mc/mark-all-like-this)
+  (define-key endless/mc-map (kbd "<backspace>") #'delete-backward-char)
+  (define-key endless/mc-map "d" #'mc/mark-all-symbols-like-this-in-defun)
+  (define-key endless/mc-map "r" #'mc/reverse-regions)
+  (define-key endless/mc-map "s" #'mc/sort-regions)
+  (define-key endless/mc-map "l" #'mc/edit-lines)
+  (define-key endless/mc-map (kbd "<return>") #'newline-and-indent)
+  (define-key endless/mc-map (kbd "C-a") #'mc/edit-beginnings-of-lines)
+  (define-key endless/mc-map (kbd "C-e") #'mc/edit-ends-of-lines)
+  (define-key endless/mc-map (kbd ">") #'mc/cycle-forward)
+  (define-key endless/mc-map (kbd "<") #'mc/cycle-backward)
+  (define-key endless/mc-map (kbd "H") #'hydra-mc/body))
+
+;;;; 5. Mode-local bindings (lazy loading)
 (with-eval-after-load 'org
   ;; macOS-style movement overrides
   (define-key org-mode-map (kbd "<M-S-left>") nil)
@@ -396,22 +508,40 @@
 
   (define-key org-mode-map (kbd "<return>") #'smart-return)
   (define-key org-mode-map (kbd "C-k") #'my/kill-line-dwim)
+  (define-key org-mode-map (kbd "<SPC>") #'smart-space)
   (define-key org-mode-map (kbd "s-v") #'pasteboard-paste-adaptive)
   (define-key org-mode-map (kbd "s-l") #'org-insert-link)
   (define-key org-mode-map (kbd "s-k c s") #'org-clone-subtree) ; Overrides global binding in Org
   (define-key org-mode-map (kbd "C-c e") #'eval-adaptive)
   (define-key org-mode-map (kbd "C-c C-s") #'org-schedule)
+  (define-key org-mode-map (kbd "C-c C-r") #'palimpsest-move-region-to-bottom)
+  (define-key org-mode-map (kbd "`") #'flyspell-auto-correct-word-correct-space)
+  (define-key org-mode-map (kbd ".") #'smart-period)
+  (define-key org-mode-map (kbd ",") #'comma-or-smart-comma)
+  (define-key org-mode-map (kbd "?") #'smart-question-mark)
+  (define-key org-mode-map (kbd "!") #'smart-exclamation-point)
+  (define-key org-mode-map (kbd "-") #'smart-hyphen)
+  (define-key org-mode-map (kbd ";") #'smart-semicolon)
+  (define-key org-mode-map (kbd ":") #'colon-or-smart-colon)
   (define-key org-mode-map (kbd "<C-S-right>") #'org-shiftmetaright)
   (define-key org-mode-map (kbd "<C-S-left>") #'org-shiftmetaleft)
   (define-key org-mode-map (kbd "<C-right>") #'org-metaright)
   (define-key org-mode-map (kbd "<C-left>") #'org-metaleft)
   (define-key org-mode-map (kbd "<C-up>") #'org-metaup)
   (define-key org-mode-map (kbd "<C-down>") #'org-metadown)
+  (define-key org-mode-map (kbd "M-<return>") #'smart-org-meta-return-dwim)
+  (define-key org-mode-map (kbd "M-S-<return>") #'smart-org-insert-todo-heading-dwim)
+  (define-key org-mode-map (kbd "C-M-<return>") #'smart-org-insert-subheading)
+  (define-key org-mode-map (kbd "<C-S-M-return>") #'smart-org-insert-todo-subheading)
+  (define-key org-mode-map (kbd "<C-s-return>") #'smart-org-insert-todo-subheading)
   (define-key org-mode-map (kbd "<C-return>") #'return-insert-blank-line-before)
   (define-key org-mode-map (kbd "<C-S-return>") #'smart-org-insert-todo-heading-dwim)
   (define-key org-mode-map (kbd "<C-S-return>") #'org-insert-todo-heading)
   (define-key org-mode-map (kbd "<M-up>") #'up-by-degrees)
   (define-key org-mode-map (kbd "<M-down>") #'down-by-degrees)
+  (define-key org-mode-map (kbd "<left>") #'jay/left-char)
+  (define-key org-mode-map (kbd "<right>") #'jay/right-char)
+  (define-key org-mode-map (kbd "DEL") #'new-org-delete-backward-char)
   (define-key org-mode-map (kbd "C-S-r") nil)
   (define-key org-mode-map (kbd "M-K") #'kill-sentence-maybe-else-kill-line)
 
@@ -421,6 +551,9 @@
   (define-key key-minor-mode-map (kbd "<M-S-down>") #'org-shiftdown)
   (define-key key-minor-mode-map (kbd "<M-down>") #'down-by-degrees)
   (define-key key-minor-mode-map (kbd "<M-up>") #'up-by-degrees))
+
+(with-eval-after-load 'org-src
+  (define-key org-src-mode-map (kbd "C-c C-c") #'org-edit-src-exit))
 
 (with-eval-after-load 'flyspell
   (define-key flyspell-mode-map (kbd "C-;") #'org-def))
@@ -434,6 +567,27 @@
 
 (with-eval-after-load 'text-mode
   (define-key text-mode-map (kbd "s-v") #'pasteboard-paste-clean))
+
+(with-eval-after-load 'info
+  (define-key Info-mode-map (kbd "s-[") #'Info-backward-node)
+  (define-key Info-mode-map (kbd "s-]") #'Info-forward-node)
+  (define-key Info-mode-map (kbd "<s-up>") #'Info-up)
+  (define-key Info-mode-map (kbd "s-l") #'Info-goto-node))
+
+(with-eval-after-load 'winner
+  (define-key winner-mode-map (kbd "s-[") #'winner-undo)
+  (define-key winner-mode-map (kbd "s-]") #'winner-redo))
+
+(with-eval-after-load 'ctrlf
+  (define-key ctrlf-mode-map (kbd "s-g") #'ctrlf-next-match))
+
+(with-eval-after-load 'markdown-mode
+  (define-key markdown-mode-map (kbd "RET") #'my-markdown-newline-with-bullet)
+  (define-key markdown-mode-map (kbd "<tab>") #'my-markdown-cycle))
+
+(with-eval-after-load 'evil
+  (define-key evil-normal-state-map (kbd "s-k") nil)
+  (define-key evil-normal-state-map (kbd "C-g") #'keyboard-quit))
 
 (with-eval-after-load 'vertico
   (define-key key-minor-mode-map (kbd "C-M-S-s-o") #'embark-act))

@@ -665,14 +665,10 @@ I use buffer-stack to navigate between buffers using ⌘-left and ⌘-right:
 
 GNU Emacs:
 #+BEGIN_SRC emacs-lisp
-(global-set-key [(s-right)] 'buffer-stack-down)
-(global-set-key [(s-left)] 'buffer-stack-up)
 #+END_SRC
 
 Aquamacs:
 #+BEGIN_SRC emacs-lisp
-(global-set-key [(A-right)] 'buffer-stack-down)
-(global-set-key [(A-left)] 'buffer-stack-up)
 #+END_SRC
 
 *** Uniqify buffers
@@ -842,10 +838,6 @@ Here is a tiny tweak for org-mode. So that inline latex like $y=mx+c$ will appea
 
 ** org-mode key bindings:
 #+BEGIN_SRC emacs-lisp
-(define-key global-map "\C-cc" 'org-capture)
-(global-set-key "\C-cc" 'org-capture)
-(global-set-key "\C-cl" 'org-store-link)
-(global-set-key "\C-ca" 'org-agenda)
 #+END_SRC
 
 ** org agenda
@@ -1227,23 +1219,12 @@ Source: [[http://stackoverflow.com/questions/6997387/how-to-archive-all-the-done
   (interactive "nLevel: ")
   (org-content n))
 
- (define-key key-minor-mode-map (kbd "C-s-1") (lambda () (interactive) (org-show-level 1)))
- (define-key key-minor-mode-map (kbd "C-s-2") (lambda () (interactive) (org-show-level 2)))
- (define-key key-minor-mode-map (kbd "C-s-3") (lambda () (interactive) (org-show-level 3)))
- (define-key key-minor-mode-map (kbd "C-s-4") (lambda () (interactive) (org-show-level 4)))
- (define-key key-minor-mode-map (kbd "C-s-5") (lambda () (interactive) (org-show-level 5)))
- (define-key key-minor-mode-map (kbd "C-s-6") (lambda () (interactive) (org-show-level 6)))
- (define-key key-minor-mode-map (kbd "C-s-7") (lambda () (interactive) (org-show-level 7)))
- (define-key key-minor-mode-map (kbd "C-s-8") (lambda () (interactive) (org-show-level 8)))
 
-(define-key key-minor-mode-map (kbd "C-s-0") 'show-all)
-(define-key key-minor-mode-map (kbd "C-s-a") 'show-all)
 
 #+END_SRC
 
 ** org-mode inline tasks
 #+BEGIN_SRC emacs-lisp
-(define-key key-minor-mode-map (kbd "<M-s-return>") 'org-inlinetask-insert-task)
 #+END_SRC
 
 ** no autorevert
@@ -1480,7 +1461,6 @@ vc-make-backup-files t ; Make backups of files, even when they're in version con
 
 * ~ibuffer~
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-x C-b") 'ibuffer)
 (autoload 'ibuffer "ibuffer" "List buffers." t)
 #+END_SRC
 
@@ -1969,8 +1949,6 @@ traditional word processors, highlighting whole words at a time:
         (skip-chars-backward " \t")
         (skip-syntax-backward "_()")))))
 
-(define-key global-map [M-s-right] 'lawlist-forward-entity)
-(define-key global-map [M-s-left] 'lawlist-backward-entity)
 #+END_SRC
 
 ** Working with windows
@@ -2172,7 +2150,6 @@ Source: [[https://emacs.stackexchange.com/questions/10707/in-org-mode-how-to-rem
 	 (fname (completing-read (car prompt) (cdr prompt) nil nil)))
     (find-file (cdr (assoc-string fname tocpl)))))
 
-(global-set-key [(control x)(control r)] 'recentf-open-files-compl)
 
 (defun visit-most-recent-file ()
   "Visits the most recently open file in `recentf-list' that is not already being visited."
@@ -2268,45 +2245,7 @@ confirmation.  Non–file‑visiting buffers and .mdx files are ignored."
 Best guide to [[http://www.nongnu.org/emacs-tiny-tools/keybindings/][keybindings]].
 
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "M-C-N") 'outline-next-visible-heading)
-(global-set-key (kbd "M-C-P") 'outline-previous-visible-heading)
-(define-key key-minor-mode-map (kbd "M-C-N") 'outline-next-visible-heading)
-(define-key key-minor-mode-map (kbd "M-C-P") 'outline-previous-visible-heading)
-
-(global-set-key (kbd "M-N") 'org-forward-heading-same-level)
-(global-set-key (kbd "M-n") 'org-next-visible-heading)
-(global-set-key (kbd "M-P") 'org-backward-heading-same-level)
-(global-set-key (kbd "M-p") 'org-previous-visible-heading)
-(define-key key-minor-mode-map (kbd "M-N") 'org-forward-heading-same-level)
-(define-key key-minor-mode-map (kbd "M-P") 'org-backward-heading-same-level)
-
-(define-key key-minor-mode-map (kbd "M-{") 'org-backward-heading-same-level)
-(define-key key-minor-mode-map (kbd "M-}") 'org-forward-heading-same-level)
-(define-key key-minor-mode-map (kbd "M-[") 'org-backward-heading-same-level)
-(define-key key-minor-mode-map (kbd "M-]") 'org-forward-heading-same-level)
-
-(global-set-key (kbd "s-p") 'org-export-dispatch)
-(define-key key-minor-mode-map (kbd "s-p") 'org-export-dispatch)
-
-(define-key global-map (kbd "<C-wheel-up>") (lambda ()
-                                              (interactive)
-                                              (scroll-up-command)))
-(define-key global-map (kbd "<C-wheel-down>") (lambda ()
-                                               (interactive)
-                                               (scroll-down-command)))
-
-(global-set-key "\C-f" 'forward-word)
-(global-set-key "\C-b" 'backward-word)
-
-(global-set-key '[(f5)] 'point-stack-push)
-(global-set-key '[(f6)] 'point-stack-pop)
-(global-set-key '[(f7)] 'point-stack-forward-stack-pop)
-(global-set-key '[(f8)] 'search-open-buffers)
-
-(define-key key-minor-mode-map (kbd "<M-S-backspace>") 'backward-kill-sexp)
-(define-key key-minor-mode-map (kbd "<M-S-backspace>") 'backward-kill-sexp)
-(define-key key-minor-mode-map (kbd "<M-S-backspace>") 'backward-kill-sexp)
-(define-key key-minor-mode-map (kbd "<M-S-backspace>") 'backward-kill-sexp)
+;; Keybindings moved to keys.el.
 #+END_SRC
 
 Make ^H delete rather than help:
@@ -2316,7 +2255,6 @@ Make ^H delete rather than help:
 
 Redefine help shortcut:
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "M-h") 'help-command)
 #+END_SRC
 
 ** flyspell-correct-space
@@ -2331,13 +2269,9 @@ Redefine help shortcut:
 #+end_src
 
 #+BEGIN_SRC emacs-lisp
-(global-set-key "\C-ce" 'eval-buffer)
-(global-set-key "\C-cr" 'eval-region)
 ;; (define-key org-mode-map (kbd "`") 'flyspell-auto-correct-word)
-(define-key org-mode-map (kbd "`") 'flyspell-auto-correct-word-correct-space)
+;; (define-key org-mode-map (kbd "`") 'flyspell-auto-correct-word-correct-space) ; moved to keys.el
 ;; (define-key org-mode-map (kbd "`") 'flyspell-auto-correct-previous-word)
-(global-set-key (kbd "s-z") 'undo)
-(global-set-key (kbd "s-y") 'redo)
 #+END_SRC
 
 ** cut-subtree
@@ -2346,8 +2280,6 @@ Redefine help shortcut:
    :END:
 
 #+BEGIN_SRC emacs-lisp
-(define-key key-minor-mode-map (kbd "M-s-k") 'org-cut-subtree)
-(define-key key-minor-mode-map (kbd "C-s-k") 'org-cut-subtree)
 #+END_SRC
 
 * these seem to need to go at the end
@@ -2363,9 +2295,8 @@ Redefine help shortcut:
               (palimpsest-mode 1)
               (global-hl-todo-mode 1)
               (projectile-mode  1)))
-  ;; Define org-mode specific keybinding
-  (with-eval-after-load 'org
-    (define-key org-mode-map (kbd "C-c C-r") 'palimpsest-move-region-to-bottom)))
+  ;; org-mode keybinding moved to keys.el
+  )
 #+END_SRC
 
 C-C C-R to move text to the bottom of the buffer
@@ -2679,7 +2610,6 @@ object satisfying `yas--field-p' to restrict the expansion to."
   (insert "# --\n")
   (insert "$0\n"))
 
-(define-key key-minor-mode-map (kbd "s-k y a") 'new-yasnippet)
 #+end_src
 
 * tiny-expand
@@ -2751,8 +2681,6 @@ object satisfying `yas--field-p' to restrict the expansion to."
   (setq olivetti-body-width 80)
 
   ;; Unbind these if you like:
-  (unbind-key (kbd "C-c [") olivetti-mode-map)
-  (unbind-key (kbd "C-c ]") olivetti-mode-map)
 
   ;; Optional: keep org-tags aligned
   (setq org-tags-column 40))
@@ -2814,7 +2742,6 @@ C-c q
     (insert "**")
     (backward-char)))
 
-(define-key key-minor-mode-map (kbd "M-s-b") 'embolden-region-or-point)
 #+END_SRC
 
 * italicize-region-or-point
@@ -2830,7 +2757,6 @@ C-c q
 (insert "//")
     (backward-char)))
 
-(define-key key-minor-mode-map (kbd "<C-i>") 'italicize-region-or-point)
 #+END_SRC
 
 * org todo stuff
@@ -2956,9 +2882,7 @@ Source: [[http://pragmaticemacs.com/emacs/wrap-text-in-custom-characters/][Wrap 
 
 ** C-c C-c to exit source code blocks
 #+BEGIN_SRC emacs-lisp
-(with-eval-after-load 'org-src
-  (define-key org-src-mode-map
-     "\C-c\C-c" #'org-edit-src-exit))
+;; Keybinding moved to keys.el (org-src-mode-map: C-c C-c)
 #+END_SRC
 
 ** narrow or widen
@@ -3147,7 +3071,6 @@ I hope this is somewhat helpful to someone else, happy hacking! Source: [[https:
 
 #+BEGIN_SRC emacs-lisp
 (dotimes (n 10)
-  (global-unset-key (kbd (format "M-%d" n))))
 #+END_SRC
 
 
@@ -3399,7 +3322,6 @@ Source: [[https://github.com/hrs/sensible-defaults.el/blob/master/sensible-defau
    (setq beg (line-beginning-position) end (line-end-position)))
   (comment-or-uncomment-region beg end)))
 
-(global-set-key (kbd "M-;")
          'sensible-defaults/comment-or-uncomment-region-or-line)
 
 
@@ -3507,7 +3429,6 @@ cmd)
    (t
     (message "⚠️ No matching eval context"))))
 
-(global-set-key (kbd "C-c e") #'eval-adaptive)
 
 
 
@@ -3528,7 +3449,6 @@ cmd)
   (kill-region (mark) (point))
   (recenter-top-bottom))
 
-(define-key key-minor-mode-map (kbd "M-w") 'kill-to-buffer-end-or-beginning)
 #+END_SRC
 
 ** navigation
@@ -3833,8 +3753,6 @@ easier-to-type =C-c C-v= and =C-c v= to useful searches.
   (interactive)
   (projectile-ag (projectile-symbol-at-point)))
 
- (global-set-key (kbd "C-c v") 'projectile-ag)
- (global-set-key (kbd "C-c C-v") 'hrs/search-project-for-symbol-at-point)
 ;; (setq projectile-indexing-method 'native)
 #+END_SRC
 
@@ -4336,29 +4254,12 @@ Go through `org-structure-template-alist' and
   :defer t)
 (setq mc/list-file "/Users/jay/emacs/emacs-settings/mc-lists.el")
 
-(define-key key-minor-mode-map (kbd "C-8") 'endless/mc-map)
 (define-prefix-command 'endless/mc-map)
-(define-key ctl-x-map "m" 'endless/mc-map)
-(define-key key-minor-mode-map (kbd "C-8") 'endless/mc-map)
+;; Keybindings moved to keys.el
 
 ;;; Really really nice!
-(define-key endless/mc-map "i" #'mc/insert-numbers)
-(define-key endless/mc-map "h" #'mc-hide-unmatched-lines-mode)
-(define-key endless/mc-map "a" #'mc/mark-all-like-this)
 
 ;;; Occasionally useful
-(define-key endless/mc-map (kbd "<backspace>") 'delete-backward-char)
-(define-key endless/mc-map "d" #'mc/mark-all-symbols-like-this-in-defun)
-(define-key endless/mc-map "r" #'mc/reverse-regions)
-(define-key endless/mc-map "s" #'mc/sort-regions)
-(define-key endless/mc-map "l" #'mc/edit-lines)
-(define-key endless/mc-map (kbd "<return>") #'newline-and-indent)
-(define-key endless/mc-map "\C-a"
- #'mc/edit-beginnings-of-lines)
-(define-key endless/mc-map "\C-e"
- #'mc/edit-ends-of-lines)
-(define-key endless/mc-map (kbd ">") #'mc/cycle-forward)
-(define-key endless/mc-map (kbd "<") #'mc/cycle-backward)
 
 (use-package hydra
 :defer t
@@ -4390,7 +4291,7 @@ Multiple cursors:
   ("q" nil))
 
 ;; Bind hydra to your existing keymap
-(define-key endless/mc-map (kbd "H") #'hydra-mc/body)
+;; (define-key endless/mc-map (kbd "H") #'hydra-mc/body) ; moved to keys.el
 
 #+END_SRC
 * org-mode-hooks and text-mode-hooks
@@ -4422,11 +4323,7 @@ Multiple cursors:
 (add-hook 'org-mode-hook 'wrap-region-mode)
  (add-hook 'latex-mode-hook 'wrap-region-mode)
 
-(add-hook
- 'org-mode-hook
- (lambda ()
- (define-key org-mode-map (kbd "DEL")
-  'new-org-delete-backward-char)))
+;; org-mode DEL binding moved to keys.el
 
 #+END_SRC
 
@@ -4767,7 +4664,6 @@ Source: [[https://emacs.stackexchange.com/questions/30280/how-to-conveniently-in
 
 * calc
 #+begin_src emacs-lisp
-(define-key key-minor-mode-map (kbd "M-=") 'calc-grab-region)
 #+end_src
 
 * trailing lines
@@ -5246,8 +5142,7 @@ depending on which one is appropriate based on the context."
 #+begin_src emacs-lisp
 ; (define-key Info-mode-map (kbd "s-o") 'copy-region-to-other-window)
 ; (define-key org-mode-map (kbd "s-o") 'move-region-to-other-window)
-(define-key Info-mode-map (kbd "s-[") 'Info-backward-node)
-(define-key Info-mode-map (kbd "s-]") 'Info-forward-node)
+;; Info-mode bindings moved to keys.el
 #+end_src
 
 * toggle between two windows but not the third
@@ -5369,7 +5264,6 @@ PREFIX >1 ⇒ dirs only,  PREFIX <0 ⇒ files only,  none ⇒ both."
      (message "Showing results for %s in EWW" word))
    (message "No word at point"))))
 
-(define-key key-minor-mode-map (kbd "M-g M-g") 'google-this)
 
 (defun google-search-region ()
  "Google the selected region if any, display a query prompt otherwise."
@@ -5699,8 +5593,7 @@ Source: [[https://taonaw-blog.netlify.app/2022-03-13/][Org ID, Org Attach & Bett
 * org-roam browsing history
 #+begin_src emacs-lisp
 (winner-mode +1)
-(define-key winner-mode-map (kbd "s-[") #'winner-undo)
-(define-key winner-mode-map (kbd "s-]") #'winner-redo)
+;; winner-mode bindings moved to keys.el
 #+end_src
 
 * deft
@@ -6172,7 +6065,7 @@ Disabling because [[https://github.com/radian-software/ctrlf/issues/130][there's
   :defer)
 ;; (ctrlf-mode +1)
 ;; (define-key key-minor-mode-map (kbd "s-f") 'ctrlf-forward-default)
-(define-key ctrlf-mode-map (kbd "s-g") 'ctrlf-next-match)
+;; (define-key ctrlf-mode-map (kbd "s-g") 'ctrlf-next-match) ; moved to keys.el
 ;; (define-key ctrlf-mode-map (kbd "s-g") 'ctrlf-next-match)
 #+END_SRC
 
@@ -6196,8 +6089,6 @@ Here's a screencast of browsing Info using ~ace-link-info~:
 Smart jump to beginning / end of lines.
 
 #+begin_src emacs-lisp
-(global-set-key (kbd "C-a") 'mwim-beginning)
-(global-set-key (kbd "C-e") 'mwim-end)
 #+end_src
 
 * delete file
@@ -6879,8 +6770,6 @@ BEG and END define the region to copy."
 
 * switch two classic keybindings
 #+begin_src emacs-lisp
-(define-key key-minor-mode-map (kbd "M-%") 'eval-expression)
-(define-key key-minor-mode-map (kbd "M-:") 'query-replace)
 #+end_src
 
 * TOC in org file
@@ -7016,12 +6905,8 @@ point with completion.
                                      (height . 47))))
     (modify-frame-parameters nil specific-frame-parameters)))
 
-(define-key key-minor-mode-map (kbd "s-k f e") 'restore-frame-to-external-minotaur-two-thirds-size-and-position)
-(define-key key-minor-mode-map (kbd "s-k f l") 'restore-frame-to-laptop-two-thirds-size-and-position)
 
 
-(define-key key-minor-mode-map (kbd "s-k f e") 'restore-frame-to-external-minotaur-two-thirds-size-and-position)
-(define-key key-minor-mode-map (kbd "s-k f l") 'restore-frame-to-laptop-two-thirds-size-and-position)
 
 #+END_EXAMPLE
 
@@ -7367,7 +7252,6 @@ Only required if Emacs < 29.3.
   (shell-command-to-string (format "cat %s | pbcopy" (shell-quote-argument temp-file)))
   (delete-file temp-file)))
 
-(global-set-key (kbd "C-c C-c") 'pasteboard-copy)
 #+end_src
 
 * Make Emacs use MacOS Trash instead of rm
@@ -7524,7 +7408,6 @@ the buffer, and kills it when done."
            keystroke return
           end tell"))))
 
-(define-key key-minor-mode-map (kbd "s-k e m") 'expand-outreach-snippet-paste-copy-all-and-submit-ChatGPT)
 #+end_SRC
 
 * suppress warnings
@@ -7691,8 +7574,8 @@ The document title (from #+TITLE: or the filename) remains in the <title> tag bu
   :config
   ;; Indentation for lists
   (setq markdown-list-indent-width 2)
-  (define-key markdown-mode-map (kbd "RET") #'my-markdown-newline-with-bullet)
-  (define-key markdown-mode-map (kbd "<tab>") #'my-markdown-cycle))
+  ;; Keybindings moved to keys.el
+  )
 
 (defvar my-markdown--last-command-removed-bullet nil
   "Non-nil if the last call to `my-markdown-newline-with-bullet'
@@ -8137,9 +8020,7 @@ current Org buffer."
 * C-g to escape
 #+begin_src emacs-lisp
 ;; Let C-g always abort in minibuffer, even under Evil
-(with-eval-after-load 'evil
-  (define-key minibuffer-local-map (kbd "C-g") #'keyboard-quit)
-  (define-key evil-normal-state-map (kbd "C-g") #'keyboard-quit)) ; optional
+;; Keybindings moved to keys.el
 #+end_src
 
 * Org-roam debugging
@@ -8307,15 +8188,7 @@ It returns a list, so you can later jump to the first culprit:
 #+begin_src emacs-lisp
 ;; (setq debug-on-quit nil)
 
-(dolist (map '(minibuffer-local-map
-               minibuffer-local-ns-map
-               minibuffer-local-completion-map
-               minibuffer-local-must-match-map
-               minibuffer-local-isearch-map
-;;  ivy-minibuffer-map
-))      ; drop this line if not using Ivy
-  (when (boundp map)
-    (define-key (symbol-value map) (kbd "C-g") #'minibuffer-keyboard-quit)))
+;; Keybindings moved to keys.el
 #+end_src
 
 * Prevent org-roam parsing crashes
@@ -8414,10 +8287,7 @@ package-native-compile    t)
 
 ;;; --- Emergency exit --------------------------------------------------------
 ;; Panic button: C-c C-! to save and exit
-(global-set-key (kbd "C-c C-!")
-                (lambda () (interactive)
-                  (save-some-buffers t)
-                  (kill-emacs)))
+;; Keybinding moved to keys.el
 #+end_src
 
 * debug on error
@@ -9276,11 +9146,7 @@ Note: DIR should be an absolute path to avoid symlink resolution issues."
 * Info Mode
 ** Custom Keybindings
 #+BEGIN_SRC emacs-lisp
-(with-eval-after-load 'info
-  (define-key Info-mode-map (kbd "s-[") 'Info-backward-node)
-  (define-key Info-mode-map (kbd "s-]") 'Info-forward-node)
-  (define-key Info-mode-map (kbd "<s-up>") 'Info-up)
-  (define-key Info-mode-map (kbd "s-l") 'Info-goto-node))
+;; Info-mode bindings moved to keys.el
 
 (defun jay/info-local-overrides ()
   "Ensure Jay's super key aliases work inside `Info-mode'."

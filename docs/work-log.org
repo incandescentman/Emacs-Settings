@@ -8,6 +8,15 @@
 - [[file+emacs:/Users/jay/emacs/emacs-settings/jay-osx.el][jay-osx.el]] preserved as-is
 - Identified ~C-c d~ conflict: ~crux-duplicate-current-line-or-region~ vs ~insert-todays-date~
 - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][instructions.org]]: added org-mode links to all file references, updated Changing Keybindings section
+- In-progress migrations already completed:
+  - Moved bindings from [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][search-commands.org]], [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][spacemacs-new-config.el]], [[file+emacs:/Users/jay/emacs/emacs-settings/goals-agenda.el][goals-agenda.el]], and [[file+emacs:/Users/jay/emacs/emacs-settings/spacecraft-mode.org][spacecraft-mode.org]] into [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]]
+  - Smart punctuation org-mode bindings (~smart-space~, ~smart-period~, ~comma-or-smart-comma~, ~smart-question-mark~, ~smart-exclamation-point~, ~smart-hyphen~, ~smart-semicolon~, ~colon-or-smart-colon~) moved into ~with-eval-after-load 'org~ block in keys.el
+  - Case-change bindings (~M-C~ → ~capitalize-word~, ~M-L~ → ~downcase-sentence~) moved into ~my/global-key-bindings~ alist
+- Continued migration into [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]]:
+  - Moved remaining shared-functions bindings (org backtick correction, palimpsest ~C-c C-r~, org-src ~C-c C-c~, Info/winner/ctrlf/markdown maps, minibuffer ~C-g~, multiple-cursors prefix map, panic button ~C-c C-!~, and ~C-x m~)
+  - Moved ~C-c <mouse-3>~ right-click context menu binding into global map bindings
+- Cleaned broken binding stubs in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] and [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org][gnu-emacs-startup.org]] created by earlier removals
+- Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] and [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org][gnu-emacs-startup.org]] and reran ~check-parens~ on both generated .el files
 
 * 2026-01-15: Corrective note on commit instruction misunderstanding
 - Added a corrective note acknowledging a mistaken response about committing all changes when asked
