@@ -205,6 +205,7 @@ This function should only modify configuration layer settings."
                                       ;; graphviz-dot-mode
                                       ;; imenu-list
                                       key-chord
+                                      keyfreq
                                       ;; magit-section
                                       ;; mpv
                                       ;; multicolumn
@@ -1058,6 +1059,7 @@ before packages are loaded."
   (load "/Users/jay/gnulisp/smart-return.el")
   (load "/Users/jay/emacs/emacs-settings/elpa-supplement/buffer-stack.el")
   (load "/Users/jay/emacs/emacs-settings/elpa-supplement/frame-cmds.el")
+  (load "/Users/jay/emacs/emacs-settings/keybinding-docs" t)
   (load "/Users/jay/emacs/local-config.el")
   ;;  (load "/Users/jay/emacs/emacs-settings/aibo-config.el")
   ;; (load "/Users/jay/emacs/emacs-settings/aibo-power-pack.el")

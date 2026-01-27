@@ -355,6 +355,20 @@ See [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-consolidation-p
 
 Spacemacs keybindings: edit [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]] in the =dotspacemacs/user-config= section.
 
+** Keybinding Documentation System
+
+[[file+emacs:/Users/jay/emacs/emacs-settings/keybinding-docs.el][keybinding-docs.el]] provides three tools for understanding and improving keybindings:
+
+- =M-x my/keybinding-dump= — auto-generates [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-dump.org][keybinding-dump.org]] from the declarative alists in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]].
+- =M-x my/keybinding-merge= — merges the dump with [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-annotations.org][keybinding-annotations.org]] to produce [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-reference.org][keybinding-reference.org]]. Flags =[NEW]= and =[REMOVED]= bindings.
+- =M-x my/keybinding-frequency-report= — uses =keyfreq= data to generate [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-frequency-report.org][keybinding-frequency-report.org]] with most-used commands, ergonomic mismatches, and underused prime keys.
+
+Workflow:
+1. Use Emacs normally; =keyfreq= silently records usage.
+2. Run =M-x my/keybinding-dump= then =M-x my/keybinding-merge= to update the reference.
+3. Add notes to [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-annotations.org][keybinding-annotations.org]] — they survive regeneration.
+4. After usage data accumulates, run =M-x my/keybinding-frequency-report= to find optimization opportunities.
+
 ** Safe Testing
 
 Before making major changes, consider:
@@ -392,6 +406,10 @@ See [[file+emacs:/Users/jay/emacs/emacs-settings/docs/][docs/]] folder for detai
 - [[file+emacs:/Users/jay/emacs/emacs-settings/docs/codebase-wisdom.org][codebase-wisdom.org]] - Lessons learned from debugging
 - [[file+emacs:/Users/jay/emacs/emacs-settings/docs/pasteboard-architecture.org][pasteboard-architecture.org]] - How clipboard integration works
 - [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-consolidation-plan.org][keybinding-consolidation-plan.org]] - Plan for centralizing all keybindings
+- [[file+emacs:/Users/jay/emacs/emacs-settings/docs/macOS-command-key-bindings.org][macOS-command-key-bindings.org]] - All Command-key (s-) bindings
+- [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-annotations.org][keybinding-annotations.org]] - Manual notes for keybindings (survives regeneration)
+- [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-reference.org][keybinding-reference.org]] - Merged reference (auto-generated + annotations)
+- [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-frequency-report.org][keybinding-frequency-report.org]] - Usage frequency and ergonomic analysis
 
 ** External Resources
 - Spacemacs documentation: https://www.spacemacs.org/doc/DOCUMENTATION.html

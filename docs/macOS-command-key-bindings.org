@@ -1,178 +1,189 @@
-#+TITLE: macOS Command Key (s-) Bindings
-#+AUTHOR: Jay Dixit
-#+DATE: [2024-10-16 Wed]
+:PROPERTIES:
+:ID: 153e1156-88fa-489f-ae76-2b39459f968a
+:END:
+#+title: macOS Command Key (s-) Bindings
+#+author: Jay Dixit
+#+date: [2024-10-16 Wed]
 
 * Overview
-This document lists custom keybindings that use the "s-" prefix (macOS Command key) from the configuration.
-Source of truth: [[file:../keys.el][keys.el]].
+
+This document lists custom keybindings that use the =s-= prefix (macOS
+Command key) from the configuration.
+
+Source of truth: [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]].
+
+For the full keybinding reference (all keys, all maps, with annotations),
+see [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-reference.org][keybinding-reference.org]].
 
 Notes:
 - This document does *not* include default Spacemacs bindings.
 - Some bindings are mode-specific overrides (see the org-mode section at the end).
 
 * Direct s- bindings (global)
-| Keybinding | Function |
-|-|-|
-| ~s-'~ | ~choose-refile-method-and-refile~ |
-| ~s-(~ | ~org-velocity~ |
-| ~s-+~ | ~copy-region-to-other-window~ |
-| ~s-,~ | ~customize-group~ |
-| ~s--~ | ~ensmallen-text~ |
-| ~s-.~ | ~calendar~ |
-| ~s-0~ | ~move-region-to-other-window~ |
-| ~s-1~ | ~delete-other-windows~ |
-| ~s-2~ | ~split-window-vertically~ |
-| ~s-3~ | ~split-window-left~ |
-| ~s-5~ | ~point-stack-push~ |
-| ~s-6~ | ~point-stack-pop~ |
-| ~s-7~ | ~point-stack-forward-stack-pop~ |
-| ~s-8~ | ~search-open-buffers~ |
-| ~s-9~ | ~sticky-window-keep-window-visible~ |
-| ~s-;~ | ~consult-outline~ |
-| ~s-<~ | ~load-shared-functions~ |
-| ~s-=~ | ~embiggen-text~ |
-| ~s-?~ | ~load-spacecraft-mode~ |
-| ~s-B~ | ~consult-buffer~ |
-| ~s-D~ | ~define-word-at-point~ |
-| ~s-E~ | ~new-email-from-subtree-no-signature~ |
-| ~s-F~ | ~pasteboard-search-for-clipboard-contents~ |
-| ~s-G~ | ~counsel-projectile-ag~ |
-| ~s-I~ | ~clone-indirect-buffer-new-window-and-focus~ |
-| ~s-K~ | ~org-cut-subtree~ |
-| ~s-L~ | ~org-mac-link-chrome-insert-frontmost-url~ |
-| ~s-M~ | ~tr-toggle-transclusion~ |
-| ~s-O~ | ~reveal-in-finder~ |
-| ~s-P~ | ~projectile-find-file~ |
-| ~s-R~ | ~fasd-find-file~ |
-| ~s-S~ | ~org-mac-link-skim-insert~ |
-| ~s-T~ | ~mw-thesaurus-lookup-dwim~ |
-| ~s-V~ | ~pasteboard-paste-adjusted-subtrees-adaptive~ |
-| ~s-W~ | ~open-weeklies~ |
-| ~s-\\~ | ~visit-most-recent-file~ |
-| ~s-_~ | ~olivetti-shrink~ |
-| ~s-`~ | ~other-window-or-frame~ |
-| ~s-a~ | ~copy-minibuffer-contents))~ |
-| ~s-b~ | ~narrow-or-widen-dwim~ |
-| ~s-c~ | ~copy-minibuffer-contents~ |
-| ~s-d~ | ~org-todo~ |
-| ~s-e~ | ~embark-act~ |
-| ~s-f~ | ~isearch-forward-ignore-case~ |
-| ~s-g~ | ~isearch-repeat-forward~ |
-| ~s-h~ | ~replace-string~ |
-| ~s-i~ | ~imenu~ |
-| ~s-j~ | ~org-todo~ |
-| ~s-k~ | ~s-k-prefix~ |
-| ~s-m~ | ~mc/mark-all-like-this~ |
-| ~s-n~ | ~make-frame~ |
-| ~s-o~ | ~move-or-copy-region-to-other-window~ |
-| ~s-p~ | ~org-export-dispatch~ |
-| ~s-r~ | ~counsel-recentf~ |
-| ~s-s~ | ~jay/save-all-buffers~ |
-| ~s-t~ | ~new-buffer~ |
-| ~s-v~ | ~pasteboard-paste-adaptive~ |
-| ~s-w~ | ~delete-window~ |
-| ~s-x~ | ~pasteboard-cut~ |
-| ~s-y~ | ~undo-fu-only-redo-fail-with-heart~ |
-| ~s-z~ | ~undo-fu-only-undo~ |
-| ~s-{~ | ~path-copy-path-to-clipboard~ |
-| ~s-|~ | ~path-copy-path-to-clipboard~ |
-| ~s-}~ | ~path-copy-path-to-clipboard~ |
+
+- ~s-'~ :: =choose-refile-method-and-refile=
+- ~s-(~ :: =org-velocity=
+- ~s-+~ :: =copy-region-to-other-window=
+- ~s-,~ :: =customize-group=
+- ~s--~ :: =ensmallen-text=
+- ~s-.~ :: =calendar=
+- ~s-0~ :: =move-region-to-other-window=
+- ~s-1~ :: =delete-other-windows=
+- ~s-2~ :: =split-window-vertically=
+- ~s-3~ :: =split-window-left=
+- ~s-5~ :: =point-stack-push=
+- ~s-6~ :: =point-stack-pop=
+- ~s-7~ :: =point-stack-forward-stack-pop=
+- ~s-8~ :: =search-open-buffers=
+- ~s-9~ :: =sticky-window-keep-window-visible=
+- ~s-;~ :: =consult-outline=
+- ~s-<~ :: =load-shared-functions=
+- ~s-=~ :: =embiggen-text=
+- ~s->~ :: =load-gnu-startup=
+- ~s-?~ :: =load-spacecraft-mode=
+- ~s-B~ :: =consult-buffer=
+- ~s-D~ :: =define-word-at-point=
+- ~s-E~ :: =new-email-from-subtree-no-signature=
+- ~s-F~ :: =pasteboard-search-for-clipboard-contents=
+- ~s-G~ :: =counsel-projectile-ag=
+- ~s-I~ :: =clone-indirect-buffer-new-window-and-focus=
+- ~s-K~ :: =org-cut-subtree=
+- ~s-L~ :: =org-mac-link-chrome-insert-frontmost-url=
+- ~s-M~ :: =tr-toggle-transclusion=
+- ~s-O~ :: =reveal-in-finder=
+- ~s-P~ :: =projectile-find-file=
+- ~s-R~ :: =fasd-find-file=
+- ~s-S~ :: =org-mac-link-skim-insert=
+- ~s-T~ :: =mw-thesaurus-lookup-dwim=
+- ~s-V~ :: =pasteboard-paste-adjusted-subtrees-adaptive=
+- ~s-W~ :: =open-weeklies=
+- ~s-\~ :: =visit-most-recent-file=
+- ~s-_~ :: =olivetti-shrink=
+- ~s-`~ :: =other-window-or-frame=
+- ~s-a~ :: =mark-whole-buffer= (global-map: =copy-minibuffer-contents= in minibuffer)
+- ~s-b~ :: =narrow-or-widen-dwim=
+- ~s-c~ :: =pasteboard-copy-adaptive= (minibuffer: =copy-minibuffer-contents=)
+- ~s-d~ :: =org-todo=
+- ~s-e~ :: =embark-act=
+- ~s-f~ :: =isearch-forward-ignore-case=
+- ~s-g~ :: =isearch-repeat-forward=
+- ~s-h~ :: =replace-string=
+- ~s-i~ :: =imenu=
+- ~s-j~ :: =org-todo=
+- ~s-k~ :: =s-k-prefix= (see s-k section below)
+- ~s-m~ :: =mc/mark-all-like-this=
+- ~s-n~ :: =make-frame=
+- ~s-o~ :: =move-or-copy-region-to-other-window=
+- ~s-p~ :: =org-export-dispatch=
+- ~s-r~ :: =counsel-recentf=
+- ~s-s~ :: =jay/save-all-buffers=
+- ~s-t~ :: =new-buffer=
+- ~s-v~ :: =pasteboard-paste-adaptive=
+- ~s-w~ :: =delete-window=
+- ~s-x~ :: =pasteboard-cut-adaptive= (minibuffer: =pasteboard-cut=)
+- ~s-y~ :: =undo-fu-only-redo-fail-with-heart=
+- ~s-z~ :: =undo-fu-only-undo=
+- ~s-{~ :: =path-copy-path-to-clipboard=
+- ~s-|~ :: =path-copy-path-to-clipboard=
+- ~s-}~ :: =path-copy-path-to-clipboard=
 
 * s-/ prefix (search)
-| Keybinding | Function |
-|-|-|
-| ~s-/ dg~ | ~deadgrep-current-directory~ |
-| ~s-/ f B~ | ~search-filename-book-directory~ |
-| ~s-/ f b~ | ~search-filename-both-book-and-proposal-directories~ |
-| ~s-/ f p~ | ~search-filename-proposal-directory~ |
-| ~s-/ g b~ | ~grep-both-directories~ |
-| ~s-/ g l~ | ~affe-grep-gnulisp-directory~ |
-| ~s-/ g ub~ | ~affe-grep-bash-scripts~ |
-| ~s-/ g up~ | ~affe-grep-bash-profile~ |
-| ~s-/ gg~ | ~consult-git-grep~ |
-| ~s-/ gr~ | ~consult-grep~ |
-| ~s-/ pa~ | ~counsel-projectile-ag~ |
-| ~s-/ rg~ | ~consult-ripgrep-current-directory~ |
-| ~s-/ rr~ | ~roam-rg-search~ |
+
+- ~s-/ dg~ :: =deadgrep-current-directory=
+- ~s-/ f B~ :: =search-filename-book-directory=
+- ~s-/ f b~ :: =search-filename-both-book-and-proposal-directories=
+- ~s-/ f p~ :: =search-filename-proposal-directory=
+- ~s-/ g b~ :: =grep-both-directories=
+- ~s-/ g l~ :: =affe-grep-gnulisp-directory=
+- ~s-/ g ub~ :: =affe-grep-bash-scripts=
+- ~s-/ g up~ :: =affe-grep-bash-profile=
+- ~s-/ gg~ :: =consult-git-grep=
+- ~s-/ gr~ :: =consult-grep=
+- ~s-/ pa~ :: =counsel-projectile-ag=
+- ~s-/ rg~ :: =consult-ripgrep-current-directory=
+- ~s-/ rr~ :: =roam-rg-search=
 
 * s-k prefix (custom map)
-| Keybinding | Function |
-|-|-|
-| ~s-k RET~ | ~kill-current-buffer~ |
-| ~s-k a d~ | ~(lambda () (interactive) (org-agenda nil "d"))~ |
-| ~s-k a f~ | ~org-attach~ |
-| ~s-k ag~ | ~affe-grep~ |
-| ~s-k bl~ | ~blue-light~ |
-| ~s-k c i~ | ~jd-clock-in~ |
-| ~s-k c m~ | ~css-mode~ |
-| ~s-k c p~ | ~path-copy-path-to-kill-ring~ |
-| ~s-k c s~ | ~org-schedule~ |
-| ~s-k cf~ | ~customize-face~ |
-| ~s-k cw~ | ~count-words~ |
-| ~s-k d c~ | ~org-table-delete-column~ |
-| ~s-k d g~ | ~deadgrep-current-directory~ |
-| ~s-k d l~ | ~double-line-breaks-in-region~ |
-| ~s-k dd~ | ~delete-duplicate-lines-keep-blanks~ |
-| ~s-k e b~ | ~ediff-buffers~ |
-| ~s-k e e~ | ~fasd-find-file~ |
-| ~s-k e l~ | ~emacs-lisp-mode~ |
-| ~s-k e m~ | ~expand-outreach-snippet-paste-copy-all-and-submit-ChatGPT~ |
-| ~s-k f e~ | ~restore-frame-to-external-minotaur-two-thirds-size-and-position~ |
-| ~s-k f l~ | ~restore-frame-to-laptop-two-thirds-size-and-position~ |
-| ~s-k f m~ | ~text-mode~ |
-| ~s-k f z~ | ~counsel-fzf~ |
-| ~s-k g b~ | ~gist-buffer-to-pasteboard~ |
-| ~s-k g c~ | ~goto-char~ |
-| ~s-k g l~ | ~affe-grep-gnulisp-directory~ |
-| ~s-k g t~ | ~google-translate-at-point~ |
-| ~s-k h l~ | ~spacemacs/toggle-highlight-current-line-globally-off~ |
-| ~s-k i c~ | ~org-table-insert-column~ |
-| ~s-k i l~ | ~imenu-list~ |
-| ~s-k i m~ | ~imenu-list~ |
-| ~s-k i r~ | ~org-table-insert-row~ |
-| ~s-k k a~ | ~load-koma-letter~ |
-| ~s-k k o~ | ~load-koma-letter~ |
-| ~s-k kb~ | ~keybinding-read-and-insert~ |
-| ~s-k l a~ | ~jay-load-latex~ |
-| ~s-k l t~ | ~jay-load-latex~ |
-| ~s-k m b~ | ~menu-bar-mode~ |
-| ~s-k m c~ | ~multiple-cursors-reflash~ |
-| ~s-k mk~ | ~keybinding-read-and-insert~ |
-| ~s-k n s~ | ~yas/new-snippet~ |
-| ~s-k o a~ | ~org-agenda~ |
-| ~s-k o c~ | ~org-wc-display~ |
-| ~s-k o d~ | ~org-deadline~ |
-| ~s-k o e~ | ~olivetti-expand~ |
-| ~s-k o l~ | ~olivetti-mode~ |
-| ~s-k o m~ | ~org-mode~ |
-| ~s-k o s~ | ~org-schedule~ |
-| ~s-k o t~ | ~org-timeline-export-to-html-and-open~ |
-| ~s-k p m~ | ~poetry-mode~ |
-| ~s-k p s~ | ~pomodoro-start~ |
-| ~s-k r b~ | ~revert-buffer~ |
-| ~s-k r e~ | ~set-rectangular-region-anchor~ |
-| ~s-k r l~ | ~remove-link~ |
-| ~s-k r t~ | ~org-render-table-at-point~ |
-| ~s-k rg~ | ~consult-ripgrep-current-directory~ |
-| ~s-k rr~ | ~replace-regexp~ |
-| ~s-k s b~ | ~scrollbar-mode-turn-off-scrollbar~ |
-| ~s-k s h~ | ~sh-mode~ |
-| ~s-k s m~ | ~sh-mode~ |
-| ~s-k s w~ | ~crux-swap-windows~ |
-| ~s-k s-k~ | ~kill-current-buffer~ |
-| ~s-k t c~ | ~org-table-create~ |
-| ~s-k t d~ | ~org-todo-list~ |
-| ~s-k t s~ | ~org-toggle-time-stamp-overlays~ |
-| ~s-k t t~ | ~toggle-between-src-and-example-block~ |
-| ~s-k u p~ | ~unfill-paragraph~ |
-| ~s-k v~ | ~org-paste-subtree~ |
-| ~s-k w c~ | ~wc-mode~ |
-| ~s-k w m~ | ~whitespace-mode~ |
-| ~s-k w s~ | ~isearch-forward-word~ |
-| ~s-k x~ | ~org-cut-subtree~ |
-| ~s-k y a~ | ~affe-grep-gnulisp-directory~ |
+
+- ~s-k RET~ :: =kill-current-buffer=
+- ~s-k a d~ :: =my/org-agenda-day=
+- ~s-k a f~ :: =org-attach=
+- ~s-k ag~ :: =affe-grep=
+- ~s-k bl~ :: =blue-light=
+- ~s-k c i~ :: =jd-clock-in=
+- ~s-k c m~ :: =css-mode=
+- ~s-k c p~ :: =path-copy-path-to-kill-ring=
+- ~s-k c s~ :: =org-schedule= (overridden to =org-clone-subtree= in org-mode)
+- ~s-k cf~ :: =customize-face=
+- ~s-k cw~ :: =count-words=
+- ~s-k d c~ :: =org-table-delete-column=
+- ~s-k d g~ :: =deadgrep-current-directory=
+- ~s-k d l~ :: =double-line-breaks-in-region=
+- ~s-k dd~ :: =delete-duplicate-lines-keep-blanks=
+- ~s-k e b~ :: =ediff-buffers=
+- ~s-k e e~ :: =fasd-find-file=
+- ~s-k e l~ :: =emacs-lisp-mode=
+- ~s-k e m~ :: =expand-outreach-snippet-paste-copy-all-and-submit-ChatGPT=
+- ~s-k f e~ :: =restore-frame-to-external-minotaur-two-thirds-size-and-position=
+- ~s-k f l~ :: =restore-frame-to-laptop-two-thirds-size-and-position=
+- ~s-k f m~ :: =text-mode=
+- ~s-k f z~ :: =counsel-fzf=
+- ~s-k g b~ :: =gist-buffer-to-pasteboard=
+- ~s-k g c~ :: =goto-char=
+- ~s-k g l~ :: =affe-grep-gnulisp-directory=
+- ~s-k g t~ :: =google-translate-at-point=
+- ~s-k h l~ :: =spacemacs/toggle-highlight-current-line-globally-off=
+- ~s-k i c~ :: =org-table-insert-column=
+- ~s-k i l~ :: =imenu-list=
+- ~s-k i m~ :: =imenu-list=
+- ~s-k i r~ :: =org-table-insert-row=
+- ~s-k k a~ :: =load-koma-letter=
+- ~s-k k o~ :: =load-koma-letter=
+- ~s-k kb~ :: =keybinding-read-and-insert=
+- ~s-k l a~ :: =jay-load-latex=
+- ~s-k l t~ :: =jay-load-latex=
+- ~s-k m b~ :: =menu-bar-mode=
+- ~s-k m c~ :: =multiple-cursors-reflash=
+- ~s-k mk~ :: =keybinding-read-and-insert=
+- ~s-k n s~ :: =yas/new-snippet=
+- ~s-k o a~ :: =org-agenda=
+- ~s-k o c~ :: =org-wc-display=
+- ~s-k o d~ :: =org-deadline=
+- ~s-k o e~ :: =olivetti-expand=
+- ~s-k o l~ :: =olivetti-mode=
+- ~s-k o m~ :: =org-mode=
+- ~s-k o s~ :: =org-schedule=
+- ~s-k o t~ :: =org-timeline-export-to-html-and-open=
+- ~s-k p m~ :: =poetry-mode=
+- ~s-k p s~ :: =pomodoro-start=
+- ~s-k r b~ :: =revert-buffer=
+- ~s-k r e~ :: =set-rectangular-region-anchor=
+- ~s-k r l~ :: =remove-link=
+- ~s-k r t~ :: =org-render-table-at-point=
+- ~s-k rg~ :: =consult-ripgrep-current-directory=
+- ~s-k rr~ :: =replace-regexp=
+- ~s-k s b~ :: =scrollbar-mode-turn-off-scrollbar=
+- ~s-k s h~ :: =sh-mode=
+- ~s-k s m~ :: =sh-mode=
+- ~s-k s w~ :: =crux-swap-windows=
+- ~s-k s-k~ :: =kill-current-buffer=
+- ~s-k t c~ :: =org-table-create=
+- ~s-k t d~ :: =org-todo-list=
+- ~s-k t s~ :: =org-toggle-time-stamp-overlays=
+- ~s-k t t~ :: =toggle-between-src-and-example-block=
+- ~s-k u p~ :: =unfill-paragraph=
+- ~s-k v~ :: =org-paste-subtree=
+- ~s-k w c~ :: =wc-mode=
+- ~s-k w m~ :: =whitespace-mode=
+- ~s-k w s~ :: =isearch-forward-word=
+- ~s-k x~ :: =org-cut-subtree=
+- ~s-k y a~ :: =affe-grep-gnulisp-directory=
+
 * Org-mode overrides
-These are defined in the org-mode block in `keys.el` and only apply in Org buffers:
-- ~s-v~ → ~pasteboard-paste-adaptive~
-- ~s-l~ → ~org-insert-link~
-- ~s-k c s~ → ~org-clone-subtree~ (overrides global ~org-schedule~)
+
+These are defined in the org-mode block in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]]
+and only apply in Org buffers:
+
+- ~s-v~ :: =pasteboard-paste-adaptive=
+- ~s-l~ :: =org-insert-link=
+- ~s-k c s~ :: =org-clone-subtree= (overrides global =org-schedule=)

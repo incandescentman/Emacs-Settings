@@ -516,105 +516,196 @@
   (define-key endless/mc-map (kbd "<") #'mc/cycle-backward)
   (define-key endless/mc-map (kbd "H") #'hydra-mc/body))
 
-;;;; 5. Mode-local bindings (lazy loading)
+;;;; 5. Mode-local binding alists ------------------------------------------
+;;
+;; Declarative alists so the dump function in keybinding-docs.el can
+;; iterate them.  Installation still uses with-eval-after-load.
+
+(defconst my/org-mode-bindings
+  '(("<return>"       . smart-return)
+    ("C-k"            . my/kill-line-dwim)
+    ("<SPC>"          . smart-space)
+    ("s-v"            . pasteboard-paste-adaptive)
+    ("s-l"            . org-insert-link)
+    ("s-k c s"        . org-clone-subtree)    ; overrides global in Org
+    ("C-c e"          . eval-adaptive)
+    ("C-c C-s"        . org-schedule)
+    ("C-c C-r"        . palimpsest-move-region-to-bottom)
+    ("`"              . flyspell-auto-correct-word-correct-space)
+    ("."              . smart-period)
+    (","              . comma-or-smart-comma)
+    ("?"              . smart-question-mark)
+    ("!"              . smart-exclamation-point)
+    ("-"              . smart-hyphen)
+    (";"              . smart-semicolon)
+    (":"              . colon-or-smart-colon)
+    ("<C-S-right>"    . org-shiftmetaright)
+    ("<C-S-left>"     . org-shiftmetaleft)
+    ("<C-right>"      . org-metaright)
+    ("<C-left>"       . org-metaleft)
+    ("<C-up>"         . org-metaup)
+    ("<C-down>"       . org-metadown)
+    ("M-<return>"     . smart-org-meta-return-dwim)
+    ("M-S-<return>"   . smart-org-insert-todo-heading-dwim)
+    ("C-M-<return>"   . smart-org-insert-subheading)
+    ("<C-S-M-return>" . smart-org-insert-todo-subheading)
+    ("<C-s-return>"   . smart-org-insert-todo-subheading)
+    ("<C-return>"     . return-insert-blank-line-before)
+    ("<C-S-return>"   . smart-org-insert-todo-heading-dwim)
+    ("<M-up>"         . up-by-degrees)
+    ("<M-down>"       . down-by-degrees)
+    ("<left>"         . jay/left-char)
+    ("<right>"        . jay/right-char)
+    ("DEL"            . new-org-delete-backward-char)
+    ("M-K"            . kill-sentence-maybe-else-kill-line))
+  "Bindings installed into `org-mode-map'.")
+
+(defconst my/org-mode-unbindings
+  '("<M-S-left>" "<M-S-right>" "<M-S-up>" "<M-S-down>"
+    "<M-left>" "<M-right>" "C-S-r")
+  "Keys unbound (set to nil) in `org-mode-map'.")
+
+(defconst my/org-override-bindings
+  '(("<C-M-left>"  . org-outdent-or-promote)
+    ("<C-M-right>" . org-indent-or-demote)
+    ("<M-S-up>"    . org-shiftup)
+    ("<M-S-down>"  . org-shiftdown)
+    ("<M-down>"    . down-by-degrees)
+    ("<M-up>"      . up-by-degrees))
+  "Bindings installed into `key-minor-mode-map' after org loads.")
+
+(defconst my/org-src-mode-bindings
+  '(("C-c C-c" . org-edit-src-exit))
+  "Bindings installed into `org-src-mode-map'.")
+
+(defconst my/flyspell-bindings
+  '(("C-;" . org-def))
+  "Bindings installed into `flyspell-mode-map'.")
+
+(defconst my/isearch-bindings
+  '(("<tab>"   . isearch-ring-advance)
+    ("<S-tab>" . isearch-repeat-backward))
+  "Bindings installed into `isearch-mode-map'.")
+
+(defconst my/help-mode-bindings
+  '(("C-s-]" . help-go-back))
+  "Bindings installed into `help-mode-map'.")
+
+(defconst my/text-mode-bindings
+  '(("s-v" . pasteboard-paste-clean))
+  "Bindings installed into `text-mode-map'.")
+
+(defconst my/info-mode-bindings
+  '(("s-[" . Info-backward-node)
+    ("s-]" . Info-forward-node)
+    ("<s-up>" . Info-up)
+    ("s-l" . Info-goto-node))
+  "Bindings installed into `Info-mode-map'.")
+
+(defconst my/winner-bindings
+  '(("s-[" . winner-undo)
+    ("s-]" . winner-redo))
+  "Bindings installed into `winner-mode-map'.")
+
+(defconst my/ctrlf-bindings
+  '(("s-g" . ctrlf-next-match))
+  "Bindings installed into `ctrlf-mode-map'.")
+
+(defconst my/markdown-mode-bindings
+  '(("RET"   . my-markdown-newline-with-bullet)
+    ("<tab>" . my-markdown-cycle))
+  "Bindings installed into `markdown-mode-map'.")
+
+(defconst my/evil-bindings
+  '(("C-g" . keyboard-quit))
+  "Bindings installed into `evil-normal-state-map'.")
+
+(defconst my/evil-unbindings '("s-k")
+  "Keys unbound in `evil-normal-state-map'.")
+
+(defconst my/vertico-override-bindings
+  '(("C-M-S-s-o" . embark-act))
+  "Bindings installed into `key-minor-mode-map' after vertico loads.")
+
+(defconst my/emacs-lisp-mode-bindings
+  '(("s-v"   . pasteboard-paste-verbatim)
+    ("C-c e" . eval-buffer)
+    ("M-K"   . kill-sexp))
+  "Bindings installed into `emacs-lisp-mode-map'.")
+
+;; Master registry — used by keybinding-docs.el dump function
+(defconst my/mode-binding-registry
+  '(("org-mode-map"          . my/org-mode-bindings)
+    ("org-src-mode-map"       . my/org-src-mode-bindings)
+    ("flyspell-mode-map"      . my/flyspell-bindings)
+    ("isearch-mode-map"       . my/isearch-bindings)
+    ("help-mode-map"          . my/help-mode-bindings)
+    ("text-mode-map"          . my/text-mode-bindings)
+    ("Info-mode-map"          . my/info-mode-bindings)
+    ("winner-mode-map"        . my/winner-bindings)
+    ("ctrlf-mode-map"         . my/ctrlf-bindings)
+    ("markdown-mode-map"      . my/markdown-mode-bindings)
+    ("evil-normal-state-map"  . my/evil-bindings)
+    ("emacs-lisp-mode-map"    . my/emacs-lisp-mode-bindings)
+    ;; Override maps (installed into key-minor-mode-map)
+    ("key-minor-mode-map (org)"    . my/org-override-bindings)
+    ("key-minor-mode-map (vertico)" . my/vertico-override-bindings))
+  "Registry mapping map names to their binding alists.
+Used by `my/keybinding-dump' to generate documentation.")
+
+;;;; 5b. Install mode-local bindings --------------------------------------
+
+(defun my/install-mode-bindings (keymap bindings)
+  "Install BINDINGS alist into KEYMAP."
+  (dolist (b bindings)
+    (define-key keymap (kbd (car b)) (cdr b))))
+
+(defun my/unbind-keys (keymap keys)
+  "Set each key string in KEYS to nil in KEYMAP."
+  (dolist (k keys)
+    (define-key keymap (kbd k) nil)))
+
 (with-eval-after-load 'org
-  ;; macOS-style movement overrides
-  (define-key org-mode-map (kbd "<M-S-left>") nil)
-  (define-key org-mode-map (kbd "<M-S-right>") nil)
-  (define-key org-mode-map (kbd "<M-S-up>") nil)
-  (define-key org-mode-map (kbd "<M-S-down>") nil)
-  (define-key org-mode-map (kbd "<M-left>") nil)
-  (define-key org-mode-map (kbd "<M-right>") nil)
-
-  (define-key org-mode-map (kbd "<return>") #'smart-return)
-  (define-key org-mode-map (kbd "C-k") #'my/kill-line-dwim)
-  (define-key org-mode-map (kbd "<SPC>") #'smart-space)
-  (define-key org-mode-map (kbd "s-v") #'pasteboard-paste-adaptive)
-  (define-key org-mode-map (kbd "s-l") #'org-insert-link)
-  (define-key org-mode-map (kbd "s-k c s") #'org-clone-subtree) ; Overrides global binding in Org
-  (define-key org-mode-map (kbd "C-c e") #'eval-adaptive)
-  (define-key org-mode-map (kbd "C-c C-s") #'org-schedule)
-  (define-key org-mode-map (kbd "C-c C-r") #'palimpsest-move-region-to-bottom)
-  (define-key org-mode-map (kbd "`") #'flyspell-auto-correct-word-correct-space)
-  (define-key org-mode-map (kbd ".") #'smart-period)
-  (define-key org-mode-map (kbd ",") #'comma-or-smart-comma)
-  (define-key org-mode-map (kbd "?") #'smart-question-mark)
-  (define-key org-mode-map (kbd "!") #'smart-exclamation-point)
-  (define-key org-mode-map (kbd "-") #'smart-hyphen)
-  (define-key org-mode-map (kbd ";") #'smart-semicolon)
-  (define-key org-mode-map (kbd ":") #'colon-or-smart-colon)
-  (define-key org-mode-map (kbd "<C-S-right>") #'org-shiftmetaright)
-  (define-key org-mode-map (kbd "<C-S-left>") #'org-shiftmetaleft)
-  (define-key org-mode-map (kbd "<C-right>") #'org-metaright)
-  (define-key org-mode-map (kbd "<C-left>") #'org-metaleft)
-  (define-key org-mode-map (kbd "<C-up>") #'org-metaup)
-  (define-key org-mode-map (kbd "<C-down>") #'org-metadown)
-  (define-key org-mode-map (kbd "M-<return>") #'smart-org-meta-return-dwim)
-  (define-key org-mode-map (kbd "M-S-<return>") #'smart-org-insert-todo-heading-dwim)
-  (define-key org-mode-map (kbd "C-M-<return>") #'smart-org-insert-subheading)
-  (define-key org-mode-map (kbd "<C-S-M-return>") #'smart-org-insert-todo-subheading)
-  (define-key org-mode-map (kbd "<C-s-return>") #'smart-org-insert-todo-subheading)
-  (define-key org-mode-map (kbd "<C-return>") #'return-insert-blank-line-before)
-  (define-key org-mode-map (kbd "<C-S-return>") #'smart-org-insert-todo-heading-dwim)
-  (define-key org-mode-map (kbd "<M-up>") #'up-by-degrees)
-  (define-key org-mode-map (kbd "<M-down>") #'down-by-degrees)
-  (define-key org-mode-map (kbd "<left>") #'jay/left-char)
-  (define-key org-mode-map (kbd "<right>") #'jay/right-char)
-  (define-key org-mode-map (kbd "DEL") #'new-org-delete-backward-char)
-  (define-key org-mode-map (kbd "C-S-r") nil)
-  (define-key org-mode-map (kbd "M-K") #'kill-sentence-maybe-else-kill-line)
-
-  (define-key key-minor-mode-map (kbd "<C-M-left>") #'org-outdent-or-promote)
-  (define-key key-minor-mode-map (kbd "<C-M-right>") #'org-indent-or-demote)
-  (define-key key-minor-mode-map (kbd "<M-S-up>") #'org-shiftup)
-  (define-key key-minor-mode-map (kbd "<M-S-down>") #'org-shiftdown)
-  (define-key key-minor-mode-map (kbd "<M-down>") #'down-by-degrees)
-  (define-key key-minor-mode-map (kbd "<M-up>") #'up-by-degrees))
+  (my/unbind-keys  org-mode-map my/org-mode-unbindings)
+  (my/install-mode-bindings org-mode-map my/org-mode-bindings)
+  (my/install-mode-bindings key-minor-mode-map my/org-override-bindings))
 
 (with-eval-after-load 'org-src
-  (define-key org-src-mode-map (kbd "C-c C-c") #'org-edit-src-exit))
+  (my/install-mode-bindings org-src-mode-map my/org-src-mode-bindings))
 
 (with-eval-after-load 'flyspell
-  (define-key flyspell-mode-map (kbd "C-;") #'org-def))
+  (my/install-mode-bindings flyspell-mode-map my/flyspell-bindings))
 
 (with-eval-after-load 'isearch
-  (define-key isearch-mode-map (kbd "<tab>") #'isearch-ring-advance)
-  (define-key isearch-mode-map (kbd "<S-tab>") #'isearch-repeat-backward))
+  (my/install-mode-bindings isearch-mode-map my/isearch-bindings))
 
 (with-eval-after-load 'help-mode
-  (define-key help-mode-map (kbd "C-s-]") #'help-go-back))
+  (my/install-mode-bindings help-mode-map my/help-mode-bindings))
 
 (with-eval-after-load 'text-mode
-  (define-key text-mode-map (kbd "s-v") #'pasteboard-paste-clean))
+  (my/install-mode-bindings text-mode-map my/text-mode-bindings))
 
 (with-eval-after-load 'info
-  (define-key Info-mode-map (kbd "s-[") #'Info-backward-node)
-  (define-key Info-mode-map (kbd "s-]") #'Info-forward-node)
-  (define-key Info-mode-map (kbd "<s-up>") #'Info-up)
-  (define-key Info-mode-map (kbd "s-l") #'Info-goto-node))
+  (my/install-mode-bindings Info-mode-map my/info-mode-bindings))
 
 (with-eval-after-load 'winner
-  (define-key winner-mode-map (kbd "s-[") #'winner-undo)
-  (define-key winner-mode-map (kbd "s-]") #'winner-redo))
+  (my/install-mode-bindings winner-mode-map my/winner-bindings))
 
 (with-eval-after-load 'ctrlf
-  (define-key ctrlf-mode-map (kbd "s-g") #'ctrlf-next-match))
+  (my/install-mode-bindings ctrlf-mode-map my/ctrlf-bindings))
 
 (with-eval-after-load 'markdown-mode
-  (define-key markdown-mode-map (kbd "RET") #'my-markdown-newline-with-bullet)
-  (define-key markdown-mode-map (kbd "<tab>") #'my-markdown-cycle))
+  (my/install-mode-bindings markdown-mode-map my/markdown-mode-bindings))
 
 (with-eval-after-load 'evil
-  (define-key evil-normal-state-map (kbd "s-k") nil)
-  (define-key evil-normal-state-map (kbd "C-g") #'keyboard-quit))
+  (my/unbind-keys evil-normal-state-map my/evil-unbindings)
+  (my/install-mode-bindings evil-normal-state-map my/evil-bindings))
 
 (with-eval-after-load 'vertico
-  (define-key key-minor-mode-map (kbd "C-M-S-s-o") #'embark-act))
+  (my/install-mode-bindings key-minor-mode-map my/vertico-override-bindings))
 
 (with-eval-after-load 'emacs-lisp-mode
-  (define-key emacs-lisp-mode-map (kbd "s-v") #'pasteboard-paste-verbatim)
-  (define-key emacs-lisp-mode-map (kbd "C-c e") #'eval-buffer)
-  (define-key emacs-lisp-mode-map (kbd "M-K") #'kill-sexp))
+  (my/install-mode-bindings emacs-lisp-mode-map my/emacs-lisp-mode-bindings))
 
 (provide 'keys)
 ;;; keys.el ends here

@@ -1,0 +1,24 @@
+:PROPERTIES:
+:ID: 075d554c-c4ed-497d-ae58-41af9f91cc05
+:END:
+#+title: Keybinding Annotations
+
+Manual notes for keybindings. This file survives regeneration of
+[[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-dump.org][keybinding-dump.org]].
+
+Format: =- KEY::COMMAND :: Your note here=
+
+Run =M-x my/keybinding-merge= to produce
+[[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-reference.org][keybinding-reference.org]]
+with these annotations merged in.
+
+* Annotations
+
+- s-d::org-todo :: Primary TODO toggle — fastest single key
+- s-j::org-todo :: Alternative TODO toggle (redundant with s-d)
+- s-r::counsel-recentf :: Most frequently used file-finding command
+- s-b::narrow-or-widen-dwim :: Toggle narrow/widen — essential for focus
+- s-;::consult-outline :: Jump to any heading in current buffer
+- C-s::consult-line :: Replaced default isearch with consult-line
+- M-%::eval-expression :: Swapped with M-: (default query-replace)
+- M-:::query-replace :: Swapped with M-% (default eval-expression)

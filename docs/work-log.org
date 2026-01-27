@@ -1,6 +1,25 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-01-27: Keybinding documentation system & keys.el cleanup
+- Resolved 6 issues in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]]:
+  1. Removed duplicate help bindings
+  2. Fixed ~s->~ conflict (kept =load-gnu-startup=, removed =org-mark-subtree=)
+  3. Fixed ~C-s-k~ conflict (kept =org-cut-subtree=)
+  4. Fixed ~C-S-return~ duplicate in org mode-local block
+  5. Replaced all lambda bindings with named wrapper functions (=my/org-show-level-N=, =my/org-agenda-day=, =my/panic-save-and-quit=, =my/scroll-up=, =my/scroll-down=)
+  6. Redistributed "Migrated Bindings" grab-bag into thematic sections and deleted the catch-all section
+- Refactored Section 5 (mode-local bindings) from procedural ~define-key~ calls into declarative alists with ~my/mode-binding-registry~ for introspection
+- Created [[file+emacs:/Users/jay/emacs/emacs-settings/keybinding-docs.el][keybinding-docs.el]] with:
+  - =keyfreq= integration for silent usage tracking
+  - =M-x my/keybinding-dump= — auto-generates [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-dump.org][keybinding-dump.org]] from declarative alists
+  - =M-x my/keybinding-merge= — merges dump with [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-annotations.org][keybinding-annotations.org]] to produce [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-reference.org][keybinding-reference.org]], flags =[NEW]= and =[REMOVED]= bindings
+  - =M-x my/keybinding-frequency-report= — generates [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-frequency-report.org][keybinding-frequency-report.org]] with most-used commands, ergonomic mismatches, and underused prime keys
+- Added =keyfreq= to =dotspacemacs-additional-packages= in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][init.el]]
+- Added load call for [[file+emacs:/Users/jay/emacs/emacs-settings/keybinding-docs.el][keybinding-docs.el]] in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][init.el]] user-config
+- Created [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-annotations.org][keybinding-annotations.org]] skeleton with initial annotations
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/docs/macOS-command-key-bindings.org][macOS-command-key-bindings.org]]: converted tables to description lists, fixed stale entries (=s->= now =load-gnu-startup=, =s-k a d= now =my/org-agenda-day=), added cross-reference to keybinding-reference.org
+
 * 2026-01-27: Plan keybinding consolidation into keys.el
 - Created [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-consolidation-plan.org][keybinding-consolidation-plan.org]] with full migration plan
 - Goal: move all ~define-key~, ~global-set-key~, ~define-super-key~, and ~spacemacs/set-leader-keys~ calls into [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] as the single canonical keybinding location
