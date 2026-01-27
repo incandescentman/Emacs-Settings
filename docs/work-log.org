@@ -1,6 +1,17 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-01-27: Fix s-k prefix clobbered by gnu-emacs-startup.el
+- All =s-k= sequences (=s-k s-k=, =s-k g l=, etc.) were broken after restart
+- Root cause: [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.el][gnu-emacs-startup.el]] lines 150-153 ran =(fset 's-k-prefix s-k-map)= inside =(with-eval-after-load 'evil ...)=, creating a fresh empty keymap that overwrote the populated prefix map keys.el had already installed
+- Fix: removed the =s-k-map= / =fset= block from both [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.el][gnu-emacs-startup.el]] and [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org][gnu-emacs-startup.org]]; keys.el now solely owns the =s-k-prefix= definition
+- Also in this session:
+  - Fixed =key-minor-mode= permanently disabled after first minibuffer use (added =minibuffer-exit-hook= to re-enable)
+  - Restored =<s-left>= / =<s-right>= → =buffer-stack-up= / =buffer-stack-down= (dropped during earlier migration)
+  - Uncommented =ivy-smex.el= load in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][spacemacs-new-config.el]]
+  - Confirmed =org-roam-config.el= is dead code (not loaded); =jay-org-roam-core.el= is authoritative
+  - Audit found only ~52 bindings remaining to migrate (26 in jay-org-roam-core.el, 25 stale in org-roam-config.el, 1 in shared-functions.org)
+
 * 2026-01-27: Keybinding documentation system & keys.el cleanup
 - Resolved 6 issues in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]]:
   1. Removed duplicate help bindings

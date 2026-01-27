@@ -18,6 +18,12 @@
 
 ;;;; 1. Helper Functions ------------------------------------------------
 
+;; Autoloads for commands defined in spacecraft-mode.el
+(autoload 'endless/upcase "/Users/jay/emacs/emacs-settings/spacecraft-mode" nil t)
+(autoload 'endless/downcase "/Users/jay/emacs/emacs-settings/spacecraft-mode" nil t)
+(autoload 'downcase-or-endless-downcase "/Users/jay/emacs/emacs-settings/spacecraft-mode" nil t)
+(autoload 'capitalize-or-endless/capitalize "/Users/jay/emacs/emacs-settings/spacecraft-mode" nil t)
+
 (defun visit-messages-buffer ()
   "Switch to the *Messages* buffer in another window."
   (interactive)

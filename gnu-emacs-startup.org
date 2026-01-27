@@ -215,13 +215,8 @@ Source: [[http://stackoverflow.com/questions/5682631/what-are-good-custom-keybin
 
 Use ⌘-m as prefix for my own custom keybindings:
 #+BEGIN_SRC emacs-lisp
-
-;; (global-set-key (kbd "s-k") nil)
-
-(with-eval-after-load 'evil
-  (defvar s-k-map (make-keymap)
-    "Keymap for local bindings and functions, prefixed by (Command-M)")
-  (fset 's-k-prefix s-k-map))
+;; s-k prefix map now defined and populated in keys.el.
+;; The old (fset 's-k-prefix s-k-map) here was clobbering keys.el bindings.
 #+END_SRC
 
 
