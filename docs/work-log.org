@@ -52,6 +52,11 @@
   - Ensured ~s-k~ is a prefix in =key-minor-mode-map= before installing bindings.
   - Restored ~=~ → =amx=; verified ~s-<left>/<right>~ → =buffer-stack-up/down= and other core bindings.
 
+* 2026-01-27: Audit of fabricated bindings during consolidation
+- Verified pre-migration baseline and compared against current =keys.el=.
+- Found one fabricated binding added during consolidation: ~org-mode~-local =-= → =smart-hyphen= (this did not exist pre-migration).
+- Removed the fabricated binding to restore pre-migration behavior.
+
 * 2026-01-27: Plan keybinding consolidation into keys.el
 - Created [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-consolidation-plan.org][keybinding-consolidation-plan.org]] with full migration plan
 - Goal: move all ~define-key~, ~global-set-key~, ~define-super-key~, and ~spacemacs/set-leader-keys~ calls into [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] as the single canonical keybinding location
