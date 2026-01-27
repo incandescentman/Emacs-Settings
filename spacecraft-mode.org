@@ -845,6 +845,7 @@ Also converts full stops to commas."
 #+END_SRC
 
 ** smart-hyphen
+#+BEGIN_SRC emacs-lisp
 (defun smart-hyphen ()
   (interactive)
   (smart-punctuation "-"))

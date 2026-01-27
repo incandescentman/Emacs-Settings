@@ -23,6 +23,13 @@
 (autoload 'endless/downcase "/Users/jay/emacs/emacs-settings/spacecraft-mode" nil t)
 (autoload 'downcase-or-endless-downcase "/Users/jay/emacs/emacs-settings/spacecraft-mode" nil t)
 (autoload 'capitalize-or-endless/capitalize "/Users/jay/emacs/emacs-settings/spacecraft-mode" nil t)
+(autoload 'smart-space "/Users/jay/emacs/emacs-settings/spacecraft-mode" nil t)
+(autoload 'smart-period "/Users/jay/emacs/emacs-settings/spacecraft-mode" nil t)
+(autoload 'comma-or-smart-comma "/Users/jay/emacs/emacs-settings/spacecraft-mode" nil t)
+(autoload 'smart-question-mark "/Users/jay/emacs/emacs-settings/spacecraft-mode" nil t)
+(autoload 'smart-exclamation-point "/Users/jay/emacs/emacs-settings/spacecraft-mode" nil t)
+(autoload 'smart-semicolon "/Users/jay/emacs/emacs-settings/spacecraft-mode" nil t)
+(autoload 'colon-or-smart-colon "/Users/jay/emacs/emacs-settings/spacecraft-mode" nil t)
 
 (defun visit-messages-buffer ()
   "Switch to the *Messages* buffer in another window."
@@ -551,7 +558,6 @@
     (","              . comma-or-smart-comma)
     ("?"              . smart-question-mark)
     ("!"              . smart-exclamation-point)
-    ("-"              . smart-hyphen)
     (";"              . smart-semicolon)
     (":"              . colon-or-smart-colon)
     ("<C-S-right>"    . org-shiftmetaright)
