@@ -39,6 +39,36 @@
     (goto-char (point-max))
     (copy-region-as-kill (region-beginning) (region-end))))
 
+(defun my/org-show-level-1 () "Show org headings to level 1." (interactive) (org-show-level 1))
+(defun my/org-show-level-2 () "Show org headings to level 2." (interactive) (org-show-level 2))
+(defun my/org-show-level-3 () "Show org headings to level 3." (interactive) (org-show-level 3))
+(defun my/org-show-level-4 () "Show org headings to level 4." (interactive) (org-show-level 4))
+(defun my/org-show-level-5 () "Show org headings to level 5." (interactive) (org-show-level 5))
+(defun my/org-show-level-6 () "Show org headings to level 6." (interactive) (org-show-level 6))
+(defun my/org-show-level-7 () "Show org headings to level 7." (interactive) (org-show-level 7))
+(defun my/org-show-level-8 () "Show org headings to level 8." (interactive) (org-show-level 8))
+
+(defun my/org-agenda-day ()
+  "Open the org agenda day view."
+  (interactive)
+  (org-agenda nil "d"))
+
+(defun my/panic-save-and-quit ()
+  "Save all buffers and kill Emacs immediately."
+  (interactive)
+  (save-some-buffers t)
+  (kill-emacs))
+
+(defun my/scroll-up ()
+  "Scroll up (for mouse wheel binding)."
+  (interactive)
+  (scroll-up-command))
+
+(defun my/scroll-down ()
+  "Scroll down (for mouse wheel binding)."
+  (interactive)
+  (scroll-down-command))
+
 ;;;; 2. Keybinding Tables ----------------------------------------------
 
 (defconst my/global-key-bindings
@@ -83,6 +113,10 @@
     ("s-/ g ub"      . affe-grep-bash-scripts)
     ("s-/ g up"      . affe-grep-bash-profile)
     ("C-x C-l"       . consult-locate)
+    ("s-8"           . search-open-buffers)
+    ("M-g M-g"       . google-this)
+    ("M-:"           . query-replace)
+    ("s-k rr"        . replace-regexp)
 
     ;; ==================================================================
     ;; Window Management
@@ -99,6 +133,8 @@
     ("s-O"           . reveal-in-finder)
     ("M-0"           . copy-region-to-other-window)
     ("s-+"           . copy-region-to-other-window)
+    ("s-k f e"       . restore-frame-to-external-minotaur-two-thirds-size-and-position)
+    ("s-k f l"       . restore-frame-to-laptop-two-thirds-size-and-position)
 
     ;; ==================================================================
     ;; Org‑mode Core
@@ -106,6 +142,7 @@
     ("s-d"           . org-todo)
     ("M-d"           . org-todo)
     ("M-s-9"         . org-todo)
+    ("s-j"           . org-todo)
     ("s-k o l"       . olivetti-mode)
     ("] ol"          . olivetti-mode)
     ("s-k o e"       . olivetti-expand)
@@ -117,6 +154,8 @@
     ("s-k o t"       . org-timeline-export-to-html-and-open)
     ("s-k o c"       . org-wc-display)
     ("s-K"           . org-cut-subtree)
+    ("C-s-k"         . org-cut-subtree)
+    ("M-s-k"         . org-cut-subtree)
     ("s-k v"         . org-paste-subtree)
     ("s-k x"         . org-cut-subtree)
     ("s->"           . load-gnu-startup) ; keep this final binding for s->
@@ -135,14 +174,46 @@
     ("C-S-<right>"   . org-indent-or-demote)
     ("C-<tab>"       . org-cycle-force-archived)
     ("s-k t s"       . org-toggle-time-stamp-overlays)
+    ("s-p"           . org-export-dispatch)
+    ("s-("           . org-velocity)
+    ("<M-s-return>"  . org-inlinetask-insert-task)
+    ("] i t"         . org-inlinetask-insert-task)
+    ("<s-S-return>"  . smart-org-insert-todo-heading-dwim)
+
+    ;; Org Outline Visibility -------------------------------------------
+    ("C-s-0"         . show-all)
+    ("C-s-a"         . show-all)
+    ("C-s-1"         . my/org-show-level-1)
+    ("C-s-2"         . my/org-show-level-2)
+    ("C-s-3"         . my/org-show-level-3)
+    ("C-s-4"         . my/org-show-level-4)
+    ("C-s-5"         . my/org-show-level-5)
+    ("C-s-6"         . my/org-show-level-6)
+    ("C-s-7"         . my/org-show-level-7)
+    ("C-s-8"         . my/org-show-level-8)
 
     ;; Navigation -------------------------------------------------------
     ("M-]"           . org-next-visible-heading)
     ("M-["           . org-previous-visible-heading)
+    ("M-n"           . org-next-visible-heading)
+    ("M-p"           . org-previous-visible-heading)
+    ("M-N"           . org-forward-heading-same-level)
+    ("M-P"           . org-backward-heading-same-level)
+    ("M-{"           . org-backward-heading-same-level)
+    ("M-}"           . org-forward-heading-same-level)
+    ("M-C-N"         . outline-next-visible-heading)
+    ("M-C-P"         . outline-previous-visible-heading)
     ("C-M-]"         . org-next-subtree-and-narrow)
     ("C-M-["         . org-previous-subtree-and-narrow)
     ("C-]"           . org-next-subtree-same-level-and-narrow)
     ("ESC ESC"       . org-previous-subtree-same-level-and-narrow)
+    ("M-("           . backward-word)
+    ("M-)"           . forward-word)
+    ("s-;"           . consult-outline)
+    ("s-5"           . point-stack-push)
+    ("s-6"           . point-stack-pop)
+    ("s-7"           . point-stack-forward-stack-pop)
+    ("s-k g c"       . goto-char)
 
     ;; Tables -----------------------------------------------------------
     ("s-k t c"       . org-table-create)
@@ -157,6 +228,10 @@
     ("M-*"           . org-toggle-todo-heading)
     ("M-a"           . org-priority-up)
     ("s-k t t"       . toggle-between-src-and-example-block)
+    ("<C-i>"         . italicize-region-or-point)
+    ("C-o"           . embolden-or-bold)
+    ("M-o"           . embolden-or-bold)
+    ("M-s-b"         . embolden-region-or-point)
 
     ;; Text & Clipboard -------------------------------------------------
     ;; ("C-c d"         . insert-todays-date) ; CONFLICT: C-c d is crux-duplicate-current-line-or-region
@@ -175,6 +250,7 @@
     ("M--"           . cycle-hyphenation-or-toggle-item)
     ("M-_"           . em-dash)
     ("s-k r l"       . remove-link)
+    ("C-s-SPC"       . cape-emoji)
 
     ;; macOS‑style bindings --------------------------------------------
     ("s-a"           . mark-whole-buffer)
@@ -205,6 +281,7 @@
     ("s-T"           . mw-thesaurus-lookup-dwim)
     ("s-k g t"       . google-translate-at-point)
     ("C-s-]"         . help-go-forward)
+    ("M-s-t"         . mw-thesaurus-lookup-at-point)
 
     ;; Editing Helpers --------------------------------------------------
     ("C-d"           . kill-word-correctly-and-capitalize)
@@ -230,6 +307,11 @@
     ("C-9"           . goto-last-change-reverse)
     ("C--"           . goto-last-change)
     ("M-j"           . aide-openai-complete-buffer-insert)
+    ("<M-S-backspace>" . backward-kill-sexp)
+    ("M-w"           . kill-to-buffer-end-or-beginning)
+    ("] ]"           . insert-right-bracket)
+    ("s-k d l"       . double-line-breaks-in-region)
+    ("s-k dd"        . delete-duplicate-lines-keep-blanks)
 
     ;; =================================================================
     ;; Mark, Region & Selection
@@ -239,10 +321,10 @@
     ("C-M-x"         . exchange-point-and-mark)
     ("C-x p"         . pop-to-mark-command)
     ("M-s-."         . mark-paragraph)
-    ("s->"           . org-mark-subtree) ; Using this as the final choice for s->
     ("s-m"           . mc/mark-all-like-this)
     ("s-k m c"       . multiple-cursors-reflash)
     ("s-k r e"       . set-rectangular-region-anchor)
+    ("C-8"           . endless/mc-map)
 
     ;; =================================================================
     ;; Mode Switching
@@ -288,6 +370,16 @@
     ("M-x"           . execute-extended-command)
     ("[mouse-2]"     . context-menu-open)
     ("C-M-3"         . number-region)
+    ("C-M-\\"        . palimpsest-move-region-to-top)
+    ("M-%"           . eval-expression)
+    ("s-{"           . path-copy-path-to-clipboard)
+    ("s-}"           . path-copy-path-to-clipboard)
+    ("s-k bl"        . blue-light)
+    ("s-k cf"        . customize-face)
+    ("s-k cw"        . count-words)
+    ("s-k e m"       . expand-outreach-snippet-paste-copy-all-and-submit-ChatGPT)
+    ("s-k kb"        . keybinding-read-and-insert)
+    ("s-k mk"        . keybinding-read-and-insert)
 
     ;; =================================================================
     ;; Pomodoro
@@ -312,75 +404,6 @@
     ("<C-s-left>"    . work-on-book)
 
     ;; =================================================================
-    ;; Migrated Bindings (gnu-emacs-startup/shared-functions)
-    ;; =================================================================
-    ("<s-S-return>"  . smart-org-insert-todo-heading-dwim)
-    ("<C-i>"         . italicize-region-or-point)
-    ("<M-S-backspace>" . backward-kill-sexp)
-    ("<M-s-return>"  . org-inlinetask-insert-task)
-    ("C-M-\\"        . palimpsest-move-region-to-top)
-    ("C-o"           . embolden-or-bold)
-    ("C-s-SPC"       . cape-emoji)
-    ("C-s-k"         . kill-unwanted-buffers)
-    ("C-s-0"         . show-all)
-    ("C-s-1"         . (lambda () (interactive) (org-show-level 1)))
-    ("C-s-2"         . (lambda () (interactive) (org-show-level 2)))
-    ("C-s-3"         . (lambda () (interactive) (org-show-level 3)))
-    ("C-s-4"         . (lambda () (interactive) (org-show-level 4)))
-    ("C-s-5"         . (lambda () (interactive) (org-show-level 5)))
-    ("C-s-6"         . (lambda () (interactive) (org-show-level 6)))
-    ("C-s-7"         . (lambda () (interactive) (org-show-level 7)))
-    ("C-s-8"         . (lambda () (interactive) (org-show-level 8)))
-    ("C-s-a"         . show-all)
-    ("C-s-k"         . org-cut-subtree)
-    ("C-8"           . endless/mc-map)
-    ("M-%"           . eval-expression)
-    ("M-:"           . query-replace)
-    ("M-("           . backward-word)
-    ("M-)"           . forward-word)
-    ("M-C-N"         . outline-next-visible-heading)
-    ("M-C-P"         . outline-previous-visible-heading)
-    ("M-N"           . org-forward-heading-same-level)
-    ("M-P"           . org-backward-heading-same-level)
-    ("M-n"           . org-next-visible-heading)
-    ("M-p"           . org-previous-visible-heading)
-    ("M-g M-g"       . google-this)
-    ("M-o"           . embolden-or-bold)
-    ("M-s-b"         . embolden-region-or-point)
-    ("M-s-k"         . org-cut-subtree)
-    ("M-s-t"         . mw-thesaurus-lookup-at-point)
-    ("M-w"           . kill-to-buffer-end-or-beginning)
-    ("M-{"           . org-backward-heading-same-level)
-    ("M-}"           . org-forward-heading-same-level)
-    ("s-;"           . consult-outline)
-    ("s-("           . org-velocity)
-    ("s-5"           . point-stack-push)
-    ("s-6"           . point-stack-pop)
-    ("s-7"           . point-stack-forward-stack-pop)
-    ("s-8"           . search-open-buffers)
-    ("s-j"           . org-todo)
-    ("s-p"           . org-export-dispatch)
-    ("s-{"           . path-copy-path-to-clipboard)
-    ("s-}"           . path-copy-path-to-clipboard)
-    ("s-k bl"        . blue-light)
-    ("s-k cf"        . customize-face)
-    ("s-k cw"        . count-words)
-    ("s-k d l"       . double-line-breaks-in-region)
-    ("s-k dd"        . delete-duplicate-lines-keep-blanks)
-    ("s-k e m"       . expand-outreach-snippet-paste-copy-all-and-submit-ChatGPT)
-    ("s-k f e"       . restore-frame-to-external-minotaur-two-thirds-size-and-position)
-    ("s-k f l"       . restore-frame-to-laptop-two-thirds-size-and-position)
-    ("s-k g c"       . goto-char)
-    ("s-k kb"        . keybinding-read-and-insert)
-    ("s-k mk"        . keybinding-read-and-insert)
-    ("s-k rr"        . replace-regexp)
-    ("] ]"           . insert-right-bracket)
-    ("] ci"          . load-spacemacs-config)
-    ("] cr"          . load-roam-config)
-    ("] cs"          . load-search-config)
-    ("] i t"         . org-inlinetask-insert-task)
-
-    ;; =================================================================
     ;; Load Functions & Docs
     ;; =================================================================
     ("s-k l a"       . jay-load-latex)
@@ -390,12 +413,9 @@
     ("s-<"           . load-shared-functions)
     ("s-?"           . load-spacecraft-mode)
     ("s-."           . calendar)
-    ("M-h"           . help-command)
-    ("M-h M-k"       . describe-key)
-    ("s-D"           . define-word-at-point)
-    ("s-T"           . mw-thesaurus-lookup-dwim)
-    ("s-k g t"       . google-translate-at-point)
-    ("C-s-]"         . help-go-forward)
+    ("] ci"          . load-spacemacs-config)
+    ("] cr"          . load-roam-config)
+    ("] cs"          . load-search-config)
     ))
 
 (defconst my/global-map-bindings
@@ -409,7 +429,7 @@
     ("s-/ gg"        . consult-git-grep)
     ("s-/ rr"        . roam-rg-search)
     ("s-/ g b"       . grep-both-directories)
-    ("s-k a d"       . (lambda () (interactive) (org-agenda nil "d")))
+    ("s-k a d"       . my/org-agenda-day)
     ("M-c"           . capitalize-or-endless/capitalize)
     ("M-l"           . downcase-or-endless-downcase)
     ("M-u"           . endless/upcase)
@@ -424,12 +444,12 @@
     ("C-e"           . mwim-end)
     ("C-x m"         . endless/mc-map)
     ("C-c C-c"       . pasteboard-copy)
-    ("C-c C-!"       . (lambda () (interactive) (save-some-buffers t) (kill-emacs)))
+    ("C-c C-!"       . my/panic-save-and-quit)
     ("C-c <mouse-3>" . right-click-context-menu)
     ("C-c v"         . projectile-ag)
     ("C-x C-b"       . ibuffer)
-    ("<C-wheel-up>"  . (lambda () (interactive) (scroll-up-command)))
-    ("<C-wheel-down>" . (lambda () (interactive) (scroll-down-command)))
+    ("<C-wheel-up>"  . my/scroll-up)
+    ("<C-wheel-down>" . my/scroll-down)
     ))
 
 (defconst my/minibuffer-bindings
@@ -536,7 +556,6 @@
   (define-key org-mode-map (kbd "<C-s-return>") #'smart-org-insert-todo-subheading)
   (define-key org-mode-map (kbd "<C-return>") #'return-insert-blank-line-before)
   (define-key org-mode-map (kbd "<C-S-return>") #'smart-org-insert-todo-heading-dwim)
-  (define-key org-mode-map (kbd "<C-S-return>") #'org-insert-todo-heading)
   (define-key org-mode-map (kbd "<M-up>") #'up-by-degrees)
   (define-key org-mode-map (kbd "<M-down>") #'down-by-degrees)
   (define-key org-mode-map (kbd "<left>") #'jay/left-char)
