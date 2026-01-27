@@ -307,10 +307,9 @@ Also converts full stops to commas."
 )
 )
 
-* spacecraft-mode - superior handling of whitespace for writing and editing prose
-
 #+end_src
 
+* spacecraft-mode - superior handling of whitespace for writing and editing prose
 
 ** smart-space
 #+BEGIN_SRC emacs-lisp

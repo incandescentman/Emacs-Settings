@@ -2,6 +2,75 @@
 #+DATE: 2025-09-24
 #+DESCRIPTION: Debugging post-mortems and prevention checklists.
 
+* Org Src Blocks: Headings Inside Break Tangling
+  Date: 2026-01-27
+
+** The Bug
+=endless/upcase= and related functions were autoloaded from =spacecraft-mode.el= but the =.el= didn't contain them. Calling =M-u= produced: =Autoloading file ... failed to define endless/upcase=.
+
+** The Truth
+A top-level =* heading= inside a =#+begin_src ... #+end_src= block silently breaks org's block parser. Everything after the heading is no longer considered part of the block, so it doesn't tangle. No error is raised — the functions simply vanish from the output.
+
+** Why This Was Tricky
+- The =.org= file looked correct at a glance — the functions were between =#+begin_src= and =#+end_src=
+- =org-babel-tangle= in batch mode reported "Tangled 0 code blocks" with no error
+- The =.el= file existed (from a previous tangle or manual creation) so nothing seemed missing until the autoload fired
+
+** The Fix
+Move =#+end_src= to before the =* heading= so the block closes properly:
+#+begin_src org
+)
+)
+
+,#+end_src
+
+,* spacecraft-mode - heading goes here
+
+,** smart-space
+#+end_src
+
+** Lessons Learned / Prevention Checklist
+- Never put an org heading (=*=) inside a src block — it silently breaks tangling
+- When =org-babel-tangle= reports 0 blocks, check for structural issues (mismatched or interrupted blocks), not just missing =:tangle= headers
+- After editing literate org files, always verify the tangled =.el= contains the expected =defun= forms
+- When autoloads fail, check that the target =.el= actually defines the function — don't just trust the autoload declaration
+
+* Global Minor Mode Hooks: Re-enable After Minibuffer
+  Date: 2026-01-27
+
+** The Bug
+All =key-minor-mode-map= bindings (=s-a=, =s-c=, =s-k=, =s-<up>=, etc.) worked at startup but became undefined after the first minibuffer interaction.
+
+** The Truth
+=key-minor-mode= is =:global t=. The =minibuffer-setup-hook= called =(key-minor-mode -1)= to disable it in the minibuffer, but since it's a global mode, this disabled it everywhere — and nothing re-enabled it.
+
+** The Fix
+#+begin_src elisp
+(add-hook 'minibuffer-exit-hook (lambda () (key-minor-mode 1)))
+#+end_src
+
+** Lessons Learned / Prevention Checklist
+- Disabling a =:global t= minor mode affects all buffers, not just the current one
+- Always pair a =setup-hook= disable with an =exit-hook= re-enable
+- If bindings "work at startup but die later," suspect a hook that disables a global mode
+
+* Prefix Maps: fset Clobbers Populated Keymaps
+  Date: 2026-01-27
+
+** The Bug
+All =s-k= sequences (=s-k s-k=, =s-k g l=, etc.) were undefined after restart.
+
+** The Truth
+=keys.el= defined =s-k-prefix= via =define-prefix-command= and populated it with all =s-k ...= bindings. Then =gnu-emacs-startup.el= ran =(fset 's-k-prefix s-k-map)= inside =(with-eval-after-load 'evil ...)=, replacing the populated keymap with a brand new empty one.
+
+** The Fix
+Removed the =fset= block from =gnu-emacs-startup.el=; =keys.el= now solely owns the prefix definition.
+
+** Lessons Learned / Prevention Checklist
+- =fset= on a prefix command symbol replaces the entire keymap — any bindings installed before the =fset= are lost
+- When consolidating keybindings into one file, grep for =fset=, =defvar=, and =make-keymap= on the same symbol in other files
+- =with-eval-after-load= runs later than top-level code, so it can silently clobber earlier setup
+
 * Org Emphasis Regex: Must Rebuild After Changing Components
   Date: 2025-12-26
 

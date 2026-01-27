@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-01-27: Fix spacecraft-mode.org broken src block
+- =endless/upcase=, =endless/downcase=, =endless/capitalize=, =capitalize-or-endless/capitalize= were missing from [[file+emacs:/Users/jay/emacs/emacs-settings/spacecraft-mode.el][spacecraft-mode.el]], causing autoload errors
+- Root cause: a top-level =* heading= at line 310 of [[file+emacs:/Users/jay/emacs/emacs-settings/spacecraft-mode.org][spacecraft-mode.org]] was inside a =#+begin_src= block (opened line 238, closed line 312), breaking org's block parsing so these functions never tangled
+- Fix: moved =#+end_src= to before the heading; retangled via =org-babel-load-file= and verified all functions present in the =.el=
+
 * 2026-01-27: Fix s-k prefix clobbered by gnu-emacs-startup.el
 - All =s-k= sequences (=s-k s-k=, =s-k g l=, etc.) were broken after restart
 - Root cause: [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.el][gnu-emacs-startup.el]] lines 150-153 ran =(fset 's-k-prefix s-k-map)= inside =(with-eval-after-load 'evil ...)=, creating a fresh empty keymap that overwrote the populated prefix map keys.el had already installed
