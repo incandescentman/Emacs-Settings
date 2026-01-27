@@ -3,389 +3,176 @@
 #+DATE: [2024-10-16 Wed]
 
 * Overview
-This document lists all keybindings that use the "s-" prefix (macOS Command key) from my Emacs configuration.
+This document lists custom keybindings that use the "s-" prefix (macOS Command key) from the configuration.
+Source of truth: [[file:../keys.el][keys.el]].
 
-* Window Management
-| Keybinding | Function | Description |
-|------------|----------|-------------|
-| ~s-0~ | ~move-region-to-other-window~ | Move region to other window |
-| ~s-1~ | ~delete-other-windows~ | Delete all other windows |
-| ~s-2~ | ~split-window-vertically~ | Split window vertically |
-| ~s-3~ | ~split-window-left~ | Split window horizontally to the left |
-| ~s-9~ | ~sticky-window-keep-window-visible~ | Keep window visible (sticky) |
-| ~s-w~ | ~delete-window~ | Close current window |
-| ~s-n~ | ~make-frame~ | Create new frame |
-| ~s-`~ | ~other-window-or-frame~ | Switch to other window or frame |
+Notes:
+- This document does *not* include default Spacemacs bindings.
+- Some bindings are mode-specific overrides (see the org-mode section at the end).
 
-* Buffer and File Operations
-| Keybinding | Function | Description |
-|------------|----------|-------------|
-| ~s-a~ | ~mark-whole-buffer~ | Select all text in buffer |
-| ~s-b~ | ~narrow-or-widen-dwim~ | Narrow or widen buffer intelligently |
-| ~s-B~ | ~consult-buffer~ | Switch buffers using consult |
-| ~s-c~ | ~pasteboard-copy-adaptive~ | Smart copy to clipboard |
-| ~s-f~ | ~isearch-forward-ignore-case~ | Search forward (case insensitive) |
-| ~s-F~ | ~pasteboard-search-for-clipboard-contents~ | Search for clipboard contents |
-| ~s-g~ | ~isearch-repeat-forward~ | Repeat forward search |
-| ~s-G~ | ~counsel-projectile-ag~ | Search in project with ag |
-| ~s-h~ | ~replace-string~ | Replace string |
-| ~s-i~ | ~imenu~ | Navigate with imenu |
-| ~s-I~ | ~clone-indirect-buffer-new-window-and-focus~ | Clone buffer indirectly |
-| ~s-j~ | ~org-todo~ | Toggle TODO state |
-| ~s-K~ | ~org-cut-subtree~ | Cut org subtree |
-| ~s-L~ | ~org-mac-link-chrome-insert-frontmost-url~ | Insert Chrome URL link |
-| ~s-m~ | ~mc/mark-all-like-this~ | Mark all like current selection |
-| ~s-M~ | ~tr-toggle-transclusion~ | Toggle transclusion |
-| ~s-o~ | ~move-or-copy-region-to-other-window~ | Move/copy region to other window |
-| ~s-O~ | ~reveal-in-finder~ | Show file in Finder |
-| ~s-P~ | ~projectile-find-file~ | Find file in project |
-| ~s-r~ | ~counsel-recentf~ | Open recent files |
-| ~s-R~ | ~fasd-find-file~ | Find file with fasd |
-| ~s-s~ | ~jay/save-all-buffers~ | Save all modified buffers |
-| ~s-S~ | ~org-mac-link-skim-insert~ | Insert Skim PDF link |
-| ~s-t~ | ~new-buffer~ | Create new buffer |
-| ~s-T~ | ~mw-thesaurus-lookup-dwim~ | Look up word in thesaurus |
-| ~s-v~ | ~pasteboard-paste-adaptive~ | Smart paste from clipboard |
-| ~s-V~ | ~pasteboard-paste-adjusted-subtrees-adaptive~ | Paste with subtree adjustment |
-| ~s-W~ | ~open-weeklies~ | Open weekly files |
-| ~s-x~ | ~pasteboard-cut-adaptive~ | Smart cut with adaptive formatting |
-| ~s-y~ | ~undo-fu-only-redo-fail-with-heart~ | Redo with feedback |
-| ~s-z~ | ~undo-fu-only-undo~ | Undo |
-| ~s-\\~ | ~visit-most-recent-file~ | Open most recently visited file |
-| ~s-|~ | ~path-copy-path-to-clipboard~ | Copy file path to clipboard |
+* Direct s- bindings (global)
+| Keybinding | Function |
+|-|-|
+| ~s-'~ | ~choose-refile-method-and-refile~ |
+| ~s-(~ | ~org-velocity~ |
+| ~s-+~ | ~copy-region-to-other-window~ |
+| ~s-,~ | ~customize-group~ |
+| ~s--~ | ~ensmallen-text~ |
+| ~s-.~ | ~calendar~ |
+| ~s-0~ | ~move-region-to-other-window~ |
+| ~s-1~ | ~delete-other-windows~ |
+| ~s-2~ | ~split-window-vertically~ |
+| ~s-3~ | ~split-window-left~ |
+| ~s-5~ | ~point-stack-push~ |
+| ~s-6~ | ~point-stack-pop~ |
+| ~s-7~ | ~point-stack-forward-stack-pop~ |
+| ~s-8~ | ~search-open-buffers~ |
+| ~s-9~ | ~sticky-window-keep-window-visible~ |
+| ~s-;~ | ~consult-outline~ |
+| ~s-<~ | ~load-shared-functions~ |
+| ~s-=~ | ~embiggen-text~ |
+| ~s-?~ | ~load-spacecraft-mode~ |
+| ~s-B~ | ~consult-buffer~ |
+| ~s-D~ | ~define-word-at-point~ |
+| ~s-E~ | ~new-email-from-subtree-no-signature~ |
+| ~s-F~ | ~pasteboard-search-for-clipboard-contents~ |
+| ~s-G~ | ~counsel-projectile-ag~ |
+| ~s-I~ | ~clone-indirect-buffer-new-window-and-focus~ |
+| ~s-K~ | ~org-cut-subtree~ |
+| ~s-L~ | ~org-mac-link-chrome-insert-frontmost-url~ |
+| ~s-M~ | ~tr-toggle-transclusion~ |
+| ~s-O~ | ~reveal-in-finder~ |
+| ~s-P~ | ~projectile-find-file~ |
+| ~s-R~ | ~fasd-find-file~ |
+| ~s-S~ | ~org-mac-link-skim-insert~ |
+| ~s-T~ | ~mw-thesaurus-lookup-dwim~ |
+| ~s-V~ | ~pasteboard-paste-adjusted-subtrees-adaptive~ |
+| ~s-W~ | ~open-weeklies~ |
+| ~s-\\~ | ~visit-most-recent-file~ |
+| ~s-_~ | ~olivetti-shrink~ |
+| ~s-`~ | ~other-window-or-frame~ |
+| ~s-a~ | ~copy-minibuffer-contents))~ |
+| ~s-b~ | ~narrow-or-widen-dwim~ |
+| ~s-c~ | ~copy-minibuffer-contents~ |
+| ~s-d~ | ~org-todo~ |
+| ~s-e~ | ~embark-act~ |
+| ~s-f~ | ~isearch-forward-ignore-case~ |
+| ~s-g~ | ~isearch-repeat-forward~ |
+| ~s-h~ | ~replace-string~ |
+| ~s-i~ | ~imenu~ |
+| ~s-j~ | ~org-todo~ |
+| ~s-k~ | ~s-k-prefix~ |
+| ~s-m~ | ~mc/mark-all-like-this~ |
+| ~s-n~ | ~make-frame~ |
+| ~s-o~ | ~move-or-copy-region-to-other-window~ |
+| ~s-p~ | ~org-export-dispatch~ |
+| ~s-r~ | ~counsel-recentf~ |
+| ~s-s~ | ~jay/save-all-buffers~ |
+| ~s-t~ | ~new-buffer~ |
+| ~s-v~ | ~pasteboard-paste-adaptive~ |
+| ~s-w~ | ~delete-window~ |
+| ~s-x~ | ~pasteboard-cut~ |
+| ~s-y~ | ~undo-fu-only-redo-fail-with-heart~ |
+| ~s-z~ | ~undo-fu-only-undo~ |
+| ~s-{~ | ~path-copy-path-to-clipboard~ |
+| ~s-|~ | ~path-copy-path-to-clipboard~ |
+| ~s-}~ | ~path-copy-path-to-clipboard~ |
 
-* Text Editing and Formatting
-| Keybinding | Function | Description |
-|------------|----------|-------------|
-| ~s-+~ | ~copy-region-to-other-window~ | Copy region to other window |
-| ~s-_~ | ~olivetti-shrink~ | Shrink olivetti mode margins |
-| ~s-=~ | ~embiggen-text~ | Increase font size |
-| ~s--~ | ~ensmallen-text~ | Decrease font size |
-| ~s-<~ | ~load-shared-functions~ | Load shared functions |
-| ~s->~ | ~load-gnu-startup~ | Reload GNU startup config |
-| ~s-?~ | ~load-spacecraft-mode~ | Load spacecraft mode |
-| ~s-.~ | ~calendar~ | Open calendar |
-| ~s-'~ | ~choose-refile-method-and-refile~ | Refile with method selection |
-| ~s-;~ | ~org-insert-link~ | Insert org link |
-| ~s-<backspace>~ | ~kill-region~ | Kill/cut selected region |
-| ~<s-backspace>~ | ~kill-region~ | Kill/cut selected region |
+* s-/ prefix (search)
+| Keybinding | Function |
+|-|-|
+| ~s-/ dg~ | ~deadgrep-current-directory~ |
+| ~s-/ f B~ | ~search-filename-book-directory~ |
+| ~s-/ f b~ | ~search-filename-both-book-and-proposal-directories~ |
+| ~s-/ f p~ | ~search-filename-proposal-directory~ |
+| ~s-/ g b~ | ~grep-both-directories~ |
+| ~s-/ g l~ | ~affe-grep-gnulisp-directory~ |
+| ~s-/ g ub~ | ~affe-grep-bash-scripts~ |
+| ~s-/ g up~ | ~affe-grep-bash-profile~ |
+| ~s-/ gg~ | ~consult-git-grep~ |
+| ~s-/ gr~ | ~consult-grep~ |
+| ~s-/ pa~ | ~counsel-projectile-ag~ |
+| ~s-/ rg~ | ~consult-ripgrep-current-directory~ |
+| ~s-/ rr~ | ~roam-rg-search~ |
 
-* Navigation and Movement
-| Keybinding | Function | Description |
-|------------|----------|-------------|
-| ~s-up~ | ~beginning-of-buffer~ | Go to beginning of buffer |
-| ~s-down~ | ~end-of-buffer~ | Go to end of buffer |
-| ~M-s-<right>~ | ~switch-to-next-buffer~ | Switch to next buffer |
-| ~M-s-<left>~ | ~previous-buffer~ | Switch to previous buffer |
-| ~M-s-d~ | ~counsel-find-file~ | Find file with counsel |
-
-* Special Functions and Modes
-| Keybinding | Function | Description |
-|------------|----------|-------------|
-| ~s-,~ | ~customize-group~ | Open Emacs customization |
-| ~s-D~ | ~define-word-at-point~ | Define word at point |
-| ~s-e~ | ~embark-act~ | Execute embark action |
-| ~s-l~ | ~consult-outline~ | Navigate document outline |
-| ~=~ | ~amx~ | Execute command with amx |
-| ~<s-return>~ | ~jay/toggle-fullscreen~ | Toggle fullscreen mode |
-| ~<s-S-return>~ | ~smart-org-insert-todo-heading-dwim~ | Insert smart TODO heading |
-
-* Complex Key Sequences (s-k prefix)
-The ~s-k~ prefix is used for a custom keymap with many sub-commands:
-
-** Navigation (s-k g)
-| Keybinding | Function | Description |
-|------------|----------|-------------|
-| ~s-k g c~ | ~goto-char~ | Go to character position |
-| ~s-k g l~ | ~goto-line~ | Go to line number |
-| ~s-k g t~ | ~google-translate-at-point~ | Translate at point |
-| ~s-k g b~ | ~gist-buffer-to-pasteboard~ | Copy buffer as gist |
-
-** Org Mode Operations (s-k o, s-k a, s-k c, s-k t)
-| Keybinding | Function | Description |
-|------------|----------|-------------|
-| ~s-k o l~ | ~olivetti-mode~ | Toggle olivetti writing mode |
-| ~s-k o t~ | ~org-timeline-export-to-html-and-open~ | Export timeline to HTML |
-| ~s-k o s~ | ~org-schedule~ | Schedule org item |
-| ~s-k o d~ | ~org-deadline~ | Set org deadline |
-| ~s-k o m~ | ~org-mode~ | Switch to org mode |
-| ~s-k o c~ | ~org-wc-display~ | Display word count |
-| ~s-k o a~ | ~org-agenda~ | Open org agenda |
-| ~s-k o e~ | ~olivetti-expand~ | Expand olivetti margins |
-| ~s-k a f~ | ~org-attach~ | Attach file to org entry |
-| ~s-k c m~ | ~css-mode~ | Switch to CSS mode |
-| ~s-k c p~ | ~path-copy-path-to-kill-ring~ | Copy path to kill ring |
-| ~s-k c s~ | ~org-clone-subtree~ | Clone org subtree |
-| ~s-k c i~ | ~jd-clock-in~ | Clock in to task |
-| ~s-k t c~ | ~org-table-create~ | Create org table |
-| ~s-k t d~ | ~org-todo-list~ | Show TODO list |
-| ~s-k t t~ | ~toggle-between-src-and-example-block~ | Toggle block type |
-| ~s-k t s~ | ~org-toggle-time-stamp-overlays~ | Toggle timestamp display |
-
-** File and Directory Operations (s-k f, s-k e)
-| Keybinding | Function | Description |
-|------------|----------|-------------|
-| ~s-k f m~ | ~text-mode~ | Switch to text mode |
-| ~s-k f z~ | ~counsel-fzf~ | Fuzzy find files |
-| ~s-k e b~ | ~ediff-buffers~ | Compare buffers |
-| ~s-k e e~ | ~fasd-find-file~ | Find file with fasd |
-| ~s-k e l~ | ~emacs-lisp-mode~ | Switch to Emacs Lisp mode |
-
-** System and Display (s-k r, s-k s, s-k w, s-k h)
-| Keybinding | Function | Description |
-|------------|----------|-------------|
-| ~s-k r t~ | ~org-render-table-at-point~ | Render org table |
-| ~s-k r l~ | ~remove-hyperlink-at-point~ | Remove links |
-| ~s-k r b~ | ~revert-buffer~ | Reload buffer from disk |
-| ~s-k r e~ | ~set-rectangular-region-anchor~ | Set rectangular selection |
-| ~s-k s h~ | ~sh-mode~ | Switch to shell script mode |
-| ~s-k s m~ | ~sh-mode~ | Switch to shell script mode |
-| ~s-k s b~ | ~scrollbar-mode-turn-off-scrollbar~ | Turn off scrollbar |
-| ~s-k s w~ | ~crux-swap-windows~ | Swap window positions |
-| ~s-k w m~ | ~whitespace-mode~ | Toggle whitespace display |
-| ~s-k w c~ | ~wc-mode~ | Toggle word count mode |
-| ~s-k w s~ | ~isearch-forward-word~ | Search forward by word |
-| ~s-k h l~ | ~spacemacs/toggle-highlight-current-line-globally-off~ | Toggle line highlight |
-
-** Utility Functions (s-k i, s-k m, s-k n, s-k p, s-k l, s-k d, s-k u, s-k ag)
-| Keybinding | Function | Description |
-|------------|----------|-------------|
-| ~s-k i l~ | ~imenu-list~ | Show imenu list |
-| ~s-k i m~ | ~imenu-list~ | Show imenu list |
-| ~s-k i c~ | ~org-table-insert-column~ | Insert table column |
-| ~s-k i r~ | ~org-table-insert-row~ | Insert table row |
-| ~s-k m c~ | ~multiple-cursors-reflash~ | Refresh multiple cursors |
-| ~s-k m b~ | ~menu-bar-mode~ | Toggle menu bar |
-| ~s-k n s~ | ~yas/new-snippet~ | Create new snippet |
-| ~s-k p s~ | ~pomodoro-start~ | Start pomodoro timer |
-| ~s-k p m~ | ~poetry-mode~ | Toggle poetry mode |
-| ~s-k l a~ | ~jay-load-latex~ | Load LaTeX configuration |
-| ~s-k l t~ | ~jay-load-latex~ | Load LaTeX configuration |
-| ~s-k d c~ | ~org-table-delete-column~ | Delete table column |
-| ~s-k u p~ | ~unfill-paragraph~ | Unfill paragraph |
-| ~s-k ag~ | ~affe-grep~ | Search with affe-grep |
-| ~s-k v~ | ~org-paste-subtree~ | Paste org subtree |
-| ~s-k x~ | ~org-cut-subtree~ | Cut org subtree |
-| ~s-k RET~ | ~kill-current-buffer~ | Kill current buffer |
-| ~s-k s-k~ | ~kill-current-buffer~ | Kill current buffer |
-| ~s-k k a~ | ~load-koma-letter~ | Load KOMA letter template |
-| ~s-k k o~ | ~load-koma-letter~ | Load KOMA letter template |
-
-* Special Key Combinations
-| Keybinding | Function | Description |
-|------------|----------|-------------|
-| ~C-s-v~ | ~html2org-clipboard~ | Convert HTML from clipboard to org |
-| ~C-s-c~ | ~ox-clip-formatted-copy~ | Copy with formatting |
-| ~C-s-r~ | ~consult-find~ | Find files with consult |
-| ~C-s-f~ | ~isearch-forward-word-at-point~ | Search for word at point |
-| ~C-s-g~ | ~consult-ripgrep-current-directory~ | Ripgrep current directory |
-| ~C-s-k~ | ~kill-unwanted-buffers~ | Kill unwanted buffers |
-| ~C-s-SPC~ | ~cape-emoji~ | Insert emoji |
-| ~C-s-]~ | ~help-go-forward~ | Go forward in help |
-| ~C-s-\\~ | ~source-current-file~ | Source current file |
-| ~M-s-d~ | ~counsel-find-file~ | Find file with counsel |
-| ~M-s-=~ | ~calc-eval-region~ | Evaluate region with calc |
-| ~M-s-9~ | ~org-todo~ | Toggle TODO state |
-| ~M-s-t~ | ~mw-thesaurus-lookup-at-point~ | Thesaurus lookup |
-| ~M-s-v~ | ~html2org-clipboard~ | Convert HTML to org |
-| ~M-s-.~ | ~mark-paragraph~ | Mark paragraph |
-| ~S-s-SPC~ | ~set-mark-command~ | Set mark |
-| ~<C-s-left>~ | ~work-on-book~ | Switch to book work |
-
-* Deprecated/Legacy Bindings
-| Keybinding | Function | Description |
-|------------|----------|-------------|
-| ~s-0~ | ~delete-window~ | (commented out) Delete window |
-
-* Hyper Key Bindings
-The function key is configured as a hyper modifier: ~(setq ns-function-modifier 'hyper)~
-
-| Keybinding | Function | Description |
-|------------|----------|-------------|
-| ~H-~ | (Available for custom bindings) | Function key acts as hyper modifier |
-
-* Additional Super Key Bindings from shared-functions.org
-| Keybinding | Function | Description |
-|------------|----------|-------------|
-| ~s-left~ | ~buffer-stack-up~ | Navigate up in buffer stack |
-| ~s-right~ | ~buffer-stack-down~ | Navigate down in buffer stack |
-| ~s-T~ | ~scratch~ | Create new scratch buffer |
-| ~s-p~ | ~org-export-dispatch~ | Open org export dispatcher |
-| ~A-left~ | ~buffer-stack-up~ | (Aquamacs) Navigate up in buffer stack |
-| ~A-right~ | ~buffer-stack-down~ | (Aquamacs) Navigate down in buffer stack |
-| ~A-W~ | ~buffer-stack-bury-and-kill~ | (Aquamacs) Bury and kill buffer |
-
-* Modifier Key Configuration
-| Variable | Value | Description |
-|----------|-------|-------------|
-| ~ns-function-modifier~ | ~'hyper~ | Maps function key to hyper modifier |
-| ~ns-right-command-modifier~ | ~'meta~ | Maps right command key to meta |
-
-* Keybinding Configuration Analysis
-
-** Overall Assessment: Good with Room for Optimization
-
-*** Configuration Strengths
-
-**** Excellent Use of macOS Conventions
-- ~s-a~ (select all), ~s-c~ (copy), ~s-v~ (paste), ~s-x~ (cut) follow macOS standards
-- ~s-z~ (undo), ~s-y~ (redo) are intuitive
-- ~s-f~ (search), ~s-h~ (find/replace) are logical
-- ~s-w~ (close window), ~s-n~ (new frame) match system expectations
-
-**** Smart Prefix Organization
-- ~s-k~ as a custom prefix is brilliant - easily accessible and expandable
-- Logical groupings within ~s-k~:
-  - ~s-k g~ for navigation (goto-char, goto-line)
-  - ~s-k o~ for org-mode operations
-  - ~s-k c~ for clipboard/copy operations
-
-**** Buffer Navigation Optimization
-- ~s-left~/~s-right~ for buffer-stack navigation is very accessible
-- ~s-r~ for recent files is well-placed
-
-*** Areas for Improvement
-
-**** Single-Key vs Multi-Key for Common Operations
-
-***** Well-Placed Common Operations:
-- ~=~ for ~amx~ (M-x alternative) - Excellent placement for frequent command
-- ~s-i~ for ~imenu~ - Good choice for navigation
-- ~s-B~ for ~consult-buffer~ - Good accessibility
-
-***** Missing Easy Access:
-- No single ~s-~ key optimized purely for buffer switching (very common operation)
-- File operations beyond recent files could be more accessible
-
-**** Accessibility Analysis by Finger Reach
-
-***** Most Accessible Keys (Prime Real Estate):
-#+BEGIN_EXAMPLE
-Left hand home row + s:  s-a, s-s, s-d, s-f, s-g
-Right hand home row + s: s-j, s-k, s-l, s-;
-#+END_EXAMPLE
-
-***** Current Usage of Prime Keys:
-| Key | Current Function | Assessment |
-|-----|------------------|------------|
-| ~s-a~ | ~mark-whole-buffer~ | ✅ Excellent (select all) |
-| ~s-s~ | ~jay/save-all-buffers~ | ✅ Excellent (save) |
-| ~s-d~ | **UNUSED** | ❗ Prime real estate available |
-| ~s-f~ | ~isearch-forward-ignore-case~ | ✅ Excellent (search) |
-| ~s-g~ | ~isearch-repeat-forward~ | ✅ Good (search repeat) |
-| ~s-j~ | ~org-todo~ | ✅ Good (if org-heavy workflow) |
-| ~s-k~ | Custom prefix | ✅ Excellent use |
-| ~s-l~ | ~consult-outline~ | ❓ Good if used frequently |
-
-**** Frequency vs Accessibility Mismatches
-
-***** Potentially Over-Accessible (Specialized on Easy Keys):
-- ~s-D~ = define word (how often used?)
-- ~s-T~ = thesaurus (specialized function)
-- ~s-L~ = Chrome URL insert (very specific use case)
-- ~s-S~ = Skim PDF link insert (specialized)
-
-***** Potentially Under-Accessible:
-- Buffer switching (currently ~s-B~ - could be more accessible)
-- File opening beyond recent files
-- Directory navigation
-- Window management workflow
-
-*** Optimization Recommendations
-
-**** 1. Claim ~s-d~ for High-Frequency Operation
-
-#+BEGIN_SRC emacs-lisp
-;; Consider one of these for the unused s-d:
-(global-set-key (kbd "s-d") 'duplicate-line)     ; if you duplicate often
-(global-set-key (kbd "s-d") 'dired-jump)        ; quick directory access
-(global-set-key (kbd "s-d") 'consult-buffer)    ; move buffer switching here
-(global-set-key (kbd "s-d") 'delete-region)     ; complement to s-c/s-x/s-v
-#+END_SRC
-
-**** 2. Reorganize Specialized Functions
-
-Move less-frequent functions to ~s-k~ prefix to free up prime keys:
-
-#+BEGIN_SRC emacs-lisp
-;; Current specialized bindings that could move to s-k:
-;; s-D (define-word) → s-k d w (define word)
-;; s-T (thesaurus) → s-k t h (thesaurus)
-;; s-L (chrome link) → s-k l c (link chrome)
-;; s-S (skim link) → s-k l s (link skim)
-#+END_SRC
-
-**** 3. Frequency-Based Audit Recommendations
-
-**If you frequently:**
-- **Switch buffers**: Move to ~s-d~ or another single key
-- **Open files**: Consider ~s-o~ for file opening (relocate current function)
-- **Navigate directories**: ~s-d~ for ~dired-jump~ could be very useful
-- **Duplicate lines/regions**: ~s-d~ for duplication is very handy
-
-**** 4. Window Management Optimization
-
-Current window management is logical and follows a pattern:
-- ~s-0~ = move region to other window
-- ~s-1~ = delete other windows  
-- ~s-2~ = split vertically
-- ~s-3~ = split horizontally
-
-This numeric pattern works well and should be maintained.
-
-**** 5. Consider Usage-Based Reorganization
-
-**High-frequency operations** (should have easiest access):
-1. Buffer switching
-2. File opening
-3. Search/navigation
-4. Copy/paste operations
-5. Save operations
-
-**Medium-frequency operations** (s-k prefix or secondary keys):
-1. Org-mode specific functions
-2. Window management
-3. Mode switching
-
-**Low-frequency operations** (s-k submenus):
-1. Dictionary/thesaurus lookups
-2. Specialized link insertions
-3. System integrations
-
-*** Implementation Strategy
-
-**** Phase 1: Audit Current Usage
-1. Track which functions you actually use most over a week
-2. Note any friction points or hard-to-remember bindings
-3. Identify truly high-frequency operations
-
-**** Phase 2: Optimize Prime Keys
-1. Claim ~s-d~ for a high-frequency operation
-2. Consider moving specialized functions to ~s-k~ prefix
-3. Ensure buffer/file operations have optimal accessibility
-
-**** Phase 3: Refine and Test
-1. Implement changes gradually
-2. Test new bindings for muscle memory compatibility
-3. Adjust based on actual usage patterns
-
-*** Configuration Strengths to Maintain
-
-1. **Consistent Logic**: The ~s-k~ prefix system is well-organized and scalable
-2. **macOS Integration**: Excellent adherence to platform conventions
-3. **Mnemonic Value**: Most bindings make intuitive sense
-4. **Expandability**: The prefix system allows for growth
-5. **Context Sensitivity**: Different bindings in different modes where appropriate
-
-* Notes
-- Many bindings use the ~s-k~ prefix as a custom keymap for personal functions
-- Some bindings are context-sensitive (different in org-mode vs other modes)
-- The configuration includes both simple bindings and complex multi-key sequences
-- Several bindings are related to clipboard/pasteboard operations optimized for macOS
-- Many org-mode specific bindings for productivity and writing workflows
-- The function key is configured as a hyper modifier, providing access to an additional modifier layer
-- Buffer-stack provides enhanced buffer navigation using Command+arrow keys
-- Some legacy Aquamacs bindings are preserved for compatibility
-- **The ~s-k~ prefix system is particularly elegant and serves as an excellent model**
-- **Configuration shows thoughtful planning and is above average in organization**
-- **Main optimization opportunity: claim unused prime keys like ~s-d~ for high-frequency operations**
+* s-k prefix (custom map)
+| Keybinding | Function |
+|-|-|
+| ~s-k RET~ | ~kill-current-buffer~ |
+| ~s-k a d~ | ~(lambda () (interactive) (org-agenda nil "d"))~ |
+| ~s-k a f~ | ~org-attach~ |
+| ~s-k ag~ | ~affe-grep~ |
+| ~s-k bl~ | ~blue-light~ |
+| ~s-k c i~ | ~jd-clock-in~ |
+| ~s-k c m~ | ~css-mode~ |
+| ~s-k c p~ | ~path-copy-path-to-kill-ring~ |
+| ~s-k c s~ | ~org-schedule~ |
+| ~s-k cf~ | ~customize-face~ |
+| ~s-k cw~ | ~count-words~ |
+| ~s-k d c~ | ~org-table-delete-column~ |
+| ~s-k d g~ | ~deadgrep-current-directory~ |
+| ~s-k d l~ | ~double-line-breaks-in-region~ |
+| ~s-k dd~ | ~delete-duplicate-lines-keep-blanks~ |
+| ~s-k e b~ | ~ediff-buffers~ |
+| ~s-k e e~ | ~fasd-find-file~ |
+| ~s-k e l~ | ~emacs-lisp-mode~ |
+| ~s-k e m~ | ~expand-outreach-snippet-paste-copy-all-and-submit-ChatGPT~ |
+| ~s-k f e~ | ~restore-frame-to-external-minotaur-two-thirds-size-and-position~ |
+| ~s-k f l~ | ~restore-frame-to-laptop-two-thirds-size-and-position~ |
+| ~s-k f m~ | ~text-mode~ |
+| ~s-k f z~ | ~counsel-fzf~ |
+| ~s-k g b~ | ~gist-buffer-to-pasteboard~ |
+| ~s-k g c~ | ~goto-char~ |
+| ~s-k g l~ | ~affe-grep-gnulisp-directory~ |
+| ~s-k g t~ | ~google-translate-at-point~ |
+| ~s-k h l~ | ~spacemacs/toggle-highlight-current-line-globally-off~ |
+| ~s-k i c~ | ~org-table-insert-column~ |
+| ~s-k i l~ | ~imenu-list~ |
+| ~s-k i m~ | ~imenu-list~ |
+| ~s-k i r~ | ~org-table-insert-row~ |
+| ~s-k k a~ | ~load-koma-letter~ |
+| ~s-k k o~ | ~load-koma-letter~ |
+| ~s-k kb~ | ~keybinding-read-and-insert~ |
+| ~s-k l a~ | ~jay-load-latex~ |
+| ~s-k l t~ | ~jay-load-latex~ |
+| ~s-k m b~ | ~menu-bar-mode~ |
+| ~s-k m c~ | ~multiple-cursors-reflash~ |
+| ~s-k mk~ | ~keybinding-read-and-insert~ |
+| ~s-k n s~ | ~yas/new-snippet~ |
+| ~s-k o a~ | ~org-agenda~ |
+| ~s-k o c~ | ~org-wc-display~ |
+| ~s-k o d~ | ~org-deadline~ |
+| ~s-k o e~ | ~olivetti-expand~ |
+| ~s-k o l~ | ~olivetti-mode~ |
+| ~s-k o m~ | ~org-mode~ |
+| ~s-k o s~ | ~org-schedule~ |
+| ~s-k o t~ | ~org-timeline-export-to-html-and-open~ |
+| ~s-k p m~ | ~poetry-mode~ |
+| ~s-k p s~ | ~pomodoro-start~ |
+| ~s-k r b~ | ~revert-buffer~ |
+| ~s-k r e~ | ~set-rectangular-region-anchor~ |
+| ~s-k r l~ | ~remove-link~ |
+| ~s-k r t~ | ~org-render-table-at-point~ |
+| ~s-k rg~ | ~consult-ripgrep-current-directory~ |
+| ~s-k rr~ | ~replace-regexp~ |
+| ~s-k s b~ | ~scrollbar-mode-turn-off-scrollbar~ |
+| ~s-k s h~ | ~sh-mode~ |
+| ~s-k s m~ | ~sh-mode~ |
+| ~s-k s w~ | ~crux-swap-windows~ |
+| ~s-k s-k~ | ~kill-current-buffer~ |
+| ~s-k t c~ | ~org-table-create~ |
+| ~s-k t d~ | ~org-todo-list~ |
+| ~s-k t s~ | ~org-toggle-time-stamp-overlays~ |
+| ~s-k t t~ | ~toggle-between-src-and-example-block~ |
+| ~s-k u p~ | ~unfill-paragraph~ |
+| ~s-k v~ | ~org-paste-subtree~ |
+| ~s-k w c~ | ~wc-mode~ |
+| ~s-k w m~ | ~whitespace-mode~ |
+| ~s-k w s~ | ~isearch-forward-word~ |
+| ~s-k x~ | ~org-cut-subtree~ |
+| ~s-k y a~ | ~affe-grep-gnulisp-directory~ |
+* Org-mode overrides
+These are defined in the org-mode block in `keys.el` and only apply in Org buffers:
+- ~s-v~ → ~pasteboard-paste-adaptive~
+- ~s-l~ → ~org-insert-link~
+- ~s-k c s~ → ~org-clone-subtree~ (overrides global ~org-schedule~)
