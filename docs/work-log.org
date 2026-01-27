@@ -20,6 +20,17 @@
 - Created [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-annotations.org][keybinding-annotations.org]] skeleton with initial annotations
 - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/docs/macOS-command-key-bindings.org][macOS-command-key-bindings.org]]: converted tables to description lists, fixed stale entries (=s->= now =load-gnu-startup=, =s-k a d= now =my/org-agenda-day=), added cross-reference to keybinding-reference.org
 
+* 2026-01-27: Keybinding migration regression (fixed) — apology
+- I broke several keybindings during the migration. Sorry.
+- Root causes:
+  - I redefined =key-minor-mode= in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]], overwriting the map defined in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-osx.el][jay-osx.el]].
+  - I installed ~s-k~ sub-keys before ensuring ~s-k~ was a prefix, which raised "starts with non-prefix key" and aborted all key installs.
+  - I changed ~=~ to =smex= (non-command here); it should have remained =amx=.
+- Fixes applied:
+  - Removed the duplicate =key-minor-mode= definition from =keys.el=.
+  - Ensured ~s-k~ is a prefix in =key-minor-mode-map= before installing bindings.
+  - Restored ~=~ → =amx=; verified ~s-<left>/<right>~ → =buffer-stack-up/down= and other core bindings.
+
 * 2026-01-27: Plan keybinding consolidation into keys.el
 - Created [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-consolidation-plan.org][keybinding-consolidation-plan.org]] with full migration plan
 - Goal: move all ~define-key~, ~global-set-key~, ~define-super-key~, and ~spacemacs/set-leader-keys~ calls into [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] as the single canonical keybinding location

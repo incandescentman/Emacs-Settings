@@ -476,6 +476,11 @@
   "Turn `key-minor-mode' on and register all global bindings."
   (key-minor-mode 1)
 
+  ;; Ensure s-k is a prefix in the override map before installing s-k bindings.
+  (unless (and (fboundp 's-k-prefix) (keymapp (symbol-function 's-k-prefix)))
+    (define-prefix-command 's-k-prefix))
+  (define-key key-minor-mode-map (kbd "s-k") 's-k-prefix)
+
   ;; Install all global keybindings from the list
   (dolist (binding my/global-key-bindings)
     (define-key key-minor-mode-map (kbd (car binding)) (cdr binding)))
