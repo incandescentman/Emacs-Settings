@@ -1,0 +1,530 @@
+#+TITLE: Master Keybindings (Custom)
+#+AUTHOR: Jay Dixit
+#+DATE: [2026-01-27]
+
+* Overview
+This document lists the custom keybindings defined in [[file:../keys.el][keys.el]].
+It does *not* include Spacemacs defaults or package-provided defaults unless overridden here.
+
+
+* Key-minor-mode global overrides (my/global-key-bindings)
+| Keybinding | Command |
+|-|-|
+| ~s-R~ | ~fasd-find-file~ |
+| ~s-r~ | ~counsel-recentf~ |
+| ~C-s-r~ | ~consult-find~ |
+| ~M-s-d~ | ~counsel-find-file~ |
+| ~s-k e e~ | ~fasd-find-file~ |
+| ~s-k f z~ | ~counsel-fzf~ |
+| ~s-P~ | ~projectile-find-file~ |
+| ~s-\\~ | ~visit-most-recent-file~ |
+| ~C-x C-d~ | ~dired~ |
+| ~C-x C-f~ | ~find-file-at-point-or-affe-find~ |
+| ~C-x C-j~ | ~consult-dir~ |
+| ~s-/ f p~ | ~search-filename-proposal-directory~ |
+| ~s-/ f B~ | ~search-filename-book-directory~ |
+| ~s-/ f b~ | ~search-filename-both-book-and-proposal-directories~ |
+| ~C-s~ | ~consult-line~ |
+| ~s-f~ | ~isearch-forward-ignore-case~ |
+| ~s-F~ | ~pasteboard-search-for-clipboard-contents~ |
+| ~s-h~ | ~replace-string~ |
+| ~s-g~ | ~isearch-repeat-forward~ |
+| ~C-s-g ~ | ~consult-ripgrep-current-directory~ |
+| ~s-G~ | ~counsel-projectile-ag~ |
+| ~C-s-f~ | ~isearch-forward-word-at-point~ |
+| ~s-k ag~ | ~affe-grep~ |
+| ~s-k d g~ | ~deadgrep-current-directory~ |
+| ~s-k g l~ | ~affe-grep-gnulisp-directory~ |
+| ~s-k y a~ | ~affe-grep-gnulisp-directory~ |
+| ~s-k w s~ | ~isearch-forward-word~ |
+| ~M-s b~ | ~book-search~ |
+| ~M-s c~ | ~current-buffers-search~ |
+| ~s-/ gr~ | ~consult-grep~ |
+| ~s-/ g l~ | ~affe-grep-gnulisp-directory~ |
+| ~s-/ g ub~ | ~affe-grep-bash-scripts~ |
+| ~s-/ g up~ | ~affe-grep-bash-profile~ |
+| ~C-x C-l~ | ~consult-locate~ |
+| ~M-1~ | ~winum-select-window-1~ |
+| ~M-2~ | ~winum-select-window-2~ |
+| ~M-3~ | ~winum-select-window-3~ |
+| ~s-w~ | ~delete-window~ |
+| ~s-`~ | ~other-window-or-frame~ |
+| ~s-n~ | ~make-frame~ |
+| ~s-k s w~ | ~crux-swap-windows~ |
+| ~s-0~ | ~move-region-to-other-window~ |
+| ~s-o~ | ~move-or-copy-region-to-other-window~ |
+| ~s-O~ | ~reveal-in-finder~ |
+| ~M-0~ | ~copy-region-to-other-window~ |
+| ~s-+~ | ~copy-region-to-other-window~ |
+| ~s-d~ | ~org-todo~ |
+| ~M-d~ | ~org-todo~ |
+| ~M-s-9~ | ~org-todo~ |
+| ~s-k o l~ | ~olivetti-mode~ |
+| ~] ol~ | ~olivetti-mode~ |
+| ~s-k o e~ | ~olivetti-expand~ |
+| ~s-_~ | ~olivetti-shrink~ |
+| ~s-k o m~ | ~org-mode~ |
+| ~s-k o a~ | ~org-agenda~ |
+| ~s-k o s~ | ~org-schedule~ |
+| ~s-k o d~ | ~org-deadline~ |
+| ~s-k o t~ | ~org-timeline-export-to-html-and-open~ |
+| ~s-k o c~ | ~org-wc-display~ |
+| ~s-K~ | ~org-cut-subtree~ |
+| ~s-k v~ | ~org-paste-subtree~ |
+| ~s-k x~ | ~org-cut-subtree~ |
+| ~s->~ | ~load-gnu-startup~ |
+| ~s-k c s~ | ~org-schedule~ |
+| ~C-c C-s~ | ~org-schedule~ |
+| ~s-k t d~ | ~org-todo-list~ |
+| ~s-k a f~ | ~org-attach~ |
+| ~s-L~ | ~org-mac-link-chrome-insert-frontmost-url~ |
+| ~s-S~ | ~org-mac-link-skim-insert~ |
+| ~C-c C-x C-r~ | ~org-clock-report~ |
+| ~C-c C-x <C-i>~ | ~org-clock-in~ |
+| ~s-k c i~ | ~jd-clock-in~ |
+| ~C-c v i~ | ~org-insert-src-block~ |
+| ~C-;~ | ~org-def~ |
+| ~C-S-<left>~ | ~org-outdent-or-promote~ |
+| ~C-S-<right>~ | ~org-indent-or-demote~ |
+| ~C-<tab>~ | ~org-cycle-force-archived~ |
+| ~s-k t s~ | ~org-toggle-time-stamp-overlays~ |
+| ~M-]~ | ~org-next-visible-heading~ |
+| ~M-[~ | ~org-previous-visible-heading~ |
+| ~C-M-]~ | ~org-next-subtree-and-narrow~ |
+| ~C-M-[~ | ~org-previous-subtree-and-narrow~ |
+| ~C-]~ | ~org-next-subtree-same-level-and-narrow~ |
+| ~ESC ESC~ | ~org-previous-subtree-same-level-and-narrow~ |
+| ~s-k t c~ | ~org-table-create~ |
+| ~s-k r t~ | ~org-render-table-at-point~ |
+| ~s-k d c~ | ~org-table-delete-column~ |
+| ~s-k i c~ | ~org-table-insert-column~ |
+| ~s-k i r~ | ~org-table-insert-row~ |
+| ~C-M-8~ | ~org-toggle-heading~ |
+| ~M-8~ | ~org-toggle-heading-same-level~ |
+| ~M-*~ | ~org-toggle-todo-heading~ |
+| ~M-a~ | ~org-priority-up~ |
+| ~s-k t t~ | ~toggle-between-src-and-example-block~ |
+| ~C-c d~ | ~insert-todays-date~ |
+| ~M-t~ | ~titlecase-dwim~ |
+| ~C-w~ | ~copy-region-as-kill-and-push-to-clipboard~ |
+| ~s-c~ | ~pasteboard-copy-adaptive~ |
+| ~s-v~ | ~pasteboard-paste-adaptive~ |
+| ~s-V~ | ~pasteboard-paste-adjusted-subtrees-adaptive~ |
+| ~s-x~ | ~pasteboard-cut-adaptive~ |
+| ~C-v~ | ~html2org-clipboard~ |
+| ~C-s-v~ | ~html2org-clipboard~ |
+| ~M-s-v~ | ~html2org-clipboard~ |
+| ~C-s-c~ | ~ox-clip-formatted-copy~ |
+| ~s-k g b~ | ~gist-buffer-to-pasteboard~ |
+| ~s-k u p~ | ~unfill-paragraph~ |
+| ~M--~ | ~cycle-hyphenation-or-toggle-item~ |
+| ~M-_~ | ~em-dash~ |
+| ~s-k r l~ | ~remove-link~ |
+| ~s-a~ | ~mark-whole-buffer~ |
+| ~s-s~ | ~jay/save-all-buffers~ |
+| ~s-z~ | ~undo-fu-only-undo~ |
+| ~s-y~ | ~undo-fu-only-redo-fail-with-heart~ |
+| ~<s-up>~ | ~beginning-of-buffer~ |
+| ~<s-down>~ | ~end-of-buffer~ |
+| ~s-=~ | ~embiggen-text~ |
+| ~s--~ | ~ensmallen-text~ |
+| ~s-,~ | ~customize-group~ |
+| ~s-b~ | ~narrow-or-widen-dwim~ |
+| ~s-B~ | ~consult-buffer~ |
+| ~s-k RET~ | ~kill-current-buffer~ |
+| ~s-k s-k~ | ~kill-current-buffer~ |
+| ~M-s-<right>~ | ~switch-to-next-buffer~ |
+| ~M-s-<left>~ | ~previous-buffer~ |
+| ~M-q~ | ~prelude-switch-to-previous-buffer~ |
+| ~s-t~ | ~new-buffer~ |
+| ~s-I~ | ~clone-indirect-buffer-new-window-and-focus~ |
+| ~M-h~ | ~help-command~ |
+| ~M-h M-k~ | ~describe-key~ |
+| ~s-D~ | ~define-word-at-point~ |
+| ~s-T~ | ~mw-thesaurus-lookup-dwim~ |
+| ~s-k g t~ | ~google-translate-at-point~ |
+| ~C-s-]~ | ~help-go-forward~ |
+| ~C-d~ | ~kill-word-correctly-and-capitalize~ |
+| ~C-k~ | ~my/kill-line-dwim~ |
+| ~C-l~ | ~reflash-indentation~ |
+| ~M-C~ | ~capitalize-word~ |
+| ~M-L~ | ~downcase-sentence~ |
+| ~<backspace>~ | ~my/delete-backward-and-capitalize~ |
+| ~C-<backspace>~ | ~delete-char~ |
+| ~M-<backspace>~ | ~backward-kill-word-correctly-and-capitalize~ |
+| ~<s-backspace>~ | ~kill-region~ |
+| ~M-/~ | ~completion-at-point~ |
+| ~C-M-/~ | ~hippie-expand~ |
+| ~M-=~ | ~er/expand-region~ |
+| ~C-=~ | ~er/expand-region~ |
+| ~M-'~ | ~insert-one-double-quote~ |
+| ~M-.~ | ~insert-period~ |
+| ~M-,~ | ~insert-comma~ |
+| ~M-?~ | ~insert-question-mark~ |
+| ~M-+~ | ~add-word-to-personal-dictionary~ |
+| ~M-e~ | ~smart-forward-sentence~ |
+| ~C-9~ | ~goto-last-change-reverse~ |
+| ~C--~ | ~goto-last-change~ |
+| ~M-j~ | ~aide-openai-complete-buffer-insert~ |
+| ~S-s-SPC~ | ~set-mark-command~ |
+| ~C-M-SPC~ | ~set-mark-command~ |
+| ~C-M-x~ | ~exchange-point-and-mark~ |
+| ~C-x p~ | ~pop-to-mark-command~ |
+| ~M-s-.~ | ~mark-paragraph~ |
+| ~s->~ | ~org-mark-subtree~ |
+| ~s-m~ | ~mc/mark-all-like-this~ |
+| ~s-k m c~ | ~multiple-cursors-reflash~ |
+| ~s-k r e~ | ~set-rectangular-region-anchor~ |
+| ~s-k c m~ | ~css-mode~ |
+| ~s-k s h~ | ~sh-mode~ |
+| ~s-k s m~ | ~sh-mode~ |
+| ~s-k f m~ | ~text-mode~ |
+| ~s-k e l~ | ~emacs-lisp-mode~ |
+| ~s-k p m~ | ~poetry-mode~ |
+| ~s-k w c~ | ~wc-mode~ |
+| ~s-k w m~ | ~whitespace-mode~ |
+| ~s-k m b~ | ~menu-bar-mode~ |
+| ~=~ | ~smex~ |
+| ~s-e~ | ~embark-act~ |
+| ~S-<return>~ | ~visit-messages-buffer~ |
+| ~s-k e b~ | ~ediff-buffers~ |
+| ~s-k r b~ | ~revert-buffer~ |
+| ~s-k s b~ | ~scrollbar-mode-turn-off-scrollbar~ |
+| ~s-i~ | ~imenu~ |
+| ~s-k i l~ | ~imenu-list~ |
+| ~s-k i m~ | ~imenu-list~ |
+| ~s-k h l~ | ~spacemacs/toggle-highlight-current-line-globally-off~ |
+| ~s-k c p~ | ~path-copy-path-to-kill-ring~ |
+| ~s-|~ | ~path-copy-path-to-clipboard~ |
+| ~<s-return>~ | ~toggle-fullscreen~ |
+| ~C-\\~ | ~palimpsest-move-region-to-bottom~ |
+| ~C-'~ | ~palimpsest-move-region-to-bottom~ |
+| ~C-c C-v~ | ~refile-region~ |
+| ~s-'~ | ~choose-refile-method-and-refile~ |
+| ~s-E~ | ~new-email-from-subtree-no-signature~ |
+| ~C-c m~ | ~compose-mail~ |
+| ~s-M~ | ~tr-toggle-transclusion~ |
+| ~s-k n s~ | ~yas/new-snippet~ |
+| ~C-s-\\~ | ~source-current-file~ |
+| ~s-W~ | ~open-weeklies~ |
+| ~M-s-=~ | ~calc-eval-region~ |
+| ~C-c r~ | ~eval-region~ |
+| ~M-x~ | ~execute-extended-command~ |
+| ~[mouse-2]~ | ~context-menu-open~ |
+| ~C-M-3~ | ~number-region~ |
+| ~<f20>~ | ~pomodoro-start~ |
+| ~s-k p s~ | ~pomodoro-start~ |
+| ~C-c C-x p p~ | ~pomodoro-start~ |
+| ~C-c C-x pi~ | ~pomodoro-start~ |
+| ~C-c C-x po~ | ~pomidor-stop~ |
+| ~M-b M-d~ | ~book-dired~ |
+| ~M-b r~ | ~read-a-book~ |
+| ~M-b j~ | ~read-jd~ |
+| ~M-b M-b~ | ~work-on-book~ |
+| ~M-b M-w~ | ~work-on-book~ |
+| ~M-b lc~ | ~book-load-current~ |
+| ~M-b M-p~ | ~book-proposal-directory~ |
+| ~M-b M-m~ | ~book-mistakes-directory~ |
+| ~<C-s-left>~ | ~work-on-book~ |
+| ~<s-S-return>~ | ~smart-org-insert-todo-heading-dwim~ |
+| ~<C-i>~ | ~italicize-region-or-point~ |
+| ~<M-S-backspace>~ | ~backward-kill-sexp~ |
+| ~<M-s-return>~ | ~org-inlinetask-insert-task~ |
+| ~C-M-\\~ | ~palimpsest-move-region-to-top~ |
+| ~C-o~ | ~embolden-or-bold~ |
+| ~C-s-SPC~ | ~cape-emoji~ |
+| ~C-s-k~ | ~kill-unwanted-buffers~ |
+| ~C-s-0~ | ~show-all~ |
+| ~C-s-1~ | ~(lambda (~ |
+| ~C-s-2~ | ~(lambda (~ |
+| ~C-s-3~ | ~(lambda (~ |
+| ~C-s-4~ | ~(lambda (~ |
+| ~C-s-5~ | ~(lambda (~ |
+| ~C-s-6~ | ~(lambda (~ |
+| ~C-s-7~ | ~(lambda (~ |
+| ~C-s-8~ | ~(lambda (~ |
+| ~C-s-a~ | ~show-all~ |
+| ~C-s-k~ | ~org-cut-subtree~ |
+| ~C-8~ | ~endless/mc-map~ |
+| ~M-%~ | ~eval-expression~ |
+| ~M-:~ | ~query-replace~ |
+| ~M-(~ | ~backward-word~ |
+| ~M-)~ | ~forward-word~ |
+| ~M-C-N~ | ~outline-next-visible-heading~ |
+| ~M-C-P~ | ~outline-previous-visible-heading~ |
+| ~M-N~ | ~org-forward-heading-same-level~ |
+| ~M-P~ | ~org-backward-heading-same-level~ |
+| ~M-n~ | ~org-next-visible-heading~ |
+| ~M-p~ | ~org-previous-visible-heading~ |
+| ~M-g M-g~ | ~google-this~ |
+| ~M-o~ | ~embolden-or-bold~ |
+| ~M-s-b~ | ~embolden-region-or-point~ |
+| ~M-s-k~ | ~org-cut-subtree~ |
+| ~M-s-t~ | ~mw-thesaurus-lookup-at-point~ |
+| ~M-w~ | ~kill-to-buffer-end-or-beginning~ |
+| ~M-{~ | ~org-backward-heading-same-level~ |
+| ~M-}~ | ~org-forward-heading-same-level~ |
+| ~s-;~ | ~consult-outline~ |
+| ~s-(~ | ~org-velocity~ |
+| ~s-5~ | ~point-stack-push~ |
+| ~s-6~ | ~point-stack-pop~ |
+| ~s-7~ | ~point-stack-forward-stack-pop~ |
+| ~s-8~ | ~search-open-buffers~ |
+| ~s-j~ | ~org-todo~ |
+| ~s-p~ | ~org-export-dispatch~ |
+| ~s-{~ | ~path-copy-path-to-clipboard~ |
+| ~s-}~ | ~path-copy-path-to-clipboard~ |
+| ~s-k bl~ | ~blue-light~ |
+| ~s-k cf~ | ~customize-face~ |
+| ~s-k cw~ | ~count-words~ |
+| ~s-k d l~ | ~double-line-breaks-in-region~ |
+| ~s-k dd~ | ~delete-duplicate-lines-keep-blanks~ |
+| ~s-k e m~ | ~expand-outreach-snippet-paste-copy-all-and-submit-ChatGPT~ |
+| ~s-k f e~ | ~restore-frame-to-external-minotaur-two-thirds-size-and-position~ |
+| ~s-k f l~ | ~restore-frame-to-laptop-two-thirds-size-and-position~ |
+| ~s-k g c~ | ~goto-char~ |
+| ~s-k kb~ | ~keybinding-read-and-insert~ |
+| ~s-k mk~ | ~keybinding-read-and-insert~ |
+| ~s-k rr~ | ~replace-regexp~ |
+| ~] ]~ | ~insert-right-bracket~ |
+| ~] ci~ | ~load-spacemacs-config~ |
+| ~] cr~ | ~load-roam-config~ |
+| ~] cs~ | ~load-search-config~ |
+| ~] i t~ | ~org-inlinetask-insert-task~ |
+| ~s-k l a~ | ~jay-load-latex~ |
+| ~s-k l t~ | ~jay-load-latex~ |
+| ~s-k k a~ | ~load-koma-letter~ |
+| ~s-k k o~ | ~load-koma-letter~ |
+| ~s-<~ | ~load-shared-functions~ |
+| ~s-?~ | ~load-spacecraft-mode~ |
+| ~s-.~ | ~calendar~ |
+| ~M-h~ | ~help-command~ |
+| ~M-h M-k~ | ~describe-key~ |
+| ~s-D~ | ~define-word-at-point~ |
+| ~s-T~ | ~mw-thesaurus-lookup-dwim~ |
+| ~s-k g t~ | ~google-translate-at-point~ |
+| ~C-s-]~ | ~help-go-forward~ |
+| ~s-/ dg~ | ~deadgrep-current-directory~ |
+| ~s-/ pa~ | ~counsel-projectile-ag~ |
+| ~s-/ rg~ | ~consult-ripgrep-current-directory~ |
+| ~s-k rg~ | ~consult-ripgrep-current-directory~ |
+| ~s-/ gg~ | ~consult-git-grep~ |
+| ~s-/ rr~ | ~roam-rg-search~ |
+| ~s-/ g b~ | ~grep-both-directories~ |
+| ~s-k a d~ | ~(lambda (~ |
+| ~M-c~ | ~capitalize-or-endless/capitalize~ |
+| ~M-l~ | ~downcase-or-endless-downcase~ |
+| ~M-u~ | ~endless/upcase~ |
+| ~M-U~ | ~caps-lock-mode~ |
+| ~M-SPC~ | ~insert-space~ |
+| ~s-1~ | ~delete-other-windows~ |
+| ~s-2~ | ~split-window-vertically~ |
+| ~s-3~ | ~split-window-left~ |
+| ~s-9~ | ~sticky-window-keep-window-visible~ |
+| ~s-k~ | ~s-k-prefix~ |
+| ~C-a~ | ~mwim-beginning~ |
+| ~C-e~ | ~mwim-end~ |
+| ~C-x m~ | ~endless/mc-map~ |
+| ~C-c C-c~ | ~pasteboard-copy~ |
+| ~C-c C-!~ | ~(lambda (~ |
+| ~C-c <mouse-3>~ | ~right-click-context-menu~ |
+| ~C-c v~ | ~projectile-ag~ |
+| ~C-x C-b~ | ~ibuffer~ |
+| ~<C-wheel-up>~ | ~(lambda (~ |
+| ~<C-wheel-down>~ | ~(lambda (~ |
+| ~s-v~ | ~pasteboard-paste-verbatim~ |
+| ~s-x~ | ~pasteboard-cut~ |
+| ~s-c~ | ~copy-minibuffer-contents~ |
+| ~s-a~ | ~copy-minibuffer-contents~ |
+
+* Global map bindings (my/global-map-bindings)
+| Keybinding | Command |
+|-|-|
+| ~s-/ dg~ | ~deadgrep-current-directory~ |
+| ~s-/ pa~ | ~counsel-projectile-ag~ |
+| ~s-/ rg~ | ~consult-ripgrep-current-directory~ |
+| ~s-k rg~ | ~consult-ripgrep-current-directory~ |
+| ~s-/ gg~ | ~consult-git-grep~ |
+| ~s-/ rr~ | ~roam-rg-search~ |
+| ~s-/ g b~ | ~grep-both-directories~ |
+| ~s-k a d~ | ~(lambda (~ |
+| ~M-c~ | ~capitalize-or-endless/capitalize~ |
+| ~M-l~ | ~downcase-or-endless-downcase~ |
+| ~M-u~ | ~endless/upcase~ |
+| ~M-U~ | ~caps-lock-mode~ |
+| ~M-SPC~ | ~insert-space~ |
+| ~s-1~ | ~delete-other-windows~ |
+| ~s-2~ | ~split-window-vertically~ |
+| ~s-3~ | ~split-window-left~ |
+| ~s-9~ | ~sticky-window-keep-window-visible~ |
+| ~s-k~ | ~s-k-prefix~ |
+| ~C-a~ | ~mwim-beginning~ |
+| ~C-e~ | ~mwim-end~ |
+| ~C-x m~ | ~endless/mc-map~ |
+| ~C-c C-c~ | ~pasteboard-copy~ |
+| ~C-c C-!~ | ~(lambda (~ |
+| ~C-c <mouse-3>~ | ~right-click-context-menu~ |
+| ~C-c v~ | ~projectile-ag~ |
+| ~C-x C-b~ | ~ibuffer~ |
+| ~<C-wheel-up>~ | ~(lambda (~ |
+| ~<C-wheel-down>~ | ~(lambda (~ |
+
+* Minibuffer bindings (my/minibuffer-bindings)
+| Keybinding | Command |
+|-|-|
+| ~s-v~ | ~pasteboard-paste-verbatim~ |
+| ~s-x~ | ~pasteboard-cut~ |
+| ~s-c~ | ~copy-minibuffer-contents~ |
+| ~s-a~ | ~copy-minibuffer-contents~ |
+
+* Prefix map: endless/mc-map
+| Keybinding | Command |
+|-|-|
+| ~<backspace>~ | ~delete-backward-char~ |
+| ~<return>~ | ~newline-and-indent~ |
+| ~C-a~ | ~mc/edit-beginnings-of-lines~ |
+| ~C-e~ | ~mc/edit-ends-of-lines~ |
+| ~>~ | ~mc/cycle-forward~ |
+| ~<~ | ~mc/cycle-backward~ |
+| ~H~ | ~hydra-mc/body~ |
+
+* Mode-local: org-mode-map
+| Keybinding | Command |
+|-|-|
+| ~<M-S-left>~ | ~nil~ |
+| ~<M-S-right>~ | ~nil~ |
+| ~<M-S-up>~ | ~nil~ |
+| ~<M-S-down>~ | ~nil~ |
+| ~<M-left>~ | ~nil~ |
+| ~<M-right>~ | ~nil~ |
+| ~<return>~ | ~smart-return~ |
+| ~C-k~ | ~my/kill-line-dwim~ |
+| ~<SPC>~ | ~smart-space~ |
+| ~s-v~ | ~pasteboard-paste-adaptive~ |
+| ~s-l~ | ~org-insert-link~ |
+| ~s-k c s~ | ~org-clone-subtree~ |
+| ~C-c e~ | ~eval-adaptive~ |
+| ~C-c C-s~ | ~org-schedule~ |
+| ~C-c C-r~ | ~palimpsest-move-region-to-bottom~ |
+| ~`~ | ~flyspell-auto-correct-word-correct-space~ |
+| ~.~ | ~smart-period~ |
+| ~,~ | ~comma-or-smart-comma~ |
+| ~?~ | ~smart-question-mark~ |
+| ~!~ | ~smart-exclamation-point~ |
+| ~-~ | ~smart-hyphen~ |
+| ~;~ | ~smart-semicolon~ |
+| ~:~ | ~colon-or-smart-colon~ |
+| ~<C-S-right>~ | ~org-shiftmetaright~ |
+| ~<C-S-left>~ | ~org-shiftmetaleft~ |
+| ~<C-right>~ | ~org-metaright~ |
+| ~<C-left>~ | ~org-metaleft~ |
+| ~<C-up>~ | ~org-metaup~ |
+| ~<C-down>~ | ~org-metadown~ |
+| ~M-<return>~ | ~smart-org-meta-return-dwim~ |
+| ~M-S-<return>~ | ~smart-org-insert-todo-heading-dwim~ |
+| ~C-M-<return>~ | ~smart-org-insert-subheading~ |
+| ~<C-S-M-return>~ | ~smart-org-insert-todo-subheading~ |
+| ~<C-s-return>~ | ~smart-org-insert-todo-subheading~ |
+| ~<C-return>~ | ~return-insert-blank-line-before~ |
+| ~<C-S-return>~ | ~smart-org-insert-todo-heading-dwim~ |
+| ~<C-S-return>~ | ~org-insert-todo-heading~ |
+| ~<M-up>~ | ~up-by-degrees~ |
+| ~<M-down>~ | ~down-by-degrees~ |
+| ~<left>~ | ~jay/left-char~ |
+| ~<right>~ | ~jay/right-char~ |
+| ~DEL~ | ~new-org-delete-backward-char~ |
+| ~C-S-r~ | ~nil~ |
+| ~M-K~ | ~kill-sentence-maybe-else-kill-line~ |
+
+* Mode-local: org-src-mode-map
+| Keybinding | Command |
+|-|-|
+| ~C-c C-c~ | ~org-edit-src-exit~ |
+
+* Mode-local: flyspell-mode-map
+| Keybinding | Command |
+|-|-|
+| ~C-;~ | ~org-def~ |
+
+* Mode-local: isearch-mode-map
+| Keybinding | Command |
+|-|-|
+| ~<tab>~ | ~isearch-ring-advance~ |
+| ~<S-tab>~ | ~isearch-repeat-backward~ |
+
+* Mode-local: help-mode-map
+| Keybinding | Command |
+|-|-|
+| ~C-s-]~ | ~help-go-back~ |
+
+* Mode-local: text-mode-map
+| Keybinding | Command |
+|-|-|
+| ~s-v~ | ~pasteboard-paste-clean~ |
+
+* Mode-local: Info-mode-map
+| Keybinding | Command |
+|-|-|
+| ~s-[~ | ~Info-backward-node~ |
+| ~s-]~ | ~Info-forward-node~ |
+| ~<s-up>~ | ~Info-up~ |
+| ~s-l~ | ~Info-goto-node~ |
+
+* Mode-local: winner-mode-map
+| Keybinding | Command |
+|-|-|
+| ~s-[~ | ~winner-undo~ |
+| ~s-]~ | ~winner-redo~ |
+
+* Mode-local: ctrlf-mode-map
+| Keybinding | Command |
+|-|-|
+| ~s-g~ | ~ctrlf-next-match~ |
+
+* Mode-local: markdown-mode-map
+| Keybinding | Command |
+|-|-|
+| ~RET~ | ~my-markdown-newline-with-bullet~ |
+| ~<tab>~ | ~my-markdown-cycle~ |
+
+* Mode-local: evil-normal-state-map
+| Keybinding | Command |
+|-|-|
+| ~s-k~ | ~nil~ |
+| ~C-g~ | ~keyboard-quit~ |
+
+* Mode-local: emacs-lisp-mode-map
+| Keybinding | Command |
+|-|-|
+| ~s-v~ | ~pasteboard-paste-verbatim~ |
+| ~C-c e~ | ~eval-buffer~ |
+| ~M-K~ | ~kill-sexp~ |
+
+* Misc: help-map
+| Keybinding | Command |
+|-|-|
+| ~i~ | ~jay-info-emacs-manual~ |
+
+* Conditional: key-minor-mode-map (after vertico)
+| Keybinding | Command |
+|-|-|
+| ~<C-M-left>~ | ~org-outdent-or-promote~ |
+| ~<C-M-right>~ | ~org-indent-or-demote~ |
+| ~C-M-S-s-o~ | ~embark-act~ |
+
+* Unbound keys
+| Map | Keybinding |
+|-|-|
+| global-map | ~C-S-r~ |
+| key-minor-mode-map | ~C-S-r~ |
+| ~org-mode-map~ | ~<M-S-left>~ |
+| ~org-mode-map~ | ~<M-S-right>~ |
+| ~org-mode-map~ | ~<M-S-up>~ |
+| ~org-mode-map~ | ~<M-S-down>~ |
+| ~org-mode-map~ | ~<M-left>~ |
+| ~org-mode-map~ | ~<M-right>~ |
+| ~org-mode-map~ | ~C-S-r~ |
+| ~evil-normal-state-map~ | ~s-k~ |
+
+* Regeneration
+This file is generated from `keys.el`. If bindings change, regenerate this file from the current `keys.el` source.
