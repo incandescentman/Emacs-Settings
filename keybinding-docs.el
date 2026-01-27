@@ -139,9 +139,18 @@ Produces keybinding-reference.org — the one doc to read."
                              (buffer-string)))
             (current-keys '()))
 
-        ;; Process line by line
+        ;; Process line by line, skipping dump file header
         (dolist (line (split-string dump-contents "\n"))
           (cond
+           ;; Skip dump-file header lines
+           ((or (string-match "^:PROPERTIES:" line)
+                (string-match "^:ID:" line)
+                (string-match "^:END:" line)
+                (string-match "^#\\+title:" line)
+                (string-match "^#\\+date:" line)
+                (string-match "^This file is auto-generated" line)
+                (string-match "^Do NOT edit" line))
+            nil)
            ;; Heading lines — pass through
            ((string-match "^\\*" line)
             (insert line "\n"))
