@@ -1,10 +1,10 @@
 ;;; keys.el --- all my key bindings  -*- lexical-binding: t; -*-
 
-;;;; 0.  Override Minor Mode Definition
+;;;; 0.  Override Minor Mode Definition
 (defvar key-minor-mode-map (make-sparse-keymap)
   "Keymap that should win against major‑mode maps.")
 
-;; NOTE → make it *global* so one activation covers every buffer.
+;; NOTE → make it *global* so one activation covers every buffer.
 (define-minor-mode key-minor-mode
   "Enable my global keys in spite of major‑mode maps."
   :init-value t                ; turned on once we load this file
@@ -12,8 +12,9 @@
   :lighter     " key"
   :keymap     key-minor-mode-map)
 
-;; Disable the override map inside the minibuffer
+;; Disable the override map inside the minibuffer, re-enable on exit
 (add-hook 'minibuffer-setup-hook (lambda () (key-minor-mode -1)))
+(add-hook 'minibuffer-exit-hook  (lambda () (key-minor-mode  1)))
 
 ;;;; 1. Helper Functions ------------------------------------------------
 
@@ -103,6 +104,7 @@
     ("C-s-f"         . isearch-forward-word-at-point)
     ("s-k ag"        . affe-grep)
     ("s-k d g"       . deadgrep-current-directory)
+    ("s-k rg"        . consult-ripgrep-current-directory)
     ("s-k g l"       . affe-grep-gnulisp-directory)
     ("s-k y a"       . affe-grep-gnulisp-directory)
     ("s-k w s"       . isearch-forward-word)
@@ -179,6 +181,7 @@
     ("<M-s-return>"  . org-inlinetask-insert-task)
     ("] i t"         . org-inlinetask-insert-task)
     ("<s-S-return>"  . smart-org-insert-todo-heading-dwim)
+    ("s-k a d"       . my/org-agenda-day)
 
     ;; Org Outline Visibility -------------------------------------------
     ("C-s-0"         . show-all)
@@ -264,6 +267,8 @@
     ("s-,"           . customize-group)
 
     ;; Buffers ----------------------------------------------------------
+    ("<s-left>"      . buffer-stack-up)
+    ("<s-right>"     . buffer-stack-down)
     ("s-b"           . narrow-or-widen-dwim)
     ("s-B"           . consult-buffer)
     ("s-k RET"       . kill-current-buffer)
@@ -342,7 +347,7 @@
     ;; =================================================================
     ;; System & Miscellaneous
     ;; =================================================================
-    ("="             . smex)
+    ("="             . amx)
     ("s-e"           . embark-act)
     ("S-<return>"    . visit-messages-buffer)
     ("s-k e b"       . ediff-buffers)
@@ -425,11 +430,9 @@
     ("s-/ dg"        . deadgrep-current-directory)
     ("s-/ pa"        . counsel-projectile-ag)
     ("s-/ rg"        . consult-ripgrep-current-directory)
-    ("s-k rg"        . consult-ripgrep-current-directory)
     ("s-/ gg"        . consult-git-grep)
     ("s-/ rr"        . roam-rg-search)
     ("s-/ g b"       . grep-both-directories)
-    ("s-k a d"       . my/org-agenda-day)
     ("M-c"           . capitalize-or-endless/capitalize)
     ("M-l"           . downcase-or-endless-downcase)
     ("M-u"           . endless/upcase)
@@ -439,7 +442,6 @@
     ("s-2"           . split-window-vertically)
     ("s-3"           . split-window-left)
     ("s-9"           . sticky-window-keep-window-visible)
-    ("s-k"           . s-k-prefix)
     ("C-a"           . mwim-beginning)
     ("C-e"           . mwim-end)
     ("C-x m"         . endless/mc-map)
@@ -496,8 +498,10 @@
   (global-unset-key (kbd "C-S-r"))
   (define-key key-minor-mode-map (kbd "C-S-r") nil))
 
-;; Run it once after init
-(add-hook 'after-init-hook #'my/install-global-keys)
+;; Run it once after init, or immediately if init already finished.
+(if after-init-time
+    (my/install-global-keys)
+  (add-hook 'after-init-hook #'my/install-global-keys))
 
 ;;;; 4. Prefix map bindings
 (when (boundp 'endless/mc-map)
