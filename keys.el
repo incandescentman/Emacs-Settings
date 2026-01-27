@@ -54,7 +54,11 @@
     ("s-P"           . projectile-find-file)
     ("s-\\"         . visit-most-recent-file)
     ("C-x C-d"       . dired) ; keep dired here – consult-dir is on "C-x C-j"
+    ("C-x C-f"       . find-file-at-point-or-affe-find)
     ("C-x C-j"       . consult-dir)
+    ("s-/ f p"       . search-filename-proposal-directory)
+    ("s-/ f B"       . search-filename-book-directory)
+    ("s-/ f b"       . search-filename-both-book-and-proposal-directories)
 
     ;; ==================================================================
     ;; Search & Replace
@@ -68,9 +72,17 @@
     ("s-G"           . counsel-projectile-ag)
     ("C-s-f"         . isearch-forward-word-at-point)
     ("s-k ag"        . affe-grep)
+    ("s-k d g"       . deadgrep-current-directory)
+    ("s-k g l"       . affe-grep-gnulisp-directory)
+    ("s-k y a"       . affe-grep-gnulisp-directory)
     ("s-k w s"       . isearch-forward-word)
     ("M-s b"         . book-search)
     ("M-s c"         . current-buffers-search)
+    ("s-/ gr"        . consult-grep)
+    ("s-/ g l"       . affe-grep-gnulisp-directory)
+    ("s-/ g ub"      . affe-grep-bash-scripts)
+    ("s-/ g up"      . affe-grep-bash-profile)
+    ("C-x C-l"       . consult-locate)
 
     ;; ==================================================================
     ;; Window Management
@@ -147,6 +159,7 @@
     ("s-k t t"       . toggle-between-src-and-example-block)
 
     ;; Text & Clipboard -------------------------------------------------
+    ;; ("C-c d"         . insert-todays-date) ; CONFLICT: C-c d is crux-duplicate-current-line-or-region
     ("M-t"           . titlecase-dwim)
     ("C-w"           . copy-region-as-kill-and-push-to-clipboard)
     ("s-c"           . pasteboard-copy-adaptive) ; <–– Fix: now active everywhere
@@ -197,6 +210,8 @@
     ("C-d"           . kill-word-correctly-and-capitalize)
     ("C-k"           . my/kill-line-dwim)
     ("C-l"           . reflash-indentation)
+    ("M-C"           . capitalize-word)
+    ("M-L"           . downcase-sentence)
     ("<backspace>"   . my/delete-backward-and-capitalize)
     ("C-<backspace>" . delete-char)
     ("M-<backspace>" . backward-kill-word-correctly-and-capitalize)
@@ -314,6 +329,25 @@
     ("C-s-]"         . help-go-forward)
     ))
 
+(defconst my/global-map-bindings
+  '(;; ==================================================================
+    ;; Global map bindings (preserve global-set-key semantics)
+    ;; ==================================================================
+    ("s-/ dg"        . deadgrep-current-directory)
+    ("s-/ pa"        . counsel-projectile-ag)
+    ("s-/ rg"        . consult-ripgrep-current-directory)
+    ("s-k rg"        . consult-ripgrep-current-directory)
+    ("s-/ gg"        . consult-git-grep)
+    ("s-/ rr"        . roam-rg-search)
+    ("s-/ g b"       . grep-both-directories)
+    ("s-k a d"       . (lambda () (interactive) (org-agenda nil "d")))
+    ("M-c"           . capitalize-or-endless/capitalize)
+    ("M-l"           . downcase-or-endless-downcase)
+    ("M-u"           . endless/upcase)
+    ("M-U"           . caps-lock-mode)
+    ("M-SPC"         . insert-space)
+    ))
+
 (defconst my/minibuffer-bindings
   '(("s-v"           . pasteboard-paste-verbatim)
     ("s-x"           . pasteboard-cut)
@@ -329,6 +363,10 @@
   ;; Install all global keybindings from the list
   (dolist (binding my/global-key-bindings)
     (define-key key-minor-mode-map (kbd (car binding)) (cdr binding)))
+
+  ;; Install global-map bindings
+  (dolist (binding my/global-map-bindings)
+    (global-set-key (kbd (car binding)) (cdr binding)))
 
   ;; Install minibuffer keybindings
   (dolist (binding my/minibuffer-bindings)
@@ -348,6 +386,14 @@
 
 ;;;; 4. Mode-local bindings (lazy loading)
 (with-eval-after-load 'org
+  ;; macOS-style movement overrides
+  (define-key org-mode-map (kbd "<M-S-left>") nil)
+  (define-key org-mode-map (kbd "<M-S-right>") nil)
+  (define-key org-mode-map (kbd "<M-S-up>") nil)
+  (define-key org-mode-map (kbd "<M-S-down>") nil)
+  (define-key org-mode-map (kbd "<M-left>") nil)
+  (define-key org-mode-map (kbd "<M-right>") nil)
+
   (define-key org-mode-map (kbd "<return>") #'smart-return)
   (define-key org-mode-map (kbd "C-k") #'my/kill-line-dwim)
   (define-key org-mode-map (kbd "s-v") #'pasteboard-paste-adaptive)
@@ -355,17 +401,42 @@
   (define-key org-mode-map (kbd "s-k c s") #'org-clone-subtree) ; Overrides global binding in Org
   (define-key org-mode-map (kbd "C-c e") #'eval-adaptive)
   (define-key org-mode-map (kbd "C-c C-s") #'org-schedule)
+  (define-key org-mode-map (kbd "<C-S-right>") #'org-shiftmetaright)
+  (define-key org-mode-map (kbd "<C-S-left>") #'org-shiftmetaleft)
+  (define-key org-mode-map (kbd "<C-right>") #'org-metaright)
+  (define-key org-mode-map (kbd "<C-left>") #'org-metaleft)
+  (define-key org-mode-map (kbd "<C-up>") #'org-metaup)
+  (define-key org-mode-map (kbd "<C-down>") #'org-metadown)
+  (define-key org-mode-map (kbd "<C-return>") #'return-insert-blank-line-before)
+  (define-key org-mode-map (kbd "<C-S-return>") #'smart-org-insert-todo-heading-dwim)
+  (define-key org-mode-map (kbd "<C-S-return>") #'org-insert-todo-heading)
+  (define-key org-mode-map (kbd "<M-up>") #'up-by-degrees)
+  (define-key org-mode-map (kbd "<M-down>") #'down-by-degrees)
   (define-key org-mode-map (kbd "C-S-r") nil)
-  (define-key org-mode-map (kbd "M-K") #'kill-sentence-maybe-else-kill-line))
+  (define-key org-mode-map (kbd "M-K") #'kill-sentence-maybe-else-kill-line)
+
+  (define-key key-minor-mode-map (kbd "<C-M-left>") #'org-outdent-or-promote)
+  (define-key key-minor-mode-map (kbd "<C-M-right>") #'org-indent-or-demote)
+  (define-key key-minor-mode-map (kbd "<M-S-up>") #'org-shiftup)
+  (define-key key-minor-mode-map (kbd "<M-S-down>") #'org-shiftdown)
+  (define-key key-minor-mode-map (kbd "<M-down>") #'down-by-degrees)
+  (define-key key-minor-mode-map (kbd "<M-up>") #'up-by-degrees))
 
 (with-eval-after-load 'flyspell
   (define-key flyspell-mode-map (kbd "C-;") #'org-def))
+
+(with-eval-after-load 'isearch
+  (define-key isearch-mode-map (kbd "<tab>") #'isearch-ring-advance)
+  (define-key isearch-mode-map (kbd "<S-tab>") #'isearch-repeat-backward))
 
 (with-eval-after-load 'help-mode
   (define-key help-mode-map (kbd "C-s-]") #'help-go-back))
 
 (with-eval-after-load 'text-mode
   (define-key text-mode-map (kbd "s-v") #'pasteboard-paste-clean))
+
+(with-eval-after-load 'vertico
+  (define-key key-minor-mode-map (kbd "C-M-S-s-o") #'embark-act))
 
 (with-eval-after-load 'emacs-lisp-mode
   (define-key emacs-lisp-mode-map (kbd "s-v") #'pasteboard-paste-verbatim)

@@ -1,6 +1,14 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-01-27: Plan keybinding consolidation into keys.el
+- Created [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-consolidation-plan.org][keybinding-consolidation-plan.org]] with full migration plan
+- Goal: move all ~define-key~, ~global-set-key~, ~define-super-key~, and ~spacemacs/set-leader-keys~ calls into [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] as the single canonical keybinding location
+- Scope: ~670+ bindings across 7 source files (gnu-emacs-startup.org, shared-functions.org, search-commands.org, spacemacs-new-config.el, org-roam-config.el, spacecraft-mode.org, jay-org-roam-core.el)
+- [[file+emacs:/Users/jay/emacs/emacs-settings/jay-osx.el][jay-osx.el]] preserved as-is
+- Identified ~C-c d~ conflict: ~crux-duplicate-current-line-or-region~ vs ~insert-todays-date~
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][instructions.org]]: added org-mode links to all file references, updated Changing Keybindings section
+
 * 2026-01-15: Corrective note on commit instruction misunderstanding
 - Added a corrective note acknowledging a mistaken response about committing all changes when asked
 

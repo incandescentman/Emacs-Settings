@@ -44,12 +44,7 @@
          ((org-agenda-compact-blocks t)
           (org-agenda-block-separator "")))))
 
-;; Optional: Quick access binding
-;; Press C-c a d to open your daily menu
-(global-set-key (kbd "s-k a d") 
-                (lambda () 
-                  (interactive) 
-                  (org-agenda nil "d")))
+;; Optional: Quick access binding moved to keys.el
 
 ;; ============================================================================
 ;; RELATED SETTINGS (Optional but recommended)

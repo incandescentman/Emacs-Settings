@@ -1,20 +1,4 @@
-(define-key key-minor-mode-map (kbd "s-/ gr") 'consult-grep)
 
-;; Search
-(global-set-key (kbd "s-/ dg") 'deadgrep-current-directory) ; not incremental. but nicely formatted. lays it all out nicely in a buffer.
-(global-set-key (kbd "s-/ pa") 'counsel-projectile-ag) ; as an alternative to deadgrep check out ag so maybe it's better
-
-(global-set-key (kbd "s-/ rg") 'consult-ripgrep-current-directory) ; pretty slick, shows you the actual file context
-
-(global-set-key (kbd "s-k rg") 'consult-ripgrep-current-directory) ; pretty slick, shows you the actual file context
-
-
-(global-set-key (kbd "s-/ gg") 'consult-git-grep) ; pretty great, like projectile, doesn't respect .projectile
-
-;; (global-set-key (kbd "s-/ st") 'consult-) ;
-;; (global-set-key (kbd "s-/ l") 'counsel-) ;
-
-(global-set-key (kbd "s-/ rr") 'roam-rg-search)
 
 (defun roam-rg-search ()
  "Search org-roam directory using consult-ripgrep. With live-preview."
@@ -76,9 +60,6 @@
 ;; (define-key key-minor-mode-map (kbd "s-G") 'counsel-projectile-grep); this fails to ignore files specified in .projectile
 ;; (define-key key-minor-mode-map (kbd "s-G") 'projectile-grep) ; this successfully ignores those files but isn't incremental
 
-(define-key key-minor-mode-map (kbd "C-s-g ") 'consult-ripgrep-current-directory)
-(define-key key-minor-mode-map (kbd "s-G") 'counsel-projectile-ag)
-
 (use-package affe
  :config
  ;; Manual preview key for `affe-grep'
@@ -93,8 +74,6 @@
   (find-file filename) ; Open file at point if it exists
   (affe-find)))) ; Otherwise, run affe-find
 
-(define-key key-minor-mode-map (kbd "C-x C-f") 'find-file-at-point-or-affe-find)
-
 (defun affe-grep-gnulisp-directory (&optional initial)
  "Fuzzy grep in the /Users/jay/gnulisp directory with optional INITIAL input."
  (interactive "P")
@@ -105,13 +84,6 @@
  (interactive "P")
  (affe-grep "/Users/jay/emacs/interesting-snippets/org-mode" initial))
 
-(define-key key-minor-mode-map (kbd "s-k g l") 'affe-grep-gnulisp-directory)
-
-(define-key key-minor-mode-map (kbd "s-/ g l") 'affe-grep-gnulisp-directory)
-
-(define-key key-minor-mode-map (kbd "s-/ g ub") 'affe-grep-bash-scripts)
-(define-key key-minor-mode-map (kbd "s-/ g up") 'affe-grep-bash-profile)
-
 ;; (define-key key-minor-mode-map (kbd "s-/ g r") 'consult-org-roam-search)
 ;; (define-key key-minor-mode-map (kbd "s-/ g r") 'affe-grep-org-roam)
 
@@ -121,8 +93,6 @@
  (let ((default-directory "/Users/jay/emacs/interesting-snippets/org-mode/"))
  (counsel-find-file)))
 
-(define-key key-minor-mode-map (kbd "s-k y a") 'affe-grep-gnulisp-directory)
-
 (defun fzf-find-file--proposal-directory ()
  "Use counsel-fzf to search for files in the /Users/jay/Dropbox/writing/proposal/ directory."
  (interactive)
@@ -130,8 +100,6 @@
  (counsel-fzf nil "/Users/jay/Dropbox/writing/proposal/"))
 
 (defalias 'search-filename-proposal-directory 'fzf-find-file--proposal-directory)
-
-(define-key key-minor-mode-map (kbd "s-/ f p") 'search-filename-proposal-directory)
 
 
 (defun fzf-find-file--book-directory ()
@@ -141,9 +109,6 @@
  (counsel-fzf nil "/Users/jay/Dropbox/writing/book/"))
 
 (defalias 'search-filename-book-directory 'fzf-find-file--book-directory)
-
-
-(define-key key-minor-mode-map (kbd "s-/ f B") 'search-filename-book-directory)
 
 (defun counsel-fzf-both-proposal-and-book-dirs ()
   "Search in both /Users/jay/Dropbox/writing/proposal/ and /Users/jay/Dropbox/writing/book/ directories."
@@ -169,10 +134,6 @@
 
 (defalias 'search-filename-both-book-and-proposal-directories 'counsel-fzf-both-proposal-and-book-dirs)
 
-(define-key key-minor-mode-map (kbd "s-/ f B") 'search-filename-book-directory)
-
-(define-key key-minor-mode-map (kbd "s-/ f b") 'search-filename-both-book-and-proposal-directories)
-
 ;; works but is overly complex. Do not use. use counsel-projectile-ag instead.
 (defun rg-search-book-and-proposal-dirs (&optional initial-input)
  "Search using ripgrep in the book and proposal directories with optional INITIAL-INPUT."
@@ -193,8 +154,6 @@
 (defalias 'grep-book-directory 'consult-ripgrep-current-directory)
 (defalias 'grep-proposal-directory 'consult-ripgrep-current-directory)
 
-
-(define-key global-map (kbd "s-/ g b") 'grep-both-directories)
 
 (defun projectile-display-project-root ()
  "Show the root directory of the current Projectile project."
@@ -275,9 +234,6 @@
   ;; set arrow keys in isearch. left/right is backward/forward, up/down is history. press Return to exit
 ;;  (define-key isearch-mode-map (kbd "<up>") 'isearch-ring-retreat )
 ;; (define-key isearch-mode-map (kbd "<down>") 'isearch-ring-advance )
-  (define-key isearch-mode-map (kbd "<tab>") 'isearch-ring-advance )
-  (define-key isearch-mode-map (kbd "<S-tab>") 'isearch-repeat-backward) ; single key, useful
-
 ;  (define-key isearch-mode-map (kbd "<right>") 'isearch-repeat-forward) ; single key, useful
  )
 
@@ -450,7 +406,6 @@
 
 (use-package deadgrep
   :defer)
-(define-key key-minor-mode-map (kbd "s-k d g") 'deadgrep-current-directory)
 
 (defun timu/search-org-files ()
   "Grep for a string in the `~/org' using `rg'."
@@ -475,12 +430,10 @@
   :defer t)
 
 (setq consult-locate-args "fasd -t -l -R")
-(define-key key-minor-mode-map (kbd "C-x C-l") 'consult-locate)
 
 (use-package counsel :defer t)
 
 (with-eval-after-load 'vertico
-(define-key key-minor-mode-map (kbd "C-M-S-s-o") 'embark-act)
 ;; (define-key vertico-map (kbd "M-o") 'embark-act)
 )
 

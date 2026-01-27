@@ -1,0 +1,70 @@
+#+title: Codex keybinding migration plan (keys.el consolidation)
+#+date: 2026-01-27
+#+author: Codex
+
+* Goals
+- Consolidate key bindings into keys.el without moving function definitions.
+- Preserve jay-osx.el exactly as-is (no edits).
+- Avoid load-order regressions (no void-function errors).
+- Improve discoverability and conflict auditing.
+
+* Non-goals
+- Refactor or rename functions.
+- Change semantics of key bindings.
+- Move jay-osx.el bindings (they remain in place).
+
+* Scope inventory (targets to audit)
+- keys.el (current centralized keymap)
+- gnu-emacs-startup.org / gnu-emacs-startup.el
+- shared-functions.org / shared-functions.el
+- search-commands.el / search-commands.org
+- any other files with define-key, key-minor-mode-map, define-super-key, global-set-key, evil-define-key, or map! (if present)
+
+* Constraints
+- jay-osx.el is preserved verbatim; bindings there do not move.
+- keys.el must load after any functions it references, or use autoload/with-eval-after-load.
+- Literate files: if bindings are moved out of a .org, delete stale tangled .el, re-tangle, and run check-parens as needed.
+
+* Plan
+** 1) Audit and catalog all bindings
+- Search for binding forms and capture their file/line + function symbol + key sequence.
+- Produce a temporary inventory table (file, form, key, command) so we can spot conflicts.
+- Decide what stays put (jay-osx.el) vs. moves into keys.el.
+
+** 2) Classify bindings by load requirements
+- Commands defined in always-loaded files (safe to bind in keys.el directly).
+- Commands defined in deferred packages (require with-eval-after-load or autoload).
+- Commands in optional/feature-flagged modules (guard with (when (featurep ...) ...) or with-eval-after-load).
+
+** 3) Prepare keys.el structure for consolidation
+- Create sections in keys.el mirroring domains (org, search, writing, navigation, etc.).
+- Add a clear "DO NOT EDIT" note for jay-osx.el bindings to avoid duplicates.
+- Add helpers (if needed) for deferred bindings (e.g., a local macro around with-eval-after-load).
+
+** 4) Move bindings (excluding jay-osx.el)
+- For each binding, remove it from the source file and add the equivalent define-key / define-super-key to keys.el.
+- Keep function definitions in their original files.
+- For package-specific bindings, wrap in with-eval-after-load (or autoload if supported).
+- Re-run tangle/check-parens for any touched literate org files.
+
+** 5) Validate load order and runtime behavior
+- Load Emacs/Spacemacs and confirm no void-function errors.
+- Smoke-test keymaps: verify critical bindings in key-minor-mode-map and super-key maps.
+- Scan for conflicts or duplicate bindings in keys.el.
+
+** 6) Cleanup and documentation
+- Update any docs that mention bindings being defined elsewhere (if needed).
+- Record changes in docs/work-log.org.
+
+* Risks and mitigations
+- Risk: void-function errors from early binding evaluation.
+  - Mitigation: with-eval-after-load or autoloads for late-loaded features.
+- Risk: silent overwrites if duplicate bindings remain.
+  - Mitigation: remove source bindings after moving; keep an audit table.
+- Risk: org tangling drift.
+  - Mitigation: delete stale tangled .el, re-tangle, run check-parens.
+
+* Success criteria
+- All non-jay-osx.el bindings consolidated into keys.el.
+- No startup warnings or void-function errors.
+- Grepping keys.el provides a full, accurate keymap view.

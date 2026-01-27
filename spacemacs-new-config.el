@@ -168,45 +168,7 @@
 ;; whole words at a time
 ;; I've been wanting to do this for so long. :-)
 ;; this works correctly!!
-(eval-after-load "org"
-  '(progn
-     (define-key org-mode-map (kbd "<M-S-left>") nil)
-     (define-key org-mode-map (kbd "<M-S-right>") nil)
-     (define-key org-mode-map (kbd "<M-S-up>") nil)
-     (define-key org-mode-map (kbd "<M-S-down>") nil)
-     (define-key org-mode-map (kbd "<M-left>") nil)
-     (define-key org-mode-map (kbd "<M-right>") nil)
-     (define-key org-mode-map (kbd "<M-right>") nil)
-     (define-key org-mode-map [C-S-right] 'org-shiftmetaright)
-     (define-key org-mode-map [C-S-left] 'org-shiftmetaleft)
-     (define-key org-mode-map [C-right] 'org-metaright)
-     (define-key org-mode-map [C-left] 'org-metaleft)
-     (define-key org-mode-map [C-up] 'org-metaup)
-     (define-key org-mode-map [C-down] 'org-metadown)
-     (define-key org-mode-map (kbd "<C-return>") 'return-insert-blank-line-before)
-     (define-key org-mode-map (kbd "<C-S-return>") 'smart-org-insert-todo-heading-dwim)
-     ;; (define-key key-minor-mode-map (kbd "<C-M-right>") 'org-shiftright)
-     ;; (define-key key-minor-mode-map (kbd "<C-M-left>") 'org-shiftleft)
-     ;;     (define-key key-minor-mode-map (kbd "<C-M-left>") 'org-backward-sentence)
-     (define-key key-minor-mode-map (kbd "<C-M-left>") 'org-outdent-or-promote)
-     ;;     (define-key key-minor-mode-map (kbd "<C-M-right>") 'smart-forward-sentence)
-     (define-key key-minor-mode-map (kbd "<C-M-right>") 'org-indent-or-demote)
-
-
-     (define-key org-mode-map [C-S-return] 'org-insert-todo-heading)
-     (define-key org-mode-map (kbd "<C-return>") 'return-insert-blank-line-before)
-     (define-key org-mode-map (kbd "<C-S-return>") 'smart-org-insert-todo-heading-dwim)
-
-     (define-key key-minor-mode-map (kbd "<M-S-up>") 'org-shiftup)
-     (define-key key-minor-mode-map (kbd "<M-S-down>") 'org-shiftdown)
-     (define-key org-mode-map (kbd "<M-up>") 'up-by-degrees)
-     (define-key org-mode-map (kbd "<M-down>") 'down-by-degrees)
-     (define-key key-minor-mode-map (kbd "<M-down>") 'down-by-degrees)
-     (define-key key-minor-mode-map (kbd "<M-up>") 'up-by-degrees)
-
-     ;; (define-key org-mode-map (kbd "needs a binding") 'org-insert-heading-respect-content)
-     ;; formerly bound to C-return
-     ))
+;; Keybindings moved to keys.el
 
 
 ;;  (setq helm-echo-input-in-header-line nil)

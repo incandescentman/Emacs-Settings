@@ -218,8 +218,6 @@ Skip capitalization if the line is an Org bullet."
   (org-forward-sentence 1)
   (jay/right-char)
   )
-(define-key key-minor-mode-map (kbd "M-C") 'capitalize-word)
-
 #+END_SRC
 
 ** downcase sentence
@@ -232,8 +230,6 @@ Skip capitalization if the line is an Org bullet."
 (org-forward-sentence 1)
 (jay/right-char)
 )
-
-(define-key key-minor-mode-map (kbd "M-L") 'downcase-sentence)
 
 #+END_SRC
 
@@ -311,10 +307,6 @@ Also converts full stops to commas."
 )
 )
 
-(global-set-key "\M-c" 'capitalize-or-endless/capitalize)
-(global-set-key "\M-l" 'downcase-or-endless-downcase)
-(global-set-key (kbd "M-u") 'endless/upcase)
-(global-set-key (kbd "M-U") 'caps-lock-mode) ;; hell yes!! This is awesome!
 * spacecraft-mode - superior handling of whitespace for writing and editing prose
 
 #+end_src
@@ -381,11 +373,8 @@ Also converts full stops to commas."
  (just-one-space))
 
 
-(define-key org-mode-map (kbd "<SPC>") 'smart-space)
 ;; Or, if you just want a literal space:
 ;; (define-key org-mode-map (kbd "<SPC>") 'insert-space)
-
-(global-set-key (kbd "M-SPC") 'insert-space)
 #+END_SRC
 
 
@@ -768,10 +757,6 @@ Also converts full stops to commas."
   )
 
 
-(define-key org-mode-map (kbd ".") 'smart-period)
-
-
-(define-key org-mode-map (kbd ".") 'smart-period)
 #+END_SRC
 
 ** smart-comma
@@ -813,7 +798,6 @@ Also converts full stops to commas."
 
 
 
-(define-key org-mode-map (kbd ",") 'comma-or-smart-comma)
 ;; (define-key orgalist-mode-map (kbd ",") 'comma-or-smart-comma)
 #+END_SRC
 
@@ -842,7 +826,6 @@ Also converts full stops to commas."
 
 ;; works!!
 
-(define-key org-mode-map (kbd "?") 'smart-question-mark)
 ;; (define-key orgalist-mode-map (kbd "?") 'smart-question-mark)
 #+END_SRC
 
@@ -859,7 +842,6 @@ Also converts full stops to commas."
 (capitalize-unless-org-heading))
 ))
 
-(define-key org-mode-map (kbd "!") 'smart-exclamation-point)
 ;; (define-key orgalist-mode-map (kbd "!") 'smart-exclamation-point)
 #+END_SRC
 
@@ -868,7 +850,6 @@ Also converts full stops to commas."
   (interactive)
   (smart-punctuation "-"))
 
-(define-key org-mode-map (kbd "-") 'smart-hyphen)
 ;; (define-key orgalist-mode-map (kbd "-") 'smart-hyphen)
 #+END_SRC
 
@@ -890,7 +871,6 @@ Also converts full stops to commas."
 
 (save-excursion (downcase-word 1))))
 
-(define-key org-mode-map (kbd ";") 'smart-semicolon)
 ;; (define-key orgalist-mode-map (kbd ";") 'smart-semicolon)
 #+END_SRC
 
@@ -914,11 +894,6 @@ Also converts full stops to commas."
 ))
 
 
-(define-key org-mode-map (kbd ":") 'colon-or-smart-colon)
-
-
-
-(define-key org-mode-map (kbd ",") 'comma-or-smart-comma)
 ;; (define-key orgalist-mode-map (kbd ":") 'smart-colon)
 #+END_SRC
 
@@ -1306,5 +1281,3 @@ These have to be at the end.
 # eval: (org-config-files-local-mode 1)
 # End:
 #+END_SRC
-
-

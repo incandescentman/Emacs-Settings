@@ -10,7 +10,7 @@ Key features:
 - Smart clipboard integration for macOS (auto-cleans web content)
 - Multiple org-roam databases (work vs. personal notes)
 - Beautiful themes and fonts optimized for writing
-- Extensive custom functions in =shared-functions.org=
+- Extensive custom functions in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]]
 
 * Installation
 
@@ -51,12 +51,12 @@ Key features:
 ** File Structure
 
 Key files you'll interact with:
-- =spacemacs.d/init.el= - Main Spacemacs configuration (=/Users/jay/emacs/emacs-settings/spacemacs.d/init.el=)
-- =shared-functions.org= - Most custom functions (9,983 lines, auto-tangles to =.el=)
-- =pasteboard-copy-and-paste-functions.el= - Clipboard magic (pure elisp, edit directly)
-- =fonts-and-themes.org= - Visual appearance
-- =spacemacs.d/= - Spacemacs config directory (symlinked from =~/.spacemacs.d=)
-- =docs/= - Documentation (including this file)
+- [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]] - Main Spacemacs configuration
+- [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] - Most custom functions (9,983 lines, auto-tangles to =.el=)
+- [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][pasteboard-copy-and-paste-functions.el]] - Clipboard magic (pure elisp, edit directly)
+- [[file+emacs:/Users/jay/emacs/emacs-settings/fonts-and-themes.org][fonts-and-themes.org]] - Visual appearance
+- [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/][spacemacs.d/]] - Spacemacs config directory (symlinked from =~/.spacemacs.d=)
+- [[file+emacs:/Users/jay/emacs/emacs-settings/docs/][docs/]] - Documentation (including this file)
 
 * Essential Features
 
@@ -145,7 +145,7 @@ Press =SPC a o r c= to capture a note. Common templates:
 | =j= | Journal           | Daily journal entry          |
 | =k= | Kanban            | Task/project management      |
 
-Find all templates in =jay-org-roam-suite/jay-org-roam-profiles.el=
+Find all templates in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-profiles.el][jay-org-roam-profiles.el]]
 
 ** Visual Themes
 
@@ -198,12 +198,12 @@ M-x medium-type    ; Return to normal size
 
 This config uses *literate programming* - you edit =.org= files which generate =.el= files.
 
-1. Edit an =.org= file (e.g., =shared-functions.org=)
+1. Edit an =.org= file (e.g., [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]])
 2. Press =C-c C-v t= to "tangle" (generate the =.el= file)
 3. Restart Emacs or reload: =SPC f e R=
 
 Files with =#+auto_tangle: t= header tangle automatically on save.
-Note: =pasteboard-copy-and-paste-functions.el= is pure elisp and does not tangle.
+Note: [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][pasteboard-copy-and-paste-functions.el]] is pure elisp and does not tangle.
 
 * Search and Navigation
 
@@ -242,7 +242,7 @@ Many files are =.org= files containing code blocks:
 
 * LaTeX Templates
 
-Custom LaTeX templates are in =latex-templates/=. Use them by adding =#+LATEX_CLASS: template-name= to your org file.
+Custom LaTeX templates are in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/][latex-templates/]]. Use them by adding =#+LATEX_CLASS: template-name= to your org file.
 
 ** beautiful-racket
 
@@ -303,7 +303,7 @@ Or within Emacs: =SPC f e R= (reload) or =SPC f e U= (update packages)
    (byte-recompile-directory "~/emacs/emacs-settings" 0)
    #+END_SRC
 
-2. Check =spacemacs.d/init.el= for unused layers (comment them out)
+2. Check [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]] for unused layers (comment them out)
 
 3. Profile startup with =emacs --timed-requires=
 
@@ -329,9 +329,9 @@ Then in Emacs: =M-x org-roam-db-sync=
 
 ** Adding Your Own Functions
 
-Best place: =shared-functions.org=
+Best place: [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]]
 
-1. Open =shared-functions.org=
+1. Open [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]]
 2. Find a relevant section (or create a new heading)
 3. Add your function in a =#+BEGIN_SRC emacs-lisp= block
 4. =C-c C-v t= to tangle
@@ -339,7 +339,7 @@ Best place: =shared-functions.org=
 
 ** Creating a New Org-Roam Template
 
-Edit =jay-org-roam-suite/jay-org-roam-profiles.el=:
+Edit [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-profiles.el][jay-org-roam-profiles.el]]:
 
 1. Find =jay/org-roam-capture-templates-default=
 2. Add a new template using the existing ones as examples
@@ -347,11 +347,13 @@ Edit =jay-org-roam-suite/jay-org-roam-profiles.el=:
 
 ** Changing Keybindings
 
-Global keybindings live in:
-- =keys.el= - Global overrides
-- =jay-osx.el= - macOS-specific (defines =key-minor-mode-map=)
+All keybindings are being consolidated into a single canonical location:
+- [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] - All global overrides and mode-specific bindings
+- [[file+emacs:/Users/jay/emacs/emacs-settings/jay-osx.el][jay-osx.el]] - macOS-specific (defines =key-minor-mode-map=, preserved separately)
 
-Spacemacs keybindings: edit =spacemacs.d/init.el= in the =dotspacemacs/user-config= section.
+See [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-consolidation-plan.org][keybinding-consolidation-plan.org]] for the migration plan.
+
+Spacemacs keybindings: edit [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]] in the =dotspacemacs/user-config= section.
 
 ** Safe Testing
 
@@ -384,11 +386,12 @@ git merge test-new-feature
 
 ** Documentation Files
 
-See =docs/= folder for detailed documentation:
-- =design-architecture.org= - How the config is structured
-- =work-log.org= - History of changes
-- =codebase-wisdom.org= - Lessons learned from debugging
-- =pasteboard-architecture.org= - How clipboard integration works
+See [[file+emacs:/Users/jay/emacs/emacs-settings/docs/][docs/]] folder for detailed documentation:
+- [[file+emacs:/Users/jay/emacs/emacs-settings/docs/design-architecture.org][design-architecture.org]] - How the config is structured
+- [[file+emacs:/Users/jay/emacs/emacs-settings/docs/work-log.org][work-log.org]] - History of changes
+- [[file+emacs:/Users/jay/emacs/emacs-settings/docs/codebase-wisdom.org][codebase-wisdom.org]] - Lessons learned from debugging
+- [[file+emacs:/Users/jay/emacs/emacs-settings/docs/pasteboard-architecture.org][pasteboard-architecture.org]] - How clipboard integration works
+- [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-consolidation-plan.org][keybinding-consolidation-plan.org]] - Plan for centralizing all keybindings
 
 ** External Resources
 - Spacemacs documentation: https://www.spacemacs.org/doc/DOCUMENTATION.html
@@ -435,13 +438,12 @@ Always *incarnadine red* (deep crimson) - distinctive but not jarring. All theme
 
 ** Files to Know
 
-| File                                     | Purpose                          |
-|------------------------------------------+----------------------------------|
-| =spacemacs.d/init.el=                    | Spacemacs main config            |
-| =shared-functions.org=                   | Most custom functions            |
-| =pasteboard-copy-and-paste-functions.el= | Clipboard magic                  |
-| =fonts-and-themes.org=                   | Appearance settings              |
-| =docs/instructions.org=                  | This file!                       |
+- [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]] — Spacemacs main config
+- [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] — Most custom functions
+- [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] — All keybindings (canonical location)
+- [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][pasteboard-copy-and-paste-functions.el]] — Clipboard magic
+- [[file+emacs:/Users/jay/emacs/emacs-settings/fonts-and-themes.org][fonts-and-themes.org]] — Appearance settings
+- [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][docs/instructions.org]] — This file!
 
 * Maintenance
 

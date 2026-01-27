@@ -1,0 +1,146 @@
+:PROPERTIES:
+:ID: keybinding-consolidation-plan
+:END:
+#+title: Plan: Consolidate Keybindings into keys.el
+
+* Goal
+
+Move all keybinding definitions into [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] so there is one canonical location for every binding. This eliminates silent conflicts and makes it possible to grep a single file to check what's bound.
+
+Preserve [[file+emacs:/Users/jay/emacs/emacs-settings/jay-osx.el][jay-osx.el]] as-is (no changes).
+
+* Non-goals
+- Refactor or rename functions.
+- Change semantics of key bindings.
+- Move bindings out of jay-osx.el.
+
+* Current State
+
+Keybindings are scattered across these files (excluding jay-osx.el and third-party/mode-specific packages like dired+.el, timeline/*.el, pomidor.el, etc.):
+
+| Source file                                              | ~define-key~ / ~global-set-key~ count | Notes                                           |
+|----------------------------------------------------------+----------------------------------------+-------------------------------------------------|
+| [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org][gnu-emacs-startup.org]]           | ~378                                   | Largest source; many via ~define-super-key~      |
+| [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]]             | ~149                                   | Bindings co-located with function definitions    |
+| [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][search-commands.org]]              | ~43                                    | Search/grep/find keybindings                     |
+| [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][spacemacs-new-config.el]]         | ~32                                    | Mostly inside ~with-eval-after-load 'org~        |
+| [[file+emacs:/Users/jay/emacs/emacs-settings/org-roam-config.el][org-roam-config.el]]               | ~27                                    | ~s-u~ prefix map for org-roam                    |
+| [[file+emacs:/Users/jay/emacs/emacs-settings/spacecraft-mode.org][spacecraft-mode.org]]              | ~26                                    | Smart punctuation + case-change bindings         |
+| [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-core.el]]  | ~17                                    | Profile switching, backlinks                     |
+
+keys.el already has ~270 bindings in a clean declarative alist plus ~with-eval-after-load~ sections.
+
+* Constraints and load order
+- jay-osx.el is preserved verbatim and remains the source of key-minor-mode-map definition.
+- keys.el must load after jay-osx.el (for key-minor-mode-map) and after any functions/macros it references (or use autoload/with-eval-after-load).
+- Literate files: when moving bindings out of a .org, delete the stale tangled .el, re-tangle, and run check-parens.
+
+* Scope: What Moves and What Stays
+
+** Move to keys.el
+- All ~define-key key-minor-mode-map~ calls
+- All ~global-set-key~ calls that bind to custom or third-party commands
+- All ~define-super-key~ calls (expand them to explicit ~(kbd "s-k ...")~ entries)
+- Mode-specific ~define-key org-mode-map~ calls (into the existing ~with-eval-after-load 'org~ block)
+- Other mode-map bindings (e.g., ~winner-mode-map~, ~Info-mode-map~) into appropriate ~with-eval-after-load~ blocks
+- Leader key and helper forms: ~spacemacs/set-leader-keys~, ~spacemacs/set-leader-keys-for-major-mode~, ~bind-key~, and any ~define-prefix-command~ blocks used for keymaps
+
+** Do NOT move
+- [[file+emacs:/Users/jay/emacs/emacs-settings/jay-osx.el][jay-osx.el]] — preserved entirely
+- Third-party / vendored package files: ~dired+.el~, ~frame-cmds.el~, ~buffer-stack.el~, ~pomidor.el~, ~key-seq.el~, ~ivy-smex.el~, ~wc-goal-mode.el~, ~forecast.el~, ~auto-capitalize.el~ — these define their own mode-specific maps, not Jay's global bindings
+- [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/][timeline/*.el]] — self-contained calendar-mode-map bindings
+- [[file+emacs:/Users/jay/emacs/emacs-settings/aibo-config.el][aibo-config.el]] / [[file+emacs:/Users/jay/emacs/emacs-settings/aibo-power-pack.el][aibo-power-pack.el]] — internal mode maps
+- [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]] — Spacemacs layer config (1-2 bindings only)
+- Bindings inside a ~defun~ that are meant to be set up conditionally (e.g., mode hooks that toggle bindings on/off) — these stay with their function, with a comment pointing to keys.el
+
+* Migration Steps
+
+** Phase 1: Audit and deduplicate
+
+1. For each source file, extract every keybinding definition into a flat list: =(key . command)=
+2. Cross-reference against what is already in keys.el to identify:
+   - Duplicates (same key, same command) — just delete from source
+   - Conflicts (same key, different command) — flag for Jay to decide which wins
+   - New entries — add to keys.el
+3. Expand all ~define-super-key~ calls to their full ~(kbd "s-k ...")~ form
+4. Include leader-key and helper forms in the audit: ~spacemacs/set-leader-keys~, ~spacemacs/set-leader-keys-for-major-mode~, ~bind-key~, and ~define-prefix-command~ usages
+
+** Phase 2: Add bindings to keys.el
+
+1. Add new entries to ~my/global-key-bindings~ alist, grouped under appropriate section headers
+2. Add new ~with-eval-after-load~ blocks for mode-specific maps not yet covered (e.g., ~winner-mode-map~, ~Info-mode-map~, ~calendar-mode-map~ if any of Jay's bindings target those)
+3. Create a new section for the ~s-u~ prefix map (org-roam) — either as part of ~my/global-key-bindings~ or as a dedicated ~with-eval-after-load 'org-roam~ block
+4. Create a new section for the ~s-/~ prefix map (search commands)
+5. If a binding depends on a macro (e.g., ~define-super-key~), ensure the macro file is loaded before keys.el or wrap the binding in ~with-eval-after-load~
+
+** Phase 3: Remove bindings from source files
+
+1. Delete the ~define-key~ / ~global-set-key~ / ~define-super-key~ lines from each source file
+2. Leave the function *definitions* in place — only the bindings move
+3. For literate org files (shared-functions.org, gnu-emacs-startup.org, etc.): remove the binding lines from the org source, then retangle
+4. Run ~emacs --batch <file.el> --eval '(check-parens)'~ on each modified .el file
+5. Verify no stray binding forms remain (excluding exemptions)
+
+** Phase 4: Verify
+
+1. Run ~emacs --batch --load ~/.emacs.d/init.el --eval '(message "ok")'~ to confirm clean startup
+2. Spot-check a handful of bindings with ~describe-key~ in a running Emacs
+3. Grep all source files for stray ~define-key~, ~global-set-key~, ~define-super-key~, ~spacemacs/set-leader-keys~, ~spacemacs/set-leader-keys-for-major-mode~, and ~bind-key~ to confirm nothing was missed (excluding the exempt files listed above)
+
+* Load Order Consideration
+
+keys.el must load *after* all the functions it references are defined. Current load order (from CLAUDE.md):
+
+1. Spacemacs core
+2. Layer config
+3. spacemacs-new-config.el
+4. jay-osx.el
+5. gnu-emacs-startup.el
+6. shared-functions.el
+7. Various feature modules
+8. local-config.el
+
+keys.el should load *last* (or near-last, before local-config.el) so all commands are available. If any commands are autoloaded, the binding will work regardless of order. For non-autoloaded custom functions, we either:
+- Ensure keys.el loads after shared-functions.el and other defining files (current order already supports this)
+- Or wrap specific bindings in ~with-eval-after-load~ for the file that defines the command
+
+* Risks and mitigations
+- Risk: void-function errors from early binding evaluation.
+  - Mitigation: with-eval-after-load or autoloads for late-loaded features; ensure keys.el loads after jay-osx.el.
+- Risk: silent overwrites if duplicate bindings remain.
+  - Mitigation: remove source bindings after moving; maintain an audit table.
+- Risk: org tangling drift or syntax errors.
+  - Mitigation: delete stale tangled .el, re-tangle, run check-parens.
+
+* Validation Rule for Future Sessions
+
+After consolidation, add this rule to CLAUDE.md:
+
+#+begin_quote
+When suggesting or assigning a keybinding, ALWAYS verify candidates against a running Emacs instance:
+
+~emacs --batch --load ~/.emacs.d/init.el --eval '(princ (format "%s → %s\n" "KEY" (or (key-binding (kbd "KEY")) "FREE")))'~
+
+Never suggest a keybinding based solely on grepping config files — packages, Spacemacs layers, and built-in Emacs bindings are not visible that way.
+#+end_quote
+
+* Risk: The ~C-c d~ Conflict
+
+Currently ~C-c d~ is bound to ~crux-duplicate-current-line-or-region~ (from crux package, via shared-functions.org). The unstaged change in keys.el tries to rebind it to ~insert-todays-date~. This conflict needs to be resolved during Phase 1 — Jay decides which command gets ~C-c d~.
+
+* Order of Files to Process
+
+Process in this order (largest impact first):
+
+1. [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org][gnu-emacs-startup.org]] — ~378 bindings
+2. [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] — ~149 bindings
+3. [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][search-commands.org]] — ~43 bindings
+4. [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][spacemacs-new-config.el]] — ~32 bindings
+5. [[file+emacs:/Users/jay/emacs/emacs-settings/org-roam-config.el][org-roam-config.el]] — ~27 bindings
+6. [[file+emacs:/Users/jay/emacs/emacs-settings/spacecraft-mode.org][spacecraft-mode.org]] — ~26 bindings
+7. [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-core.el]] — ~17 bindings
+
+* Success criteria
+- All non-jay-osx.el bindings consolidated into keys.el.
+- No startup warnings or void-function errors.
+- Grepping keys.el provides a full, accurate keymap view.

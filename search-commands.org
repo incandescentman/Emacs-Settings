@@ -10,24 +10,6 @@ and full text, respectively, is a logical choice.
 
 * search
 #+begin_src emacs-lisp
-(define-key key-minor-mode-map (kbd "s-/ gr") 'consult-grep)
-
-;; Search
-(global-set-key (kbd "s-/ dg") 'deadgrep-current-directory) ; not incremental. but nicely formatted. lays it all out nicely in a buffer.
-(global-set-key (kbd "s-/ pa") 'counsel-projectile-ag) ; as an alternative to deadgrep check out ag so maybe it's better
-
-(global-set-key (kbd "s-/ rg") 'consult-ripgrep-current-directory) ; pretty slick, shows you the actual file context
-
-(global-set-key (kbd "s-k rg") 'consult-ripgrep-current-directory) ; pretty slick, shows you the actual file context
-
-
-(global-set-key (kbd "s-/ gg") 'consult-git-grep) ; pretty great, like projectile, doesn't respect .projectile
-
-;; (global-set-key (kbd "s-/ st") 'consult-) ;
-;; (global-set-key (kbd "s-/ l") 'counsel-) ;
-
-(global-set-key (kbd "s-/ rr") 'roam-rg-search)
-
 #+end_src
 
 
@@ -148,11 +130,6 @@ Eventually, you might want to suppress previewing for certain functions. This ca
 #+begin_src emacs-lisp
 ;; (define-key key-minor-mode-map (kbd "s-G") 'counsel-projectile-grep); this fails to ignore files specified in .projectile
 ;; (define-key key-minor-mode-map (kbd "s-G") 'projectile-grep) ; this successfully ignores those files but isn't incremental
-
-(define-key key-minor-mode-map (kbd "C-s-g ") 'consult-ripgrep-current-directory)
-(define-key key-minor-mode-map (kbd "s-G") 'counsel-projectile-ag)
-
-
 #+end_src
 
 
@@ -172,8 +149,6 @@ Eventually, you might want to suppress previewing for certain functions. This ca
   (find-file filename) ; Open file at point if it exists
   (affe-find)))) ; Otherwise, run affe-find
 
-(define-key key-minor-mode-map (kbd "C-x C-f") 'find-file-at-point-or-affe-find)
-
 #+end_src
 
 * affe: search full text within frequently used directories
@@ -188,13 +163,6 @@ Eventually, you might want to suppress previewing for certain functions. This ca
  "Fuzzy grep in the /Users/jay/gnulisp directory with optional INITIAL input."
  (interactive "P")
  (affe-grep "/Users/jay/emacs/interesting-snippets/org-mode" initial))
-
-(define-key key-minor-mode-map (kbd "s-k g l") 'affe-grep-gnulisp-directory)
-
-(define-key key-minor-mode-map (kbd "s-/ g l") 'affe-grep-gnulisp-directory)
-
-(define-key key-minor-mode-map (kbd "s-/ g ub") 'affe-grep-bash-scripts)
-(define-key key-minor-mode-map (kbd "s-/ g up") 'affe-grep-bash-profile)
 
 ;; (define-key key-minor-mode-map (kbd "s-/ g r") 'consult-org-roam-search)
 ;; (define-key key-minor-mode-map (kbd "s-/ g r") 'affe-grep-org-roam)
@@ -212,8 +180,6 @@ Eventually, you might want to suppress previewing for certain functions. This ca
  (interactive)
  (let ((default-directory "/Users/jay/emacs/interesting-snippets/org-mode/"))
  (counsel-find-file)))
-
-(define-key key-minor-mode-map (kbd "s-k y a") 'affe-grep-gnulisp-directory)
 
 #+end_src
 
@@ -237,8 +203,6 @@ Eventually, you might want to suppress previewing for certain functions. This ca
 
 (defalias 'search-filename-proposal-directory 'fzf-find-file--proposal-directory)
 
-(define-key key-minor-mode-map (kbd "s-/ f p") 'search-filename-proposal-directory)
-
 
 (defun fzf-find-file--book-directory ()
  "Use counsel-fzf to search for files in the /Users/jay/Dropbox/writing/book/ directory."
@@ -247,9 +211,6 @@ Eventually, you might want to suppress previewing for certain functions. This ca
  (counsel-fzf nil "/Users/jay/Dropbox/writing/book/"))
 
 (defalias 'search-filename-book-directory 'fzf-find-file--book-directory)
-
-
-(define-key key-minor-mode-map (kbd "s-/ f B") 'search-filename-book-directory)
 
 
 #+end_src
@@ -306,10 +267,6 @@ This function provides a user-friendly way to search and open files from two dif
 
 (defalias 'search-filename-both-book-and-proposal-directories 'counsel-fzf-both-proposal-and-book-dirs)
 
-(define-key key-minor-mode-map (kbd "s-/ f B") 'search-filename-book-directory)
-
-(define-key key-minor-mode-map (kbd "s-/ f b") 'search-filename-both-book-and-proposal-directories)
-
 #+end_src
 
 
@@ -336,8 +293,6 @@ This function provides a user-friendly way to search and open files from two dif
 (defalias 'grep-book-directory 'consult-ripgrep-current-directory)
 (defalias 'grep-proposal-directory 'consult-ripgrep-current-directory)
 
-
-(define-key global-map (kbd "s-/ g b") 'grep-both-directories)
 
 (defun projectile-display-project-root ()
  "Show the root directory of the current Projectile project."
@@ -451,9 +406,6 @@ AdrianKubala:
   ;; set arrow keys in isearch. left/right is backward/forward, up/down is history. press Return to exit
 ;;  (define-key isearch-mode-map (kbd "<up>") 'isearch-ring-retreat )
 ;; (define-key isearch-mode-map (kbd "<down>") 'isearch-ring-advance )
-  (define-key isearch-mode-map (kbd "<tab>") 'isearch-ring-advance )
-  (define-key isearch-mode-map (kbd "<S-tab>") 'isearch-repeat-backward) ; single key, useful
-
 ;  (define-key isearch-mode-map (kbd "<right>") 'isearch-repeat-forward) ; single key, useful
  )
 
@@ -810,7 +762,6 @@ Avoid recentering errors. Works!
 #+begin_src emacs-lisp
 (use-package deadgrep
   :defer)
-(define-key key-minor-mode-map (kbd "s-k d g") 'deadgrep-current-directory)
 #+end_src
 
 * search recently used directories
@@ -859,7 +810,6 @@ Maybe to replace fasd?
 
 #+begin_src emacs-lisp
 (setq consult-locate-args "fasd -t -l -R")
-(define-key key-minor-mode-map (kbd "C-x C-l") 'consult-locate)
 #+end_src
 
 * counsel
@@ -870,7 +820,6 @@ Maybe to replace fasd?
 * embark vertico
 #+begin_src emacs-lisp
 (with-eval-after-load 'vertico
-(define-key key-minor-mode-map (kbd "C-M-S-s-o") 'embark-act)
 ;; (define-key vertico-map (kbd "M-o") 'embark-act)
 )
 

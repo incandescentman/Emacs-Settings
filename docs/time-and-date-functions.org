@@ -1,0 +1,117 @@
+:PROPERTIES:
+:ID: time-and-date-functions
+:END:
+#+title: Time and Date Functions
+
+* Overview
+
+This document catalogs Jay's custom functions for inserting dates and timestamps in Emacs. All functions are defined in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]].
+
+* Simple Date Insertion
+
+These functions insert plain text dates at point.
+
+** insert-todays-date (line 2793)
+
+Inserts today's date in ISO format by default.
+
+- Without prefix: =2025-01-23= (ISO format)
+- With prefix arg (C-u): =23-01-2025= (European format)
+
+Uses pure Elisp =format-time-string=.
+
+** today (line 3201)
+
+Inserts today's date via shell command =date +%F=.
+
+Output: =2025-01-23=
+
+** yesterday (line 3196)
+
+Inserts yesterday's date via shell command =date -v -1d +%F=.
+
+Output: =2025-01-22=
+
+* Org-Mode Date Headings
+
+These functions create new org headings with timestamps, useful for journaling and daily tracking. All use =org-insert-time-stamp= for proper org timestamps.
+
+** jd-org-today (line 1205)
+
+Creates a new heading with today's timestamp.
+
+** jd-org-approach (line 1213)
+
+Creates a heading with timestamp plus a structured morning routine:
+
+#+begin_example
+** <2025-01-23 Thu>
+*** TODO morning pages
+#+end_example
+
+** jd-org-today-and-accountability (line 1227)
+
+Creates a "committed actions" heading with a progress cookie:
+
+#+begin_example
+** committed actions: <2025-01-23 Thu> [0%]
+#+end_example
+
+** jd-org-2-book-and-accountability (line 1251)
+
+Creates a heading with a bookwriting checklist structure.
+
+** jd-org-today-and-book (line 1263)
+
+Creates a heading with bookwriting TODO and starts org-pomodoro timer.
+
+** pomidor-start (line 1272)
+
+Same as =jd-org-today-and-book= but starts the pomidor timer instead.
+
+** jd-pomodoro-sprint (line 1281)
+
+Creates a heading with "pomodoro sprint" TODO and starts timer.
+
+* Date Format Configuration
+
+Interactive functions for configuring how dates appear in exports and overlays.
+
+** jay/org-export-date-format-chooser (line 5427)
+
+Interactive menu to choose an org export date format. Options include:
+
+- U.S. short: 12/25
+- U.S. numeric: 12/25/2025
+- ISO standard: 2025-12-25
+- Month Day, Year: December 25, 2025
+- Full: Monday December 25, 2025
+
+Sets =org-export-date-timestamp-format= globally and copies a file-local variable definition to the clipboard.
+
+** jay/org-date-format-chooser (line 5478)
+
+More comprehensive chooser that can configure:
+
+- Export formats only
+- Overlay formats only (how timestamps display in buffer)
+- Both export and overlay formats
+
+When configuring overlays, timestamps with times display as "7:00pm" format.
+
+* Related Settings
+
+These variables control date/time behavior:
+
+#+begin_src emacs-lisp
+;; Extend "today" until 8am (for late-night work)
+org-extend-today-until 8
+
+;; Export date format (set by chooser functions)
+org-export-date-timestamp-format "%B %d, %Y"
+#+end_src
+
+* See Also
+
+- [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]] - Source definitions
+- [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-core.el]] - Org-roam daily notes (=org-roam-dailies-goto-today=, =jay/org-roam-yesterday=)
