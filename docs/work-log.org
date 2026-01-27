@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-01-27: Fix =[= key blocked by bad kbd syntax
+- =[= was acting as a prefix key instead of self-inserting
+- Root cause: =("[mouse-2]" . context-menu-open)= in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] — =kbd= parsed ="[mouse-2]"= as literal keystrokes =[=, =m=, =o=, =u=, =s=, =e=, =-=, =2=, =]= making =[= a prefix
+- Fix: changed to ="<mouse-2>"= which is the correct =kbd= syntax for mouse events
+
 * 2026-01-27: Fix spacecraft-mode.org broken src block
 - =endless/upcase=, =endless/downcase=, =endless/capitalize=, =capitalize-or-endless/capitalize= were missing from [[file+emacs:/Users/jay/emacs/emacs-settings/spacecraft-mode.el][spacecraft-mode.el]], causing autoload errors
 - Root cause: a top-level =* heading= at line 310 of [[file+emacs:/Users/jay/emacs/emacs-settings/spacecraft-mode.org][spacecraft-mode.org]] was inside a =#+begin_src= block (opened line 238, closed line 312), breaking org's block parsing so these functions never tangled

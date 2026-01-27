@@ -379,7 +379,7 @@
     ("M-s-="         . calc-eval-region)
     ("C-c r"         . eval-region)
     ("M-x"           . execute-extended-command)
-    ("[mouse-2]"     . context-menu-open)
+    ("<mouse-2>"     . context-menu-open)
     ("C-M-3"         . number-region)
     ("C-M-\\"        . palimpsest-move-region-to-top)
     ("M-%"           . eval-expression)
