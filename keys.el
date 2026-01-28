@@ -97,7 +97,7 @@
     ("s-k f z"       . counsel-fzf)
     ("s-P"           . projectile-find-file)
     ("s-\\"         . visit-most-recent-file)
-    ("C-x C-d"       . dired) ; keep dired here – consult-dir is on "C-x C-j"
+    ("C-x C-d"       . consult-dir)
     ("C-x C-f"       . find-file-at-point-or-affe-find)
     ("C-x C-j"       . jay-up-directory)
     ("s-/ f p"       . search-filename-proposal-directory)
@@ -118,8 +118,8 @@
     ("s-k ag"        . affe-grep)
     ("s-k d g"       . deadgrep-current-directory)
     ("s-k rg"        . consult-ripgrep-current-directory)
-    ("s-k g l"       . affe-grep-gnulisp-directory)
-    ("s-k y a"       . affe-grep-gnulisp-directory)
+    ("s-k g l"       . goto-line)
+    ("s-k y a"       . new-yasnippet)
     ("s-k w s"       . isearch-forward-word)
     ("M-s b"         . book-search)
     ("M-s c"         . current-buffers-search)
@@ -188,6 +188,7 @@
     ("C-S-<left>"    . org-outdent-or-promote)
     ("C-S-<right>"   . org-indent-or-demote)
     ("C-<tab>"       . org-cycle-force-archived)
+    ("s-k t h"       . mw-thesaurus-lookup-dwim)
     ("s-k t s"       . org-toggle-time-stamp-overlays)
     ("s-p"           . org-export-dispatch)
     ("s-("           . org-velocity)
@@ -209,8 +210,8 @@
     ("C-s-8"         . my/org-show-level-8)
 
     ;; Navigation -------------------------------------------------------
-    ("M-]"           . org-next-visible-heading)
-    ("M-["           . org-previous-visible-heading)
+    ("M-]"           . org-forward-heading-same-level)
+    ("M-["           . org-backward-heading-same-level)
     ("M-n"           . org-next-visible-heading)
     ("M-p"           . org-previous-visible-heading)
     ("M-N"           . org-forward-heading-same-level)
@@ -255,7 +256,7 @@
     ("C-w"           . copy-region-as-kill-and-push-to-clipboard)
     ("s-c"           . pasteboard-copy-adaptive) ; <–– Fix: now active everywhere
     ("s-v"           . pasteboard-paste-adaptive)
-    ("s-V"           . pasteboard-paste-adjusted-subtrees-adaptive)
+    ("s-V"           . pasteboard-paste-verbatim)
     ("s-x"           . pasteboard-cut-adaptive)
     ("C-v"           . html2org-clipboard)
     ("C-s-v"         . html2org-clipboard)
@@ -265,7 +266,7 @@
     ("s-k u p"       . unfill-paragraph)
     ("M--"           . cycle-hyphenation-or-toggle-item)
     ("M-_"           . em-dash)
-    ("s-k r l"       . remove-link)
+    ("s-k r l"       . remove-hyperlink-at-point)
     ("C-s-SPC"       . cape-emoji)
 
     ;; macOS‑style bindings --------------------------------------------
@@ -296,7 +297,7 @@
     ("M-h"           . help-command)
     ("M-h M-k"       . describe-key)
     ("s-D"           . define-word-at-point)
-    ("s-T"           . mw-thesaurus-lookup-dwim)
+    ("s-T"           . new-buffer-in-new-pane)
     ("s-k g t"       . google-translate-at-point)
     ("C-s-]"         . help-go-forward)
     ("M-s-t"         . mw-thesaurus-lookup-at-point)
@@ -372,7 +373,7 @@
     ("s-k h l"       . spacemacs/toggle-highlight-current-line-globally-off)
     ("s-k c p"       . path-copy-path-to-kill-ring)
     ("s-|"           . path-copy-path-to-clipboard)
-    ("<s-return>"    . toggle-fullscreen)
+    ("<s-return>"    . jay/toggle-fullscreen)
     ("C-\\"          . palimpsest-move-region-to-bottom)
     ("C-'"           . palimpsest-move-region-to-bottom)
     ("C-c C-v"       . refile-region)
@@ -405,7 +406,7 @@
     ("s-k p s"       . pomodoro-start)
     ("C-c C-x p p"   . pomodoro-start)
     ("C-c C-x pi"    . pomodoro-start)
-    ("C-c C-x po"    . pomidor-stop)
+    ("C-c C-x po"    . pomodoro-stop)
 
     ;; =================================================================
     ;; Book Related

@@ -1,6 +1,29 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-01-28: Fix 12 incorrectly resolved keybinding conflicts from migration
+- The keybinding consolidation into [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] had incorrectly resolved conflicts: when the same key was bound in both keys.el and a .org file (gnu-emacs-startup.org or shared-functions.org), the .org file's binding should have won (since it loaded after keys.el), but the migration kept the keys.el binding instead.
+- Fixed 12 bindings in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]]:
+  - ~C-x C-j~ :: =consult-dir= → =jay-up-directory= (gnu-emacs-startup.org)
+  - ~s-k g l~ :: =affe-grep-gnulisp-directory= → =goto-line= (gnu-emacs-startup.org)
+  - ~s-k y a~ :: =affe-grep-gnulisp-directory= → =new-yasnippet= (shared-functions.org)
+  - ~s-V~ :: =pasteboard-paste-adjusted-subtrees-adaptive= → =pasteboard-paste-verbatim= (gnu-emacs-startup.org)
+  - ~s-T~ :: =mw-thesaurus-lookup-dwim= → =new-buffer-in-new-pane= (gnu-emacs-startup.org)
+  - ~M-[~ :: =org-previous-visible-heading= → =org-backward-heading-same-level= (shared-functions.org)
+  - ~M-]~ :: =org-next-visible-heading= → =org-forward-heading-same-level= (shared-functions.org)
+  - ~s-k r l~ :: =remove-link= (nonexistent) → =remove-hyperlink-at-point= (gnu-emacs-startup.org)
+  - ~<s-return>~ :: =toggle-fullscreen= (nonexistent) → =jay/toggle-fullscreen= (gnu-emacs-startup.org)
+  - ~C-c C-x po~ :: =pomidor-stop= → =pomodoro-stop= (gnu-emacs-startup.org)
+  - ~M-t~ :: restored to =titlecase-dwim=; moved =mw-thesaurus-lookup-dwim= to new binding ~s-k t h~
+  - ~C-x C-d~ :: =dired= → =consult-dir= (Jay's preference)
+- Removed 3 fabricated bindings that never existed pre-migration:
+  - ~s-{~ → =path-copy-path-to-clipboard= (removed)
+  - ~s-}~ → =path-copy-path-to-clipboard= (restored to =poetry-rhyme-word=)
+  - ~C-x m~ → =endless/mc-map= (removed; was only on ~C-8~)
+- Deleted redundant [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybindings-master.org][keybindings-master.org]] — the dump/annotations/reference pipeline already covers it
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-reference.org][keybinding-reference.org]] as the canonical human-readable keybinding doc
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-dump.org][keybinding-dump.org]] with corrected bindings
+
 * 2026-01-27: Fix =[= key blocked by bad kbd syntax
 - =[= was acting as a prefix key instead of self-inserting
 - Root cause: =("[mouse-2]" . context-menu-open)= in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] — =kbd= parsed ="[mouse-2]"= as literal keystrokes =[=, =m=, =o=, =u=, =s=, =e=, =-=, =2=, =]= making =[= a prefix
