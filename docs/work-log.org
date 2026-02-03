@@ -1,6 +1,20 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-02-03: Sort org-roam capture templates alphabetically
+- Sorted all capture template lists in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-profiles.el][jay-org-roam-profiles.el]] alphabetically by key (ASCII order: =$= first, then uppercase A-Z, then lowercase a-z)
+- Affected lists:
+  - =jay/org-roam-default-template-specs= (20 templates)
+  - =jay/org-roam-default-factory-template-specs= (19 templates)
+  - =jay/org-roam-capture-templates-mylife= (13 templates)
+  - =jay/org-roam-capture-templates-social= (10 templates)
+  - =jay/org-roam-capture-templates-parents= (6 templates)
+
+* 2026-01-29: Fix keys.el not being loaded
+- All bindings in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] were not working (e.g., ~s-v~ → =pasteboard-paste-adaptive=)
+- Root cause: during the keybinding consolidation, bindings were migrated to =keys.el= but no one added a =(load ...)= statement to actually load the file
+- Fix: added =(load "/Users/jay/emacs/emacs-settings/keys.el")= to [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][spacemacs-new-config.el]] after =jay-osx.el= is loaded
+
 * 2026-01-28: Fix 12 incorrectly resolved keybinding conflicts from migration
 - The keybinding consolidation into [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] had incorrectly resolved conflicts: when the same key was bound in both keys.el and a .org file (gnu-emacs-startup.org or shared-functions.org), the .org file's binding should have won (since it loaded after keys.el), but the migration kept the keys.el binding instead.
 - Fixed 12 bindings in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]]:

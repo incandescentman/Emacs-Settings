@@ -130,7 +130,7 @@
     ("C-x C-l"       . consult-locate)
     ("s-8"           . search-open-buffers)
     ("M-g M-g"       . google-this)
-    ("M-:"           . query-replace)
+    ("M-:"           . eval-expression)
     ("s-k rr"        . replace-regexp)
 
     ;; ==================================================================
@@ -390,7 +390,7 @@
     ("<mouse-2>"     . context-menu-open)
     ("C-M-3"         . number-region)
     ("C-M-\\"        . palimpsest-move-region-to-top)
-    ("M-%"           . eval-expression)
+    ("M-%"           . query-replace)
     ("s-}"           . poetry-rhyme-word)
     ("s-k bl"        . blue-light)
     ("s-k cf"        . customize-face)
@@ -472,6 +472,17 @@
     ("s-c"           . copy-minibuffer-contents)
     ("s-a"           . copy-minibuffer-contents)))
 
+(defun my/install-minibuffer-bindings ()
+  "Install `my/minibuffer-bindings` into all minibuffer maps."
+  (dolist (map '(minibuffer-local-map
+                 minibuffer-local-ns-map
+                 minibuffer-local-completion-map
+                 minibuffer-local-must-match-map
+                 minibuffer-local-isearch-map))
+    (when (boundp map)
+      (dolist (binding my/minibuffer-bindings)
+        (define-key (symbol-value map) (kbd (car binding)) (cdr binding))))))
+
 (defun my/install-minibuffer-escape-keys ()
   "Ensure C-g always aborts in minibuffer maps."
   (dolist (map '(minibuffer-local-map
@@ -502,8 +513,7 @@
     (global-set-key (kbd (car binding)) (cdr binding)))
 
   ;; Install minibuffer keybindings
-  (dolist (binding my/minibuffer-bindings)
-    (define-key minibuffer-local-map (kbd (car binding)) (cdr binding)))
+  (my/install-minibuffer-bindings)
   (my/install-minibuffer-escape-keys)
 
   (define-key help-map (kbd "i") 'jay-info-emacs-manual)
@@ -698,6 +708,10 @@ Used by `my/keybinding-dump' to generate documentation.")
 
 (with-eval-after-load 'isearch
   (my/install-mode-bindings isearch-mode-map my/isearch-bindings))
+
+(with-eval-after-load 'ivy
+  (when (boundp 'ivy-minibuffer-map)
+    (my/install-mode-bindings ivy-minibuffer-map my/minibuffer-bindings)))
 
 (with-eval-after-load 'help-mode
   (my/install-mode-bindings help-mode-map my/help-mode-bindings))

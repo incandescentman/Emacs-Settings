@@ -136,26 +136,26 @@ Additional keyword ARGS allow callers to override pieces of the template:
 
 (defconst jay/org-roam-default-template-specs
   '(("A" "accountability and task capture" "accountability" "accountability")
-    ("a" "article notes or books and articles" "literature-notes" "literaturenote")
-    ("H" "Plans" "project" "project")
-    ("g" "ChatGPT Outputs" "chatgpt-outputs" "gpt")
-    ("I" "intelligence" "AI" "intelligence"
-     :body "- Links ::\n- Source ::\n\n\n* ${title}\n%?")
-    ("j" "job application" "job-applications" "job")
-    ("l" "logistics of OpenAI" "logistics" "library")
-    ("c" "Conversation" "conversations" "conversation")
-    ("d" "documents and deliverables" "documents" "document")
     ("D" "Developing, vibecoding" "vibecoding" "document")
     ("E" "Exercise" "exercise" "exercise")
-    ("f" "finances and housekeeping" "finances" "finances")
+    ("H" "Plans" "project" "project")
+    ("I" "intelligence" "AI" "intelligence"
+     :body "- Links ::\n- Source ::\n\n\n* ${title}\n%?")
+    ("L" "Learning, lectures, and classes" "lectures" "learning")
     ("M" "Momentum --- 2025 job hunt" "job-hunt-2025" "momentum")
     ("O" "Outline / Structure / Schelling Points" "structure" "structure")
-    ("p" "person" "person" "person"
-     :body "- Links :: [[id:20240426T130414.177117][🌐 People]]\n- Source ::\n\n* ${title}\n%?")
     ("W" "writers" "writers" "writers"
      :filetags ":writers:person:")
+    ("a" "article notes or books and articles" "literature-notes" "literaturenote")
+    ("c" "Conversation" "conversations" "conversation")
+    ("d" "documents and deliverables" "documents" "document")
+    ("f" "finances and housekeeping" "finances" "finances")
+    ("g" "ChatGPT Outputs" "chatgpt-outputs" "gpt")
+    ("j" "job application" "job-applications" "job")
     ("k" "kanban" "kanban" "kanban")
-    ("L" "Learning, lectures, and classes" "lectures" "learning")
+    ("l" "logistics of OpenAI" "logistics" "library")
+    ("p" "person" "person" "person"
+     :body "- Links :: [[id:20240426T130414.177117][🌐 People]]\n- Source ::\n\n* ${title}\n%?")
     ("u" "approved language" "approved-language" "language")
     ("z" "CRM (custom path)" "" "crm"
      :body "- Links ::\nSource ::\n\n\n* ${title}\n%?"
@@ -166,24 +166,24 @@ Additional keyword ARGS allow callers to override pieces of the template:
   "Data-driven specs for the default profile's bespoke templates.")
 
 (defconst jay/org-roam-default-factory-template-specs
-  '(("B" "Business (Socratic AI)" "business-socratic" "project")
-    ("b" "books" "books" "books")
+  '(("$" "consumerist" "consumerist" "consumerist")
+    ("B" "Business (Socratic AI)" "business-socratic" "project")
     ("C" "corpus (transcripts and examples)" "corpus" "corpus")
+    ("P" "photography" "photography" "photography")
+    ("R" "recipe" "recipes" "recipe")
+    ("S" "Socratic AI" "socratic" "socratic")
+    ("T" "Travel" "travel" "travel")
+    ("X" "exemplars" "exemplars" "exemplars")
+    ("b" "books" "books" "books")
     ("e" "emacs" "emacs" "emacs")
     ("m" "mantras and intentions" "mantras" "mantras")
     ("n" "note" "notes" "note")
     ("o" "OpenAI, i.e. work" "notes" "work")
-    ("P" "photography" "photography" "photography")
     ("q" "quotes about AI" "quotes" "quote")
-    ("S" "Socratic AI" "socratic" "socratic")
-    ("s" "Storytelling and Writing" "storytelling" "storytelling")
-    ("T" "Travel" "travel" "travel")
-    ("w" "lectures and public talks" "lectures" "lectures")
-    ("X" "exemplars" "exemplars" "exemplars")
-    ("x" "cuts" "cuts" "cuts")
-    ("$" "consumerist" "consumerist" "consumerist")
     ("r" "social / relationships" "social" "social")
-    ("R" "recipe" "recipes" "recipe")
+    ("s" "Storytelling and Writing" "storytelling" "storytelling")
+    ("w" "lectures and public talks" "lectures" "lectures")
+    ("x" "cuts" "cuts" "cuts")
     ("y" "YouTube" "youtube" "youtube"
      :body "- Links ::\n- URL :: %?\n- Channel ::\n\n* ${title}\n\n** Notes\n"))
   "Factory-style template specs that also lean on `jay/roam-template`.")
@@ -200,23 +200,23 @@ Additional keyword ARGS allow callers to override pieces of the template:
 ;; MY-LIFE PROFILE TEMPLATES (Personal/life notes)
 (defvar jay/org-roam-capture-templates-mylife
   (list
-   ;; Storytelling & memoir templates
-   '("s" "story / anecdote" plain
-     "- Links ::\n- Date :: %<%Y-%m-%d>\n- Time Period :: \n- Location :: \n- People Involved :: \n\n* ${title}\n\n** The Story\n\n%?\n\n** Why This Matters\n\n** Details to Remember\n\n"
-     :target (file+head "stories/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+FILETAGS: :story:")
+   ;; Storytelling & memoir templates (sorted alphabetically by key)
+   '("M" "Moth story idea" plain
+     "- Links ::\n- Date :: %<%Y-%m-%d>\n- Theme :: \n- Stakes :: \n- Arc :: \n\n* ${title}\n\n** Opening Hook\n\n%?\n\n** Middle / Turning Point\n\n** Ending / What I Learned\n\n** Stage Notes\n\n"
+     :target (file+head "moth-stories/%<%Y%m%d%H%M%S>-${slug}.org"
+                        "#+TITLE: ${title}\n#+FILETAGS: :moth:performance:")
      :unnarrowed t)
 
-   '("o" "OpenAI story" plain
-     "- Links ::\n- Date :: %<%Y-%m-%d>\n- Time Period :: \n- People :: \n\n* ${title}\n\n** What Happened\n\n%?\n\n** Context\n\n** Why It's Interesting\n\n"
-     :target (file+head "openai-stories/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+FILETAGS: :openai:story:")
+   '("c" "character detail / observation" plain
+     "- Links ::\n- About :: \n- Date Observed :: %<%Y-%m-%d>\n\n* ${title}\n\n%?\n\n"
+     :target (file+head "observations/%<%Y%m%d%H%M%S>-${slug}.org"
+                        "#+TITLE: ${title}\n#+FILETAGS: :observation:")
      :unnarrowed t)
 
-   '("m" "memory / moment" plain
-     "- Links ::\n- When :: \n- Where :: \n- Who :: \n\n* ${title}\n\n%?\n\n"
-     :target (file+head "memories/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+FILETAGS: :memory:")
+   '("e" "essay / reflection piece" plain
+     "- Links ::\n- Date :: %<%Y-%m-%d>\n- Theme :: \n\n* ${title}\n\n** Core Idea\n\n%?\n\n** Examples / Stories\n\n** So What?\n\n"
+     :target (file+head "essays/%<%Y%m%d%H%M%S>-${slug}.org"
+                        "#+TITLE: ${title}\n#+FILETAGS: :essay:memoir:")
      :unnarrowed t)
 
    '("f" "family story" plain
@@ -231,40 +231,16 @@ Additional keyword ARGS allow callers to override pieces of the template:
                         "#+TITLE: ${title}\n#+FILETAGS: :school:story:")
      :unnarrowed t)
 
-   '("p" "person (character sketch)" plain
-     "- Links ::\n- Relationship :: \n- Time Period :: \n\n* ${title}\n\n** Memorable Qualities\n\n%?\n\n** Key Stories\n\n** Why They Matter\n\n"
-     :target (file+head "people/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+FILETAGS: :person:memoir:")
+   '("l" "life lesson / insight" plain
+     "- Links ::\n- Date :: %<%Y-%m-%d>\n- Source :: \n- Context :: \n\n* ${title}\n\n** The Insight\n\n%?\n\n** How I Learned This\n\n** How to Apply It\n\n"
+     :target (file+head "lessons/%<%Y%m%d%H%M%S>-${slug}.org"
+                        "#+TITLE: ${title}\n#+FILETAGS: :lesson:insight:")
      :unnarrowed t)
 
-   '("M" "Moth story idea" plain
-     "- Links ::\n- Date :: %<%Y-%m-%d>\n- Theme :: \n- Stakes :: \n- Arc :: \n\n* ${title}\n\n** Opening Hook\n\n%?\n\n** Middle / Turning Point\n\n** Ending / What I Learned\n\n** Stage Notes\n\n"
-     :target (file+head "moth-stories/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+FILETAGS: :moth:performance:")
-     :unnarrowed t)
-
-   '("e" "essay / reflection piece" plain
-     "- Links ::\n- Date :: %<%Y-%m-%d>\n- Theme :: \n\n* ${title}\n\n** Core Idea\n\n%?\n\n** Examples / Stories\n\n** So What?\n\n"
-     :target (file+head "essays/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+FILETAGS: :essay:memoir:")
-     :unnarrowed t)
-
-   '("q" "quote / dialogue" plain
-     "- Links ::\n- Who Said It :: \n- Context :: \n- Date :: %<%Y-%m-%d>\n\n* ${title}\n\n%?\n\n"
-     :target (file+head "quotes/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+FILETAGS: :quote:dialogue:")
-     :unnarrowed t)
-
-   '("c" "character detail / observation" plain
-     "- Links ::\n- About :: \n- Date Observed :: %<%Y-%m-%d>\n\n* ${title}\n\n%?\n\n"
-     :target (file+head "observations/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+FILETAGS: :observation:")
-     :unnarrowed t)
-
-   '("t" "turning point / pivotal moment" plain
-     "- Links ::\n- Date :: %<%Y-%m-%d>\n- Before :: \n- After :: \n\n* ${title}\n\n** What Happened\n\n%?\n\n** Why It Changed Things\n\n"
-     :target (file+head "turning-points/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+FILETAGS: :turning-point:memoir:")
+   '("m" "memory / moment" plain
+     "- Links ::\n- When :: \n- Where :: \n- Who :: \n\n* ${title}\n\n%?\n\n"
+     :target (file+head "memories/%<%Y%m%d%H%M%S>-${slug}.org"
+                        "#+TITLE: ${title}\n#+FILETAGS: :memory:")
      :unnarrowed t)
 
    '("n" "note / fragment" plain
@@ -273,35 +249,48 @@ Additional keyword ARGS allow callers to override pieces of the template:
                         "#+TITLE: ${title}\n#+FILETAGS: :fragment:")
      :unnarrowed t)
 
-   '("l" "life lesson / insight" plain
-     "- Links ::\n- Date :: %<%Y-%m-%d>\n- Source :: \n- Context :: \n\n* ${title}\n\n** The Insight\n\n%?\n\n** How I Learned This\n\n** How to Apply It\n\n"
-     :target (file+head "lessons/%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+TITLE: ${title}\n#+FILETAGS: :lesson:insight:")
+   '("o" "OpenAI story" plain
+     "- Links ::\n- Date :: %<%Y-%m-%d>\n- Time Period :: \n- People :: \n\n* ${title}\n\n** What Happened\n\n%?\n\n** Context\n\n** Why It's Interesting\n\n"
+     :target (file+head "openai-stories/%<%Y%m%d%H%M%S>-${slug}.org"
+                        "#+TITLE: ${title}\n#+FILETAGS: :openai:story:")
+     :unnarrowed t)
+
+   '("p" "person (character sketch)" plain
+     "- Links ::\n- Relationship :: \n- Time Period :: \n\n* ${title}\n\n** Memorable Qualities\n\n%?\n\n** Key Stories\n\n** Why They Matter\n\n"
+     :target (file+head "people/%<%Y%m%d%H%M%S>-${slug}.org"
+                        "#+TITLE: ${title}\n#+FILETAGS: :person:memoir:")
+     :unnarrowed t)
+
+   '("q" "quote / dialogue" plain
+     "- Links ::\n- Who Said It :: \n- Context :: \n- Date :: %<%Y-%m-%d>\n\n* ${title}\n\n%?\n\n"
+     :target (file+head "quotes/%<%Y%m%d%H%M%S>-${slug}.org"
+                        "#+TITLE: ${title}\n#+FILETAGS: :quote:dialogue:")
+     :unnarrowed t)
+
+   '("s" "story / anecdote" plain
+     "- Links ::\n- Date :: %<%Y-%m-%d>\n- Time Period :: \n- Location :: \n- People Involved :: \n\n* ${title}\n\n** The Story\n\n%?\n\n** Why This Matters\n\n** Details to Remember\n\n"
+     :target (file+head "stories/%<%Y%m%d%H%M%S>-${slug}.org"
+                        "#+TITLE: ${title}\n#+FILETAGS: :story:")
+     :unnarrowed t)
+
+   '("t" "turning point / pivotal moment" plain
+     "- Links ::\n- Date :: %<%Y-%m-%d>\n- Before :: \n- After :: \n\n* ${title}\n\n** What Happened\n\n%?\n\n** Why It Changed Things\n\n"
+     :target (file+head "turning-points/%<%Y%m%d%H%M%S>-${slug}.org"
+                        "#+TITLE: ${title}\n#+FILETAGS: :turning-point:memoir:")
      :unnarrowed t))
   "Capture templates for the my-life (storytelling/memoir) profile.")
 
 ;; ROAM-SOCIAL PROFILE TEMPLATES (Relationships, community, networking)
 (defvar jay/org-roam-capture-templates-social
   (list
-   ;; General-purpose templates
+   ;; Templates sorted alphabetically by key
    (jay/roam-template
-    "n" "note" "notes" "note")
+    "c" "connection log" "connections" "connection"
+    :body "- Links ::\n- Person :: \n- Context :: \n- Next Touchpoint :: \n\n* ${title}\n\n** What We Talked About\n%?\n\n** Actions\n- [ ] ")
 
    (jay/roam-template
     "d" "idea" "ideas" "idea"
     :body "- Links ::\n- Source ::\n\n* ${title}\n\n** The Idea\n%?\n\n** Why It Matters\n")
-
-   (jay/roam-template
-    "s" "insight" "insights" "insight"
-    :body "- Links ::\n- Source ::\n- Context :: \n\n* ${title}\n\n%?\n")
-
-   (jay/roam-template
-    "t" "thought" "thoughts" "thought")
-
-   ;; Relationship-specific templates
-   (jay/roam-template
-    "c" "connection log" "connections" "connection"
-    :body "- Links ::\n- Person :: \n- Context :: \n- Next Touchpoint :: \n\n* ${title}\n\n** What We Talked About\n%?\n\n** Actions\n- [ ] ")
 
    (jay/roam-template
     "e" "event debrief" "events" "event"
@@ -317,18 +306,33 @@ Additional keyword ARGS allow callers to override pieces of the template:
     :filetags ":introduction:social:")
 
    (jay/roam-template
+    "n" "note" "notes" "note")
+
+   (jay/roam-template
     "p" "person snapshot" "people" "person"
     :body "- Links ::\n- Relationship Depth :: \n- Last Talked :: \n- Shared Projects :: \n\n* ${title}\n\n** Bio\n%?\n\n** Topics They Love\n- \n\n** I Can Help With\n- \n"
     :filetags ":person:social:")
 
    (jay/roam-template
     "r" "relationship map" "relationships" "relationship"
-    :body "- Links ::\n- Anchor Person :: \n- Theme :: \n\n* ${title}\n\n** Constellation\n- %?\n\n** Warm Paths\n- \n\n** Energy Level\n"))
+    :body "- Links ::\n- Anchor Person :: \n- Theme :: \n\n* ${title}\n\n** Constellation\n- %?\n\n** Warm Paths\n- \n\n** Energy Level\n")
+
+   (jay/roam-template
+    "s" "insight" "insights" "insight"
+    :body "- Links ::\n- Source ::\n- Context :: \n\n* ${title}\n\n%?\n")
+
+   (jay/roam-template
+    "t" "thought" "thoughts" "thought"))
   "Capture templates for the roam-social (relationships/networking) profile.")
 
 ;; ROAM-PARENTS PROFILE TEMPLATES (Family HQ / caretaking)
 (defvar jay/org-roam-capture-templates-parents
   (list
+   ;; Templates sorted alphabetically by key
+   (jay/roam-template
+    "a" "appointment" "appointments" "appointment"
+    :body "- Links ::\n- Parent :: \n- When :: %<%Y-%m-%d %H:%M>\n- Location :: \n\n* ${title}\n\n** Prep Checklist\n- [ ] %?\n\n** Outcomes\n- \n")
+
    (jay/roam-template
     "c" "care log" "care-log" "care"
     :body "- Links ::\n- Parent :: \n- Date :: %<%Y-%m-%d>\n- Time :: %<%H:%M>\n\n* ${title}\n\n** Summary\n%?\n\n** Mood / Energy\n- \n\n** Notes\n- \n")
@@ -337,10 +341,6 @@ Additional keyword ARGS allow callers to override pieces of the template:
     "m" "medical note" "medical" "medical"
     :body "- Links ::\n- Parent :: \n- Provider :: \n- Facility :: \n- Date :: %<%Y-%m-%d>\n\n* ${title}\n\n** Observations\n%?\n\n** Medications / Dosage\n- \n\n** Questions\n- \n"
     :filetags ":medical:parents:")
-
-   (jay/roam-template
-    "a" "appointment" "appointments" "appointment"
-    :body "- Links ::\n- Parent :: \n- When :: %<%Y-%m-%d %H:%M>\n- Location :: \n\n* ${title}\n\n** Prep Checklist\n- [ ] %?\n\n** Outcomes\n- \n")
 
    (jay/roam-template
     "p" "parent dossier" "profiles" "profile"

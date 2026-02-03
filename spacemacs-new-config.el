@@ -128,6 +128,7 @@
 
 
 (load "/Users/jay/emacs/emacs-settings/jay-osx.el")
+(load "/Users/jay/emacs/emacs-settings/keys.el")
 (org-babel-load-file "~/emacs/emacs-settings/gnu-emacs-startup.org")
 (org-babel-load-file "~/emacs/emacs-settings/shared-functions.org")
 (org-babel-load-file "~/emacs/emacs-settings/spacecraft-mode.org")
