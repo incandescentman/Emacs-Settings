@@ -370,10 +370,10 @@ when pasted into Org files.  Stripping trailing whitespace normalises the text."
 
 (defun pasteboard--remove-blank-line-after-headings (beg end)
   "Remove blank lines between headings and body text between BEG and END.
-Preserves blank lines between consecutive headings."
+Preserves blank lines before headings and # directives (code blocks, properties)."
   (save-excursion
     (goto-char beg)
-    (while (re-search-forward "^\\(\\*+ .+\\)\n\n+\\([^*\n]\\)" end t)
+    (while (re-search-forward "^\\(\\*+ .+\\)\n\n+\\([^*\n#]\\)" end t)
       (replace-match "\\1\n\\2" t))))
 
 (defun pasteboard--convert-bold-to-headings (beg end)

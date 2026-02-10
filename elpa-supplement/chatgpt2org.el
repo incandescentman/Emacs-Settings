@@ -83,8 +83,8 @@
    ;; Remove lines that are only whitespace (consume the newline too)
    (setq org-content (replace-regexp-in-string "^[ \t]+\\(?:\n\\|\\'\\)" "" org-content))
 
-   ;; Remove blank line between heading and body text (but preserve between headings)
-   (setq org-content (replace-regexp-in-string "^\\(\\*+ .+\\)\n\n+\\([^*\n]\\)" "\\1\n\\2" org-content))
+   ;; Remove blank line between heading and body text (preserve before headings and # directives)
+   (setq org-content (replace-regexp-in-string "^\\(\\*+ .+\\)\n\n+\\([^*\n#]\\)" "\\1\n\\2" org-content))
 
    (kill-new org-content)
    (yank)))

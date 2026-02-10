@@ -1762,8 +1762,8 @@ Set to t to preserve them.")
     (setq result (replace-regexp-in-string "^[ \t]+\\(?:\n\\|\\'\\)" "" result))
     ;; Collapse excessive newlines
     (setq result (replace-regexp-in-string "\n\n\n+" "\n\n" result))
-    ;; Remove blank line between heading and body text (but preserve between headings)
-    (setq result (replace-regexp-in-string "^\\(\\*+ .+\\)\n\n+\\([^*\n]\\)" "\\1\n\\2" result))
+    ;; Remove blank line between heading and body text (preserve before headings and # directives)
+    (setq result (replace-regexp-in-string "^\\(\\*+ .+\\)\n\n+\\([^*\n#]\\)" "\\1\n\\2" result))
     result))
 
 (defun jay/org-web-tools-cleanup-buffer ()
