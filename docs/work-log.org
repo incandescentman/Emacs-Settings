@@ -1,6 +1,20 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-02-10: Enhanced web content cleanup with heading spacing
+- Added cleanup rules across all paste/capture methods:
+  - Strip relative timestamps like "2 years ago", "3 months ago"
+  - Remove lines containing only whitespace
+  - Remove blank lines between headings and body text (preserve between headings)
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]]:
+  - Enhanced =jay/org-web-tools-cleanup-string= with new rules
+  - Archived old =html2org-clipboard= EXAMPLE blocks (now aliased to chatgpt2org)
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/elpa-supplement/chatgpt2org.el][chatgpt2org.el]] with same cleanup rules
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][pasteboard-copy-and-paste-functions.el]]:
+  - Added =pasteboard--remove-blank-line-after-headings= function
+  - Called in =pasteboard--clean-string= after bold-to-heading conversion
+- Org-mode style: headings flow directly into body text without blank line separation
+
 * 2026-02-10: Install org-web-tools and add social share link cleanup
 - Installed [[file+emacs:/Users/jay/emacs/emacs-settings/org-web-tools-master/][org-web-tools]] for capturing web pages as org-mode content
 - Added dependencies to =dotspacemacs-additional-packages=: =compat=, =esxml=, =plz=, =request=

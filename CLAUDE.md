@@ -83,7 +83,12 @@ The following documentation files provide detailed information about various asp
 - **org-web-tools**: Installed for capturing web pages as org-mode content
 - **Chrome Integration**: `jay/get-url-from-chrome` grabs URL from frontmost Chrome tab via AppleScript
 - **Clean Commands**: `jay/org-web-tools-read-url-as-org-clean` and `jay/org-web-tools-insert-web-page-as-entry-clean`
-- **Enhanced Cleanup**: Both `chatgpt2org` and org-web-tools now strip social share links, base64 images, view counts
+- **Enhanced Cleanup**: All paste/capture methods (`chatgpt2org`, `org-web-tools`, `pasteboard-paste-adaptive`) now:
+  - Strip social share links, base64 images, view counts
+  - Remove relative timestamps ("2 years ago", "3 months ago")
+  - Remove whitespace-only lines
+  - Remove blank lines between headings and body text (proper org-mode style)
+  - Convert bold lines that look like headings to actual org headings
 
 ### 2. Org Roam Profile System (Nov 2025)
 - **Multi-Graph Support**: Distinct profiles for 'Work' (default), 'My Life', 'Social', and 'Parents'.
