@@ -57,12 +57,9 @@ These single-keystroke Command-key bindings have very low usage and could be rea
 
 | Binding | Current Command                          | Recommendation                         |
 |---------+------------------------------------------+----------------------------------------|
-| s-r     | =counsel-recentf=                          | Reassign - you're not using this       |
-| s-P     | =projectile-find-file=                     | Reassign or remove                     |
 | s-F     | =pasteboard-search-for-clipboard-contents= | Reassign                               |
 | s-n     | =make-frame=                               | Reassign - rarely need new frames      |
 | s-D     | =define-word-at-point=                     | Reassign                               |
-| s-e     | =embark-act=                               | Reassign - embark not in your workflow |
 | s-E     | =new-email-from-subtree-no-signature=      | Reassign                               |
 | s-W     | =open-weeklies=                            | Reassign                               |
 
@@ -70,10 +67,13 @@ These single-keystroke Command-key bindings have very low usage and could be rea
 
 | Binding | Current Command                            | Uses | Recommendation                                |
 |---------+--------------------------------------------+------+-----------------------------------------------|
+| s-e     | =embark-act=                                 |    1 | Reassign - embark not in your workflow        |
+| s-M     | =tr-toggle-transclusion=                     |    1 | Reassign                                      |
 | s-S     | =org-mac-link-skim-insert=                   |    1 | Reassign                                      |
 | s-I     | =clone-indirect-buffer-new-window-and-focus= |    1 | Reassign                                      |
-| s-M     | =tr-toggle-transclusion=                     |    1 | Reassign                                      |
-| s-i     | =imenu=                                      |    1 | Reassign                                      |
+| s-r     | =counsel-recentf=                             |    2 | Reassign - you're not using this              |
+| s-i     | =imenu=                                      |    2 | Reassign                                      |
+| s-P     | =jay/org-web-tools-insert-web-page-as-entry-clean= |    3 | New mapping — evaluate usage                  |
 | s-d     | =org-todo=                                   |    3 | Reserved (Command-Tab) — treat as unavailable |
 | s-j     | =org-todo=                                   |    3 | Keep as the primary org-todo key              |
 | s-B     | =consult-buffer=                             |    3 | Reassign                                      |
@@ -168,7 +168,7 @@ s-n  make-frame (0 uses) ✗
 s-o  move-or-copy-region-to-other-window (? uses)
 s-O  reveal-in-finder (8 uses) ⚠
 s-p  org-export-dispatch (69 uses) ✓
-s-P  projectile-find-file (0 uses) ✗
+s-P  jay/org-web-tools-insert-web-page-as-entry-clean (3 uses) ⚠
 s-r  counsel-recentf (0 uses) ✗
 s-R  fasd-find-file (5 uses) ✗
 s-s  jay/save-all-buffers (2338 uses) ✓✓
@@ -189,6 +189,6 @@ Legend: ✓ = good usage, ✓✓ = excellent, ⚠ = low usage, ✗ = unused/wast
 
 - The frequency report now resolves bindings from active keymaps per recorded major mode (global + local + minor), and can read the saved keyfreq file even if the package is not loaded in batch.
 - High-usage commands already sit on single-key bindings: =right-word= (M-<right>/C-<right>), =left-word= (M-<left>/C-<left>), =smart-space= (SPC), =org-shiftup/down= (S-<up>/<down> plus M-S-<up>/<down> overrides), =smart-return= (<return>).
-- The only ergonomic mismatch flagged at high usage is =org-mode= on =s-k o m= (triple-key, 24 uses).
+- No high-usage ergonomic mismatches remain for =org-mode= now that it is bound to =M-o= (single-key). The older =s-k o m= binding can remain as a backup.
 - Underused prime single =s-KEY= slots from the updated report: =s-r=, =s-P=, =s-F=, =s-n=, =s-D=, =s-e=, =s-i=, =s-E=, =s-M=, =s-W=. (=s-d= is not available because it is bound to Command-Tab; =s-j= is the remaining =org-todo= binding.)
 - In batch generation, minibuffer bindings such as =ivy-next-line= and =vertico-next/exit= may still appear as "(no binding found)" because their maps are not loaded; running the report interactively inside Emacs resolves those.

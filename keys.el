@@ -247,7 +247,7 @@
     ("s-k t t"       . toggle-between-src-and-example-block)
     ("<C-i>"         . italicize-region-or-point)
     ("C-o"           . embolden-or-bold)
-    ("M-o"           . embolden-or-bold)
+    ("M-o"           . org-mode)
     ("M-s-b"         . embolden-region-or-point)
 
     ;; Text & Clipboard -------------------------------------------------

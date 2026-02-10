@@ -51,7 +51,7 @@ Notes:
 - ~s-L~ :: =org-mac-link-chrome-insert-frontmost-url=
 - ~s-M~ :: =tr-toggle-transclusion=
 - ~s-O~ :: =reveal-in-finder=
-- ~s-P~ :: =projectile-find-file=
+- ~s-P~ :: =jay/org-web-tools-insert-web-page-as-entry-clean=
 - ~s-R~ :: =fasd-find-file=
 - ~s-S~ :: =org-mac-link-skim-insert=
 - ~s-T~ :: =mw-thesaurus-lookup-dwim=

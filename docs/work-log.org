@@ -51,6 +51,13 @@
   - Ergonomic mismatch list now flags only when the *best* binding is triple/quad-key
   - Added reserved-key exclusion list and documented s-d as unavailable (Command-Tab)
   - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-consolidation-plan.org][keybinding-consolidation-plan.org]] with the macOS reserved-key constraint
+  - Rebound ~s-P~ to =jay/org-web-tools-insert-web-page-as-entry-clean= in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]]
+  - Updated keybinding docs/report and added the binding to the memorize list:
+    - [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-frequency-report.org][keybinding-frequency-report.org]]
+    - [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-analysis.org][keybinding-analysis.org]]
+    - [[file+emacs:/Users/jay/emacs/emacs-settings/docs/macOS-command-key-bindings.org][macOS-command-key-bindings.org]]
+    - [[file+emacs:/Users/jay/Dropbox/roam/notes/20230408212913-emacs_keybindings_to_remember_to_use.org][20230408212913-emacs_keybindings_to_remember_to_use.org]]
+    - Regenerated [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-dump.org][keybinding-dump.org]] and [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-reference.org][keybinding-reference.org]]
 
 * 2026-02-03: Sort org-roam capture templates alphabetically
 - Sorted all capture template lists in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-profiles.el][jay-org-roam-profiles.el]] alphabetically by key (ASCII order: =$= first, then uppercase A-Z, then lowercase a-z)
