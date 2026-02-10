@@ -368,6 +368,16 @@ when pasted into Org files.  Stripping trailing whitespace normalises the text."
               (insert "\n")
               (setq end (1+ end)))))))))
 
+(defun pasteboard--remove-blank-line-after-headings (beg end)
+  "Remove blank lines between headings and body text between BEG and END.
+Preserves blank lines between consecutive headings."
+  (save-excursion
+    (goto-char beg)
+    (while (re-search-forward "^\\(\\*+ .+\\)\n\n+\\([^*\n]\\)" end t)
+      (replace-match "\\1\n\\2" t)
+      ;; Adjust end since we removed characters
+      (setq end (- end (- (match-end 0) (match-beginning 0) (length (match-string 0))))))))
+
 (defun pasteboard--convert-bold-to-headings (beg end)
   "Convert bold lines that look like headings to actual org headings between BEG and END.
 For example, \"*1. Classic Unalome:*\" becomes \"*** 1. Classic Unalome:\""
@@ -870,6 +880,8 @@ Transforms lines like \"| --- | --- |\" into \"|---|---|\" while leaving data ro
               ;; Convert bold lines that look like headings to actual org headings
               ;; e.g., "*1. Classic Unalome:*" -> "*** 1. Classic Unalome:"
               (pasteboard--convert-bold-to-headings (point-min) (point-max))
+              ;; Remove blank lines between headings and body text
+              (pasteboard--remove-blank-line-after-headings (point-min) (point-max))
               (buffer-string))
           (when heading-markers
             (mapc (lambda (marker) (set-marker marker nil)) heading-markers)))))))
