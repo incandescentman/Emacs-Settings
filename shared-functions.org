@@ -1772,6 +1772,11 @@ Set to t to preserve them.")
     ;; Optionally remove capture timestamp like [2026-02-10 Tue 15:14]
     (unless jay/org-web-tools-include-timestamp
       (setq result (replace-regexp-in-string "^\\[[-0-9]+ [A-Za-z]+ [0-9:]+\\]\n+" "" result)))
+    ;; Convert bold lines that look like headings to actual org headings
+    ;; e.g., "*1. Classic Unalome:*" -> "*** 1. Classic Unalome:"
+    (setq result (replace-regexp-in-string "^\\*\\([0-9]+\\. [^*]+\\):\\*$" "*** \\1:" result))
+    ;; e.g., "*Heading:*" or "*Heading*" at start of line
+    (setq result (replace-regexp-in-string "^\\*\\([A-Z][^*]+\\)\\*$" "*** \\1" result))
     ;; Collapse excessive newlines
     (setq result (replace-regexp-in-string "\n\n\n+" "\n\n" result))
     result))

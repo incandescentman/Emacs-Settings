@@ -95,7 +95,7 @@
     ("M-s-d"         . counsel-find-file)
     ("s-k e e"       . fasd-find-file)
     ("s-k f z"       . counsel-fzf)
-    ("s-P"           . projectile-find-file)
+    ("s-P"           . jay/org-web-tools-insert-web-page-as-entry-clean)
     ("s-\\"         . visit-most-recent-file)
     ("C-x C-d"       . consult-dir)
     ("C-x C-f"       . find-file-at-point-or-affe-find)

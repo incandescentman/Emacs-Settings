@@ -68,18 +68,18 @@ These single-keystroke Command-key bindings have very low usage and could be rea
 
 ** Very Low Usage (1-10 uses)
 
-| Binding | Current Command                            | Uses | Recommendation               |
-|---------+--------------------------------------------+------+------------------------------|
-| s-S     | =org-mac-link-skim-insert=                   |    1 | Reassign                     |
-| s-I     | =clone-indirect-buffer-new-window-and-focus= |    1 | Reassign                     |
-| s-M     | =tr-toggle-transclusion=                     |    1 | Reassign                     |
-| s-i     | =imenu=                                      |    1 | Reassign                     |
+| Binding | Current Command                            | Uses | Recommendation                                |
+|---------+--------------------------------------------+------+-----------------------------------------------|
+| s-S     | =org-mac-link-skim-insert=                   |    1 | Reassign                                      |
+| s-I     | =clone-indirect-buffer-new-window-and-focus= |    1 | Reassign                                      |
+| s-M     | =tr-toggle-transclusion=                     |    1 | Reassign                                      |
+| s-i     | =imenu=                                      |    1 | Reassign                                      |
 | s-d     | =org-todo=                                   |    3 | Reserved (Command-Tab) — treat as unavailable |
 | s-j     | =org-todo=                                   |    3 | Keep as the primary org-todo key              |
-| s-B     | =consult-buffer=                             |    3 | Reassign                     |
-| s-R     | =fasd-find-file=                             |    5 | Reassign                     |
-| s-h     | =replace-string=                             |    6 | Keep? Or reassign            |
-| s-O     | =reveal-in-finder=                           |    8 | Keep - useful when needed    |
+| s-B     | =consult-buffer=                             |    3 | Reassign                                      |
+| s-R     | =fasd-find-file=                             |    5 | Reassign                                      |
+| s-h     | =replace-string=                             |    6 | Keep? Or reassign                             |
+| s-O     | =reveal-in-finder=                           |    8 | Keep - useful when needed                     |
 
 * Key Observations
 

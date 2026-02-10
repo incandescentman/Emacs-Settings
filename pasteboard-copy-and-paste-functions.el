@@ -368,6 +368,19 @@ when pasted into Org files.  Stripping trailing whitespace normalises the text."
               (insert "\n")
               (setq end (1+ end)))))))))
 
+(defun pasteboard--convert-bold-to-headings (beg end)
+  "Convert bold lines that look like headings to actual org headings between BEG and END.
+For example, \"*1. Classic Unalome:*\" becomes \"*** 1. Classic Unalome:\""
+  (save-excursion
+    (goto-char beg)
+    ;; Convert numbered bold headings: *1. Title:* -> *** 1. Title:
+    (while (re-search-forward "^\\*\\([0-9]+\\. [^*]+\\):\\*$" end t)
+      (replace-match "*** \\1:" t))
+    (goto-char beg)
+    ;; Convert capitalized bold headings: *Heading* -> *** Heading
+    (while (re-search-forward "^\\*\\([A-Z][^*]+\\)\\*$" end t)
+      (replace-match "*** \\1" t))))
+
 (defun pasteboard--convert-markdown-inline-emphasis (beg end)
   "Convert inline Markdown emphasis between BEG and END to Org markup.
 
@@ -854,6 +867,9 @@ Transforms lines like \"| --- | --- |\" into \"|---|---|\" while leaving data ro
               ;; clean up fixed-width padding from terminal UI copies.
               (pasteboard--strip-trailing-whitespace (point-min) (point-max))
               (pasteboard--ensure-blank-line-before-headings (point-min) (point-max))
+              ;; Convert bold lines that look like headings to actual org headings
+              ;; e.g., "*1. Classic Unalome:*" -> "*** 1. Classic Unalome:"
+              (pasteboard--convert-bold-to-headings (point-min) (point-max))
               (buffer-string))
           (when heading-markers
             (mapc (lambda (marker) (set-marker marker nil)) heading-markers)))))))

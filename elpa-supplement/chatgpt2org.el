@@ -69,6 +69,12 @@
    (setq org-content (replace-regexp-in-string "\\(\n\\)?\\s-+\\(#\\+begin_\\(src\\|example\\)\\)" "\n\n\\2" org-content))
    (setq org-content (replace-regexp-in-string "\\(\n\\)?\\s-+\\(#\\+end_\\(src\\|example\\)\\)" "\n\\2" org-content))
 
+   ;; Convert bold lines that look like headings to actual org headings
+   ;; e.g., "*1. Classic Unalome:*" -> "*** 1. Classic Unalome:"
+   (setq org-content (replace-regexp-in-string "^\\*\\([0-9]+\\. [^*]+\\):\\*$" "*** \\1:" org-content))
+   ;; e.g., "*Heading:*" or "*Heading*" at start of line
+   (setq org-content (replace-regexp-in-string "^\\*\\([A-Z][^*]+\\)\\*$" "*** \\1" org-content))
+
    (kill-new org-content)
    (yank)))
 
