@@ -24,11 +24,15 @@
   2. `replace-smart-quotes` - Converts markdown bold `**` → org bold `*`, smart quotes, etc.
   3. `replace-smart-quotes-regexp`
   4. `replace-weird-spaces`
-  5. `convert-markdown-blockquotes-to-org` (strips `>` markers from single- and multi-line blockquotes, preserving blank lines)
-  6. `convert-markdown-links-to-org-mode`
-  7. Narrowed pass: `asterisk-to-dash-and-convert-code-blocks-to-org` (if available)
-  8. Markdown table cleanup: `pasteboard--tighten-markdown-table-separators`
-  9. Ensure a blank line before headings unless the previous line is also a heading (keeps `*`/`**` sequences tight)
+  5. `pasteboard--strip-cite-markers`
+  6. `convert-markdown-blockquotes-to-org` (strips `>` markers from single- and multi-line blockquotes, preserving blank lines)
+  7. `convert-markdown-links-to-org-mode`
+  8. Markdown-only cleanup (when detected as Markdown): convert inline emphasis if enabled, convert asterisk bullets to dashes while skipping heading markers, fallback bullet conversion, tighten markdown table separators, run `normalize-dashes` if available, convert Markdown fences to org src blocks if available
+  9. `pasteboard--strip-trailing-whitespace`
+  10. `pasteboard--ensure-blank-line-before-headings`
+  11. `pasteboard--convert-bold-to-headings`
+  12. `pasteboard--remove-blank-line-after-headings` (preserves blank lines before headings and `#` directives)
+  13. `pasteboard--remove-redundant-heading-asterisks` (removes trailing whitespace-separated `*` from headings)
 
 ** Adaptive Paste Decision Tree
 `pasteboard-paste-adaptive` chooses paste behavior based on context (see =pasteboard-copy-and-paste-functions.el=):

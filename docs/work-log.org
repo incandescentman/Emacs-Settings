@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-02-10: Remove redundant asterisks from pasted headings
+- Added =pasteboard--remove-redundant-heading-asterisks= in [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][pasteboard-copy-and-paste-functions.el]] to strip trailing whitespace-separated asterisks (e.g., =** Heading **= → =** Heading=) while preserving inline emphasis.
+- Added whitespace-guarded heading cleanup to [[file+emacs:/Users/jay/emacs/emacs-settings/elpa-supplement/chatgpt2org.el][chatgpt2org.el]] and [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]].
+- Runs automatically during =pasteboard-paste-adaptive=, =chatgpt2org= / =html2org-clipboard=, and =jay/org-web-tools-*-clean=.
+
 * 2026-02-10: Enhanced web content cleanup with heading spacing
 - Added cleanup rules across all paste/capture methods:
   - Strip relative timestamps like "2 years ago", "3 months ago"
