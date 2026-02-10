@@ -374,9 +374,7 @@ Preserves blank lines between consecutive headings."
   (save-excursion
     (goto-char beg)
     (while (re-search-forward "^\\(\\*+ .+\\)\n\n+\\([^*\n]\\)" end t)
-      (replace-match "\\1\n\\2" t)
-      ;; Adjust end since we removed characters
-      (setq end (- end (- (match-end 0) (match-beginning 0) (length (match-string 0))))))))
+      (replace-match "\\1\n\\2" t))))
 
 (defun pasteboard--convert-bold-to-headings (beg end)
   "Convert bold lines that look like headings to actual org headings between BEG and END.

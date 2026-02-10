@@ -1742,10 +1742,10 @@ Set to t to preserve them.")
     (setq result (replace-regexp-in-string "\\[\\[mailto:\\?subject=[^]]*\\]\\[[^]]*\\]\\]" "" result))
     ;; Remove common social share domains entirely
     (setq result (replace-regexp-in-string "\\[\\[https://\\(www\\.\\)?\\(facebook\\.com/sharer\\|twitter\\.com/intent\\|linkedin\\.com/shareArticle\\|pinterest\\.com/pin/create\\|web\\.whatsapp\\.com/send\\|xing\\.com/spi/shares\\)[^]]*\\]\\[[^]]*\\]\\]" "" result))
-    ;; Remove view counts like //6,728
-    (setq result (replace-regexp-in-string "^//[0-9,]+\n" "" result))
-    ;; Remove relative timestamps like "2 years ago", "3 months ago"
-    (setq result (replace-regexp-in-string "^\\([0-9]+\\|a\\|an\\) \\(year\\|month\\|week\\|day\\|hour\\|minute\\|second\\)s? ago\n" "" result))
+    ;; Remove view counts like //6,728 (handles EOF without trailing newline)
+    (setq result (replace-regexp-in-string "^//[0-9,]+\\(?:\n\\|\\'\\)" "" result))
+    ;; Remove relative timestamps like "2 years ago", "3 months ago" (handles EOF)
+    (setq result (replace-regexp-in-string "^\\([0-9]+\\|a\\|an\\) \\(year\\|month\\|week\\|day\\|hour\\|minute\\|second\\)s? ago\\(?:\n\\|\\'\\)" "" result))
     ;; Remove :website: tag from headings
     (setq result (replace-regexp-in-string " :website:$" "" result))
     ;; Optionally remove capture timestamp like [2026-02-10 Tue 15:14]
@@ -1758,8 +1758,8 @@ Set to t to preserve them.")
     ;; Anchors ensure we only match full-line bold, not inline emphasis.
     ;; e.g., "*Heading:*" or "*Heading*" at start of line
     (setq result (replace-regexp-in-string "^\\*\\([A-Z][^*]+\\)\\*$" "*** \\1" result))
-    ;; Remove lines that are only whitespace
-    (setq result (replace-regexp-in-string "^[ \t]+$" "" result))
+    ;; Remove lines that are only whitespace (consume the newline too)
+    (setq result (replace-regexp-in-string "^[ \t]+\\(?:\n\\|\\'\\)" "" result))
     ;; Collapse excessive newlines
     (setq result (replace-regexp-in-string "\n\n\n+" "\n\n" result))
     ;; Remove blank line between heading and body text (but preserve between headings)

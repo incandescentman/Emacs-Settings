@@ -36,8 +36,8 @@
    (setq org-content (replace-regexp-in-string "\\n\\n\\n\\n\\n\\n\\n" "\\n\\n" org-content))
    (setq org-content (replace-regexp-in-string "\\n\\n\\n\\n" "\\n\\n" org-content))
 
-   ;; Remove view counts like //6,728
-   (setq org-content (replace-regexp-in-string "^//[0-9,]+\n" "" org-content))
+   ;; Remove view counts like //6,728 (handles EOF without trailing newline)
+   (setq org-content (replace-regexp-in-string "^//[0-9,]+\\(?:\n\\|\\'\\)" "" org-content))
 
    ;; Remove unnecessary symbols and strings
    (setq org-content (replace-regexp-in-string "^<<.*\n" "" org-content))
@@ -77,11 +77,11 @@
    ;; e.g., "*Heading:*" or "*Heading*" at start of line
    (setq org-content (replace-regexp-in-string "^\\*\\([A-Z][^*]+\\)\\*$" "*** \\1" org-content))
 
-   ;; Remove relative timestamps like "2 years ago", "3 months ago"
-   (setq org-content (replace-regexp-in-string "^\\([0-9]+\\|a\\|an\\) \\(year\\|month\\|week\\|day\\|hour\\|minute\\|second\\)s? ago\n" "" org-content))
+   ;; Remove relative timestamps like "2 years ago", "3 months ago" (handles EOF)
+   (setq org-content (replace-regexp-in-string "^\\([0-9]+\\|a\\|an\\) \\(year\\|month\\|week\\|day\\|hour\\|minute\\|second\\)s? ago\\(?:\n\\|\\'\\)" "" org-content))
 
-   ;; Remove lines that are only whitespace
-   (setq org-content (replace-regexp-in-string "^[ \t]+$" "" org-content))
+   ;; Remove lines that are only whitespace (consume the newline too)
+   (setq org-content (replace-regexp-in-string "^[ \t]+\\(?:\n\\|\\'\\)" "" org-content))
 
    ;; Remove blank line between heading and body text (but preserve between headings)
    (setq org-content (replace-regexp-in-string "^\\(\\*+ .+\\)\n\n+\\([^*\n]\\)" "\\1\n\\2" org-content))
