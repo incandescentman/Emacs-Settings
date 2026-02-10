@@ -6,6 +6,9 @@
 - Fixed =my/keybinding-frequency-report= in [[file+emacs:/Users/jay/emacs/emacs-settings/keybinding-docs.el][keybinding-docs.el]]:
   - Changed =(keyfreq-table)= to =keyfreq-table= (it's a variable, not a function)
   - Added =(keyfreq-table-load keyfreq-table)= to load saved data from disk before generating report
+  - Enhanced to resolve bindings from active keymaps per recorded major mode (global + local + minor)
+  - Added =my/--load-keyfreq-table= to read saved keyfreq file even when package not loaded
+  - Added =my/prime-key-unavailable= alist for keys reserved by macOS (e.g., s-d for Command-Tab)
 - Fixed =C-c e= keybinding conflict:
   - =yasnippet= use-package block had global binding =("C-c e" . yas-load-snippet-buffer)= overriding mode-specific =eval-buffer= / =eval-adaptive= bindings
   - Changed to =:map snippet-mode-map= so it only applies in snippet-mode
@@ -15,6 +18,7 @@
   - Top 35 most-used commands with usage counts
   - Underused prime keys (8 with zero usage, 10 with 1-10 uses)
   - Recommendations for reassigning wasted s-KEY bindings
+  - Updated with corrections: s-d reserved by macOS, s-j kept as primary org-todo key
 
 * 2026-02-03: Sort org-roam capture templates alphabetically
 - Sorted all capture template lists in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-profiles.el][jay-org-roam-profiles.el]] alphabetically by key (ASCII order: =$= first, then uppercase A-Z, then lowercase a-z)

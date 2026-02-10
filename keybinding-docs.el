@@ -44,6 +44,14 @@
                                   "/Users/jay/emacs/emacs-settings/keybinding-docs.el")))
   "Directory where keybinding documentation files are written.")
 
+(defvar my/keyfreq-data-file
+  (expand-file-name ".emacs.keyfreq" user-emacs-directory)
+  "Path to keyfreq data file (used when keyfreq isn't loaded).")
+
+(defvar my/prime-key-unavailable
+  '(("s-d" . "Command-Tab (macOS app switcher)"))
+  "Prime s-KEY bindings that should be excluded from reuse suggestions.")
+
 (defun my/keybinding-dump ()
   "Dump all declared keybindings to `docs/keybinding-dump.org'.
 Iterates the declarative alists in keys.el and writes an org
@@ -218,6 +226,33 @@ Returns hash table or nil if file doesn't exist."
 
 ;;;; 4. Frequency report -----------------------------------------------------
 
+(defun my/--load-keyfreq-table ()
+  "Return keyfreq data as a hash table.
+Uses keyfreq if available; otherwise reads the saved data file."
+  (cond
+   ((featurep 'keyfreq)
+    (keyfreq-table-load keyfreq-table)
+    keyfreq-table)
+   ((file-exists-p my/keyfreq-data-file)
+    (let ((data (my/--read-keyfreq-data my/keyfreq-data-file)))
+      (when data
+        (my/--keyfreq-list-to-hash data))))
+   (t nil)))
+
+(defun my/--read-keyfreq-data (file)
+  "Read keyfreq data list from FILE."
+  (with-temp-buffer
+    (insert-file-contents file)
+    (goto-char (point-min))
+    (read (current-buffer))))
+
+(defun my/--keyfreq-list-to-hash (data)
+  "Convert keyfreq DATA list into a hash table."
+  (let ((table (make-hash-table :test 'equal)))
+    (dolist (entry data table)
+      (when (consp entry)
+        (puthash (car entry) (cdr entry) table)))))
+
 (defun my/keybinding-frequency-report ()
   "Generate a frequency report from keyfreq data.
 Cross-references usage counts with declared keybindings to find:
@@ -225,22 +260,20 @@ Cross-references usage counts with declared keybindings to find:
 2. Ergonomic mismatches (high frequency on awkward sequences)
 3. Underused prime keys (single s-KEY with low usage)"
   (interactive)
-  (unless (featurep 'keyfreq)
-    (user-error "keyfreq is not loaded; install it first"))
-  ;; Load saved data from disk and merge with current session
-  (keyfreq-table-load keyfreq-table)
   (let* ((outfile (expand-file-name "keybinding-frequency-report.org"
                                      my/keybinding-docs-dir))
-         (freq-table keyfreq-table)
+         (freq-table (my/--load-keyfreq-table))
          (cmd-counts (make-hash-table :test 'equal))
          (mode-buffers (make-hash-table :test 'equal))
          (buf (generate-new-buffer "*keyfreq-report*")))
+    (unless freq-table
+      (user-error "No keyfreq data found (expected %s)" my/keyfreq-data-file))
 
     ;; Aggregate counts across all major modes
-    (maphash (lambda (_mode-cmd-pair count)
+    (maphash (lambda (mode-cmd-pair count)
                ;; keyfreq-table returns ((mode . cmd) . count)
                ;; but the hash is keyed by (mode . cmd)
-               (let ((cmd (cdr _mode-cmd-pair)))
+               (let ((cmd (cdr mode-cmd-pair)))
                  (puthash cmd
                           (+ (gethash cmd cmd-counts 0) count)
                           cmd-counts)))
@@ -303,23 +336,32 @@ Cross-references usage counts with declared keybindings to find:
                              (cmd (cdr entry))
                              (keys (gethash cmd cmd-to-keys)))
                         (when (and keys (> count 20))
-                          (let ((worst (my/--worst-ergonomic keys)))
-                            (when (and worst (string-match-p "triple\\|quad" worst))
+                          (let ((best (my/--classify-ergonomics keys)))
+                            (when (and best (string-match-p "triple\\|quad" best))
                               (insert (format "- =%s= (%d uses) :: %s -- %s\n"
                                               cmd count
                                               (mapconcat (lambda (k) (format "~%s~" k))
                                                          (my/--sort-keys keys) " / ")
-                                              worst))))))
+                                              best))))))
                       (setq n (1+ n)))))
 
                 ;; Underused prime keys
                 (insert "\n* Underused Prime Keys (single s-KEY, low frequency)\n\n")
+                (when (and (boundp 'my/prime-key-unavailable)
+                           my/prime-key-unavailable)
+                  (insert "- Reserved (excluded): "
+                          (mapconcat (lambda (pair)
+                                       (format "~%s~ (%s)" (car pair) (cdr pair)))
+                                     my/prime-key-unavailable
+                                     ", ")
+                          "\n\n"))
                 (when (boundp 'my/global-key-bindings)
                   (dolist (b my/global-key-bindings)
                     (let ((key (car b))
                           (cmd (cdr b)))
                       (when (and key cmd
-                                 (string-match "^s-[a-zA-Z]$" key))
+                                 (string-match "^s-[a-zA-Z]$" key)
+                                 (not (assoc key my/prime-key-unavailable)))
                         (let ((count (gethash cmd cmd-counts 0)))
                           (when (< count 10)
                             (insert (format "- ~%s~ :: =%s= (%d uses) -- prime real estate, rarely used\n"
@@ -327,23 +369,43 @@ Cross-references usage counts with declared keybindings to find:
 
                 ;; Write file
                 (write-region (point-min) (point-max) outfile)
-                (message "Frequency report written to %s" outfile))))))
+                (message "Frequency report written to %s" outfile))))
       ;; Cleanup any temp buffers created for mode probing
       (maphash (lambda (_mode buffer)
                  (when (buffer-live-p buffer)
                    (kill-buffer buffer)))
                mode-buffers)
       (when (buffer-live-p buf)
-        (kill-buffer buf)))))
+        (kill-buffer buf))))))
 
 (defun my/--keys-for-command-in-mode (cmd mode mode-buffers)
   "Return list of key strings for CMD in MODE.
 Looks up active keymaps for that mode (global + local + minor).
 MODE-BUFFERS caches temp buffers by mode."
-  (let ((buf (my/--mode-buffer-for mode mode-buffers)))
-    (when (buffer-live-p buf)
-      (with-current-buffer buf
-        (my/--normalize-keys (where-is-internal cmd nil nil t))))))
+  (if (eq mode 'minibuffer-mode)
+      (my/--keys-for-command-in-keymaps
+       cmd
+       (delq nil
+             (list (and (boundp 'minibuffer-local-map) minibuffer-local-map)
+                   (and (boundp 'minibuffer-local-completion-map) minibuffer-local-completion-map)
+                   (and (boundp 'minibuffer-local-must-match-map) minibuffer-local-must-match-map)
+                   (and (boundp 'minibuffer-local-isearch-map) minibuffer-local-isearch-map)
+                   (and (boundp 'minibuffer-local-ns-map) minibuffer-local-ns-map)
+                   (and (boundp 'ivy-minibuffer-map) ivy-minibuffer-map)
+                   (and (boundp 'vertico-map) vertico-map))))
+    (let ((buf (my/--mode-buffer-for mode mode-buffers)))
+      (when (buffer-live-p buf)
+        (with-current-buffer buf
+          (my/--normalize-keys (where-is-internal cmd nil nil t)))))))
+
+(defun my/--keys-for-command-in-keymaps (cmd keymaps)
+  "Return list of key strings for CMD across KEYMAPS."
+  (let ((out '()))
+    (dolist (map keymaps)
+      (when (keymapp map)
+        (dolist (k (where-is-internal cmd map nil t))
+          (push (key-description k) out))))
+    (my/--normalize-keys out)))
 
 (defun my/--mode-buffer-for (mode mode-buffers)
   "Return a temp buffer for MODE, creating and caching as needed."

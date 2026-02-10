@@ -74,8 +74,8 @@ These single-keystroke Command-key bindings have very low usage and could be rea
 | s-I     | =clone-indirect-buffer-new-window-and-focus= |    1 | Reassign                     |
 | s-M     | =tr-toggle-transclusion=                     |    1 | Reassign                     |
 | s-i     | =imenu=                                      |    1 | Reassign                     |
-| s-d     | =org-todo=                                   |    3 | Duplicate of s-j, remove one |
-| s-j     | =org-todo=                                   |    3 | Duplicate of s-d, remove one |
+| s-d     | =org-todo=                                   |    3 | Reserved (Command-Tab) — treat as unavailable |
+| s-j     | =org-todo=                                   |    3 | Keep as the primary org-todo key              |
 | s-B     | =consult-buffer=                             |    3 | Reassign                     |
 | s-R     | =fasd-find-file=                             |    5 | Reassign                     |
 | s-h     | =replace-string=                             |    6 | Keep? Or reassign            |
@@ -121,15 +121,13 @@ Consider these high-value reassignments:
 | s-r | counsel-recentf  | =consult-recent-file= or =org-roam-node-find= | Recent files is useful, maybe try consult version |
 | s-n | make-frame       | Keep or =org-roam-capture=                  | If you use org-roam capture often                 |
 | s-e | embark-act       | =eval-buffer= or =eval-region=                | Quick evaluation                                  |
-| s-d | org-todo (dup)   | =duplicate-line= or free                    | Free up for future use                            |
 
 ** Commands That Might Deserve Better Bindings
 
 If you find yourself reaching for these often and wishing they were easier:
 
-- =org-roam-node-find= - if used frequently, deserves a prime key
+- =org-roam-node-find= - if used frequently, deserves a prime key. already bound to (kbd "S-s-<right>") 
 - =consult-line= - quick in-buffer search
-- =org-capture= - if you capture often
 
 ** Data Collection Note
 
@@ -150,7 +148,7 @@ s-a  mark-whole-buffer (231 uses) ✓
 s-b  narrow-or-widen-dwim (243 uses) ✓
 s-B  consult-buffer (3 uses) ⚠
 s-c  pasteboard-copy-adaptive (517 uses) ✓
-s-d  org-todo (3 uses) ⚠ duplicate
+s-d  org-todo (3 uses) ⚠ reserved (Command-Tab)
 s-D  define-word-at-point (0 uses) ✗
 s-e  embark-act (0 uses) ✗
 s-E  new-email-from-subtree-no-signature (0 uses) ✗
@@ -186,3 +184,11 @@ s-z  undo-fu-only-undo (437 uses) ✓
 #+end_src
 
 Legend: ✓ = good usage, ✓✓ = excellent, ⚠ = low usage, ✗ = unused/wasted
+
+* 2026-02-10 Updated Analysis (Resolved Bindings)
+
+- The frequency report now resolves bindings from active keymaps per recorded major mode (global + local + minor), and can read the saved keyfreq file even if the package is not loaded in batch.
+- High-usage commands already sit on single-key bindings: =right-word= (M-<right>/C-<right>), =left-word= (M-<left>/C-<left>), =smart-space= (SPC), =org-shiftup/down= (S-<up>/<down> plus M-S-<up>/<down> overrides), =smart-return= (<return>).
+- The only ergonomic mismatch flagged at high usage is =org-mode= on =s-k o m= (triple-key, 24 uses).
+- Underused prime single =s-KEY= slots from the updated report: =s-r=, =s-P=, =s-F=, =s-n=, =s-D=, =s-e=, =s-i=, =s-E=, =s-M=, =s-W=. (=s-d= is not available because it is bound to Command-Tab; =s-j= is the remaining =org-todo= binding.)
+- In batch generation, minibuffer bindings such as =ivy-next-line= and =vertico-next/exit= may still appear as "(no binding found)" because their maps are not loaded; running the report interactively inside Emacs resolves those.

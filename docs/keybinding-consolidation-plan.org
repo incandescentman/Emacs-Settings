@@ -34,6 +34,7 @@ keys.el already has ~270 bindings in a clean declarative alist plus ~with-eval-a
 - jay-osx.el is preserved verbatim and remains the source of key-minor-mode-map definition.
 - keys.el must load after jay-osx.el (for key-minor-mode-map) and after any functions/macros it references (or use autoload/with-eval-after-load).
 - Literate files: when moving bindings out of a .org, delete the stale tangled .el, re-tangle, and run check-parens.
+- macOS reserved keys: treat =s-d= as unavailable (bound to Command-Tab app switcher).
 
 * Scope: What Moves and What Stays
 
