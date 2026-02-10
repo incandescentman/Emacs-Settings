@@ -70,9 +70,10 @@ This function runs the actual AppleScript."
   (let* ((revealpath (if file		   ; Define revealpath local variable.
 			 (concat dir file) ; dir/file if file name available.
 		       dir))		   ; dir only if not.
+	 (escaped-path (reveal-in-finder--escape-applescript-string revealpath))
 	 (script			   ; Define script variable using revealpath and text.
 	  (concat
-	   "set thePath to POSIX file \"" revealpath "\"\n"
+	   "set thePath to POSIX file \"" escaped-path "\"\n"
 	   "tell application \"Finder\"\n"
 	   " set frontmost to true\n"
 	   " reveal thePath \n"
@@ -80,6 +81,11 @@ This function runs the actual AppleScript."
     ;; (message script)			   ; Check the text output.
     (start-process "osascript-getinfo" nil "osascript" "-e" script) ; Run AppleScript.
     ))
+
+(defun reveal-in-finder--escape-applescript-string (s)
+  "Escape S for safe use inside an AppleScript double-quoted string."
+  (let ((escaped (replace-regexp-in-string "\\\\" "\\\\\\\\" s)))
+    (replace-regexp-in-string "\"" "\\\\\"" escaped)))
 
 (provide 'reveal-in-finder)
 ;;; reveal-in-finder.el ends here
