@@ -52,6 +52,7 @@
   - Added reserved-key exclusion list and documented s-d as unavailable (Command-Tab)
   - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-consolidation-plan.org][keybinding-consolidation-plan.org]] with the macOS reserved-key constraint
   - Rebound ~s-P~ to =jay/org-web-tools-insert-web-page-as-entry-clean= in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]]
+  - Rebound ~M-o~ to =org-mode= in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] (replaces =embolden-or-bold=)
   - Updated keybinding docs/report and added the binding to the memorize list:
     - [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-frequency-report.org][keybinding-frequency-report.org]]
     - [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-analysis.org][keybinding-analysis.org]]
