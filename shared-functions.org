@@ -2529,8 +2529,9 @@ object satisfying `yas--field-p' to restrict the expansion to."
   :defer t
   :ensure t
   :bind
-  (("C-c e" . yas-load-snippet-buffer)
-   ("." . insert-period))
+  (("." . insert-period)
+   :map snippet-mode-map
+   ("C-c e" . yas-load-snippet-buffer))
   :hook ((org-mode . yas-minor-mode)
          (text-mode . yas-minor-mode))
   :config

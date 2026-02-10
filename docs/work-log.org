@@ -1,6 +1,21 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-02-10: Fix keybinding frequency report and yasnippet conflict
+
+- Fixed =my/keybinding-frequency-report= in [[file+emacs:/Users/jay/emacs/emacs-settings/keybinding-docs.el][keybinding-docs.el]]:
+  - Changed =(keyfreq-table)= to =keyfreq-table= (it's a variable, not a function)
+  - Added =(keyfreq-table-load keyfreq-table)= to load saved data from disk before generating report
+- Fixed =C-c e= keybinding conflict:
+  - =yasnippet= use-package block had global binding =("C-c e" . yas-load-snippet-buffer)= overriding mode-specific =eval-buffer= / =eval-adaptive= bindings
+  - Changed to =:map snippet-mode-map= so it only applies in snippet-mode
+  - Edit in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] line 2532
+- Generated first [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-frequency-report.org][keybinding-frequency-report.org]] from accumulated keyfreq data
+- Created [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-analysis.org][keybinding-analysis.org]] with:
+  - Top 35 most-used commands with usage counts
+  - Underused prime keys (8 with zero usage, 10 with 1-10 uses)
+  - Recommendations for reassigning wasted s-KEY bindings
+
 * 2026-02-03: Sort org-roam capture templates alphabetically
 - Sorted all capture template lists in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-profiles.el][jay-org-roam-profiles.el]] alphabetically by key (ASCII order: =$= first, then uppercase A-Z, then lowercase a-z)
 - Affected lists:
