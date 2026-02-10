@@ -377,14 +377,12 @@ Preserves blank lines before headings and # directives (code blocks, properties)
       (replace-match "\\1\n\\2" t))))
 
 (defun pasteboard--remove-redundant-heading-asterisks (beg end)
-  "Remove redundant asterisks from org headings between BEG and END.
-Converts '** Heading **' to '** Heading' and strips embedded asterisks."
+  "Remove redundant trailing asterisks from org headings between BEG and END.
+Converts '** Heading **' to '** Heading', but preserves embedded emphasis."
   (save-excursion
     (goto-char beg)
-    (while (re-search-forward "^\\(\\*+\\) \\(.*?\\)\\(\\*+\\)?\\s-*$" end t)
-      (let ((stars (match-string 1))
-            (heading (match-string 2)))
-        (replace-match (concat stars " " (replace-regexp-in-string "\\*+" "" heading)))))))
+    (while (re-search-forward "^\\(\\*+\\) \\(.*?\\)\\s-+\\*+\\s-*$" end t)
+      (replace-match (concat (match-string 1) " " (match-string 2)) t t))))
 
 (defun pasteboard--convert-bold-to-headings (beg end)
   "Convert bold lines that look like headings to actual org headings between BEG and END.
