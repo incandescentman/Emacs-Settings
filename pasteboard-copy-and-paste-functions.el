@@ -376,6 +376,16 @@ Preserves blank lines before headings and # directives (code blocks, properties)
     (while (re-search-forward "^\\(\\*+ .+\\)\n\n+\\([^*\n#]\\)" end t)
       (replace-match "\\1\n\\2" t))))
 
+(defun pasteboard--remove-redundant-heading-asterisks (beg end)
+  "Remove redundant asterisks from org headings between BEG and END.
+Converts '** Heading **' to '** Heading' and strips embedded asterisks."
+  (save-excursion
+    (goto-char beg)
+    (while (re-search-forward "^\\(\\*+\\) \\(.*?\\)\\(\\*+\\)?\\s-*$" end t)
+      (let ((stars (match-string 1))
+            (heading (match-string 2)))
+        (replace-match (concat stars " " (replace-regexp-in-string "\\*+" "" heading)))))))
+
 (defun pasteboard--convert-bold-to-headings (beg end)
   "Convert bold lines that look like headings to actual org headings between BEG and END.
 For example, \"*1. Classic Unalome:*\" becomes \"*** 1. Classic Unalome:\""
@@ -880,6 +890,8 @@ Transforms lines like \"| --- | --- |\" into \"|---|---|\" while leaving data ro
               (pasteboard--convert-bold-to-headings (point-min) (point-max))
               ;; Remove blank lines between headings and body text
               (pasteboard--remove-blank-line-after-headings (point-min) (point-max))
+              ;; Remove redundant asterisks from headings (e.g., "** Heading **" -> "** Heading")
+              (pasteboard--remove-redundant-heading-asterisks (point-min) (point-max))
               (buffer-string))
           (when heading-markers
             (mapc (lambda (marker) (set-marker marker nil)) heading-markers)))))))

@@ -86,6 +86,9 @@
    ;; Remove blank line between heading and body text (preserve before headings and # directives)
    (setq org-content (replace-regexp-in-string "^\\(\\*+ .+\\)\n\n+\\([^*\n#]\\)" "\\1\n\\2" org-content))
 
+   ;; Remove trailing asterisks from headings (e.g., "** Heading **" -> "** Heading")
+   (setq org-content (replace-regexp-in-string "^\\(\\*+ .*?\\)\\*+\\s-*$" "\\1" org-content))
+
    (kill-new org-content)
    (yank)))
 
