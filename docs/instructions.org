@@ -85,6 +85,57 @@ The clipboard system automatically cleans up text from the web:
 - Use =C-u Cmd-v= to paste without any modifications
 - Fundamental or scratch buffers (`fundamental-mode`) already default to raw paste; switch to =text-mode= if you want cleaners there
 
+** Web Page Capture
+
+Two tools for getting web content into org-mode:
+
+*** org-web-tools (from URL)
+
+Fetches a URL and extracts the main article content using =eww-readable=.
+
+| Command                                      | What It Does                                        |
+|----------------------------------------------+-----------------------------------------------------|
+| =jay/org-web-tools-read-url-as-org-clean=    | Opens page content in new org buffer                |
+| =jay/org-web-tools-insert-web-page-as-entry-clean= | Inserts as org heading at point                |
+
+*Usage:* Just have the page open in Chrome and run the command. No copying needed - it grabs the URL directly from Chrome's frontmost tab.
+
+Falls back to: macOS clipboard → kill-ring → prompt
+
+*** html2org-clipboard (from copied HTML)
+
+Converts HTML you've already copied to org-mode.
+
+| Key   | Command              | What It Does                                   |
+|-------+----------------------+------------------------------------------------|
+| =s-L= | =html2org-clipboard= | Pastes clipboard HTML as clean org-mode text   |
+
+*Usage:* Select content in browser, copy (Cmd-C), then run =html2org-clipboard=.
+
+*** When to Use Which
+
+- *org-web-tools*: Capture an entire article from a URL (auto-extracts main content)
+- *html2org-clipboard*: Paste a specific selection you copied (ChatGPT output, partial page)
+
+Both tools automatically strip:
+- Base64-encoded images
+- Social share buttons (Facebook, Twitter, LinkedIn, etc.)
+- View counts (=//6,728=)
+- Empty icon links
+- Capture timestamps (by default)
+- =:website:= tags
+
+*** Customization
+
+| Variable                              | Default | Effect                                      |
+|---------------------------------------+---------+---------------------------------------------|
+| =jay/org-web-tools-include-timestamp= | =nil=   | If =t=, keep capture timestamp in output    |
+
+Example to enable timestamps:
+#+begin_src emacs-lisp
+(setq jay/org-web-tools-include-timestamp t)
+#+end_src
+
 ** Text Manipulation
 
 | Key         | Command                        | What It Does                                    |

@@ -23,9 +23,21 @@
    (setq org-content (replace-regexp-in-string "^\\[\\[https://chat.openai.com.*$" "" org-content))
    (setq org-content (replace-regexp-in-string "^\\[\\[https://lh3.googleusercontent.*$" "" org-content))
 
+   ;; Remove social share links (links with empty/icon-only descriptions like [//])
+   (setq org-content (replace-regexp-in-string "\\[\\[[^]]+\\]\\[//\\]\\]" "" org-content))
+   ;; Remove social share links with nested base64 images in description
+   (setq org-content (replace-regexp-in-string "\\[\\[[^]]+\\]\\[/\\[\\[data:image[^]]*\\]\\]/\\]\\]" "" org-content))
+   ;; Remove mailto share links
+   (setq org-content (replace-regexp-in-string "\\[\\[mailto:\\?subject=[^]]*\\]\\[[^]]*\\]\\]" "" org-content))
+   ;; Remove common social share domains entirely
+   (setq org-content (replace-regexp-in-string "\\[\\[https://\\(www\\.\\)?\\(facebook\\.com/sharer\\|twitter\\.com/intent\\|linkedin\\.com/shareArticle\\|pinterest\\.com/pin/create\\|web\\.whatsapp\\.com/send\\|xing\\.com/spi/shares\\)[^]]*\\]\\[[^]]*\\]\\]" "" org-content))
+
    ;; Replace excessive newlines
    (setq org-content (replace-regexp-in-string "\\n\\n\\n\\n\\n\\n\\n" "\\n\\n" org-content))
    (setq org-content (replace-regexp-in-string "\\n\\n\\n\\n" "\\n\\n" org-content))
+
+   ;; Remove view counts like //6,728
+   (setq org-content (replace-regexp-in-string "^//[0-9,]+\n" "" org-content))
 
    ;; Remove unnecessary symbols and strings
    (setq org-content (replace-regexp-in-string "^<<.*\n" "" org-content))

@@ -77,29 +77,35 @@ The following documentation files provide detailed information about various asp
 7. Various feature modules (deferred or immediate)
 8. Local configuration (`local-config.el`)
 
-## Recent Major Updates (Oct-Nov 2025)
+## Recent Major Updates
 
-### 1. Org Roam Profile System (Nov 2025)
+### 1. Web Page Capture (Feb 2026)
+- **org-web-tools**: Installed for capturing web pages as org-mode content
+- **Chrome Integration**: `jay/get-url-from-chrome` grabs URL from frontmost Chrome tab via AppleScript
+- **Clean Commands**: `jay/org-web-tools-read-url-as-org-clean` and `jay/org-web-tools-insert-web-page-as-entry-clean`
+- **Enhanced Cleanup**: Both `chatgpt2org` and org-web-tools now strip social share links, base64 images, view counts
+
+### 2. Org Roam Profile System (Nov 2025)
 - **Multi-Graph Support**: Distinct profiles for 'Work' (default), 'My Life', 'Social', and 'Parents'.
 - **Architecture**: Modularized into `jay-org-roam-suite/` (Core, Profiles, Templates).
 - **Features**: Independent databases, capture templates, and export paths per profile.
 - **Commands**: `s-u P` to switch, `s-u 1/2/3/4` shortcuts.
 
-### 2. Documentation Overhaul (Oct 2025)
+### 3. Documentation Overhaul (Oct 2025)
 - **Complete Rewrite**: Transformed technical notes into user-friendly guides (`instructions.org`, `design-architecture.org`).
 - **New Guides**: Added `ORG-ROAM-PROFILES-README.md`, `pasteboard-markdown-detection.org`.
 - **Philosophy**: Shifted to "comprehensive guides teaching concepts".
 
-### 3. Pasteboard & Editor Hardening
+### 4. Pasteboard & Editor Hardening
 - **Pure Elisp**: Converted `pasteboard-copy-and-paste-functions` to pure `.el` for reliability.
 - **Smart Paste**: Improved Markdown detection, blockquote handling, and table formatting.
 - **Formatting**: Added `scripts/org_spacing_formatter.py` for automatic heading spacing.
 
-### 4. LaTeX & Publishing
+### 5. LaTeX & Publishing
 - **New Templates**: Added 'Hipster CV' and 'Elegant Less Whitespace' templates in `latex-templates/`.
 - **Export**: Enhanced `ox-astro` integration with profile-aware source roots.
 
-### 5. System Stability
+### 6. System Stability
 - **Cloud Storage**: Fixed critical Dropbox/CloudStorage path resolution issues and timeouts.
 - **File Watchers**: Optimized `file-notify` to prevent sync errors with mobile edits.
 - **Startup**: Cleaned up unused packages and deprecated variables.

@@ -1738,6 +1738,90 @@ Source: [[http://emacs.stackexchange.com/questions/12121/org-mode-parsing-rich-h
 
 #+END_EXAMPLE
 
+** org-web-tools cleanup
+Clean up org-web-tools output to strip base64 images, empty social share links, etc.
+
+Customization:
+- =jay/org-web-tools-include-timestamp= : set to =t= to keep capture timestamps
+
+#+begin_src emacs-lisp
+;; Customization variable for org-web-tools cleanup
+;; Set to t to include timestamps like [2026-02-10 Tue 15:14] in captured pages
+(defvar jay/org-web-tools-include-timestamp nil
+  "If non-nil, keep the capture timestamp in org-web-tools output.
+By default, timestamps like [2026-02-10 Tue 15:14] are stripped.
+Set to t to preserve them.")
+
+(defun jay/org-web-tools-cleanup-string (content)
+  "Clean up CONTENT string from org-web-tools, removing cruft."
+  (let ((result content))
+    ;; Remove base64-encoded images
+    (setq result (replace-regexp-in-string "\\[\\[data:image[^]]*\\]\\]" "" result))
+    ;; Remove empty link descriptions like [[url][//]]
+    (setq result (replace-regexp-in-string "\\[\\[[^]]+\\]\\[//\\]\\]" "" result))
+    ;; Remove social share links with nested base64 images in description
+    (setq result (replace-regexp-in-string "\\[\\[[^]]+\\]\\[/\\[\\[data:image[^]]*\\]\\]/\\]\\]" "" result))
+    ;; Remove social share mailto links
+    (setq result (replace-regexp-in-string "\\[\\[mailto:\\?subject=[^]]*\\]\\[[^]]*\\]\\]" "" result))
+    ;; Remove common social share domains entirely
+    (setq result (replace-regexp-in-string "\\[\\[https://\\(www\\.\\)?\\(facebook\\.com/sharer\\|twitter\\.com/intent\\|linkedin\\.com/shareArticle\\|pinterest\\.com/pin/create\\|web\\.whatsapp\\.com/send\\|xing\\.com/spi/shares\\)[^]]*\\]\\[[^]]*\\]\\]" "" result))
+    ;; Remove view counts like //6,728
+    (setq result (replace-regexp-in-string "^//[0-9,]+\n" "" result))
+    ;; Remove :website: tag from headings
+    (setq result (replace-regexp-in-string " :website:$" "" result))
+    ;; Optionally remove capture timestamp like [2026-02-10 Tue 15:14]
+    (unless jay/org-web-tools-include-timestamp
+      (setq result (replace-regexp-in-string "^\\[[-0-9]+ [A-Za-z]+ [0-9:]+\\]\n+" "" result)))
+    ;; Collapse excessive newlines
+    (setq result (replace-regexp-in-string "\n\n\n+" "\n\n" result))
+    result))
+
+(defun jay/org-web-tools-cleanup-buffer ()
+  "Clean up current buffer after org-web-tools insertion."
+  (interactive)
+  (save-excursion
+    (let ((content (buffer-string)))
+      (erase-buffer)
+      (insert (jay/org-web-tools-cleanup-string content)))))
+
+(defun jay/get-url-from-chrome ()
+  "Get URL from frontmost Chrome tab, or nil if Chrome not running."
+  (ignore-errors
+    (let* ((as-command "tell application \"Google Chrome\"
+                          set theURL to URL of active tab of front window
+                          return theURL
+                        end tell")
+           (url (string-trim (shell-command-to-string
+                              (concat "osascript -e " (shell-quote-argument as-command))))))
+      (when (string-match-p "^https?://" url)
+        url))))
+
+(defun jay/get-url-from-clipboard-or-chrome ()
+  "Get URL from Chrome frontmost tab, macOS clipboard, kill-ring, or prompt."
+  (or (jay/get-url-from-chrome)
+      (let ((clipboard (ignore-errors (gui-get-selection 'CLIPBOARD 'STRING))))
+        (when (and clipboard (string-match-p "^https?://" clipboard))
+          (string-trim clipboard)))
+      (org-web-tools--get-first-url)
+      (read-string "URL: ")))
+
+(defun jay/org-web-tools-read-url-as-org-clean (url)
+  "Like `org-web-tools-read-url-as-org' but with cleanup.
+Gets URL from Chrome frontmost tab, or clipboard, or prompts."
+  (interactive (list (jay/get-url-from-clipboard-or-chrome)))
+  (org-web-tools-read-url-as-org url)
+  (jay/org-web-tools-cleanup-buffer))
+
+(defun jay/org-web-tools-insert-web-page-as-entry-clean (url)
+  "Like `org-web-tools-insert-web-page-as-entry' but with cleanup.
+Gets URL from Chrome frontmost tab, or clipboard, or prompts."
+  (interactive (list (jay/get-url-from-clipboard-or-chrome)))
+  (let ((content (org-web-tools--url-as-readable-org url)))
+    (when content
+      (setq content (jay/org-web-tools-cleanup-string content))
+      (beginning-of-line)
+      (org-paste-subtree nil (s-trim content)))))
+#+end_src
 
 ** html2text-clipboard
 #+begin_src emacs-lisp

@@ -1,6 +1,29 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-02-10: Install org-web-tools and add social share link cleanup
+- Installed [[file+emacs:/Users/jay/emacs/emacs-settings/org-web-tools-master/][org-web-tools]] for capturing web pages as org-mode content
+- Added dependencies to =dotspacemacs-additional-packages=: =compat=, =esxml=, =plz=, =request=
+- Added load-path and require in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][init.el]]
+- Enhanced [[file+emacs:/Users/jay/emacs/emacs-settings/elpa-supplement/chatgpt2org.el][chatgpt2org.el]] with social share link cleanup:
+  - Remove =[[url][//]]= patterns (icon-only link descriptions)
+  - Remove nested base64 images in link descriptions
+  - Remove common social share domains (facebook, twitter, linkedin, pinterest, whatsapp, xing)
+  - Remove mailto share links
+  - Remove view counts like =//6,728=
+- Added org-web-tools cleanup functions to [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]]:
+  - =jay/get-url-from-chrome= - get URL from Chrome's frontmost tab via AppleScript
+  - =jay/get-url-from-clipboard-or-chrome= - get URL from Chrome, clipboard, kill-ring, or prompt
+  - =jay/org-web-tools-cleanup-string= - clean cruft from org content
+  - =jay/org-web-tools-cleanup-buffer= - clean current buffer
+  - =jay/org-web-tools-read-url-as-org-clean= - fetch URL with cleanup
+  - =jay/org-web-tools-insert-web-page-as-entry-clean= - insert as heading with cleanup
+- Usage: Just have the page open in Chrome and run =jay/org-web-tools-read-url-as-org-clean=
+- Customization: =jay/org-web-tools-include-timestamp= (default =nil=) - set to =t= to keep capture timestamps
+- Key difference between tools:
+  - =html2org-clipboard= / =chatgpt2org=: pastes clipboard HTML (what you copied)
+  - =org-web-tools=: fetches URL and uses =eww-readable= to extract main article content
+
 * 2026-02-10: Fix keybinding frequency report and yasnippet conflict
 
 - Fixed =my/keybinding-frequency-report= in [[file+emacs:/Users/jay/emacs/emacs-settings/keybinding-docs.el][keybinding-docs.el]]:
@@ -19,6 +42,11 @@
   - Underused prime keys (8 with zero usage, 10 with 1-10 uses)
   - Recommendations for reassigning wasted s-KEY bindings
   - Updated with corrections: s-d reserved by macOS, s-j kept as primary org-todo key
+- Follow-up refinements:
+  - Frequency report now resolves bindings via active keymaps per recorded mode (plus minibuffer maps), not just custom alists
+  - Ergonomic mismatch list now flags only when the *best* binding is triple/quad-key
+  - Added reserved-key exclusion list and documented s-d as unavailable (Command-Tab)
+  - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-consolidation-plan.org][keybinding-consolidation-plan.org]] with the macOS reserved-key constraint
 
 * 2026-02-03: Sort org-roam capture templates alphabetically
 - Sorted all capture template lists in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-profiles.el][jay-org-roam-profiles.el]] alphabetically by key (ASCII order: =$= first, then uppercase A-Z, then lowercase a-z)

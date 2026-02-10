@@ -233,6 +233,13 @@ This function should only modify configuration layer settings."
                                       ;; zenburn-theme
                                       ;; zone
                                       ;; smex
+                                      ;; org-web-tools dependencies
+                                      compat
+                                      esxml
+                                      plz
+                                      request
+                                      ;; org-web-tools (local)
+                                      (org-web-tools :location "/Users/jay/emacs/emacs-settings/org-web-tools-master/")
                                       )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -939,6 +946,10 @@ before packages are loaded."
   ;; Load pomidor (pomodoro timer)
   (add-to-list 'load-path (expand-file-name "pomidor" user-emacs-directory))
   (require 'pomidor nil t)
+
+  ;; Load org-web-tools (web content to org-mode)
+  (add-to-list 'load-path "/Users/jay/emacs/emacs-settings/org-web-tools-master/")
+  (require 'org-web-tools nil t)
 
 ;;; --- macOS 15.5 deadlock workaround ----------------------------------------
   (when (eq system-type 'darwin)

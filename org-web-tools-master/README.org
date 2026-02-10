@@ -1,0 +1,121 @@
+#+TITLE: org-web-tools
+#+PROPERTY: LOGGING nil
+
+[[https://melpa.org/#/org-web-tools][file:https://melpa.org/packages/org-web-tools-badge.svg]] [[https://stable.melpa.org/#/org-web-tools][file:https://stable.melpa.org/packages/org-web-tools-badge.svg]]
+
+This file contains library functions and commands useful for retrieving web page content and processing it into Org-mode content.
+
+For example, you can copy a URL to the clipboard or kill-ring, then run a command that downloads the page, isolates the "readable" content with =eww-readable=, converts it to Org-mode content with Pandoc, and displays it in an Org-mode buffer.  Another command does all of that but inserts it as an Org entry instead of displaying it in a new buffer.
+
+* Installation                                                   :noexport_1:
+
+** Requirements
+
++ Emacs 27.1 or later.
++ Commands that process HTML into Org require [[https://pandoc.org/][Pandoc]].  *Note:* The output of current Pandoc versions differs substantially from versions that may still be present in stable Linux distros.  If you encounter any issues, please install a more recent version of Pandoc.
+
+** MELPA
+
+After installing from MELPA, just run one of the [[*Usage][commands]] below.  If you want to use any of the functions in your own code, you should ~(require 'org-web-tools)~.
+
+* Usage                                                          :noexport_1:
+
+** Commands
+
++  =org-web-tools-insert-link-for-url=: Insert an Org-mode link to the URL in the clipboard or kill-ring.  Downloads the page to get the HTML title.
++  =org-web-tools-insert-web-page-as-entry=: Insert the web page for the URL in the clipboard or kill-ring as an Org-mode entry, as a sibling heading of the current entry.
++  =org-web-tools-read-url-as-org=: Display the web page for the URL in the clipboard or kill-ring as Org-mode text in a new buffer, processed with =eww-readable=.
++  =org-web-tools-convert-links-to-page-entries=: Convert all URLs and Org links in current Org entry to Org headings, each containing the web page content of that URL, converted to Org-mode text and processed with =eww-readable=.  This should be called on an entry that solely contains a list of URLs or links.
++  ~org-web-tools-archive-attach~: Download archive of page at URL and attach with =org-attach=.  If =CHOOSE-FN= is non-nil (interactively, with universal prefix), prompt for the archive function to use.  If =VIEW= is non-nil (interactively, with two universal prefixes), view the archive immediately after attaching.  (See also [[https://github.com/scallywag/org-board][org-board]]).
++  ~org-web-tools-archive-view~: Open Zip file archive of web page. Extracts to a temp directory and opens with ~browse-url-default-browser~.  Note: the extracted files are left on-disk in the temp directory.
+
+** Functions
+
+ These are used in the commands above and may be useful in building your own commands.
+
++  =org-web-tools--dom-to-html=: Return parsed HTML DOM as an HTML string. Note: This is an approximation and is not necessarily correct HTML (e.g. IMG tags may be rendered with a closing "</img>" tag).
++  =org-web-tools--eww-readable=: Return "readable" part of HTML with title.
++  =org-web-tools--get-url=: Return content for URL as string.
++  =org-web-tools--html-to-org-with-pandoc=: Return string of HTML converted to Org with Pandoc.  When SELECTOR is non-nil, the HTML is filtered using =esxml-query= SELECTOR and re-rendered to HTML with =org-web-tools--dom-to-html=, which see.
++  =org-web-tools--url-as-readable-org=: Return string containing Org entry of URL's web page content.  Content is processed with =eww-readable= and Pandoc.  Entry will be a top-level heading, with article contents below a second-level "Article" heading, and a timestamp in the first-level entry for writing comments.
++  =org-web-tools--demote-headings-below=: Demote all headings in buffer so the highest level is below LEVEL.
++  =org-web-tools--get-first-url=: Return URL in clipboard, or first URL in the kill-ring, or nil if none.
++  ~org-web-tools--read-url~: Return a URL by searching at point, then in clipboard, then in kill-ring, and finally prompting the user.
++  =org-web-tools--read-org-bracket-link=: Return (TARGET . DESCRIPTION) for Org bracket LINK or next link on current line.
++  =org-web-tools--remove-dos-crlf=: Remove all DOS CRLF (^M) in buffer.
+
+* Changelog                                                      :noexport_1:
+
+** 1.3
+
+*Changes*
++ Errors from Pandoc are now displayed.  ([[https://github.com/alphapapa/org-web-tools/pull/47][#47]].  Thanks to [[https://github.com/c1-g][c1-g]].)
+
+*Fixes*
++ Default options to Wget (see [[https://github.com/alphapapa/org-web-tools/issues/35][#35]]).
++ Finding URL in clipboard on MacOS and Windows.  (See [[https://github.com/alphapapa/org-web-tools/pull/66][#66]].  Thanks to [[https://github.com/askdkc][@askdkc]].)
++ Org timestamp format when inserting pages.  ([[https://github.com/alphapapa/org-web-tools/pull/54][#54]].  Thanks to [[https://github.com/p4v4n][p4v4n]] for reporting.)
+
+*Internal*
++ Use ~plz~ HTTP library and make various related optimizations.
+
+*Removed*
++ Internal function ~org-web-tools--html-title~.  (If your program used this function, it's trivially reimplemented; see source code.)
+
+** 1.2
+
+*Improvements*
++ Archiving tools:
+  - Can use multiple functions to attempt archiving.
+  - Associated options control retry attempts, delays, and fallbacks to other functions.
+  - Functions to archive Web pages with =wget= and =tar=:
+    + Function ~org-web-tools-archive--wget-tar~ archives a URL's Web page, including page resources.
+    + Function =org-web-tools-archive--wget-tar-html-only= archives a URL's HTML only.
+  - Command ~org-web-tools-archive-view~ handles both =zip= and =tar= archives.
+  - The default settings use =wget= and =tar= to archive pages (because the ~archive.today~ service has not worked reliably with external tools for a long time).
+
+*Changes*
++ Option ~org-web-tools-archive-fn~ defaults to using ~wget~ and ~tar~ to archive pages to XZ archives with HTML and page resources.  (The ~archive.is~ service has not worked reliably with other tools for a long time.)
+
+*Fixes*
++ =org-web-tools--org-link-for-url= now returns the URL if the HTML page has no title tag.  This avoids an error, e.g. when used in an Org capture template.
+
+*Compatibility*
++ Emacs 27.1 or later is now required.
++ Updated for Org 9.3's changes to ~org-bracket-link-regexp~.  (Thanks to [[https://github.com/bcc32][Aaron Zeng]] and [[https://github.com/akirak][Akira Komamura]].)
++ Activate ~org-mode~ in temporary buffer for ~org-web-tools--html-to-org-with-pandoc~.  ([[https://github.com/alphapapa/org-web-tools/issues/56][#56]].  Thanks to [[https://github.com/mooseyboots][mooseyboots]].)
++ Use ~compat~ library.
+
+** 1.1.2
+
+*Fixed*
++  Only test non-nil items in ~org-web-tools--get-first-url~.  This makes it work properly in non-GUI Emacs sessions.  (Thanks to [[https://github.com/bsima][Ben Sima]] for reporting.)
+
+** 1.1.1
+
+*Fixed*
++  Require ~org-attach~.
+
+** 1.1
+
+*Additions*
++  Command ~org-web-tools-attach-url-archive~.
++  Command ~org-web-tools-view-archive~.
++  Function ~org-web-tools--read-url~.
+
+** 1.0.1
+
+*Changes*
++  Remove all property drawers that contain the =CUSTOM_ID= property from Pandoc output.
+
+** 1.0
+
++ First declared stable release.
+
+* Development                                                    :noexport_1:
+
+Contributions and suggestions are welcome.
+
+* License                                                          :noexport:
+
+GPLv3
