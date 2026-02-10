@@ -125,6 +125,10 @@ Both tools automatically strip:
 - Capture timestamps (by default)
 - =:website:= tags
 
+All paste methods (including =pasteboard-paste-adaptive=) convert bold lines that look like headings into actual org headings:
+- =*1. Classic Unalome:*= → =*** 1. Classic Unalome:=
+- =*Heading*= → =*** Heading=
+
 *** Customization
 
 | Variable                              | Default | Effect                                      |

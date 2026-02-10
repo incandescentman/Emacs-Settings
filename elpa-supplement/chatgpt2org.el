@@ -69,7 +69,9 @@
    (setq org-content (replace-regexp-in-string "\\(\n\\)?\\s-+\\(#\\+begin_\\(src\\|example\\)\\)" "\n\n\\2" org-content))
    (setq org-content (replace-regexp-in-string "\\(\n\\)?\\s-+\\(#\\+end_\\(src\\|example\\)\\)" "\n\\2" org-content))
 
-   ;; Convert bold lines that look like headings to actual org headings
+   ;; Pandoc turns <strong>/<b> into *bold* even when it was a visual heading.
+   ;; Promote standalone bold lines to level-3 headings to restore structure.
+   ;; Anchors ensure we only match full-line bold, not inline emphasis.
    ;; e.g., "*1. Classic Unalome:*" -> "*** 1. Classic Unalome:"
    (setq org-content (replace-regexp-in-string "^\\*\\([0-9]+\\. [^*]+\\):\\*$" "*** \\1:" org-content))
    ;; e.g., "*Heading:*" or "*Heading*" at start of line

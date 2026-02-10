@@ -20,6 +20,10 @@
   - =jay/org-web-tools-insert-web-page-as-entry-clean= - insert as heading with cleanup
 - Usage: Just have the page open in Chrome and run =jay/org-web-tools-read-url-as-org-clean=
 - Customization: =jay/org-web-tools-include-timestamp= (default =nil=) - set to =t= to keep capture timestamps
+- Bold-to-heading conversion: all three paste methods now convert bold lines that look like headings to actual org headings:
+  - =*1. Title:*= becomes =*** 1. Title:=
+  - =*Heading*= becomes =*** Heading=
+  - Added to: =jay/org-web-tools-cleanup-string=, =chatgpt2org=, and =pasteboard--convert-bold-to-headings=
 - Key difference between tools:
   - =html2org-clipboard= / =chatgpt2org=: pastes clipboard HTML (what you copied)
   - =org-web-tools=: fetches URL and uses =eww-readable= to extract main article content

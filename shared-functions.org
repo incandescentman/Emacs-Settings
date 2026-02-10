@@ -1772,9 +1772,11 @@ Set to t to preserve them.")
     ;; Optionally remove capture timestamp like [2026-02-10 Tue 15:14]
     (unless jay/org-web-tools-include-timestamp
       (setq result (replace-regexp-in-string "^\\[[-0-9]+ [A-Za-z]+ [0-9:]+\\]\n+" "" result)))
-    ;; Convert bold lines that look like headings to actual org headings
+    ;; Pandoc turns <strong>/<b> into *bold* even when it was a visual heading.
+    ;; Promote standalone bold lines to level-3 headings to restore structure.
     ;; e.g., "*1. Classic Unalome:*" -> "*** 1. Classic Unalome:"
     (setq result (replace-regexp-in-string "^\\*\\([0-9]+\\. [^*]+\\):\\*$" "*** \\1:" result))
+    ;; Anchors ensure we only match full-line bold, not inline emphasis.
     ;; e.g., "*Heading:*" or "*Heading*" at start of line
     (setq result (replace-regexp-in-string "^\\*\\([A-Z][^*]+\\)\\*$" "*** \\1" result))
     ;; Collapse excessive newlines
