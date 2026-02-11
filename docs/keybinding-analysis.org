@@ -9,6 +9,37 @@
 
 This analysis examines your Emacs keybinding usage patterns based on keyfreq data. The goal is to identify optimization opportunities: commands that deserve better bindings, and prime keys that are underutilized.
 
+* Underused Prime Keys
+
+These single-keystroke Command-key bindings have very low usage and could be reassigned to more frequently needed commands.
+
+** Zero Usage (Never Used)
+
+| Binding | Current Command                          | Recommendation                    |
+|---------+------------------------------------------+-----------------------------------|
+| s-n     | =make-frame=                               | Reassign - rarely need new frames |
+| s-D     | =define-word-at-point=                     | Reassign                          |
+| s-E     | =new-email-from-subtree-no-signature=      | Reassign                          |
+| s-W     | =open-weeklies=                            | Reassign                          |
+
+** Very Low Usage (1-10 uses)
+
+| Binding | Current Command                                  | Uses | Recommendation                                |
+|---------+--------------------------------------------------+------+-----------------------------------------------|
+| s-e     | =embark-act=                                       |    1 | Reassign - embark not in your workflow        |
+| s-M     | =tr-toggle-transclusion=                           |    1 | Reassign                                      |
+| s-S     | =org-mac-link-skim-insert=                         |    1 | Reassign                                      |
+| s-I     | =clone-indirect-buffer-new-window-and-focus=       |    1 | Reassign                                      |
+| s-r     | =counsel-recentf=                                  |    2 | Reassign - you're not using this              |
+| s-i     | =imenu=                                            |    2 | Reassign                                      |
+| s-P     | =jay/org-web-tools-insert-web-page-as-entry-clean= |    3 | New mapping — evaluate usage                  |
+| s-d     | =org-todo=                                         |    3 | Reserved (Command-Tab) — treat as unavailable |
+| s-j     | =org-todo=                                         |    3 | Keep as the primary org-todo key              |
+| s-B     | =consult-buffer=                                   |    3 | Reassign                                      |
+| s-R     | =fasd-find-file=                                   |    5 | Reassign                                      |
+| s-h     | =replace-string=                                   |    6 | Keep? Or reassign                             |
+| s-O     | =reveal-in-finder=                                 |    8 | Keep - useful when needed                     |
+
 * Top 35 Most Used Commands
 
 | Rank | Command                                     |   Uses | Current Binding     | Notes                                   |
@@ -48,38 +79,6 @@ This analysis examines your Emacs keybinding usage patterns based on keyfreq dat
 |   33 | =vertico-next=                                |    159 | (vertico internal)  | Completion navigation                   |
 |   34 | =org-shiftright=                              |    149 | S-<right> (org)     | TODO state cycling                      |
 |   35 | =mwim-beginning=                              |    135 | C-a                 | Good - standard                         |
-
-* Underused Prime Keys
-
-These single-keystroke Command-key bindings have very low usage and could be reassigned to more frequently needed commands.
-
-** Zero Usage (Never Used)
-
-| Binding | Current Command                          | Recommendation                         |
-|---------+------------------------------------------+----------------------------------------|
-| s-F     | =pasteboard-search-for-clipboard-contents= | Reassign                               |
-| s-n     | =make-frame=                               | Reassign - rarely need new frames      |
-| s-D     | =define-word-at-point=                     | Reassign                               |
-| s-E     | =new-email-from-subtree-no-signature=      | Reassign                               |
-| s-W     | =open-weeklies=                            | Reassign                               |
-
-** Very Low Usage (1-10 uses)
-
-| Binding | Current Command                            | Uses | Recommendation                                |
-|---------+--------------------------------------------+------+-----------------------------------------------|
-| s-e     | =embark-act=                                 |    1 | Reassign - embark not in your workflow        |
-| s-M     | =tr-toggle-transclusion=                     |    1 | Reassign                                      |
-| s-S     | =org-mac-link-skim-insert=                   |    1 | Reassign                                      |
-| s-I     | =clone-indirect-buffer-new-window-and-focus= |    1 | Reassign                                      |
-| s-r     | =counsel-recentf=                             |    2 | Reassign - you're not using this              |
-| s-i     | =imenu=                                      |    2 | Reassign                                      |
-| s-P     | =jay/org-web-tools-insert-web-page-as-entry-clean= |    3 | New mapping — evaluate usage                  |
-| s-d     | =org-todo=                                   |    3 | Reserved (Command-Tab) — treat as unavailable |
-| s-j     | =org-todo=                                   |    3 | Keep as the primary org-todo key              |
-| s-B     | =consult-buffer=                             |    3 | Reassign                                      |
-| s-R     | =fasd-find-file=                             |    5 | Reassign                                      |
-| s-h     | =replace-string=                             |    6 | Keep? Or reassign                             |
-| s-O     | =reveal-in-finder=                           |    8 | Keep - useful when needed                     |
 
 * Key Observations
 

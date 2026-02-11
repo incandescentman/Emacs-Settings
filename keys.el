@@ -698,7 +698,32 @@ Used by `my/keybinding-dump' to generate documentation.")
 (with-eval-after-load 'org
   (my/unbind-keys  org-mode-map my/org-mode-unbindings)
   (my/install-mode-bindings org-mode-map my/org-mode-bindings)
-  (my/install-mode-bindings key-minor-mode-map my/org-override-bindings))
+  (my/install-mode-bindings key-minor-mode-map my/org-override-bindings)
+
+  ;; Auto-advance to next checkbox after toggling with C-c C-c
+  (defmacro my/with-advice (adlist &rest body)
+    "Execute BODY with temporary advice in ADLIST.
+Each element of ADLIST should look like (FUNCTION WHERE AD-FN)."
+    (declare (debug ((&rest (&rest form)) body))
+             (indent 1))
+    `(progn
+       ,@(mapcar (lambda (adform)
+                   `(advice-add ',(car adform) ,(cadr adform) ,(caddr adform)))
+                 adlist)
+       (unwind-protect (progn ,@body)
+         ,@(mapcar (lambda (adform)
+                     `(advice-remove ',(car adform) ,(caddr adform)))
+                   adlist))))
+
+  (defun my/org-checkbox-toggle-advice (orig-fn &rest args)
+    "Advice to move to next list item after checkbox toggle."
+    (my/with-advice
+        ((org-update-checkbox-count-maybe
+          :after (lambda () (ignore-errors (org-next-item)))))
+      (apply orig-fn args)))
+
+  (advice-add #'org-ctrl-c-ctrl-c   :around #'my/org-checkbox-toggle-advice)
+  (advice-add #'org-toggle-checkbox :around #'my/org-checkbox-toggle-advice))
 
 (with-eval-after-load 'org-src
   (my/install-mode-bindings org-src-mode-map my/org-src-mode-bindings))
