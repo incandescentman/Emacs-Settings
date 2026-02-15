@@ -981,7 +981,16 @@ With prefix argument (C-u), force verbatim paste."
   "Paste from the macOS clipboard and normalise the text in a single edit."
   (interactive "P")
   (let* ((source (or text (pasteboard--clipboard-string)))
-         (insert-text (if raw source (pasteboard--clean-string source))))
+         (cleaned-text (if raw source (pasteboard--clean-string source)))
+         (insert-text
+          (if (and (not raw)
+                   (derived-mode-p 'org-mode)
+                   (fboundp 'redundant-delete-redundant-asterisks-in-org-headings))
+              (with-temp-buffer
+                (insert cleaned-text)
+                (redundant-delete-redundant-asterisks-in-org-headings)
+                (buffer-string))
+            cleaned-text)))
     (pasteboard-paste insert-text)))
 
 (defun pasteboard-paste-verbatim (&optional text)
