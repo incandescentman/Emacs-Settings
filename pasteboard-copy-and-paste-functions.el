@@ -388,14 +388,19 @@ Converts '** Heading **' to '** Heading', but preserves embedded emphasis."
   "Convert bold lines that look like headings to actual org headings between BEG and END.
 For example, \"*1. Classic Unalome:*\" becomes \"*** 1. Classic Unalome:\""
   (save-excursion
-    (goto-char beg)
-    ;; Convert numbered bold headings: *1. Title:* -> *** 1. Title:
-    (while (re-search-forward "^\\*\\([0-9]+\\. [^*]+\\):\\*$" end t)
-      (replace-match "*** \\1:" t))
-    (goto-char beg)
-    ;; Convert capitalized bold headings: *Heading* -> *** Heading
-    (while (re-search-forward "^\\*\\([A-Z][^*]+\\)\\*$" end t)
-      (replace-match "*** \\1" t))))
+    ;; Use a marker so replacement growth never invalidates the search bound.
+    (let ((end-marker (copy-marker end t)))
+      (unwind-protect
+          (progn
+            (goto-char beg)
+            ;; Convert numbered bold headings: *1. Title:* -> *** 1. Title:
+            (while (re-search-forward "^\\*\\([0-9]+\\. [^*]+\\):\\*$" end-marker t)
+              (replace-match "*** \\1:" t))
+            (goto-char beg)
+            ;; Convert capitalized bold headings: *Heading* -> *** Heading
+            (while (re-search-forward "^\\*\\([A-Z][^*]+\\)\\*$" end-marker t)
+              (replace-match "*** \\1" t)))
+        (set-marker end-marker nil)))))
 
 (defun pasteboard--convert-markdown-inline-emphasis (beg end)
   "Convert inline Markdown emphasis between BEG and END to Org markup.
