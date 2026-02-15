@@ -121,7 +121,7 @@ when pasting from web pages.
 *What*: Functions detect context and adapt behavior automatically.
 
 *Examples*:
-- =pasteboard-paste-adaptive=: Cleans text in org buffers, pastes raw in code
+- =pasteboard-paste-adaptive=: Routes clean pastes through =pasteboard-paste-clean= (one obvious clean path), pastes raw in code
 - =smart-return=: Different behavior in org vs. code vs. text modes
 - Font/theme functions: Adjust frame parameters without permanent changes
 
@@ -174,7 +174,7 @@ pbpaste command (raw text)
 pasteboard-paste-adaptive (detects buffer type)
     ↓
     ├→ Code buffer: Insert raw
-    └→ Org buffer: pasteboard-paste-clean
+    └→ Org/Text buffer: pasteboard-paste-clean (canonical clean path)
               ↓
         normalize-dashes (fix quotes)
               ↓

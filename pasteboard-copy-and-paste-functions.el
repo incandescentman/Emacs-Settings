@@ -828,7 +828,8 @@ Transforms lines like \"| --- | --- |\" into \"|---|---|\" while leaving data ro
         (setq end (point-max))))))
 
 (defun pasteboard--clean-string (text)
-  "Apply the same normalisation steps as `pasteboard-paste-clean' to TEXT."
+  "Return cleaned TEXT for Org/text pastes.
+This function is pure text transformation and does not insert into buffers."
   (let* ((markdown-headings-present (pasteboard--text-contains-markdown-headings-p text))
          (analysis (pasteboard--analyse-clipboard-text text))
          (style (plist-get analysis :style))
@@ -911,7 +912,9 @@ Transforms lines like \"| --- | --- |\" into \"|---|---|\" while leaving data ro
 
 (defun pasteboard-paste-adaptive ()
   "Paste from the macOS pasteboard, choosing behaviour based on context while keeping Org's cache stable.
-With prefix argument (C-u), force verbatim paste."
+With prefix argument (C-u), force verbatim paste.
+All non-verbatim cleaned paths delegate to `pasteboard-paste-clean' so there
+is one obvious clean pipeline."
   (interactive)
   ;; If prefix arg, force verbatim
   (if current-prefix-arg
@@ -944,7 +947,8 @@ With prefix argument (C-u), force verbatim paste."
                    (not (bound-and-true-p org-config-files-local-mode)))
               (derived-mode-p 'text-mode))
           (setq choice "clean")
-          (pasteboard-paste (pasteboard--clean-string clipboard-raw)))
+          ;; One obvious clean path: adaptive clean inserts go through pasteboard-paste-clean.
+          (pasteboard-paste-clean nil clipboard-raw))
          (t
           (let* ((prev-char (char-before))
                  (next-char (char-after))
@@ -956,7 +960,8 @@ With prefix argument (C-u), force verbatim paste."
                   (setq choice "paste-raw")
                   (pasteboard-paste-verbatim clipboard-raw))
                 (setq choice "paste-clean")
-                (pasteboard-paste (pasteboard--clean-string clipboard-raw))))))
+                ;; Keep fallback clean behavior aligned with pasteboard-paste-clean.
+                (pasteboard-paste-clean nil clipboard-raw)))))
         (when choice
           (message "Pasted: %s" choice)))))
 
@@ -978,7 +983,9 @@ With prefix argument (C-u), force verbatim paste."
           (goto-char paste-end))))))
 
 (defun pasteboard-paste-clean (&optional raw text)
-  "Paste from the macOS clipboard and normalise the text in a single edit."
+  "Canonical clean paste path for clipboard text.
+When RAW is non-nil, bypass cleaning.  Otherwise this runs the clean-string
+pipeline and org-heading cleanup, then inserts in a single edit."
   (interactive "P")
   (let* ((source (or text (pasteboard--clipboard-string)))
          (cleaned-text (if raw source (pasteboard--clean-string source)))
