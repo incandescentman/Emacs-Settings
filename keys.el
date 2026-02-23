@@ -659,7 +659,7 @@
 
 (defconst my/emacs-lisp-mode-bindings
   '(("s-v"   . pasteboard-paste-verbatim)
-    ("C-c e" . eval-buffer)
+    ("C-c e" . eval-adaptive)
     ("M-K"   . kill-sexp))
   "Bindings installed into `emacs-lisp-mode-map'.")
 
@@ -763,7 +763,7 @@ Each element of ADLIST should look like (FUNCTION WHERE AD-FN)."
 (with-eval-after-load 'vertico
   (my/install-mode-bindings key-minor-mode-map my/vertico-override-bindings))
 
-(with-eval-after-load 'emacs-lisp-mode
+(with-eval-after-load 'lisp-mode
   (my/install-mode-bindings emacs-lisp-mode-map my/emacs-lisp-mode-bindings))
 
 (provide 'keys)
