@@ -464,6 +464,13 @@ Run a one-screen diagnostics report in Emacs:
 M-x jay/doctor
 #+END_SRC
 
+Include actionable fix hints (one-line remediation commands):
+#+BEGIN_SRC emacs-lisp
+C-u M-x jay/doctor
+;; or:
+M-x jay/doctor-fix-hints
+#+END_SRC
+
 Startup timing snapshots are appended on each launch to:
 - [[file+emacs:/Users/jay/emacs/emacs-settings/docs/lab/startup-profile.org][docs/lab/startup-profile.org]]
 

@@ -192,15 +192,60 @@
        key-minor-mode-map))
     (nreverse collisions)))
 
-(defun jay/doctor ()
-  "Run one-screen diagnostics for startup/runtime health."
-  (interactive)
+(defun jay/doctor--collect-fix-hints (bins roam dropbox collisions errors)
+  "Return actionable one-line fix hints from doctor inputs."
+  (let ((hints '()))
+    ;; Missing binaries
+    (dolist (row bins)
+      (let ((bin (car row))
+            (path (cdr row)))
+        (when (string= path "MISSING")
+          (push (format "Missing %s: run `brew install %s`" bin bin) hints))))
+
+    ;; Org-roam directory/db checks
+    (when (string= (cdr (assoc "db-file-exists" roam)) "no")
+      (push "Org-roam DB missing: run `M-x org-roam-db-sync`" hints))
+    (when (string= (cdr (assoc "db-connection-live" roam)) "no")
+      (push "Org-roam DB connection is not live: run `M-x org-roam-db-clear-all` then `M-x org-roam-db-sync`" hints))
+    (let ((roam-dir (cdr (assoc "org-roam-directory" roam))))
+      (when (and (stringp roam-dir)
+                 (not (string= roam-dir "unbound"))
+                 (not (file-directory-p roam-dir)))
+        (push (format "Org-roam directory missing: run `mkdir -p %s`" (shell-quote-argument roam-dir))
+              hints)))
+
+    ;; Dropbox path sanity
+    (when (string= (cdr (assoc "direct-dropbox-exists" dropbox)) "no")
+      (push "Direct Dropbox path missing: verify Dropbox desktop is installed and `/Users/jay/Dropbox` exists" hints))
+    (when (string= (cdr (assoc "org-roam-uses-cloudstorage-path" dropbox)) "yes")
+      (push "Org-roam points to CloudStorage path: set `org-roam-directory` to `/Users/jay/Dropbox/roam` in `jay-org-roam-core.el`" hints))
+
+    ;; Keybinding collisions
+    (when (> (length collisions) 0)
+      (push (format "Found %d key collisions: review with `M-x describe-keymap RET key-minor-mode-map RET` and resolve the highest-frequency keys first"
+                    (length collisions))
+            hints))
+
+    ;; Recent error-like messages
+    (when errors
+      (push "Startup/runtime errors seen: run `M-x view-echo-area-messages`, then `M-x toggle-debug-on-error` and restart to capture a backtrace" hints))
+
+    (if hints
+        (delete-dups (nreverse hints))
+      '("No obvious fixes needed based on current checks."))))
+
+(defun jay/doctor (&optional fix-hints)
+  "Run one-screen diagnostics for startup/runtime health.
+With prefix arg FIX-HINTS, append actionable remediation commands."
+  (interactive "P")
   (require 'org)
   (let* ((errors (jay/doctor--recent-load-errors))
          (bins (jay/doctor--binary-report))
          (roam (jay/doctor--org-roam-db-report))
          (dropbox (jay/doctor--dropbox-sanity-report))
-         (collisions (jay/doctor--keybinding-collisions)))
+         (collisions (jay/doctor--keybinding-collisions))
+         (hints (and fix-hints
+                     (jay/doctor--collect-fix-hints bins roam dropbox collisions errors))))
     (with-current-buffer (get-buffer-create "*Jay Doctor*")
       (erase-buffer)
       (insert (format "Jay Doctor Report - %s\n\n" (format-time-string "%Y-%m-%d %H:%M:%S")))
@@ -232,9 +277,22 @@
           (dolist (line errors)
             (insert (format "- %s\n" line)))
         (insert "- none detected in recent *Messages* scan\n"))
+
+      (when fix-hints
+        (insert "\n== Fix Hints ==\n")
+        (dolist (hint hints)
+          (insert (format "- %s\n" hint))))
+
       (goto-char (point-min))
       (display-buffer (current-buffer)))
-    (message "Doctor report written to *Jay Doctor*")))
+    (message (if fix-hints
+                 "Doctor report with fix hints written to *Jay Doctor*"
+               "Doctor report written to *Jay Doctor*"))))
+
+(defun jay/doctor-fix-hints ()
+  "Run `jay/doctor' and include actionable remediation hints."
+  (interactive)
+  (jay/doctor t))
 
 
 

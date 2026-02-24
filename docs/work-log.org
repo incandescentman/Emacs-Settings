@@ -1,6 +1,28 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-02-24: Add capture-cleanup ERT regression suite and smoke-test gate
+- Added new ERT file [[file+emacs:/Users/jay/emacs/emacs-settings/tests/capture-cleanup-tests.el][tests/capture-cleanup-tests.el]] with focused regression coverage for =jay/org-web-tools-cleanup-string=:
+  - Timestamp removal/preservation toggle
+  - Social share link + mailto stripping
+  - Relative-time and view-count removal
+  - Bold-line to org-heading promotion
+  - Heading/body spacing and whitespace-only line cleanup
+- Updated smoke script [[file+emacs:/Users/jay/emacs/emacs-settings/scripts/emacs_smoke_test.sh][scripts/emacs_smoke_test.sh]] to run the capture cleanup ERT suite as part of the default batch flow.
+- Smoke test now runs in 5 stages (with optional full-init stage retained via =--full-init=).
+
+* 2026-02-24: Add jay/doctor fix-hints mode
+- Enhanced [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][spacemacs-new-config.el]] doctor workflow:
+  - =M-x jay/doctor= now accepts prefix arg (=C-u=) to append a =Fix Hints= section
+  - Added =M-x jay/doctor-fix-hints= convenience command
+- Fix hints include actionable one-line remediations for:
+  - Missing binaries (=brew install rg/pandoc/hunspell=)
+  - Org-roam DB/path issues (=org-roam-db-sync= / rebuild guidance)
+  - Dropbox CloudStorage path mismatch
+  - Keybinding collision follow-up command
+  - Recent startup/runtime error follow-up steps
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][docs/instructions.org]] with usage examples.
+
 * 2026-02-24: Add which-key descriptions for custom keybindings
 - Added which-key labels in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] for main prefix groups:
   - =s-k= (commands), =s-/= (search), =s-u= (org-roam), =]= (extras)
