@@ -66,10 +66,28 @@ If FILENAME starts with /Users/jay/Dropbox, return it as-is without resolution."
 ;; Set org-roam-directory directly here, before any profile loading
 (setq org-roam-directory "/Users/jay/Dropbox/roam")
 
-;; Optional local fixes (loaded only if present)
+;; Optional local fixes (loaded only if present).
+;; During migration, fixes may live either beside this file (suite dir)
+;; or one level up in emacs-settings/.
+(defun jay/org-roam--load-optional-fix (filename)
+  "Load optional org-roam fix FILENAME from suite dir or parent dir."
+  (when load-file-name
+    (let* ((suite-dir (file-name-directory load-file-name))
+           (parent-dir (expand-file-name ".." suite-dir))
+           (suite-path (expand-file-name filename suite-dir))
+           (parent-path (expand-file-name filename parent-dir))
+           (candidate (cond
+                       ((file-exists-p suite-path) suite-path)
+                       ((file-exists-p parent-path) parent-path)
+                       (t nil))))
+      (if candidate
+          (load candidate t t)
+        (message "org-roam: optional fix missing: %s (checked %s and %s)"
+                 filename suite-path parent-path)))))
+
 (when load-file-name
-  (load (expand-file-name "org-roam-id-fix.el" (file-name-directory load-file-name)) t)
-  (load (expand-file-name "org-roam-db-fix.el" (file-name-directory load-file-name)) t))
+  (jay/org-roam--load-optional-fix "org-roam-id-fix.el")
+  (jay/org-roam--load-optional-fix "org-roam-db-fix.el"))
 
 ;; Load the profile system
 (require 'jay-org-roam-profiles)
