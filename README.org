@@ -31,7 +31,7 @@ This is a sophisticated Emacs configuration that uses Spacemacs as its foundatio
 
 *** Org-Mode & Knowledge Management
 - [[file:jay-org-roam-suite/][jay-org-roam-suite/]] - **Core Architecture**: Modular Org Roam system (Core, Profiles, Templates)
-- [[file:org-roam-config.el][org-roam-config.el]] - Legacy entry point (delegates to suite)
+- [[file:org-roam-config.el][org-roam-config.el]] - Legacy compatibility shim (loads the suite; full legacy implementation archived in [[file:archive/org-roam-config.el_legacy_2026-02-24][archive/org-roam-config.el_legacy_2026-02-24]])
 - =org-roam-ui= - Interactive graph visualization for org-roam (keybinding: =s-u u=)
 - [[file:org-yt.el][org-yt.el]] - YouTube link support
 - [[file:org-visual-style.el][org-visual-style.el]] - Visual enhancements for org-mode

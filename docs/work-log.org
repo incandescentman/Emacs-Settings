@@ -1,6 +1,15 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-02-24: Deprecate org-roam-config.el into compatibility shim
+- Replaced [[file+emacs:/Users/jay/emacs/emacs-settings/org-roam-config.el][org-roam-config.el]] implementation with a minimal compatibility shim that:
+  - Adds =jay-org-roam-suite/= to load-path (when needed)
+  - Shows a one-time deprecation message
+  - Loads =jay-org-roam-core= (and =jay-editor-extras= if present)
+  - Provides feature =org-roam-config= for backward compatibility
+- Archived full legacy implementation to [[file+emacs:/Users/jay/emacs/emacs-settings/archive/org-roam-config.el_legacy_2026-02-24][archive/org-roam-config.el_legacy_2026-02-24]].
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/README.org][README.org]] to mark =org-roam-config.el= as a shim and link to the archive copy.
+
 * 2026-02-24: Org obsolete API migration + 9.8-compatible preview fallback
 - Updated Org/Emacs obsolete symbols in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]]:
   - =org-export-before-processing-hook= → =org-export-before-processing-functions=
