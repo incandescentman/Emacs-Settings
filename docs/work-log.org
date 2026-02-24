@@ -1,6 +1,16 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-02-24: Add which-key descriptions for custom keybindings
+- Added which-key labels in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] for main prefix groups:
+  - =s-k= (commands), =s-/= (search), =s-u= (org-roam), =]= (extras)
+  - Subgroups: =s-k o= (org), =s-k t= (tools), =s-k c= (clock), =s-k f= (frame), etc.
+- Added org-roam-specific labels in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-core.el]]:
+  - Profile shortcuts: =s-u 1/2/3/4= with profile names
+  - Dailies: =s-u d= (today), =s-u y= (yesterday), =s-u .= (goto date)
+  - Core commands: =s-u f= (find), =s-u i= (insert), =s-u c= (capture)
+- Makes custom keybindings discoverable via which-key popup.
+
 * 2026-02-24: Add jay/doctor diagnostics + startup timing dashboard
 - Added =M-x jay/doctor= in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][spacemacs-new-config.el]].
   - Reports recent error-like startup messages
@@ -13,6 +23,18 @@
   - Added startup hook that appends timing snapshots to [[file+emacs:/Users/jay/emacs/emacs-settings/docs/lab/startup-profile.org][docs/lab/startup-profile.org]]
   - Captures total init time plus per-module load times for regression tracking
 - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][docs/instructions.org]] with =jay/doctor= usage and startup profile location.
+
+* 2026-02-24: Add Embark context actions for org-roam and URLs
+- Added Embark org-roam target actions in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-core.el]]:
+  - =i= insert node link
+  - =v= visit node
+  - =r= refile to node
+  - =b= toggle backlinks buffer
+  - =a= add alias on target node
+- Added URL Embark actions in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-core.el]]:
+  - =y= copy URL to kill ring
+  - =p= preview inline links/images in Org buffers
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][docs/instructions.org]] with Embark action usage notes.
 
 * 2026-02-24: Add repeat-mode for faster Org navigation
 - Enabled =repeat-mode= globally in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]].

@@ -329,6 +329,100 @@ Only effective when `jay/org-roam--skip-next-sync' is non-nil and FORCE is nil."
 (with-eval-after-load 'consult-org-roam
   (setq consult-org-roam-buffer-after-buffers t))
 
+;; Embark integration ----------------------------------------------------------
+(defun jay/embark-org-roam--target-node (target)
+  "Return org-roam node object from Embark TARGET."
+  (cond
+   ((and (fboundp 'org-roam-node-p) (org-roam-node-p target)) target)
+   ((stringp target)
+    (or (get-text-property 0 'node target)
+        (when (fboundp 'org-roam-node-from-title-or-alias)
+          (org-roam-node-from-title-or-alias target))))
+   (t nil)))
+
+(defun jay/embark-org-roam-visit (target)
+  "Visit org-roam TARGET node."
+  (interactive)
+  (let ((node (jay/embark-org-roam--target-node target)))
+    (unless node
+      (user-error "Could not resolve org-roam node from target"))
+    (jay/with-org-roam (org-roam-node-visit node))))
+
+(defun jay/embark-org-roam-insert-link (target)
+  "Insert link to org-roam TARGET node at point."
+  (interactive)
+  (let ((node (jay/embark-org-roam--target-node target)))
+    (unless node
+      (user-error "Could not resolve org-roam node from target"))
+    (insert
+     (org-link-make-string
+      (concat "id:" (org-roam-node-id node))
+      (org-roam-node-title node)))))
+
+(defun jay/embark-org-roam-refile (target)
+  "Refile region/subtree to org-roam TARGET node."
+  (interactive)
+  (let ((node (jay/embark-org-roam--target-node target)))
+    (unless node
+      (user-error "Could not resolve org-roam node from target"))
+    (jay/with-org-roam (org-roam-refile node))))
+
+(defun jay/embark-org-roam-buffer-toggle (&optional _target)
+  "Toggle org-roam backlinks buffer.
+_TARGET is ignored so this can be used as an Embark action."
+  (interactive)
+  (jay/with-org-roam (org-roam-buffer-toggle)))
+
+(defun jay/embark-org-roam-alias-add (target)
+  "Add alias to org-roam TARGET node."
+  (interactive)
+  (let ((node (jay/embark-org-roam--target-node target)))
+    (unless node
+      (user-error "Could not resolve org-roam node from target"))
+    (with-current-buffer (find-file-noselect (org-roam-node-file node))
+      (save-excursion
+        (goto-char (org-roam-node-point node))
+        (call-interactively #'org-roam-alias-add)))))
+
+(defun jay/embark-url-copy (url)
+  "Copy URL target from Embark."
+  (interactive "sURL: ")
+  (kill-new url)
+  (message "Copied URL: %s" url))
+
+(defun jay/embark-url-preview (&optional _url)
+  "Preview links/images in current Org buffer.
+_URL is ignored so this can be used as an Embark action."
+  (interactive)
+  (unless (derived-mode-p 'org-mode)
+    (user-error "Preview action is only available in org-mode buffers"))
+  (cond
+   ((fboundp 'jay/org-preview-inline-images)
+    (jay/org-preview-inline-images))
+   ((fboundp 'org-link-preview)
+    (org-link-preview '(16)))
+   ((fboundp 'org-display-inline-images)
+    (org-display-inline-images))
+   (t
+    (user-error "No Org link preview command available"))))
+
+(with-eval-after-load 'embark
+  (with-eval-after-load 'org-roam
+    (defvar jay/embark-org-roam-node-map
+      (let ((map (make-sparse-keymap)))
+        (set-keymap-parent map embark-general-map)
+        (define-key map (kbd "i") #'jay/embark-org-roam-insert-link)
+        (define-key map (kbd "v") #'jay/embark-org-roam-visit)
+        (define-key map (kbd "r") #'jay/embark-org-roam-refile)
+        (define-key map (kbd "b") #'jay/embark-org-roam-buffer-toggle)
+        (define-key map (kbd "a") #'jay/embark-org-roam-alias-add)
+        map)
+      "Embark actions for org-roam node targets.")
+    (setq embark-keymap-alist (assq-delete-all 'org-roam-node embark-keymap-alist))
+    (add-to-list 'embark-keymap-alist '(org-roam-node . jay/embark-org-roam-node-map)))
+  (define-key embark-url-map (kbd "y") #'jay/embark-url-copy)
+  (define-key embark-url-map (kbd "p") #'jay/embark-url-preview))
+
 ;; Which-key descriptions for org-roam bindings --------------------------------
 (with-eval-after-load 'which-key
   (which-key-add-key-based-replacements

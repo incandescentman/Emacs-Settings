@@ -270,6 +270,21 @@ Note: [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-fun
 
 These use =ripgrep= for fast searching. Install: =brew install ripgrep=
 
+** Embark Context Actions
+
+Use =s-e= (=embark-act=) on the current target for context-specific actions.
+
+- In =consult-org-roam= minibuffer candidates (target type =org-roam-node=):
+  - =i= insert link to node
+  - =v= visit node
+  - =r= refile to node
+  - =b= toggle backlinks buffer
+  - =a= add alias on the target node
+
+- On URL targets (target type =url=):
+  - =y= copy URL
+  - =p= preview inline links/images in Org buffers
+
 * Literate Programming Guide
 
 Many files are =.org= files containing code blocks:

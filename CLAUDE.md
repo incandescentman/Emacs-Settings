@@ -79,6 +79,13 @@ The following documentation files provide detailed information about various asp
 
 ## Recent Major Updates
 
+### 0. Org 9.8 Compatibility & Navigation (Feb 2026)
+- **Link Preview Migration**: Migrated `org-yt.el` and `shared-functions` from deprecated `org-toggle-inline-images`/`org-display-inline-images` to new `org-link-preview` API.
+- **Backward Compatibility**: Added version-checking wrappers that work on Org 9.6+ and will use native Org 9.8 features when available.
+- **Repeat-mode Navigation**: Enabled `repeat-mode` with custom repeat maps for Org heading/block/link navigation (press `C-c C-n`, then just `n` to continue).
+- **Which-key Descriptions**: Added descriptive labels for all custom prefix keys (`s-k`, `s-/`, `s-u`, `]`) and org-roam bindings for better discoverability.
+- **Legacy Cleanup**: Deprecated `org-roam-config.el` to a compatibility shim pointing to `jay-org-roam-suite/`.
+
 ### 1. Web Page Capture (Feb 2026)
 - **org-web-tools**: Installed for capturing web pages as org-mode content
 - **Chrome Integration**: `jay/get-url-from-chrome` grabs URL from frontmost Chrome tab via AppleScript
