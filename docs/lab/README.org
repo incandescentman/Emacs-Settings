@@ -1,0 +1,18 @@
+#+title: Lab Directory (Archived)
+
+The experimental org-roam code that was here has been archived.
+
+* Current Implementation
+
+The production implementation is now in:
+
+- [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/][jay-org-roam-suite/]] - Core, Profiles, and Templates modules
+- [[file+emacs:/Users/jay/emacs/emacs-settings/docs/ORG-ROAM-PROFILES-README.md][docs/ORG-ROAM-PROFILES-README.md]] - User guide for the profile system
+
+* Archived Files
+
+Original experimental files moved to:
+
+- [[file+emacs:/Users/jay/emacs/emacs-settings/archive/docs-lab/][archive/docs-lab/]]
+
+These contain early prototypes for database switching and enhancements that informed the suite design.

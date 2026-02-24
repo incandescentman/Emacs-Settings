@@ -1,6 +1,29 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-02-24: Archive docs/lab/ experimental org-roam code
+- Moved experimental org-roam files to =archive/docs-lab/= (gitignored):
+  - =org-roam-database-switching.org=
+  - =org-roam-enhancements.org=
+  - =org-roam-second-database.org=
+- Added [[file+emacs:/Users/jay/emacs/emacs-settings/docs/lab/README.org][docs/lab/README.org]] pointer to current implementation in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/][jay-org-roam-suite/]].
+- These files contained early prototypes that informed the suite design; archived for historical reference.
+
+* 2026-02-24: Consolidate clipboard primitives into pasteboard module
+- Moved low-level clipboard functions from [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] into [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][pasteboard-copy-and-paste-functions.el]]:
+  - =clipboard-to-kill-ring=
+  - =clipboard-to-kill-ring-and-strip-trailing-newlines=
+  - =copy-region-as-kill-and-push-to-clipboard=
+  - =yas/pasteboard-raw=
+  - =pasteboard-copy-large-file=
+- Left notes in shared-functions.org pointing to the pasteboard module.
+- Kept higher-level Org link insertion helpers in shared-functions.org.
+
+* 2026-02-24: Fix org-roam optional fix-file lookup paths
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-core.el]] to search both suite directory and parent =emacs-settings/= for optional fix files.
+- Added =jay/org-roam--load-optional-fix= helper with clear logging.
+- Fixes silent load failure for =org-roam-id-fix.el= and =org-roam-db-fix.el=.
+
 * 2026-02-24: Deprecate org-roam-config.el into compatibility shim
 - Replaced [[file+emacs:/Users/jay/emacs/emacs-settings/org-roam-config.el][org-roam-config.el]] implementation with a minimal compatibility shim that:
   - Adds =jay-org-roam-suite/= to load-path (when needed)
