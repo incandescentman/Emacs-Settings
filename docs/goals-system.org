@@ -1,0 +1,78 @@
+#+TITLE: Goals System Documentation
+#+STARTUP: showall
+
+* Overview
+
+The goals tooling is now split into two modules:
+
+1. *Rep Counter Module* ([[file+emacs:/Users/jay/emacs/emacs-settings/jay-goals-system.el][jay-goals-system.el]])
+   - Prefix: =s-M-g=
+   - Tracks weekly input reps in the mode-line
+   - Persists to [[file+emacs:/Users/jay/Dropbox/roam/velocity/tracking/weekly-reps.org][weekly-reps.org]]
+
+2. *Workflow Automation Module* ([[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-core.el]])
+   - Prefix: =s-u=
+   - Morning start, anti-stall, and revenue block commands
+
+Note: =s-g= remains =isearch-repeat-forward=.
+
+* Rep Counter (=s-M-g=)
+
+** Quick Reference
+
+| Key       | Command                            | Purpose |
+|-----------+------------------------------------+---------|
+| =s-M-g 1= | =jay-goals-increment-outreach=    | Outreach +1 |
+| =s-M-g 2= | =jay-goals-increment-followup=    | Follow-up +1 |
+| =s-M-g 3= | =jay-goals-increment-call=        | Call +1 |
+| =s-M-g 4= | =jay-goals-increment-post=        | Post +1 |
+| =s-M-g s= | =jay-goals-show-scoreboard=       | Show counts |
+| =s-M-g S= | =jay-goals-open-scoreboard-file=  | Open data file |
+| =s-M-g r= | =jay-goals-reset-scoreboard=      | Manual reset |
+
+Mode-line example:
+#+begin_example
+[O:3/10 F:8/15 C:1/5 P:1/2]
+#+end_example
+
+** Behavior
+
+- Counters roll over by ISO week.
+- Data persists in:
+  - [[file+emacs:/Users/jay/Dropbox/roam/velocity/tracking/weekly-reps.org][weekly-reps.org]]
+
+** Customization
+
+#+begin_src emacs-lisp
+(setq jay-goals-targets
+      '((outreach . 10)
+        (followups . 15)
+        (calls . 5)
+        (posts . 2)))
+
+(setq jay-goals-prefix-key "s-M-g")
+#+end_src
+
+* Workflow Automation (=s-u=)
+
+These commands live in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-core.el]]:
+
+| Key       | Command                    | Purpose |
+|-----------+----------------------------+---------|
+| =s-u g=   | =jay/goals-start-day=     | Open daily + dashboard + hub, ensure pipeline |
+| =s-u A=   | =jay/anti-stall-now=      | Start anti-stall sprint from avoiding list |
+| =s-u R=   | =jay/revenue-block-start= | Start focused Track 1 block |
+| =s-u C-r= | =jay/revenue-block-stop=  | Stop active block and restore layout |
+
+* File Paths
+
+Rep counter storage:
+#+begin_src emacs-lisp
+jay-goals-reps-file
+"/Users/jay/Dropbox/roam/velocity/tracking/weekly-reps.org"
+#+end_src
+
+* Related Files
+
+- [[file+emacs:/Users/jay/Dropbox/roam/accountability/20251201155922-goals_start_here.org][Goals Start Here]]
+- [[file+emacs:/Users/jay/Dropbox/roam/velocity/goals-system/goals-instructions-for-Claude.org][Goals Instructions for Claude]]

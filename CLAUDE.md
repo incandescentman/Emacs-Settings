@@ -20,6 +20,7 @@ The following documentation files provide detailed information about various asp
 - [`docs/experimental-mode-playbook.org`](docs/experimental-mode-playbook.org) - Guide for experimental mode features
 - [`docs/ORG-ROAM-PROFILES-README.md`](docs/ORG-ROAM-PROFILES-README.md) - Guide to the multi-profile Org Roam system
 - [`docs/pasteboard-markdown-detection.org`](docs/pasteboard-markdown-detection.org) - Documentation for the smart pasteboard system
+- [`docs/goals-system.org`](docs/goals-system.org) - Goals workflow integration (rep counter, morning ritual, anti-stall)
 
 ## Configuration Architecture
 

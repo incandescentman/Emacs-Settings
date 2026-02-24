@@ -1,6 +1,22 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-02-24: Keep s-g search; split goals features cleanly
+- Refactored [[file+emacs:/Users/jay/emacs/emacs-settings/jay-goals-system.el][jay-goals-system.el]] to *rep-counter only*:
+  - Weekly reps tracking (outreach/followups/calls/posts)
+  - Mode-line indicator: =[O:2/10 F:8/15 C:1/5 P:1/2]=
+  - Persistence to [[file+emacs:/Users/jay/Dropbox/roam/velocity/tracking/weekly-reps.org][weekly-reps.org]]
+  - Keybindings under =s-M-g=: =1/2/3/4/s/S/r=
+- Preserved =s-g= for =isearch-repeat-forward= (muscle-memory safe).
+- Confirmed workflow automation remains in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-core.el]]:
+  - =s-u g= start day
+  - =s-u A= anti-stall
+  - =s-u R= revenue block start
+  - =s-u C-r= revenue block stop
+- Updated docs to reflect this split:
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/docs/goals-system.org][docs/goals-system.org]]
+  - goals hub and Claude instructions in roam notes.
+
 * 2026-02-24: Add capture-cleanup ERT regression suite and smoke-test gate
 - Added new ERT file [[file+emacs:/Users/jay/emacs/emacs-settings/tests/capture-cleanup-tests.el][tests/capture-cleanup-tests.el]] with focused regression coverage for =jay/org-web-tools-cleanup-string=:
   - Timestamp removal/preservation toggle

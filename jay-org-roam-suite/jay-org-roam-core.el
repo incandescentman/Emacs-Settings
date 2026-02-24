@@ -280,6 +280,276 @@ Only effective when `jay/org-roam--skip-next-sync' is non-nil and FORCE is nil."
 
 (defun insert-colon () (interactive) (insert ":"))
 
+;; Goals workflow helpers ------------------------------------------------------
+(defconst jay/goals-hub-id "20251201T155922.490384"
+  "Org-roam ID for the goals navigation hub.")
+
+(defconst jay/goals-execution-dashboard-id "20260114-socratic-ai-execution"
+  "Org-roam ID for the execution dashboard.")
+
+(defconst jay/goals-avoiding-id "20251201T155810.623762"
+  "Org-roam ID for the anti-stall avoidance list.")
+
+(defconst jay/goals-daily-pipeline-template-lines
+  '("* Daily Pipeline"
+    "- [ ] OBT :: "
+    "- [ ] MIT 1 :: "
+    "- [ ] MIT 2 :: "
+    "- [ ] Reach-out 1 (Track 1) :: "
+    "- [ ] Reach-out 2 (Track 1) :: "
+    "- [ ] Visibility Move (Track 2) :: "
+    "- [ ] Health Action :: ")
+  "Template inserted into a daily note by `jay/goals-start-day'.")
+
+(defvar jay/anti-stall-default-minutes 2
+  "Default timer length for `jay/anti-stall-now'.")
+
+(defvar jay/anti-stall--timer nil
+  "Internal timer object for active anti-stall sprint.")
+
+(defvar jay/revenue-block-default-minutes 90
+  "Default length of a Track 1 revenue block.")
+
+(defvar jay/revenue-block--timer nil
+  "Internal timer object for active revenue block.")
+
+(defvar jay/revenue-block--heartbeat-timer nil
+  "Internal repeating timer for revenue block progress updates.")
+
+(defvar jay/revenue-block--end-time nil
+  "Absolute end time (float seconds) for active revenue block.")
+
+(defvar jay/revenue-block--minutes nil
+  "Duration in minutes for active revenue block.")
+
+(defvar jay/revenue-block--window-config nil
+  "Saved window configuration before entering revenue focus mode.")
+
+(defvar jay/revenue-block--enabled-olivetti nil
+  "Non-nil when `jay/revenue-block-start' enabled `olivetti-mode'.")
+
+(define-minor-mode jay/revenue-block-mode
+  "Global indicator for an active Track 1 revenue sprint."
+  :global t
+  :lighter " RevBlock")
+
+(defun jay/goals--find-node-by-id (id)
+  "Return org-roam node for ID, or nil when not found."
+  (jay/with-org-roam (org-roam-node-from-id id)))
+
+(defun jay/goals--display-id (id)
+  "Display Org-roam note for ID without stealing focus."
+  (let ((node (jay/goals--find-node-by-id id)))
+    (if node
+        (let ((buf (find-file-noselect (org-roam-node-file node))))
+          (with-current-buffer buf
+            (goto-char (org-roam-node-point node)))
+          (display-buffer buf)
+          t)
+      (message "Goals helper: missing note id %s" id)
+      nil)))
+
+(defun jay/goals--open-id (id &optional other-window)
+  "Visit Org-roam note for ID.
+When OTHER-WINDOW is non-nil, open in another window."
+  (let ((node (jay/goals--find-node-by-id id)))
+    (unless node
+      (user-error "Could not find Org-roam note for id %s" id))
+    (jay/with-org-roam
+     (org-roam-node-visit node other-window))))
+
+(defun jay/goals--today-daily-buffer ()
+  "Return today's org-roam daily buffer."
+  (save-window-excursion
+    (jay/with-org-roam (org-roam-dailies-goto-today))
+    (current-buffer)))
+
+(defun jay/goals--goto-or-create-heading (heading)
+  "Move point to HEADING in current org buffer, creating it when absent."
+  (goto-char (point-min))
+  (if (re-search-forward (format "^\\*+ %s\\b" (regexp-quote heading)) nil t)
+      (beginning-of-line)
+    (goto-char (point-max))
+    (unless (bolp) (insert "\n"))
+    (insert (format "\n* %s\n" heading))
+    (forward-line -1)
+    (beginning-of-line)))
+
+(defun jay/goals--append-daily-log (heading text)
+  "Append TEXT under HEADING in today's daily note."
+  (let ((daily-buffer (jay/goals--today-daily-buffer)))
+    (with-current-buffer daily-buffer
+      (save-excursion
+        (jay/goals--goto-or-create-heading heading)
+        (org-end-of-subtree t t)
+        (unless (bolp) (insert "\n"))
+        (insert text "\n"))
+      (save-buffer))))
+
+(defun jay/goals--ensure-daily-pipeline ()
+  "Ensure today's daily note contains a Daily Pipeline section.
+Return non-nil when the section was inserted."
+  (save-excursion
+    (goto-char (point-min))
+    (if (re-search-forward "^\\*+ Daily Pipeline\\b" nil t)
+        nil
+      (goto-char (point-max))
+      (unless (bolp) (insert "\n"))
+      (insert "\n" (mapconcat #'identity jay/goals-daily-pipeline-template-lines "\n") "\n")
+      (save-buffer)
+      t)))
+
+(defun jay/goals-start-day ()
+  "Open the three key goals buffers and seed today's Daily Pipeline."
+  (interactive)
+  (jay/with-org-roam (org-roam-dailies-goto-today))
+  (let* ((daily-buffer (current-buffer))
+         (inserted (jay/goals--ensure-daily-pipeline)))
+    (jay/goals--display-id jay/goals-execution-dashboard-id)
+    (jay/goals--display-id jay/goals-hub-id)
+    (switch-to-buffer daily-buffer)
+    (message "Goals day setup complete%s."
+             (if inserted " (inserted Daily Pipeline template)" ""))))
+
+(defun jay/anti-stall--timer-finished (minutes)
+  "Handle completion of anti-stall timer for MINUTES."
+  (setq jay/anti-stall--timer nil)
+  (jay/goals--append-daily-log
+   "Anti-Stall Log"
+   (format "- [%s] Completed %d-minute anti-stall sprint."
+           (format-time-string "%H:%M")
+           minutes))
+  (beep)
+  (message "Anti-stall sprint complete. Keep momentum."))
+
+(defun jay/anti-stall-now (&optional arg)
+  "Start anti-stall sprint from the avoiding list.
+With prefix ARG, prompt for minutes; with numeric ARG, use that duration."
+  (interactive "P")
+  (let ((minutes (cond
+                  ((numberp arg) arg)
+                  (arg (read-number "Anti-stall minutes: " jay/anti-stall-default-minutes))
+                  (t jay/anti-stall-default-minutes))))
+    (when (timerp jay/anti-stall--timer)
+      (cancel-timer jay/anti-stall--timer)
+      (setq jay/anti-stall--timer nil))
+    (jay/goals--open-id jay/goals-avoiding-id)
+    (when (derived-mode-p 'org-mode)
+      (goto-char (point-min))
+      (unless (re-search-forward "^\\s-*[-+] \\[ \\] " nil t)
+        (goto-char (point-max))
+        (unless (bolp) (insert "\n"))
+        (insert "- [ ] "))
+      (beginning-of-line))
+    (jay/goals--append-daily-log
+     "Anti-Stall Log"
+     (format "- [%s] Started %d-minute anti-stall sprint."
+             (format-time-string "%H:%M")
+             minutes))
+    (setq jay/anti-stall--timer
+          (run-at-time (* minutes 60) nil #'jay/anti-stall--timer-finished minutes))
+    (message "Anti-stall sprint started for %d minutes." minutes)))
+
+(defun jay/revenue-block--cancel-timers ()
+  "Cancel internal revenue block timers."
+  (when (timerp jay/revenue-block--timer)
+    (cancel-timer jay/revenue-block--timer)
+    (setq jay/revenue-block--timer nil))
+  (when (timerp jay/revenue-block--heartbeat-timer)
+    (cancel-timer jay/revenue-block--heartbeat-timer)
+    (setq jay/revenue-block--heartbeat-timer nil)))
+
+(defun jay/revenue-block--restore-layout ()
+  "Restore layout and local focus settings from before revenue block."
+  (when (window-configuration-p jay/revenue-block--window-config)
+    (set-window-configuration jay/revenue-block--window-config))
+  (setq jay/revenue-block--window-config nil)
+  (when (and jay/revenue-block--enabled-olivetti
+             (fboundp 'olivetti-mode))
+    (olivetti-mode -1))
+  (setq jay/revenue-block--enabled-olivetti nil))
+
+(defun jay/revenue-block--remaining-minutes ()
+  "Return rounded-up minutes remaining in active revenue block."
+  (if (and jay/revenue-block--end-time
+           (> jay/revenue-block--end-time (float-time)))
+      (ceiling (/ (- jay/revenue-block--end-time (float-time)) 60.0))
+    0))
+
+(defun jay/revenue-block--heartbeat ()
+  "Emit periodic progress updates for active revenue block."
+  (when jay/revenue-block-mode
+    (message "Revenue block in progress: %d minutes remaining."
+             (jay/revenue-block--remaining-minutes))))
+
+(defun jay/revenue-block--finish ()
+  "Finalize revenue block and prompt for outcome logging."
+  (let ((minutes (or jay/revenue-block--minutes jay/revenue-block-default-minutes)))
+    (jay/revenue-block--cancel-timers)
+    (jay/revenue-block-mode -1)
+    (jay/revenue-block--restore-layout)
+    (setq jay/revenue-block--end-time nil
+          jay/revenue-block--minutes nil)
+    (beep)
+    (let* ((raw (read-string (format "Revenue block (%d min) done. Outcome: " minutes)))
+           (trimmed (replace-regexp-in-string
+                     "\\`[[:space:]\n\r\t]*\\|[[:space:]\n\r\t]*\\'" "" raw))
+           (outcome (if (string= trimmed "") "n/a" trimmed)))
+      (jay/goals--append-daily-log
+       "Revenue Block Log"
+       (format "- [%s] Completed %d-minute Track 1 block. Outcome: %s"
+               (format-time-string "%H:%M")
+               minutes
+               outcome))
+      (message "Revenue block complete. Outcome logged."))))
+
+(defun jay/revenue-block-start (&optional arg)
+  "Start focused Track 1 revenue block timer.
+Default duration is `jay/revenue-block-default-minutes'. With prefix ARG,
+prompt for minutes; with numeric ARG, use that duration."
+  (interactive "P")
+  (let ((minutes (cond
+                  ((numberp arg) arg)
+                  (arg (read-number "Revenue block minutes: " jay/revenue-block-default-minutes))
+                  (t jay/revenue-block-default-minutes))))
+    (jay/revenue-block--cancel-timers)
+    (setq jay/revenue-block--window-config (current-window-configuration))
+    (delete-other-windows)
+    (setq jay/revenue-block--enabled-olivetti nil)
+    (when (and (fboundp 'olivetti-mode)
+               (not (bound-and-true-p olivetti-mode)))
+      (olivetti-mode 1)
+      (setq jay/revenue-block--enabled-olivetti t))
+    (setq jay/revenue-block--minutes minutes
+          jay/revenue-block--end-time (+ (float-time) (* minutes 60)))
+    (setq jay/revenue-block--timer
+          (run-at-time (* minutes 60) nil #'jay/revenue-block--finish))
+    (setq jay/revenue-block--heartbeat-timer
+          (run-at-time 300 300 #'jay/revenue-block--heartbeat))
+    (jay/revenue-block-mode 1)
+    (jay/goals--append-daily-log
+     "Revenue Block Log"
+     (format "- [%s] Started %d-minute Track 1 revenue block."
+             (format-time-string "%H:%M")
+             minutes))
+    (message "Revenue block started for %d minutes." minutes)))
+
+(defun jay/revenue-block-stop ()
+  "Stop current revenue block early and restore previous layout."
+  (interactive)
+  (unless jay/revenue-block-mode
+    (user-error "No active revenue block"))
+  (jay/revenue-block--cancel-timers)
+  (jay/revenue-block-mode -1)
+  (jay/revenue-block--restore-layout)
+  (jay/goals--append-daily-log
+   "Revenue Block Log"
+   (format "- [%s] Stopped Track 1 block early."
+           (format-time-string "%H:%M")))
+  (setq jay/revenue-block--end-time nil
+        jay/revenue-block--minutes nil)
+  (message "Revenue block stopped."))
+
 ;; Keybindings -----------------------------------------------------------------
 (jay/bind-roam "f" org-roam-node-find)
 (jay/bind-roam "l" org-roam-buffer-toggle)
@@ -287,6 +557,10 @@ Only effective when `jay/org-roam--skip-next-sync' is non-nil and FORCE is nil."
 (jay/bind-roam "c" org-roam-capture)
 (jay/bind-roam "a" org-roam-alias-add)
 (jay/bind-roam "s" org-roam-db-sync)
+(define-key jay/super-u-map (kbd "g") #'jay/goals-start-day)
+(define-key jay/super-u-map (kbd "A") #'jay/anti-stall-now)
+(define-key jay/super-u-map (kbd "R") #'jay/revenue-block-start)
+(define-key jay/super-u-map (kbd "C-r") #'jay/revenue-block-stop)
 
 ;; Profile switching
 (define-key jay/super-u-map (kbd "P") #'jay/org-roam-switch-profile)
@@ -449,6 +723,10 @@ _URL is ignored so this can be used as an Embark action."
     "s-u b"   "buffer toggle"
     "s-u a"   "add alias"
     "s-u s"   "db sync"
+    "s-u g"   "goals start day"
+    "s-u A"   "anti-stall now"
+    "s-u R"   "revenue block start"
+    "s-u C-r" "revenue block stop"
     "s-u r"   "refile"
     "s-u h"   "add ID"
     "s-u t"   "transclusion"))
