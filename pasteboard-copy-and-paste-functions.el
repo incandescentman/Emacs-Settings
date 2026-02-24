@@ -512,15 +512,15 @@ With prefix argument (C-u), force verbatim copy."
   "Copy region between BEG and END to the macOS pasteboard verbatim.
 
 Unlike the old echo→pbcopy helper, this uses Emacs' built-in
-`x-select-text`, so it follows the identical encoding path that
-`kill-region` uses when `x-select-enable-clipboard` is non-nil."
+`gui-select-text`, so it follows the identical encoding path that
+`kill-region` uses when `select-enable-clipboard` is non-nil."
   (interactive "r")
   (unless (use-region-p)
     (user-error "No region selected"))
   ;; Grab the bytes exactly as they live in the buffer.
   (let ((txt (buffer-substring-no-properties beg end)))
     ;; Same function `kill-region` calls under the hood.
-    (x-select-text txt))
+    (gui-select-text txt))
   (message "Copied %d characters verbatim." (- end beg)))
 
 (defun pasteboard-copy-and-replace-em-dashes-in-clipboard (&optional arg)
@@ -1198,11 +1198,11 @@ With prefix argument (C-u), force verbatim cut."
            (buffer-string))))
     (wrapped-search-forward search-term)))
 
-(setq x-select-enable-clipboard t)
+(setq select-enable-clipboard t)
 
 (defun push-kill-ring-pasteboard-to-MacOS-clipboard ()
   (interactive)
-  (x-select-text (current-kill 0)))
+  (gui-select-text (current-kill 0)))
 
 (defun push-MacOS-clipboard-to-kill-ring ()
   "Push the content of the MacOS clipboard to the Emacs kill ring."

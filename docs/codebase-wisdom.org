@@ -2,6 +2,30 @@
 #+DATE: 2025-09-24
 #+DESCRIPTION: Debugging post-mortems and prevention checklists.
 
+* Org 9.8 Preview Migration: Guard For Mixed Runtime Versions
+  Date: 2026-02-24
+
+** The Bug
+We migrated to the new Org 9.8 preview API (=org-link-preview= and link =:preview=), but the current runtime was still Org 9.6.15 in batch checks. New code loaded, but 9.8-only entry points were unavailable.
+
+** The Truth
+- API migration and runtime upgrade are separate events.
+- If config calls 9.8 functions unconditionally while Org is still 9.6/9.7, behavior regresses or errors at call sites.
+- Custom link preview integrations (like =org-yt=) need both paths during transition.
+
+** The Fix
+- Added feature guards using =fboundp=.
+- Introduced a compatibility wrapper that prefers =org-link-preview= when available, else falls back to =org-display-inline-images= (and then =org-toggle-inline-images= for very old setups).
+- For =org-yt=, kept the 9.8 =:preview= parameter and added a legacy advice fallback on =org-display-inline-images= when =org-link-preview= is missing.
+
+** Lessons Learned / Prevention Checklist
+- Before adopting a new Org API, verify runtime with batch:
+  - =emacs --batch --eval "(progn (require 'org) (princ org-version))"=
+  - =emacs --batch --eval "(progn (require 'org) (princ (fboundp 'org-link-preview)))"=
+- During migrations, write compatibility shims first, then switch call sites to the shim.
+- Prefer symbol guards (=fboundp= / =boundp=) over version-string comparisons.
+- After literate edits, keep the loop tight: edit → tangle → =check-parens= → smoke test.
+
 * Org Src Blocks: Headings Inside Break Tangling
   Date: 2026-01-27
 

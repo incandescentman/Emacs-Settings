@@ -1,6 +1,33 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-02-24: Org obsolete API migration + 9.8-compatible preview fallback
+- Updated Org/Emacs obsolete symbols in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]]:
+  - =org-export-before-processing-hook= → =org-export-before-processing-functions=
+  - =org-export-before-parsing-hook= → =org-export-before-parsing-functions=
+  - =org-speed-commands-user= → =org-speed-commands=
+  - =org-time-clocksum-format= → =org-duration-format=
+  - =find-file-hooks= → =find-file-hook=
+  - =org-match-string-no-properties= → =match-string-no-properties=
+  - =org-add-link-type= → =org-link-set-parameters=
+  - =org-make-link-string= → =org-link-make-string=
+  - =org-preview-latex-fragment= → =org-toggle-latex-fragment=
+- Added Org-version-safe inline image preview helper in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]]:
+  - New =jay/org-preview-inline-images= uses =org-link-preview= on Org 9.8+, falls back to =org-display-inline-images= / =org-toggle-inline-images= on older Org.
+  - Updated =org-show-inline-images= and clipboard image insertion to use the helper.
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/org-yt.el][org-yt.el]] for dual compatibility:
+  - Keeps new =:preview= path for Org 9.8+
+  - Adds fallback advice for =org-display-inline-images= when =org-link-preview= is unavailable (current runtime Org 9.6.x).
+  - Unified link registration through =org-yt-url-protocol=.
+- Updated hook link registration in [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org][gnu-emacs-startup.org]]: =org-add-link-type= → =org-link-set-parameters=.
+- Updated pasteboard obsoletes in [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][pasteboard-copy-and-paste-functions.el]]:
+  - =x-select-text= → =gui-select-text=
+  - =x-select-enable-clipboard= → =select-enable-clipboard=
+- Validation:
+  - Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] and [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org][gnu-emacs-startup.org]]
+  - Ran =check-parens= on edited/generated files
+  - Obsolete-symbol scan is clean for active config files; remaining hits are in archive/vendor docs.
+
 * 2026-02-11: Auto-advance to next checkbox after toggle
 - Added advice to =org-ctrl-c-ctrl-c= and =org-toggle-checkbox= in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] so that toggling a checkbox with =C-c C-c= automatically moves to the next list item.
 - Uses =my/with-advice= macro for temporary advice scoping around =org-update-checkbox-count-maybe=.

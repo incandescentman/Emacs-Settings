@@ -255,9 +255,21 @@ for Org 9.8+ link preview system."
                 (overlay-put ol 'after-string description-str))
               ol)))))))
 
-(org-link-set-parameters org-yt-url-protocol
-                         :follow #'org-yt-follow
-                         :preview #'org-yt-preview)
+(defun org-yt-preview-visible-links (&optional beg end)
+  "Preview visible YouTube links between BEG and END.
+Used as a fallback on Org versions that do not have `org-link-preview'."
+  (when (display-graphic-p)
+    (save-excursion
+      (goto-char (or beg (point-min)))
+      (while (re-search-forward org-link-any-re end t)
+        (let ((link (org-element-context)))
+          (when (and (eq (org-element-type link) 'link)
+                     (string= (org-element-property :type link) org-yt-url-protocol))
+            (org-yt-preview link)))))))
+
+(defun org-yt--legacy-inline-preview-advice (&optional _include-linked _refresh beg end &rest _)
+  "Fallback advice for Org versions without `org-link-preview'."
+  (org-yt-preview-visible-links beg end))
 
 
 ;; Export
@@ -271,12 +283,21 @@ EXT-PLIST is the data channel for the export backend."
      (concat
       (format "[[%s][%s]]" video-link (org-yt-image-link video-id))
       (when description
-	(format " [[%s][%s]]" video-link description)))
-     backend
-     t
-     ext-plist)))
+		(format " [[%s][%s]]" video-link description)))
+	     backend
+	     t
+	     ext-plist)))
 
-(org-link-set-parameters "yt" :export #'org-yt-export)
+(let ((params (list :follow #'org-yt-follow
+                    :export #'org-yt-export)))
+  (when (fboundp 'org-link-preview)
+    (setq params (append params (list :preview #'org-yt-preview))))
+  (apply #'org-link-set-parameters org-yt-url-protocol params))
+
+(unless (fboundp 'org-link-preview)
+  (unless (advice-member-p #'org-yt--legacy-inline-preview-advice
+                           'org-display-inline-images)
+    (advice-add 'org-display-inline-images :after #'org-yt--legacy-inline-preview-advice)))
 
 (provide 'org-yt)
 ;;; org-yt.el ends here

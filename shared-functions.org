@@ -227,7 +227,7 @@ I should probably eventually break these out of custom-set-variables and organiz
     (while (re-search-forward "^\\s-*\\(- Links ::\\|- Source ::\\).*$" nil t)
       (replace-match ""))))
 
-(add-hook 'org-export-before-processing-hook #'my/org-remove-links-and-source-lines)
+(add-hook 'org-export-before-processing-functions #'my/org-remove-links-and-source-lines)
 #+end_src
 
 * Custom Functions
@@ -800,7 +800,7 @@ Keeps identical behaviour to the old `defadvice', but uses `advice-add'."
 *** org-mode speed commands
 #+BEGIN_SRC emacs-lisp
 (setq org-use-speed-commands t)
-(setq org-speed-commands-user (quote (
+(setq org-speed-commands (quote (
 ; ("k" . org-kill-note-or-show-branches)
                                       ("q" . bh/show-org-agenda)
                                       ("h" . org-agenda-schedule)
@@ -1158,7 +1158,7 @@ Mark heading done when all checkboxes are checked. See [[http://thread.gmane.org
   "Extract the link location at point and put it on the killring."
   (interactive)
   (when (org-in-regexp org-link-bracket-re 1)
-    (kill-new (org-link-unescape (org-match-string-no-properties 1)))))
+    (kill-new (org-link-unescape (match-string-no-properties 1)))))
 #+END_SRC
 
 *** org insert link
@@ -1315,7 +1315,7 @@ do shell script "echo " & (quoted form of archivedTasks) & "|tr -d \"\\t\"|/usr/
 * Browsing
 ** Make URLs in comments/strings clickable
 #+BEGIN_SRC emacs-lisp
-(add-hook 'find-file-hooks 'goto-address-prog-mode)
+(add-hook 'find-file-hook 'goto-address-prog-mode)
 #+END_SRC
 
 ** Set the default browser
@@ -2163,8 +2163,8 @@ Bracket links look like [[url][desc]] or [[url]]."
         (save-excursion
           (let* ((remove (list (match-beginning 0) (match-end 0)))
                  (description (if (match-end 2)
-                                  (org-match-string-no-properties 2)
-                                (org-match-string-no-properties 1))))
+                                  (match-string-no-properties 2)
+                                (match-string-no-properties 1))))
             (apply #'delete-region remove)
             (insert description))
           (message "Removed link at point"))
@@ -2721,7 +2721,7 @@ object satisfying `yas--field-p' to restrict the expansion to."
 
 * Treat all new files as modified
 #+BEGIN_SRC emacs-lisp
-(add-hook 'find-file-hooks 'assume-new-is-modified)
+(add-hook 'find-file-hook 'assume-new-is-modified)
 (defun assume-new-is-modified ()
   (when (not (file-exists-p (buffer-file-name)))
     (set-buffer-modified-p t)))
@@ -3188,11 +3188,11 @@ I hope this is somewhat helpful to someone else, happy hacking! Source: [[https:
 #+BEGIN_SRC emacs-lisp
 
 ;; old code (works for HTML export, breaks http links)
-;; (add-hook 'org-export-before-parsing-hook (lambda (backend) (replace-regexp "^[A-Za-z]+:" "*\\&*")))
+;; (add-hook 'org-export-before-parsing-functions (lambda (backend) (replace-regexp "^[A-Za-z]+:" "*\\&*")))
 
-(add-hook 'org-export-before-parsing-hook (lambda (backend) (replace-regexp "^\\([A-Za-z]+:\\)\\([^/]\\|/[^/]\\|$\\)" "*\\1*\\2")))
+(add-hook 'org-export-before-parsing-functions (lambda (backend) (replace-regexp "^\\([A-Za-z]+:\\)\\([^/]\\|/[^/]\\|$\\)" "*\\1*\\2")))
 
-;; (add-hook 'org-export-before-parsing-hook (lambda (backend) (replace-regexp "^\\(.*:\\)[ ]*$" "*\\1*")))
+;; (add-hook 'org-export-before-parsing-functions (lambda (backend) (replace-regexp "^\\(.*:\\)[ ]*$" "*\\1*")))
  ;; any line that ends with a colon
 
 #+END_SRC
@@ -3378,7 +3378,7 @@ Source: [[http://emacs.stackexchange.com/questions/20344/how-to-query-delete-dup
  (quote
  (:maxlevel 3 :lang "en" :scope file :block nil :wstart 1 :mstart 1 :tstart nil :tend nil :step nil :stepskip0 nil :fileskip0 nil :tags nil :emphasize nil :link nil :narrow 40! :indent t :formula nil :timestamp nil :level nil :tcolumns nil :formatter nil)))
 
-(setq org-time-clocksum-format
+(setq org-duration-format
  (quote
  (:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t)))
 #+END_SRC
@@ -4018,18 +4018,18 @@ Here's a simple bit of code from the Emacs wiki to insert the current date. I've
      " frameborder=\"0\""
      " allowfullscreen>%s</iframe>"))
 
-(org-add-link-type
+(org-link-set-parameters
  "yt"
- (lambda (handle)
-  (browse-url
-  (concat "https://www.youtube.com/embed/"
-      handle)))
- (lambda (path desc backend)
-  (cl-case backend
-   (html (format yt-iframe-format
-          path (or desc "")))
-   (latex (format "\href{%s}{%s}"
-          path (or desc "video"))))))
+ :follow (lambda (handle)
+           (browse-url
+            (concat "https://www.youtube.com/embed/"
+                    handle)))
+ :export (lambda (path desc backend)
+           (cl-case backend
+             (html (format yt-iframe-format
+                           path (or desc "")))
+             (latex (format "\href{%s}{%s}"
+                            path (or desc "video"))))))
 #+END_SRC
 
 [[http://endlessparentheses.com/embedding-youtube-videos-with-org-mode-links.html][Embedding Youtube videos with org-mode links · Endless Parentheses]]
@@ -4277,7 +4277,7 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
       (setq org-html-head-include-default-style nil)
       (setq org-html-head nil))))
 
-(add-hook 'org-export-before-processing-hook 'my-org-inline-css-hook)
+(add-hook 'org-export-before-processing-functions 'my-org-inline-css-hook)
 #+END_SRC
 
 * hashtags
@@ -4510,7 +4510,7 @@ Courtesy of Mike Goldenberg
         (insert tabletxt)
         (mark-whole-buffer)
         (org-latex-convert-region-to-latex)
-        (org-preview-latex-fragment)
+        (org-toggle-latex-fragment)
         (goto-char (point-min))
         (overlay-get (car (overlays-at (point))) 'display)))
      (overlay (make-overlay begin end)))
@@ -4525,10 +4525,26 @@ Courtesy of Mike Goldenberg
 
 * org-show-inline-images
 #+begin_src emacs-lisp
-(defun org-show-inline-images ()
-  "Show inline images using org-link-preview."
+(defun jay/org-preview-inline-images ()
+  "Preview inline images in current Org buffer across Org versions."
   (interactive)
-  (org-link-preview))
+  (cond
+   ((fboundp 'org-link-preview)
+    ;; Org 9.8+: C-u C-u behavior previews all accessible links/images.
+    (org-link-preview '(16)))
+   ((fboundp 'org-display-inline-images)
+    ;; Org <=9.7 fallback.
+    (org-display-inline-images))
+   ((fboundp 'org-toggle-inline-images)
+    ;; Very old fallback.
+    (org-toggle-inline-images))
+   (t
+    (user-error "No inline-image preview command available in this Org version"))))
+
+(defun org-show-inline-images ()
+  "Show inline images using the best available Org command."
+  (interactive)
+  (jay/org-preview-inline-images))
 #+end_src
 
 * ido-vertical-mode
@@ -5075,7 +5091,7 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
 Jay: How do I direct Emacs to load a file (containing my org-mode LaTeX
 export configuration) the first time I run org Export to LaTeX?
 
-ChatGPT: You can achieve this by using the ~org-export-before-processing-hook~.
+ChatGPT: You can achieve this by using the ~org-export-before-processing-functions~.
 This hook allows you to run a custom function before the export process
 starts. You can define a custom function to load your Org-mode LaTeX
 export configuration file and add this function to the hook.
@@ -5084,17 +5100,17 @@ Jay: Can I make it load this file only the first time I export something to
 LaTeX, rather than every time?
 
 ChatGPT: Yes, you can achieve this by modifying your custom function to remove
-itself from the ~org-export-before-processing-hook~ after it loads your
+itself from the ~org-export-before-processing-functions~ after it loads your
 configuration file. This way, the function will be executed only once
 during the first export:
 
 #+begin_src emacs-lisp
-(add-hook 'org-export-before-processing-hook 'my-load-org-latex-export-config)
+(add-hook 'org-export-before-processing-functions 'my-load-org-latex-export-config)
 
 (defun my-load-org-latex-export-config (&rest args)
   "Load the Org-mode LaTeX export configuration file and remove itself from the hook."
   (jay-load-latex)
-  (remove-hook 'org-export-before-processing-hook 'my-load-org-latex-export-config))
+  (remove-hook 'org-export-before-processing-functions 'my-load-org-latex-export-config))
 #+end_src
 
 * org-autolist
@@ -5404,7 +5420,7 @@ Input format is one link per line, each line:
                          for url  = (car parts)
                          for desc = (cadr parts)
                          unless (string-empty-p url)
-                         collect (org-make-link-string url desc))))
+                         collect (org-link-make-string url desc))))
     (kill-new (string-join links "\n"))
     (car kill-ring)))
 
@@ -6918,7 +6934,7 @@ point with completion.
         (if (string-match-p "^http" clip-content)
             (progn
               (insert (format "[[img%s]]" clip-content))
-              (org-link-preview))
+              (jay/org-preview-inline-images))
           (message "Clipboard content does not start with 'http'."))
       (message "Clipboard is empty."))))
 #+end_src
@@ -8583,7 +8599,7 @@ current buffer.  Safe (save-excursion) and repeatable."
         (replace-match (format "[[file:%s]]" encoded) t t))))
   (buffer-string))
 
-(add-hook 'org-export-before-processing-hook #'my/org-wrap-bare-image-paths)
+(add-hook 'org-export-before-processing-functions #'my/org-wrap-bare-image-paths)
 
 #+end_src
 

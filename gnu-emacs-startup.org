@@ -789,7 +789,7 @@ Adds an empty line before the cloned subtree."
  "Create an org-link target string using `hook://` url scheme."
  (shell-command (concat "open \"" hook "\"")))
 
- (org-add-link-type "hook" 'my/hook)
+ (org-link-set-parameters "hook" :follow #'my/hook)
 #+end_src
 
 * keybindings for terminal
