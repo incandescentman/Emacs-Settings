@@ -6553,16 +6553,16 @@ c: cook-ideas-over-time\n"))
     'my-org-latex-strip-emoji)
 
 ;; Add line breaks in email signature blocks in HTML export
-;; Handles: Best, / Name / urls becoming separate lines
+;; Handles: Best, / Warm regards, / Name / urls becoming separate lines
 (defun jay/org-html-filter-signature-line-breaks (text backend info)
   "Add line breaks in email signature blocks in HTML export."
   (when (org-export-derived-backend-p backend 'html)
     ;; Match "Best, Name Name url.tld url.tld" and add <br> between parts
     (let ((result text))
-      ;; First: "Best," followed by a name
+      ;; First: closing salutation followed by a name
       (setq result (replace-regexp-in-string
-                    "Best,\\([[:space:]]+\\)\\([A-Z][a-z]+\\)"
-                    "Best,<br>\\2"
+                    "\\(Best,\\|Warm regards,\\)\\([[:space:]]+\\)\\([A-Z][a-z]+\\)"
+                    "\\1<br>\\3"
                     result))
       ;; Then: name followed by a URL (word.tld pattern)
       (setq result (replace-regexp-in-string
