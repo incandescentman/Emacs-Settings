@@ -329,5 +329,35 @@ Only effective when `jay/org-roam--skip-next-sync' is non-nil and FORCE is nil."
 (with-eval-after-load 'consult-org-roam
   (setq consult-org-roam-buffer-after-buffers t))
 
+;; Which-key descriptions for org-roam bindings --------------------------------
+(with-eval-after-load 'which-key
+  (which-key-add-key-based-replacements
+    ;; Profile shortcuts
+    "s-u 1"   "profile: Work"
+    "s-u 2"   "profile: My Life"
+    "s-u 3"   "profile: Social"
+    "s-u 4"   "profile: Parents"
+    "s-u P"   "switch profile"
+    "s-u C-p" "show profile"
+    ;; Dailies
+    "s-u d"   "today"
+    "s-u y"   "yesterday"
+    "s-u Y"   "yesterday (roam)"
+    "s-u T"   "tomorrow"
+    "s-u ."   "goto date"
+    "s-u p"   "prev daily"
+    "s-u n"   "next daily"
+    "s-u k"   "capture date"
+    ;; Core
+    "s-u f"   "find node"
+    "s-u i"   "insert node"
+    "s-u c"   "capture"
+    "s-u b"   "buffer toggle"
+    "s-u a"   "add alias"
+    "s-u s"   "db sync"
+    "s-u r"   "refile"
+    "s-u h"   "add ID"
+    "s-u t"   "transclusion"))
+
 (provide 'jay-org-roam-core)
 ;;; jay-org-roam-core.el ends here

@@ -812,5 +812,51 @@ Each element of ADLIST should look like (FUNCTION WHERE AD-FN)."
   (put 'org-next-link 'repeat-map 'org-link-navigation-repeat-map)
   (put 'org-previous-link 'repeat-map 'org-link-navigation-repeat-map))
 
+;;;; Which-key descriptions for custom prefixes ------------------------------
+(with-eval-after-load 'which-key
+  ;; Main prefix groups
+  (which-key-add-key-based-replacements
+    "s-k"     "⌘ commands"
+    "s-/"     "⌘ search"
+    "s-u"     "⌘ org-roam"
+    "]"       "⌘ extras"
+
+    ;; s-k subgroups
+    "s-k o"   "org"
+    "s-k t"   "tools"
+    "s-k c"   "clock/schedule"
+    "s-k a"   "agenda/attach"
+    "s-k f"   "frame"
+    "s-k d"   "deadgrep"
+    "s-k g"   "goto"
+    "s-k r"   "replace"
+    "s-k s"   "swap/search"
+    "s-k w"   "word"
+    "s-k y"   "yasnippet"
+
+    ;; s-/ subgroups (search)
+    "s-/ f"   "filename"
+    "s-/ g"   "grep"
+
+    ;; s-u subgroups (org-roam)
+    "s-u c"   "capture"
+    "s-u d"   "dailies"
+    "s-u n"   "node"
+
+    ;; ] subgroups
+    "] i"     "insert"
+    "] o"     "olivetti"
+
+    ;; Important individual commands
+    "s-d"     "org-todo"
+    "s-p"     "export"
+    "s-L"     "insert Chrome URL"
+    "s-K"     "cut subtree"
+    "s-O"     "reveal in Finder"
+    "C-s-0"   "show all"
+    "C-s-1"   "show level 1"
+    "C-s-2"   "show level 2"
+    "C-s-3"   "show level 3"))
+
 (provide 'keys)
 ;;; keys.el ends here
