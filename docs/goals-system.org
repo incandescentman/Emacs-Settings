@@ -3,18 +3,82 @@
 
 * Overview
 
-The goals tooling is now split into two modules:
+The goals tooling is split into two modules that work together:
 
-1. *Rep Counter Module* ([[file+emacs:/Users/jay/emacs/emacs-settings/jay-goals-system.el][jay-goals-system.el]])
-   - Prefix: =s-M-g=
-   - Tracks weekly input reps in the mode-line
-   - Persists to [[file+emacs:/Users/jay/Dropbox/roam/velocity/tracking/weekly-reps.org][weekly-reps.org]]
-
-2. *Workflow Automation Module* ([[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-core.el]])
+1. *Workflow Automation Module* ([[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-core.el]])
    - Prefix: =s-u=
-   - Morning start, anti-stall, and revenue block commands
+   - Purpose: get you into action quickly (start day, anti-stall, revenue block)
+
+2. *Rep Counter Module* ([[file+emacs:/Users/jay/emacs/emacs-settings/jay-goals-system.el][jay-goals-system.el]])
+   - Prefix: =s-M-g=
+   - Purpose: track weekly input metrics in the mode-line and [[file+emacs:/Users/jay/Dropbox/roam/velocity/tracking/weekly-reps.org][weekly-reps.org]]
 
 Note: =s-g= remains =isearch-repeat-forward=.
+
+* Getting Started (2 Minutes)
+
+If you're at your desk and want to start work immediately, do this sequence:
+
+1. Press =s-u g= (=jay/goals-start-day=)
+   - Opens daily note + execution dashboard + goals hub
+   - Ensures your Daily Pipeline exists
+2. Fill only these first:
+   - OBT
+   - MIT 1
+   - Reach-out 1
+3. Press =s-u R= (=jay/revenue-block-start=)
+   - Starts =prolific= sprint engine (default: 3 sprints ~= 90 min)
+4. Start work on OBT immediately
+5. As reps happen, log them with =s-M-g 1/2/3/4=
+
+If stuck for >3 minutes at any point, press =s-u A=.
+
+* Daily Execution Checklist
+
+** Morning (5 minutes)
+- [ ] Run =s-u g=
+- [ ] Set OBT + MIT 1 + MIT 2
+- [ ] Choose first outreach action
+- [ ] Start focus block: =s-u R=
+
+** During Work
+- [ ] Stay on Track 1 first (revenue before craft)
+- [ ] Log reps as you complete them (=s-M-g 1/2/3/4=)
+- [ ] If blocked: run anti-stall (=s-u A=)
+- [ ] If interrupted hard: stop block (=s-u C-r=), then restart later (=s-u R=)
+
+** Evening (5 minutes)
+- [ ] Quick scoreboard check: =s-M-g s=
+- [ ] Ensure today's reps were logged
+- [ ] Decide tomorrow's first move (OBT starter step)
+
+* Minimum Viable Day (When Overloaded)
+
+If the day is chaotic, do this minimum set:
+
+1. =s-u g=
+2. One 30-90 min focused block (=s-u R=)
+3. One outreach rep (=s-M-g 1=)
+4. One follow-up rep (=s-M-g 2=)
+5. If frozen, one anti-stall sprint (=s-u A=)
+
+This keeps momentum and protects the system on hard days.
+
+* Workflow Automation (=s-u=)
+
+These commands live in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-core.el]].
+
+| Key       | Command                    | Purpose |
+|-----------+----------------------------+---------|
+| =s-u g=   | =jay/goals-start-day=     | Open daily + dashboard + hub, ensure pipeline |
+| =s-u A=   | =jay/anti-stall-now=      | Start anti-stall sprint from avoiding list |
+| =s-u R=   | =jay/revenue-block-start= | Start prolific focus block (3 sprints by default) |
+| =s-u C-r= | =jay/revenue-block-stop=  | Stop active prolific block |
+
+Notes:
+- =s-u A= supports prefix args for custom duration (e.g., =C-u s-u A=).
+- Revenue block now uses =/Users/jay/Dropbox/github/writing-trackers/prolific/bin/pomo=.
+- Legacy Pomodoro keypaths (e.g. =s-k p s=, =<f20>=, =C-c C-x p p=) are routed to the same prolific engine.
 
 * Rep Counter (=s-M-g=)
 
@@ -35,13 +99,28 @@ Mode-line example:
 [O:3/10 F:8/15 C:1/5 P:1/2]
 #+end_example
 
-** Behavior
-
+Behavior:
 - Counters roll over by ISO week.
-- Data persists in:
-  - [[file+emacs:/Users/jay/Dropbox/roam/velocity/tracking/weekly-reps.org][weekly-reps.org]]
+- Data persists in [[file+emacs:/Users/jay/Dropbox/roam/velocity/tracking/weekly-reps.org][weekly-reps.org]].
 
-** Customization
+* Use Cases (What To Do When)
+
+| Situation | Do this |
+|-----------+---------|
+| “I don't know where to start” | =s-u g=, then do OBT for 10 minutes |
+| “I keep avoiding this task” | =s-u A= and do the smallest action |
+| “I need deep focus right now” | =s-u R= and commit to first 25 minutes |
+| “How am I doing this week?” | =s-M-g s= (quick) or =s-M-g S= (full file) |
+| “I got interrupted badly” | =s-u C-r=, handle interruption, restart with =s-u R= |
+
+* Suggested Weekly Rhythm
+
+1. Monday: check baseline with =s-M-g s=
+2. Daily: log reps as they happen (don't batch at end of week)
+3. Friday review: =s-M-g S= and compare inputs vs outcomes
+4. New week reset only if needed: =s-M-g r=
+
+* Customization
 
 #+begin_src emacs-lisp
 (setq jay-goals-targets
@@ -51,25 +130,6 @@ Mode-line example:
         (posts . 2)))
 
 (setq jay-goals-prefix-key "s-M-g")
-#+end_src
-
-* Workflow Automation (=s-u=)
-
-These commands live in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-core.el]]:
-
-| Key       | Command                    | Purpose |
-|-----------+----------------------------+---------|
-| =s-u g=   | =jay/goals-start-day=     | Open daily + dashboard + hub, ensure pipeline |
-| =s-u A=   | =jay/anti-stall-now=      | Start anti-stall sprint from avoiding list |
-| =s-u R=   | =jay/revenue-block-start= | Start focused Track 1 block |
-| =s-u C-r= | =jay/revenue-block-stop=  | Stop active block and restore layout |
-
-* File Paths
-
-Rep counter storage:
-#+begin_src emacs-lisp
-jay-goals-reps-file
-"/Users/jay/Dropbox/roam/velocity/tracking/weekly-reps.org"
 #+end_src
 
 * Related Files

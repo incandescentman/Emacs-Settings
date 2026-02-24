@@ -1260,43 +1260,23 @@ Source: [[http://stackoverflow.com/questions/6997387/how-to-archive-all-the-done
 
 ;; (setq org-pomodoro-ticking-sound "~/Music/iTunes/iTunes Media/Music/Unknown Artist/Unknown Album/com.taptanium.thunderstorm.DreamQuest_preview.m4a")
 
-(defun pomodoro-start ()
-  (interactive)
-(org-todo 'done)
-(previous-line)
-(condition-case nil
-(org-pomodoro)
- (error nil))
-)
+(defun pomodoro-start (&optional arg)
+  "Start prolific pom from Emacs.
+With prefix ARG, run that many sprints. Default is 1 sprint."
+  (interactive "P")
+  (unless (fboundp 'jay/prolific-pomo-start)
+    (user-error "Prolific pom bridge is not loaded yet"))
+  (let ((sprints (if arg (prefix-numeric-value arg) 1)))
+    (jay/prolific-pomo-start (max 1 sprints))))
 
 (defun pomodoro-stop ()
-  "Stop the current org-pomodoro timer."
+  "Stop the active prolific pom process."
   (interactive)
-  (org-pomodoro-kill))
+  (unless (fboundp 'jay/prolific-pomo-stop)
+    (user-error "Prolific pom bridge is not loaded yet"))
+  (jay/prolific-pomo-stop))
 
-(add-hook 'org-pomodoro-finished-hook #'(lambda ()
-
-(do-applescript (format "
-ignoring application responses
-	tell application \"System Events\"
-keystroke \"B\" using {command down, shift down, option down, control down} -- start Pomodoro One
-key code {118}
-end tell
-end ignoring
-
-set now to current date
-set nowTime to (hours of now) & \":\" & (minutes of now)
-set pomodoroStart to (current date) - 25 * minutes
-set pStartTime to (hours of pomodoroStart) & \":\" & (minutes of pomodoroStart)
-set achieved to text returned of (display dialog \"What did you achieve in this Pomodoro?\" default answer \"\")
-set entry_text to \"# Bookwriting:\" & pStartTime & \" - \" & time string of now & \"
-
-\" & achieved & \"
-
-#pomodoro \"
-
-"))
-))
+;; Legacy org-pomodoro completion hook intentionally disabled.
 
 #+END_SRC
 
@@ -1894,7 +1874,7 @@ Gets URL from Chrome frontmost tab, or clipboard, or prompts."
  )
 
 (defun jd-org-today-and-book ()
- "Insert a new heading with today's date and start org-pomodoro timer."
+ "Insert a new heading with today's date and start a prolific sprint."
  (interactive)
  (insert "\n** ")
  (org-insert-time-stamp (current-time))
@@ -1903,13 +1883,13 @@ Gets URL from Chrome frontmost tab, or clipboard, or prompts."
  (pomodoro-start))
 
 (defun pomidor-start ()
- "Insert a new heading with today's date and start pomidor timer."
+ "Insert a new heading with today's date and start a prolific sprint."
  (interactive)
  (insert "\n** ")
  (org-insert-time-stamp (current-time))
  (insert "\n")
  (insert "*** TODO bookwriting\n")
- (pomidor))
+ (pomodoro-start))
 
 (defun jd-pomodoro-sprint ()
  "Insert a new heading with today's date and pomodoro sprint subheading, then start timer."

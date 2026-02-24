@@ -1,6 +1,23 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-02-24: Unify sprint timer engine on prolific
+- Replaced in-Emacs revenue timer logic in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-core.el]] with a process bridge to prolific:
+  - =jay/prolific-pomo-start= launches [[file+emacs:/Users/jay/Dropbox/github/writing-trackers/prolific/bin/pomo][bin/pomo]]
+  - default block size is now 3 sprints (roughly 90 minutes)
+  - =s-u R= starts prolific block, =s-u C-r= stops it
+- Updated legacy Pomodoro keypaths in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] to point at the same prolific commands:
+  - =<f20>=, =s-k p s=, =C-c C-x p p=, =C-c C-x pi= → =jay/prolific-pomo-start=
+  - =C-c C-x po= → =jay/prolific-pomo-stop=
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so compatibility entrypoints now route to prolific:
+  - =pomodoro-start= and =pomodoro-stop=
+  - =pomidor-start= now delegates to =pomodoro-start=
+- Updated docs for the new canonical flow:
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/docs/goals-system.org][docs/goals-system.org]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][docs/instructions.org]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/docs/time-and-date-functions.org][docs/time-and-date-functions.org]]
+- Result: one canonical sprint engine (prolific), while keeping existing muscle-memory keys intact.
+
 * 2026-02-24: Keep s-g search; split goals features cleanly
 - Refactored [[file+emacs:/Users/jay/emacs/emacs-settings/jay-goals-system.el][jay-goals-system.el]] to *rep-counter only*:
   - Weekly reps tracking (outreach/followups/calls/posts)

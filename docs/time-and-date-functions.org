@@ -63,15 +63,15 @@ Creates a heading with a bookwriting checklist structure.
 
 ** jd-org-today-and-book (line 1263)
 
-Creates a heading with bookwriting TODO and starts org-pomodoro timer.
+Creates a heading with bookwriting TODO and starts a prolific sprint (via =pomodoro-start= wrapper).
 
 ** pomidor-start (line 1272)
 
-Same as =jd-org-today-and-book= but starts the pomidor timer instead.
+Compatibility alias for =jd-org-today-and-book= behavior; also starts a prolific sprint.
 
 ** jd-pomodoro-sprint (line 1281)
 
-Creates a heading with "pomodoro sprint" TODO and starts timer.
+Creates a heading with "pomodoro sprint" TODO and starts a prolific sprint.
 
 * Date Format Configuration
 

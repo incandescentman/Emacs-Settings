@@ -402,11 +402,11 @@
     ;; =================================================================
     ;; Pomodoro
     ;; =================================================================
-    ("<f20>"         . pomodoro-start)
-    ("s-k p s"       . pomodoro-start)
-    ("C-c C-x p p"   . pomodoro-start)
-    ("C-c C-x pi"    . pomodoro-start)
-    ("C-c C-x po"    . pomodoro-stop)
+    ("<f20>"         . jay/prolific-pomo-start)
+    ("s-k p s"       . jay/prolific-pomo-start)
+    ("C-c C-x p p"   . jay/prolific-pomo-start)
+    ("C-c C-x pi"    . jay/prolific-pomo-start)
+    ("C-c C-x po"    . jay/prolific-pomo-stop)
 
     ;; =================================================================
     ;; Book Related

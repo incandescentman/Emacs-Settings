@@ -307,31 +307,26 @@ Only effective when `jay/org-roam--skip-next-sync' is non-nil and FORCE is nil."
 (defvar jay/anti-stall--timer nil
   "Internal timer object for active anti-stall sprint.")
 
-(defvar jay/revenue-block-default-minutes 90
-  "Default length of a Track 1 revenue block.")
+(defcustom jay/prolific-root
+  "/Users/jay/Dropbox/github/writing-trackers/prolific"
+  "Path to the prolific workspace."
+  :type 'string
+  :group 'applications)
 
-(defvar jay/revenue-block--timer nil
-  "Internal timer object for active revenue block.")
+(defcustom jay/prolific-pomo-command
+  "bin/pomo"
+  "Path to prolific pom command, relative to `jay/prolific-root'."
+  :type 'string
+  :group 'applications)
 
-(defvar jay/revenue-block--heartbeat-timer nil
-  "Internal repeating timer for revenue block progress updates.")
+(defvar jay/prolific-pomo-process nil
+  "Active prolific pom process, when running.")
 
-(defvar jay/revenue-block--end-time nil
-  "Absolute end time (float seconds) for active revenue block.")
+(defvar jay/prolific-pomo-buffer-name "*jay-prolific-pomo*"
+  "Buffer used for prolific pom command output.")
 
-(defvar jay/revenue-block--minutes nil
-  "Duration in minutes for active revenue block.")
-
-(defvar jay/revenue-block--window-config nil
-  "Saved window configuration before entering revenue focus mode.")
-
-(defvar jay/revenue-block--enabled-olivetti nil
-  "Non-nil when `jay/revenue-block-start' enabled `olivetti-mode'.")
-
-(define-minor-mode jay/revenue-block-mode
-  "Global indicator for an active Track 1 revenue sprint."
-  :global t
-  :lighter " RevBlock")
+(defvar jay/revenue-block-default-sprints 3
+  "Default number of prolific sprints for `jay/revenue-block-start'.")
 
 (defun jay/goals--find-node-by-id (id)
   "Return org-roam node for ID, or nil when not found."
@@ -450,105 +445,80 @@ With prefix ARG, prompt for minutes; with numeric ARG, use that duration."
           (run-at-time (* minutes 60) nil #'jay/anti-stall--timer-finished minutes))
     (message "Anti-stall sprint started for %d minutes." minutes)))
 
-(defun jay/revenue-block--cancel-timers ()
-  "Cancel internal revenue block timers."
-  (when (timerp jay/revenue-block--timer)
-    (cancel-timer jay/revenue-block--timer)
-    (setq jay/revenue-block--timer nil))
-  (when (timerp jay/revenue-block--heartbeat-timer)
-    (cancel-timer jay/revenue-block--heartbeat-timer)
-    (setq jay/revenue-block--heartbeat-timer nil)))
+(defun jay/prolific-pomo-running-p ()
+  "Return non-nil when prolific pom process is active."
+  (and (processp jay/prolific-pomo-process)
+       (process-live-p jay/prolific-pomo-process)))
 
-(defun jay/revenue-block--restore-layout ()
-  "Restore layout and local focus settings from before revenue block."
-  (when (window-configuration-p jay/revenue-block--window-config)
-    (set-window-configuration jay/revenue-block--window-config))
-  (setq jay/revenue-block--window-config nil)
-  (when (and jay/revenue-block--enabled-olivetti
-             (fboundp 'olivetti-mode))
-    (olivetti-mode -1))
-  (setq jay/revenue-block--enabled-olivetti nil))
+(defun jay/prolific-pomo--sentinel (process event)
+  "Handle lifecycle EVENT updates from prolific PROCESS."
+  (when (memq (process-status process) '(exit signal))
+    (setq jay/prolific-pomo-process nil)
+    (message "Prolific pom finished: %s"
+             (replace-regexp-in-string "[\n\r]+\\'" "" event))))
 
-(defun jay/revenue-block--remaining-minutes ()
-  "Return rounded-up minutes remaining in active revenue block."
-  (if (and jay/revenue-block--end-time
-           (> jay/revenue-block--end-time (float-time)))
-      (ceiling (/ (- jay/revenue-block--end-time (float-time)) 60.0))
-    0))
+(defun jay/prolific-pomo-start (&optional sprints)
+  "Start prolific pom with SPRINTS (default 3)."
+  (interactive "P")
+  (let* ((count (cond
+                 ((numberp sprints) sprints)
+                 (sprints (prefix-numeric-value sprints))
+                 (t jay/revenue-block-default-sprints)))
+         (default-directory (file-name-as-directory (expand-file-name jay/prolific-root)))
+         (program (expand-file-name jay/prolific-pomo-command default-directory))
+         (buffer (get-buffer-create jay/prolific-pomo-buffer-name)))
+    (unless (file-directory-p default-directory)
+      (user-error "Missing prolific workspace: %s" default-directory))
+    (unless (file-executable-p program)
+      (user-error "Missing executable prolific command: %s" program))
+    (when (jay/prolific-pomo-running-p)
+      (user-error "Prolific pom is already running"))
+    (with-current-buffer buffer
+      (read-only-mode -1)
+      (erase-buffer))
+    (setq jay/prolific-pomo-process
+          (start-file-process "jay-prolific-pomo"
+                              buffer
+                              program
+                              (number-to-string (max 1 count))))
+    (set-process-query-on-exit-flag jay/prolific-pomo-process nil)
+    (set-process-sentinel jay/prolific-pomo-process #'jay/prolific-pomo--sentinel)
+    (pop-to-buffer buffer)
+    (message "Started prolific pom: %d sprint(s)." (max 1 count))))
 
-(defun jay/revenue-block--heartbeat ()
-  "Emit periodic progress updates for active revenue block."
-  (when jay/revenue-block-mode
-    (message "Revenue block in progress: %d minutes remaining."
-             (jay/revenue-block--remaining-minutes))))
-
-(defun jay/revenue-block--finish ()
-  "Finalize revenue block and prompt for outcome logging."
-  (let ((minutes (or jay/revenue-block--minutes jay/revenue-block-default-minutes)))
-    (jay/revenue-block--cancel-timers)
-    (jay/revenue-block-mode -1)
-    (jay/revenue-block--restore-layout)
-    (setq jay/revenue-block--end-time nil
-          jay/revenue-block--minutes nil)
-    (beep)
-    (let* ((raw (read-string (format "Revenue block (%d min) done. Outcome: " minutes)))
-           (trimmed (replace-regexp-in-string
-                     "\\`[[:space:]\n\r\t]*\\|[[:space:]\n\r\t]*\\'" "" raw))
-           (outcome (if (string= trimmed "") "n/a" trimmed)))
-      (jay/goals--append-daily-log
-       "Revenue Block Log"
-       (format "- [%s] Completed %d-minute Track 1 block. Outcome: %s"
-               (format-time-string "%H:%M")
-               minutes
-               outcome))
-      (message "Revenue block complete. Outcome logged."))))
+(defun jay/prolific-pomo-stop ()
+  "Stop active prolific pom process."
+  (interactive)
+  (unless (jay/prolific-pomo-running-p)
+    (user-error "No active prolific pom process"))
+  (delete-process jay/prolific-pomo-process)
+  (setq jay/prolific-pomo-process nil)
+  (message "Stopped prolific pom process."))
 
 (defun jay/revenue-block-start (&optional arg)
-  "Start focused Track 1 revenue block timer.
-Default duration is `jay/revenue-block-default-minutes'. With prefix ARG,
-prompt for minutes; with numeric ARG, use that duration."
+  "Start Track 1 revenue block via prolific pom.
+Default is `jay/revenue-block-default-sprints' (3 sprints ~= 90 minutes)."
   (interactive "P")
-  (let ((minutes (cond
+  (let ((sprints (cond
                   ((numberp arg) arg)
-                  (arg (read-number "Revenue block minutes: " jay/revenue-block-default-minutes))
-                  (t jay/revenue-block-default-minutes))))
-    (jay/revenue-block--cancel-timers)
-    (setq jay/revenue-block--window-config (current-window-configuration))
-    (delete-other-windows)
-    (setq jay/revenue-block--enabled-olivetti nil)
-    (when (and (fboundp 'olivetti-mode)
-               (not (bound-and-true-p olivetti-mode)))
-      (olivetti-mode 1)
-      (setq jay/revenue-block--enabled-olivetti t))
-    (setq jay/revenue-block--minutes minutes
-          jay/revenue-block--end-time (+ (float-time) (* minutes 60)))
-    (setq jay/revenue-block--timer
-          (run-at-time (* minutes 60) nil #'jay/revenue-block--finish))
-    (setq jay/revenue-block--heartbeat-timer
-          (run-at-time 300 300 #'jay/revenue-block--heartbeat))
-    (jay/revenue-block-mode 1)
+                  (arg (read-number "Revenue block sprints: " jay/revenue-block-default-sprints))
+                  (t jay/revenue-block-default-sprints))))
+    (jay/prolific-pomo-start sprints)
     (jay/goals--append-daily-log
      "Revenue Block Log"
-     (format "- [%s] Started %d-minute Track 1 revenue block."
+     (format "- [%s] Started prolific block (%d sprint%s)."
              (format-time-string "%H:%M")
-             minutes))
-    (message "Revenue block started for %d minutes." minutes)))
+             (max 1 sprints)
+             (if (= 1 (max 1 sprints)) "" "s")))))
 
 (defun jay/revenue-block-stop ()
-  "Stop current revenue block early and restore previous layout."
+  "Stop current revenue block (prolific pom)."
   (interactive)
-  (unless jay/revenue-block-mode
-    (user-error "No active revenue block"))
-  (jay/revenue-block--cancel-timers)
-  (jay/revenue-block-mode -1)
-  (jay/revenue-block--restore-layout)
+  (jay/prolific-pomo-stop)
   (jay/goals--append-daily-log
    "Revenue Block Log"
-   (format "- [%s] Stopped Track 1 block early."
-           (format-time-string "%H:%M")))
-  (setq jay/revenue-block--end-time nil
-        jay/revenue-block--minutes nil)
-  (message "Revenue block stopped."))
+   (format "- [%s] Stopped prolific block early."
+           (format-time-string "%H:%M"))))
 
 ;; Keybindings -----------------------------------------------------------------
 (jay/bind-roam "f" org-roam-node-find)
@@ -725,8 +695,8 @@ _URL is ignored so this can be used as an Embark action."
     "s-u s"   "db sync"
     "s-u g"   "goals start day"
     "s-u A"   "anti-stall now"
-    "s-u R"   "revenue block start"
-    "s-u C-r" "revenue block stop"
+    "s-u R"   "start prolific block"
+    "s-u C-r" "stop prolific block"
     "s-u r"   "refile"
     "s-u h"   "add ID"
     "s-u t"   "transclusion"))

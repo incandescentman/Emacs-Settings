@@ -249,6 +249,17 @@ M-x whiteboard     ; Switch to clean theme
 M-x medium-type    ; Return to normal size
 #+END_SRC
 
+** Focused Sprint Block (Prolific)
+
+Sprint execution is now standardized on the prolific CLI:
+- =s-u R= (=jay/revenue-block-start=) starts a block via =/Users/jay/Dropbox/github/writing-trackers/prolific/bin/pomo=
+- Default is 3 sprints (about 90 minutes total)
+- =s-u C-r= (=jay/revenue-block-stop=) stops the active prolific process
+
+Legacy Pomodoro keys still work, but now route to the same engine:
+- =<f20>=, =s-k p s=, =C-c C-x p p=, =C-c C-x pi= → start
+- =C-c C-x po= → stop
+
 ** Editing Configuration Files
 
 This config uses *literate programming* - you edit =.org= files which generate =.el= files.
