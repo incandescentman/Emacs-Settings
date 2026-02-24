@@ -766,5 +766,51 @@ Each element of ADLIST should look like (FUNCTION WHERE AD-FN)."
 (with-eval-after-load 'lisp-mode
   (my/install-mode-bindings emacs-lisp-mode-map my/emacs-lisp-mode-bindings))
 
+;;;; Repeat-mode for faster navigation --------------------------------------
+;; Enable repeat-mode globally (Emacs 28+)
+(when (fboundp 'repeat-mode)
+  (repeat-mode 1))
+
+;; Define repeat maps for Org navigation (works on Org 9.6+, native in Org 9.8)
+(with-eval-after-load 'org
+  ;; Heading navigation: C-c C-n/p, then just n/p to continue
+  (defvar org-heading-navigation-repeat-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map "n" #'org-next-visible-heading)
+      (define-key map "p" #'org-previous-visible-heading)
+      (define-key map "f" #'org-forward-heading-same-level)
+      (define-key map "b" #'org-backward-heading-same-level)
+      (define-key map "u" #'outline-up-heading)
+      map)
+    "Repeat map for Org heading navigation.")
+
+  (put 'org-next-visible-heading 'repeat-map 'org-heading-navigation-repeat-map)
+  (put 'org-previous-visible-heading 'repeat-map 'org-heading-navigation-repeat-map)
+  (put 'org-forward-heading-same-level 'repeat-map 'org-heading-navigation-repeat-map)
+  (put 'org-backward-heading-same-level 'repeat-map 'org-heading-navigation-repeat-map)
+  (put 'outline-up-heading 'repeat-map 'org-heading-navigation-repeat-map)
+
+  ;; Block navigation: C-c M-f/b, then just f/b to continue
+  (defvar org-block-navigation-repeat-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map "f" #'org-next-block)
+      (define-key map "b" #'org-previous-block)
+      map)
+    "Repeat map for Org block navigation.")
+
+  (put 'org-next-block 'repeat-map 'org-block-navigation-repeat-map)
+  (put 'org-previous-block 'repeat-map 'org-block-navigation-repeat-map)
+
+  ;; Link navigation: C-c C-x C-n/p, then just n/p to continue
+  (defvar org-link-navigation-repeat-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map "n" #'org-next-link)
+      (define-key map "p" #'org-previous-link)
+      map)
+    "Repeat map for Org link navigation.")
+
+  (put 'org-next-link 'repeat-map 'org-link-navigation-repeat-map)
+  (put 'org-previous-link 'repeat-map 'org-link-navigation-repeat-map))
+
 (provide 'keys)
 ;;; keys.el ends here
