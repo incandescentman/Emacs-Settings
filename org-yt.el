@@ -67,7 +67,7 @@
 If DATA-P is non-nil FILE is not a file name but a string with the image data.
 If REFRESH is non-nil don't download the file but refresh the image.
 See also `create-image'.
-This function is almost a duplicate of a part of `org-display-inline-images'."
+This function is almost a duplicate of a part of `org-link-preview'."
   (when (or data-p (file-exists-p file))
     (let ((width
            ;; Apply `org-image-actual-width' specifications.
@@ -103,7 +103,7 @@ This function is almost a duplicate of a part of `org-display-inline-images'."
                 (org-element-property :begin link)
                 'org-image-overlay)))
       (if (and (car-safe old) refresh)
-          (image-refresh (overlay-get (cdr old) 'display))
+          (image-flush (overlay-get (cdr old) 'display))
         (let ((image (create-image file
                                    (and (image-type-available-p 'imagemagick)
                                         width
@@ -237,74 +237,27 @@ Try cache first."
   "Open youtube with VIDEO-ID."
   (browse-url (org-yt-video-link video-id)))
 
-(defun org-yt-image-data-fun (_protocol link _description)
-  "Get image corresponding to LINK from youtube.
-Use this as :image-data-fun property in `org-link-properties'.
-See `org-display-user-inline-images' for a description of :image-data-fun."
-  (when (string-match org-yt-video-id-regexp link)
-    (org-yt-get-image-for-id link)))
+(defun org-yt-preview (link-element)
+  "Preview YouTube thumbnail for LINK-ELEMENT.
+This function is used as the :preview parameter in `org-link-set-parameters'
+for Org 9.8+ link preview system."
+  (when (display-graphic-p)
+    (let* ((video-id (org-element-property :path link-element))
+           (description (org-element-contents link-element))
+           (description-str (when description
+                              (substring-no-properties
+                               (org-element-interpret-data description)))))
+      (when (and video-id (string-match org-yt-video-id-regexp video-id))
+        (let ((image-data (org-yt-get-image-for-id video-id)))
+          (when image-data
+            (let ((ol (org-image-update-overlay image-data link-element t t)))
+              (when (and ol description-str)
+                (overlay-put ol 'after-string description-str))
+              ol)))))))
 
 (org-link-set-parameters org-yt-url-protocol
-			 :follow #'org-yt-follow
-			 :image-data-fun #'org-yt-image-data-fun)
-
-(require 'subr-x)
-
-(defun org-display-user-inline-images (&optional _include-linked _refresh beg end)
-  "Like `org-display-inline-images' but for image data links.
-_INCLUDE-LINKED and _REFRESH are ignored.
-Restrict to region between BEG and END if both are non-nil.
-Image data links have a :image-data-fun parameter.
-\(See `org-link-set-parameters'.)
-The value of the :image-data-fun parameter is a function
-taking the PROTOCOL, the LINK, and the DESCRIPTION as arguments.
-If that function returns nil the link is not interpreted as image.
-Otherwise the return value is the image data string to be displayed.
-
-Note that only bracket links are allowed as image data links
-with one of the formats
- [[PROTOCOL:LINK]]
-or
- [[PROTOCOL:LINK][DESCRIPTION]]
-are recognized."
-  (interactive)
-  (when (and (called-interactively-p 'any)
-             (use-region-p))
-    (setq beg (region-beginning)
-          end (region-end)))
-  (when (display-graphic-p)
-    (org-with-wide-buffer
-     (goto-char (or beg (point-min)))
-     (when-let ((image-data-link-parameters
-		 (cl-loop for link-par-entry in org-link-parameters
-			  with fun
-			  when (setq fun (plist-get (cdr link-par-entry) :image-data-fun))
-			  collect (cons (car link-par-entry) fun)))
-		(image-data-link-re (regexp-opt (mapcar 'car image-data-link-parameters)))
-		(re (format "\\[\\[\\(%s\\):\\([^]]+\\)\\]\\(?:\\[\\([^]]+\\)\\]\\)?\\]"
-			    image-data-link-re)))
-       (while (re-search-forward re end t)
-         (let* ((protocol (match-string-no-properties 1))
-		(link (match-string-no-properties 2))
-		(description (match-string-no-properties 3))
-		(image-data-link (assoc-string protocol image-data-link-parameters))
-		(el (save-excursion (goto-char (match-beginning 1)) (org-element-context)))
-		image-data)
-           (when el
-             (setq image-data
-                   (or (let ((old (get-char-property-and-overlay
-                                   (org-element-property :begin el)
-                                   'org-image-overlay)))
-                         (and old
-                              (car-safe old)
-                              (overlay-get (cdr old) 'display)))
-		       (funcall (cdr image-data-link) protocol link description)))
-             (when image-data
-               (let ((ol (org-image-update-overlay image-data el t t)))
-                 (when (and ol description)
-                   (overlay-put ol 'after-string description)))))))))))
-
-(advice-add #'org-display-inline-images :after #'org-display-user-inline-images)
+                         :follow #'org-yt-follow
+                         :preview #'org-yt-preview)
 
 
 ;; Export

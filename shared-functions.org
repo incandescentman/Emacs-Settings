@@ -4526,8 +4526,9 @@ Courtesy of Mike Goldenberg
 * org-show-inline-images
 #+begin_src emacs-lisp
 (defun org-show-inline-images ()
- (interactive)
-(org-toggle-inline-images))
+  "Show inline images using org-link-preview."
+  (interactive)
+  (org-link-preview))
 #+end_src
 
 * ido-vertical-mode
@@ -6917,7 +6918,7 @@ point with completion.
         (if (string-match-p "^http" clip-content)
             (progn
               (insert (format "[[img%s]]" clip-content))
-              (org-display-inline-images))
+              (org-link-preview))
           (message "Clipboard content does not start with 'http'."))
       (message "Clipboard is empty."))))
 #+end_src
