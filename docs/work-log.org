@@ -1,6 +1,14 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-02-24: Add repeat-mode for faster Org navigation
+- Enabled =repeat-mode= globally in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]].
+- Defined custom repeat maps for Org navigation (works on Org 9.6+):
+  - Heading navigation: =C-c C-n/p=, then =n/p/f/b/u= to continue
+  - Block navigation: =C-c M-f/b=, then =f/b= to continue
+  - Link navigation: =C-c C-x C-n/p=, then =n/p= to continue
+- When upgrading to Org 9.8, these become redundant (Org 9.8 has built-in repeat maps).
+
 * 2026-02-24: Add startup health command and repeatable smoke script
 - Removed always-on org-roam debug in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-core.el]]:
   - Replaced global =init-file-debug= toggle with =jay/org-roam-debug= (default =nil=).
