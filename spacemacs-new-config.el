@@ -1,4 +1,6 @@
 ;; ------------- init.el (or early-load file) --------------------------
+(require 'cl-lib)
+
 (use-package ob-tangle
   :defer t)          ; 1️⃣ make sure tangling is available
 
@@ -14,6 +16,68 @@
 
   ;; Global hook is fine; predicate prevents work on non-Org files.
   (add-hook 'after-save-hook #'jd/org-auto-tangle))
+
+(defvar jay/startup-module-timings nil
+  "Collected startup timing entries as (LABEL . SECONDS).")
+
+(defvar jay/startup-profile-file "/Users/jay/emacs/emacs-settings/docs/lab/startup-profile.org"
+  "Org file that stores startup timing snapshots.")
+
+(defun jay/measure-startup-step (label thunk)
+  "Measure THUNK and store timing with LABEL."
+  (let ((start (float-time)))
+    (prog1 (funcall thunk)
+      (push (cons label (- (float-time) start)) jay/startup-module-timings))))
+
+(defun jay/load-with-timing (file)
+  "Load FILE and record elapsed startup time."
+  (jay/measure-startup-step
+   (format "load %s" (file-name-nondirectory file))
+   (lambda () (load file))))
+
+(defun jay/org-babel-load-file-with-timing (file)
+  "Run `org-babel-load-file' on FILE and record elapsed startup time."
+  (jay/measure-startup-step
+   (format "org-babel-load %s" (file-name-nondirectory file))
+   (lambda () (org-babel-load-file file))))
+
+(defun jay/require-with-timing (feature)
+  "Require FEATURE and record elapsed startup time."
+  (jay/measure-startup-step
+   (format "require %s" feature)
+   (lambda () (require feature))))
+
+(defun jay/startup-write-profile ()
+  "Append one startup timing snapshot to `jay/startup-profile-file'."
+  (let* ((dir (file-name-directory jay/startup-profile-file))
+         (timestamp (format-time-string "%Y-%m-%d %H:%M:%S"))
+         (total (if (and (boundp 'before-init-time)
+                         (boundp 'after-init-time)
+                         before-init-time
+                         after-init-time)
+                    (float-time (time-subtract after-init-time before-init-time))
+                  nil))
+         (timings (sort (copy-sequence jay/startup-module-timings)
+                        (lambda (a b) (> (cdr a) (cdr b))))))
+    (make-directory dir t)
+    (with-temp-buffer
+      (if (file-exists-p jay/startup-profile-file)
+          (insert-file-contents jay/startup-profile-file)
+        (insert "#+TITLE: Startup Timing Profile\n#+STARTUP: showall\n"))
+      (goto-char (point-max))
+      (unless (bolp) (insert "\n"))
+      (insert (format "* %s\n" timestamp))
+      (insert (format "- Emacs: %s\n" emacs-version))
+      (insert (format "- Org: %s\n" (if (boundp 'org-version) org-version "unknown")))
+      (when total
+        (insert (format "- Total init time: %.3fs\n" total)))
+      (insert "- Measured module loads:\n")
+      (insert "| Step | Seconds |\n|------+---------|\n")
+      (dolist (entry timings)
+        (insert (format "| %s | %.4f |\n" (car entry) (cdr entry))))
+      (write-region (point-min) (point-max) jay/startup-profile-file nil 'silent))))
+
+(add-hook 'emacs-startup-hook #'jay/startup-write-profile)
 
 (defun jay/startup-health-check ()
   "Show a quick startup health report for Org and Org-roam glue code."
@@ -50,6 +114,127 @@
       (goto-char (point-min))
       (display-buffer (current-buffer)))
     (message "Startup health report written to *Jay Startup Health*")))
+
+(defun jay/doctor--recent-load-errors (&optional max-lines max-hits)
+  "Return recent error-like lines from *Messages*."
+  (let ((line-limit (or max-lines 600))
+        (hit-limit (or max-hits 12))
+        (hits '())
+        (seen 0))
+    (with-current-buffer (messages-buffer)
+      (save-excursion
+        (goto-char (point-max))
+        (while (and (< seen line-limit)
+                    (not (bobp)))
+          (setq seen (1+ seen))
+          (forward-line -1)
+          (let ((line (string-trim (buffer-substring-no-properties
+                                    (line-beginning-position)
+                                    (line-end-position)))))
+            (when (and (not (string-empty-p line))
+                       (string-match-p
+                        "\\(\\b[Ee]rror\\b\\|failed\\|void-function\\|void-variable\\|wrong-type-argument\\)"
+                        line))
+              (push line hits))))))
+    (setq hits (delete-dups (nreverse hits)))
+    (if (> (length hits) hit-limit)
+        (cl-subseq hits 0 hit-limit)
+      hits)))
+
+(defun jay/doctor--binary-report ()
+  "Return diagnostic rows for required external binaries."
+  (mapcar (lambda (bin)
+            (cons bin (or (executable-find bin) "MISSING")))
+          '("rg" "pandoc" "hunspell")))
+
+(defun jay/doctor--org-roam-db-report ()
+  "Return Org-roam database diagnostics as an alist."
+  (let* ((db-loc (and (boundp 'org-roam-db-location) org-roam-db-location))
+         (db-file (and db-loc (expand-file-name db-loc)))
+         (db-size (and db-file (file-exists-p db-file)
+                       (file-attribute-size (file-attributes db-file))))
+         (db-live (and (boundp 'org-roam-db)
+                       (boundp 'org-roam-db-location)
+                       (fboundp 'emacsql-live-p)
+                       org-roam-db
+                       (ignore-errors (emacsql-live-p org-roam-db)))))
+    `(("org-roam-directory" . ,(if (boundp 'org-roam-directory) org-roam-directory "unbound"))
+      ("org-roam-db-location" . ,(or db-file "unbound"))
+      ("db-file-exists" . ,(if (and db-file (file-exists-p db-file)) "yes" "no"))
+      ("db-file-size" . ,(if db-size (format "%s bytes" db-size) "n/a"))
+      ("db-connection-live" . ,(if db-live "yes" "no")))))
+
+(defun jay/doctor--dropbox-sanity-report ()
+  "Return Dropbox path sanity diagnostics."
+  (let* ((direct "/Users/jay/Dropbox")
+         (cloud "/Users/jay/Library/CloudStorage/Dropbox")
+         (roam (and (boundp 'org-roam-directory) org-roam-directory))
+         (roam-expanded (and roam (expand-file-name roam))))
+    `(("direct-dropbox-exists" . ,(if (file-directory-p direct) "yes" "no"))
+      ("cloudstorage-dropbox-exists" . ,(if (file-directory-p cloud) "yes" "no"))
+      ("org-roam-directory" . ,(or roam-expanded "unbound"))
+      ("org-roam-uses-cloudstorage-path"
+       . ,(if (and roam-expanded (string-prefix-p cloud roam-expanded)) "yes" "no")))))
+
+(defun jay/doctor--keybinding-collisions ()
+  "Return key collisions where key-minor bindings shadow different global commands."
+  (let ((collisions '()))
+    (when (boundp 'key-minor-mode-map)
+      (map-keymap
+       (lambda (event binding)
+         (when (and (commandp binding)
+                    (not (integerp event)))
+           (let* ((key (vector event))
+                  (global (lookup-key global-map key)))
+             (when (and (commandp global)
+                        (not (eq global binding)))
+               (push (list (key-description key) binding global) collisions)))))
+       key-minor-mode-map))
+    (nreverse collisions)))
+
+(defun jay/doctor ()
+  "Run one-screen diagnostics for startup/runtime health."
+  (interactive)
+  (require 'org)
+  (let* ((errors (jay/doctor--recent-load-errors))
+         (bins (jay/doctor--binary-report))
+         (roam (jay/doctor--org-roam-db-report))
+         (dropbox (jay/doctor--dropbox-sanity-report))
+         (collisions (jay/doctor--keybinding-collisions)))
+    (with-current-buffer (get-buffer-create "*Jay Doctor*")
+      (erase-buffer)
+      (insert (format "Jay Doctor Report - %s\n\n" (format-time-string "%Y-%m-%d %H:%M:%S")))
+      (insert (format "Emacs: %s\nOrg: %s\norg-link-preview: %s\n\n"
+                      emacs-version
+                      org-version
+                      (if (fboundp 'org-link-preview) "yes" "no")))
+
+      (insert "== External Binaries ==\n")
+      (dolist (row bins)
+        (insert (format "- %s: %s\n" (car row) (cdr row))))
+      (insert "\n== Org-roam DB ==\n")
+      (dolist (row roam)
+        (insert (format "- %s: %s\n" (car row) (cdr row))))
+      (insert "\n== Dropbox Path Sanity ==\n")
+      (dolist (row dropbox)
+        (insert (format "- %s: %s\n" (car row) (cdr row))))
+
+      (insert (format "\n== Keybinding Collisions (key-minor vs global) ==\n- Count: %d\n"
+                      (length collisions)))
+      (dolist (row (if (> (length collisions) 20)
+                       (cl-subseq collisions 0 20)
+                     collisions))
+        (insert (format "- %s :: minor=%s | global=%s\n"
+                        (nth 0 row) (nth 1 row) (nth 2 row))))
+
+      (insert "\n== Recent Error-like Messages ==\n")
+      (if errors
+          (dolist (line errors)
+            (insert (format "- %s\n" line)))
+        (insert "- none detected in recent *Messages* scan\n"))
+      (goto-char (point-min))
+      (display-buffer (current-buffer)))
+    (message "Doctor report written to *Jay Doctor*")))
 
 
 
@@ -122,7 +307,7 @@
 
 (let ((directory "~/emacs/emacs-settings/elpa-supplement/"))
   (dolist (file (directory-files directory t "\\.el$"))
-    (load file)))
+    (jay/load-with-timing file)))
 
 
 
@@ -163,32 +348,32 @@
 
 
 
-(load "/Users/jay/emacs/emacs-settings/jay-osx.el")
-(load "/Users/jay/emacs/emacs-settings/keys.el")
-(org-babel-load-file "~/emacs/emacs-settings/gnu-emacs-startup.org")
-(org-babel-load-file "~/emacs/emacs-settings/shared-functions.org")
-(org-babel-load-file "~/emacs/emacs-settings/spacecraft-mode.org")
-(load "/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el")
-(org-babel-load-file "/Users/jay/emacs/emacs-settings/search-commands.org")
-(org-babel-load-file "/Users/jay/emacs/emacs-settings/fonts-and-themes.org")
-(org-babel-load-file "/Users/jay/emacs/emacs-settings/goals-agenda.org")
+(jay/load-with-timing "/Users/jay/emacs/emacs-settings/jay-osx.el")
+(jay/load-with-timing "/Users/jay/emacs/emacs-settings/keys.el")
+(jay/org-babel-load-file-with-timing "~/emacs/emacs-settings/gnu-emacs-startup.org")
+(jay/org-babel-load-file-with-timing "~/emacs/emacs-settings/shared-functions.org")
+(jay/org-babel-load-file-with-timing "~/emacs/emacs-settings/spacecraft-mode.org")
+(jay/load-with-timing "/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el")
+(jay/org-babel-load-file-with-timing "/Users/jay/emacs/emacs-settings/search-commands.org")
+(jay/org-babel-load-file-with-timing "/Users/jay/emacs/emacs-settings/fonts-and-themes.org")
+(jay/org-babel-load-file-with-timing "/Users/jay/emacs/emacs-settings/goals-agenda.org")
 
 ;; (org-babel-load-file "/Users/jay/emacs/external-packages/org-mime-stuff/org-mime-stuff.org")
-(load "/Users/jay/emacs/external-packages/prelude/core/prelude-core.el")
-(load "/Users/jay/emacs/emacs-settings/skeletons.el")
-(load "/Users/jay/emacs/emacs-settings/prelude-key-chord.el")
+(jay/load-with-timing "/Users/jay/emacs/external-packages/prelude/core/prelude-core.el")
+(jay/load-with-timing "/Users/jay/emacs/emacs-settings/skeletons.el")
+(jay/load-with-timing "/Users/jay/emacs/emacs-settings/prelude-key-chord.el")
 ;; (load "/Users/jay/gnulisp/book-functions.el")
-(load "/Users/jay/emacs/emacs-settings/poetry_JD.el")
+(jay/load-with-timing "/Users/jay/emacs/emacs-settings/poetry_JD.el")
 ;; (load "/Users/jay/emacs/emacs-settings/define-word.el")
 ;; (load "/Users/jay/emacs/emacs-settings/searchlink/searchlink-new.el")
-(load "/Users/jay/emacs/emacs-settings/ivy-smex.el")
+(jay/load-with-timing "/Users/jay/emacs/emacs-settings/ivy-smex.el")
 ;; (load "/Users/jay/emacs/emacs-settings/emacs_friends.el")
 ;; (load "/Users/jay/gnulisp/org-image.el")
 
 ;; Load modular org-roam suite
 (add-to-list 'load-path "/Users/jay/emacs/emacs-settings/jay-org-roam-suite")
-(require 'jay-org-roam-core)       ;; lazy Org-roam core (idle timers, keybindings, profiles, templates)
-(require 'jay-editor-extras)       ;; environment: PATH, ispell, XeLaTeX, captain-predicate
+(jay/require-with-timing 'jay-org-roam-core)       ;; lazy Org-roam core (idle timers, keybindings, profiles, templates)
+(jay/require-with-timing 'jay-editor-extras)       ;; environment: PATH, ispell, XeLaTeX, captain-predicate
 
 ;;(load "/Users/jay/emacs/emacs-settings/org-roam-review.el")
 

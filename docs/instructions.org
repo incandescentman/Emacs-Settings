@@ -444,6 +444,14 @@ cd ~/emacs/emacs-settings
 scripts/emacs_smoke_test.sh --full-init
 #+END_SRC
 
+Run a one-screen diagnostics report in Emacs:
+#+BEGIN_SRC emacs-lisp
+M-x jay/doctor
+#+END_SRC
+
+Startup timing snapshots are appended on each launch to:
+- [[file+emacs:/Users/jay/emacs/emacs-settings/docs/lab/startup-profile.org][docs/lab/startup-profile.org]]
+
 Git workflow:
 #+BEGIN_SRC sh
 git checkout -b test-new-feature
