@@ -453,6 +453,19 @@ cd ~/emacs/emacs-settings
 scripts/emacs_smoke_test.sh
 #+END_SRC
 
+What this now validates by default:
+- Tangles core literate files
+- Runs =check-parens= on key config files
+- Runs capture cleanup regression tests via ERT:
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/tests/capture-cleanup-tests.el][tests/capture-cleanup-tests.el]]
+- Runs minimal runtime health checks
+
+Run only the capture cleanup suite directly:
+#+BEGIN_SRC sh
+cd ~/emacs/emacs-settings
+emacs --batch -Q -l tests/capture-cleanup-tests.el -f ert-run-tests-batch-and-exit
+#+END_SRC
+
 Optional full startup check (slower):
 #+BEGIN_SRC sh
 cd ~/emacs/emacs-settings

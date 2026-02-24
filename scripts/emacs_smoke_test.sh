@@ -12,7 +12,7 @@ elif [[ -n "${1:-}" ]]; then
   exit 2
 fi
 
-echo "[1/4] Tangling core literate files..."
+echo "[1/5] Tangling core literate files..."
 "$EMACS_BIN" --batch --eval \
   "(progn
      (require 'org)
@@ -20,7 +20,7 @@ echo "[1/4] Tangling core literate files..."
      (org-babel-tangle-file \"$ROOT/shared-functions.org\" \"$ROOT/shared-functions.el\" \"emacs-lisp\")
      (org-babel-tangle-file \"$ROOT/gnu-emacs-startup.org\" \"$ROOT/gnu-emacs-startup.el\" \"emacs-lisp\"))"
 
-echo "[2/4] Running check-parens on key files..."
+echo "[2/5] Running check-parens on key files..."
 FILES=(
   "shared-functions.el"
   "gnu-emacs-startup.el"
@@ -34,7 +34,12 @@ for rel in "${FILES[@]}"; do
   echo "  ok: $rel"
 done
 
-echo "[3/4] Minimal runtime health checks..."
+echo "[3/5] Running capture cleanup ERT tests..."
+"$EMACS_BIN" --batch -Q \
+  -l "$ROOT/tests/capture-cleanup-tests.el" \
+  -f ert-run-tests-batch-and-exit
+
+echo "[4/5] Minimal runtime health checks..."
 "$EMACS_BIN" --batch --eval \
   "(progn
      (require 'org)
@@ -56,13 +61,13 @@ for fix in org-roam-id-fix.el org-roam-db-fix.el; do
 done
 
 if [[ "$FULL_INIT" -eq 1 ]]; then
-  echo "[4/4] Full-init smoke check..."
+  echo "[5/5] Full-init smoke check..."
   "$EMACS_BIN" --batch --load "$HOME/.emacs.d/init.el" --eval \
     "(with-temp-buffer
        (org-mode)
        (message \"shift %S\" org-support-shift-select))"
 else
-  echo "[4/4] Skipping full-init check (pass --full-init to enable)."
+  echo "[5/5] Skipping full-init check (pass --full-init to enable)."
 fi
 
 echo "Smoke test complete."
