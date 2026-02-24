@@ -1,6 +1,19 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-02-24: Add startup health command and repeatable smoke script
+- Removed always-on org-roam debug in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-core.el]]:
+  - Replaced global =init-file-debug= toggle with =jay/org-roam-debug= (default =nil=).
+  - Keeps optional diagnostics available without forcing noisy startup.
+- Added =M-x jay/startup-health-check= in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][spacemacs-new-config.el]].
+  - Reports Org version, =org-link-preview= availability, =org-support-shift-select= status, and org-roam fix-file found/loaded status.
+- Added executable smoke-test script [[file+emacs:/Users/jay/emacs/emacs-settings/scripts/emacs_smoke_test.sh][scripts/emacs_smoke_test.sh]]:
+  - Tangles core literate files
+  - Runs =check-parens= on key files
+  - Performs minimal runtime checks
+  - Optional =--full-init= mode for a full startup pass
+- Documented usage in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][docs/instructions.org]] under Safe Testing.
+
 * 2026-02-24: Archive docs/lab/ experimental org-roam code
 - Moved experimental org-roam files to =archive/docs-lab/= (gitignored):
   - =org-roam-database-switching.org=

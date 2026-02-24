@@ -432,6 +432,18 @@ Before making major changes, consider:
 3. Test thoroughly
 4. Merge when stable
 
+Batch smoke test (recommended before committing):
+#+BEGIN_SRC sh
+cd ~/emacs/emacs-settings
+scripts/emacs_smoke_test.sh
+#+END_SRC
+
+Optional full startup check (slower):
+#+BEGIN_SRC sh
+cd ~/emacs/emacs-settings
+scripts/emacs_smoke_test.sh --full-init
+#+END_SRC
+
 Git workflow:
 #+BEGIN_SRC sh
 git checkout -b test-new-feature

@@ -9,8 +9,10 @@
 
 ;;; Code:
 
-;; Enable debug mode to trace org-roam sync behavior
-(setq init-file-debug t)
+;; Optional debug switch for org-roam startup diagnostics.
+;; Keep this nil for normal use to avoid noisy startup logs.
+(defvar jay/org-roam-debug nil
+  "When non-nil, emit extra org-roam startup diagnostics.")
 
 ;; CRITICAL: Set org-roam-directory FIRST, before anything else
 ;; This prevents org-roam from ever seeing the CloudStorage File Provider path
@@ -146,7 +148,7 @@ If FILENAME starts with /Users/jay/Dropbox, return it as-is without resolution."
          (jay/with-org-roam
           (let ((cache-warm (jay/org-roam-db-cache-healthy-p)))
             (setq jay/org-roam--skip-next-sync cache-warm)
-            (when init-file-debug
+            (when jay/org-roam-debug
               (message "⮡ enabling org-roam autosync … (cache warm: %s)" cache-warm)))
           (when (and (boundp 'org-roam-db) (not (emacsql-live-p org-roam-db)))
             (setq org-roam-db nil)
@@ -183,7 +185,7 @@ If FILENAME starts with /Users/jay/Dropbox, return it as-is without resolution."
               (org-roam-db) ; ensure connection exists
               (let* ((rows (org-roam-db-query [:select (funcall count *) :from files]))
                      (count (and rows (caar rows))))
-                (when init-file-debug
+                (when jay/org-roam-debug
                   (message "org-roam cache probe: %s indexed files" count))
                 (and count (>= count jay/org-roam-db-min-rows))))
           (error

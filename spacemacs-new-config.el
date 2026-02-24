@@ -15,6 +15,42 @@
   ;; Global hook is fine; predicate prevents work on non-Org files.
   (add-hook 'after-save-hook #'jd/org-auto-tangle))
 
+(defun jay/startup-health-check ()
+  "Show a quick startup health report for Org and Org-roam glue code."
+  (interactive)
+  (require 'org)
+  (let* ((root "/Users/jay/emacs/emacs-settings")
+         (suite-dir (expand-file-name "jay-org-roam-suite" root))
+         (fix-info '(("org-roam-id-fix.el" . org-roam-id-fix)
+                     ("org-roam-db-fix.el" . org-roam-db-fix)))
+         (lines (list
+                 (format "Org version: %s" org-version)
+                 (format "org-link-preview available: %s" (if (fboundp 'org-link-preview) "yes" "no"))
+                 (format "org-support-shift-select: %S"
+                         (if (boundp 'org-support-shift-select)
+                             org-support-shift-select
+                           'unbound)))))
+    (dolist (entry fix-info)
+      (let* ((filename (car entry))
+             (feature (cdr entry))
+             (suite-path (expand-file-name filename suite-dir))
+             (parent-path (expand-file-name filename root))
+             (found-at (cond
+                        ((file-exists-p suite-path) suite-path)
+                        ((file-exists-p parent-path) parent-path)
+                        (t "missing")))
+             (loaded (if (featurep feature) "yes" "no")))
+        (setq lines
+              (append lines
+                      (list (format "%s found: %s" filename found-at)
+                            (format "%s loaded: %s" feature loaded))))))
+    (with-current-buffer (get-buffer-create "*Jay Startup Health*")
+      (erase-buffer)
+      (insert (mapconcat #'identity lines "\n"))
+      (goto-char (point-min))
+      (display-buffer (current-buffer)))
+    (message "Startup health report written to *Jay Startup Health*")))
+
 
 
 
