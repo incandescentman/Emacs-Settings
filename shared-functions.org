@@ -3610,9 +3610,7 @@ cmd)
 
 * yasnippet fixes
 #+BEGIN_SRC emacs-lisp
-(defun yas/pasteboard-raw ()
- "Return content of OS X system pasteboard via `pbpaste'."
- (shell-command-to-string "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"))
+;; Clipboard primitives were moved to pasteboard-copy-and-paste-functions.el.
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -6852,40 +6850,11 @@ https://chat.openai.com/share/84fdc7cc-f6d1-410b-85e8-efffb249ed36
 * copy-region-as-kill-and-push-to-clipboard
 
 #+begin_src emacs-lisp
-(defun copy-region-as-kill-and-push-to-clipboard (beg end)
-  "Copy the region as kill and push it to the macOS clipboard.
-BEG and END define the region to copy."
-  (interactive "r")
-  (copy-region-as-kill beg end)
-  (push-kill-ring-pasteboard-to-MacOS-clipboard))
+;; Clipboard primitives were moved to pasteboard-copy-and-paste-functions.el.
 #+end_src
 
 #+begin_src emacs-lisp
-;; Simpler version - directly copies clipboard to kill ring
-(defun clipboard-to-kill-ring ()
-"Copies clipboard contents directly to kill ring."
-(interactive)
-(let ((clipboard-content (shell-command-to-string "pbpaste")))
-(unless (string-equal clipboard-content "")
-(kill-new clipboard-content))))
-
-;; More complex version - strips trailing newline
-(defun clipboard-to-kill-ring-and-strip-trailing-newlines ()
-"Strips trailing newline from clipboard before copying to kill ring."
-(interactive)
-(let ((clipboard-content (shell-command-to-string "pbpaste")))
-;; Check for non-empty clipboard contents
-(when clipboard-content
-
-  ;; Strip trailing newline if present
-  (setq clipboard-content
-        (if (string-match "\n\\'" clipboard-content)
-            (replace-match "" t t clipboard-content)
-          clipboard-content))
-
-   ;; Copy to kill ring unless empty
-   (unless (string-equal clipboard-content "")
-     (kill-new clipboard-content)))))
+;; Clipboard primitives were moved to pasteboard-copy-and-paste-functions.el.
 #+end_src
 
 * switch two classic keybindings
@@ -7362,16 +7331,7 @@ Only required if Emacs < 29.3.
 
 * pasteboard-copy-large-file
 #+begin_src emacs-lisp
-(defun pasteboard-copy-large-file ()
- "Copy the current region to the pasteboard using a temporary file."
- (interactive)
- (let* ((txt (buffer-substring (region-beginning) (region-end)))
-     (temp-file (make-temp-file "emacs-pasteboard")))
-  (with-temp-file temp-file
-   (insert txt))
-  (shell-command-to-string (format "cat %s | pbcopy" (shell-quote-argument temp-file)))
-  (delete-file temp-file)))
-
+;; Clipboard primitives were moved to pasteboard-copy-and-paste-functions.el.
 #+end_src
 
 * Make Emacs use MacOS Trash instead of rm

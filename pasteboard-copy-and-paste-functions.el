@@ -1212,6 +1212,46 @@ With prefix argument (C-u), force verbatim cut."
       (kill-new clipboard-content)
       (message "Pushed clipboard content to kill ring: %s" clipboard-content))))
 
+(defun clipboard-to-kill-ring ()
+  "Copy clipboard contents directly to the kill ring."
+  (interactive)
+  (let ((clipboard-content (shell-command-to-string "pbpaste")))
+    (unless (string-equal clipboard-content "")
+      (kill-new clipboard-content))))
+
+(defun clipboard-to-kill-ring-and-strip-trailing-newlines ()
+  "Strip trailing newline from clipboard content before copying to kill ring."
+  (interactive)
+  (let ((clipboard-content (shell-command-to-string "pbpaste")))
+    (when clipboard-content
+      (setq clipboard-content
+            (if (string-match "\n\\'" clipboard-content)
+                (replace-match "" t t clipboard-content)
+              clipboard-content))
+      (unless (string-equal clipboard-content "")
+        (kill-new clipboard-content)))))
+
+(defun copy-region-as-kill-and-push-to-clipboard (beg end)
+  "Copy region BEG..END as kill and push it to the macOS clipboard."
+  (interactive "r")
+  (copy-region-as-kill beg end)
+  (push-kill-ring-pasteboard-to-MacOS-clipboard))
+
+(defun yas/pasteboard-raw ()
+  "Return content of OS X system pasteboard via `pbpaste'."
+  (shell-command-to-string "pbpaste | perl -p -e 's/\r$//' | tr '\r' '\n'"))
+
+(defun pasteboard-copy-large-file ()
+  "Copy the current region to the pasteboard using a temporary file."
+  (interactive)
+  (let* ((txt (buffer-substring (region-beginning) (region-end)))
+         (temp-file (make-temp-file "emacs-pasteboard")))
+    (with-temp-file temp-file
+      (insert txt))
+    (shell-command-to-string
+     (format "cat %s | pbcopy" (shell-quote-argument temp-file)))
+    (delete-file temp-file)))
+
 (defun gist-buffer-to-pasteboard ()
   (interactive)
   (gist-buffer)
