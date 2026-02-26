@@ -40,10 +40,12 @@
 \\usepackage{tocloft}
 \\usepackage[normalem]{ulem}
 \\usepackage{enumitem}
+\\usepackage{csquotes}
 \\usepackage{titlesec}
 \\usepackage{lipsum}
 \\usepackage[breaklinks=true, linktocpage, xetex]{hyperref}
 \\usepackage[most]{tcolorbox} % For enhanced environments
+\\MakeOuterQuote{\"}
 
 \\newcounter{level} % Define the custom counter
 \\usepackage{forloop}
@@ -74,6 +76,9 @@
   % Set main font to Garamond Premier Pro
   \\setromanfont[
     Path = /Users/jay/Library/Fonts/,
+    Numbers = OldStyle,
+    Ligatures = {Common,Rare},
+    Contextuals = Alternate,
     UprightFont = GaramondPremrPro,
     ItalicFont = GaramondPremrPro-It,
     BoldFont = GaramondPremrPro-Bd,

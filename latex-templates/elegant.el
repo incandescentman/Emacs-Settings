@@ -276,7 +276,9 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 \\newcommand{\\textsubscr}[1]{\\ensuremath{_{\\scriptsize\\textrm{#1}}}}
 
 \\usepackage{enumitem}
+\\usepackage{csquotes}
 \\setlistdepth{10} % Allows up to 10 levels of nesting
+\\MakeOuterQuote{\"}
 \\newenvironment{resumeenum}{\\begin{enumerate}[resume*]}{\\end{enumerate}}
 
 \\newlist{mylist}{enumerate}{10}
@@ -389,6 +391,34 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 }
 {%
   \\end{tcolorbox}
+}
+
+% Subtitle environments for different heading levels
+\\newenvironment{subtitle}%
+{%
+\\vspace{-0.5\\baselineskip}
+\\fontsize{21}{24}\\selectfont\\itshape\\raggedright
+}%
+{%
+\\par\\bigskip
+}
+
+\\newenvironment{subsubtitle}%
+{%
+\\vspace{-0.5\\baselineskip}
+\\fontsize{13}{16}\\selectfont\\itshape
+}%
+{%
+\\par\\bigskip
+}
+
+\\newenvironment{subsubsubtitle}%
+{%
+\\vspace{-0.5\\baselineskip}
+\\small\\itshape
+}%
+{%
+\\par\\bigskip
 }
 
 

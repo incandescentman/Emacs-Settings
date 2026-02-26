@@ -1,6 +1,24 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-02-26: LaTeX cross-template consistency pass (quotes, subtitles, tables, OT features)
+- Updated the three primary proposal classes:
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant.el][latex-templates/elegant.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][latex-templates/elegant-garamond.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el][latex-templates/beautiful-racket.el]]
+- Quote handling consistency:
+  - Added ~csquotes~ + ~\\MakeOuterQuote{\"}~ to ~elegant~ and ~elegant-garamond~ so straight quotes render as smart opening/closing quotes (matching ~beautiful-racket~ behavior).
+- Subtitle environment consistency:
+  - Added ~subtitle~, ~subsubtitle~, and ~subsubsubtitle~ environments to ~elegant~ so all three templates expose the same subtitle helper pattern.
+- Table feature consistency:
+  - In ~beautiful-racket~, added ~longtable~ package support.
+  - Added missing ~Z~ (centered) and ~W~ (right-aligned) tabularx column types in ~beautiful-racket~ to match ~elegant*~.
+  - Normalized ~\\tabularxcolumn~ in ~beautiful-racket~ to ~m{#1}~ for consistent vertical alignment behavior with the other classes.
+- OpenType defaults for Garamond classes:
+  - Enabled Garamond feature defaults in ~elegant-garamond~ (~Numbers=OldStyle~, ~Ligatures={Common,Rare}~, ~Contextuals=Alternate~), matching existing ~beautiful-racket~ defaults.
+- Validation:
+  - Batch-loaded all three class files with ~ox-latex~ in Emacs; all loaded cleanly with no Lisp load errors.
+
 * 2026-02-26: LaTeX table export hardening + shared wrapper refactor
 - Added/updated table-export behavior across:
   - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant.el][latex-templates/elegant.el]]

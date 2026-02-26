@@ -33,7 +33,11 @@
 \\ifxetex
 \\usepackage{fontspec,xltxtra,xunicode}
 \\defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
-\\setromanfont{Garamond Premier Pro}
+\\setromanfont[
+Numbers=OldStyle,
+Ligatures={Common,Rare},
+Contextuals=Alternate
+]{Garamond Premier Pro}
  \\setsansfont{TeX Gyre Pagella}
   \\setmonofont{TeX Gyre Heros}
 
@@ -154,8 +158,11 @@
 \\usepackage{array}
 \\usepackage{booktabs} % Customized table styles: If you plan to use tables in your document, you might want to consider customizing their appearance with the `booktabs` package for professional-looking tables
 \\usepackage{tabularx} % Tables with auto-wrapping columns that fit page width
+\\usepackage{longtable} % Multi-page tables
 \\newcolumntype{Y}{>{\\RaggedRight\\arraybackslash}X}
-\\renewcommand{\\tabularxcolumn}[1]{>{\\RaggedRight\\arraybackslash}p{#1}} % Ragged right in table cells
+\\newcolumntype{Z}{>{\\Centering\\arraybackslash}X}
+\\newcolumntype{W}{>{\\RaggedLeft\\arraybackslash}X}
+\\renewcommand{\\tabularxcolumn}[1]{m{#1}}
 
 % Use the fancyhdr package to customize the headers and footers of your document for a professional appearance
 
