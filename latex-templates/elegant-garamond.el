@@ -77,7 +77,7 @@
   \\setromanfont[
     Path = /Users/jay/Library/Fonts/,
     Numbers = OldStyle,
-    Ligatures = {Common,Rare},
+    Ligatures = {Common},
     Contextuals = Alternate,
     UprightFont = GaramondPremrPro,
     ItalicFont = GaramondPremrPro-It,

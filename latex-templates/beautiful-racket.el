@@ -35,7 +35,7 @@
 \\defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
 \\setromanfont[
 Numbers=OldStyle,
-Ligatures={Common,Rare},
+Ligatures = {Common},
 Contextuals=Alternate
 ]{Garamond Premier Pro}
  \\setsansfont{TeX Gyre Pagella}

@@ -1,6 +1,19 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-02-26: Disable rare Garamond ligatures by default (remove ct join)
+- Updated Garamond fontspec defaults to disable rare ligatures while keeping common ligatures:
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][latex-templates/elegant-garamond.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el][latex-templates/beautiful-racket.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond-tabularray.el][latex-templates/elegant-garamond-tabularray.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket-tabularray.el][latex-templates/beautiful-racket-tabularray.el]]
+- Change made:
+  - ~Ligatures={Common,Rare}~ -> ~Ligatures={Common}~
+- Result:
+  - Disables discretionary/rare joins like ~ct~ in “Connecting”.
+  - Keeps standard/common ligatures (e.g., ~fi~, ~fl~).
+  - Leaves ~Contextuals=Alternate~ unchanged.
+
 * 2026-02-26: Add opt-in tabularray class family for modern table rendering
 - Added new opt-in LaTeX classes in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/][latex-templates/]]:
   - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-tabularray.el][elegant-tabularray.el]]
