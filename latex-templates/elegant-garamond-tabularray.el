@@ -33,7 +33,18 @@
 \\usepackage{longtable} % Multi-page tables
 \\usepackage{tabularray} % Modern table engine
 \\UseTblrLibrary{booktabs}
-\\SetTblrInner{rows={valign=m},rowsep=1.5pt,colsep=4pt}
+\\SetTblrInner{rows={valign=m},rowsep=0pt,colsep=4pt}
+\\SetTblrTemplate{caption-tag}{empty}
+\\SetTblrTemplate{caption-sep}{empty}
+\\SetTblrTemplate{caption-text}{empty}
+\\SetTblrTemplate{conthead}{empty}
+\\SetTblrTemplate{contfoot}{empty}
+\\DefTblrTemplate{conthead-text}{normal}{}
+\\ExplSyntaxOn
+\\tl_set:Nn \\tblrcontheadname {}
+\\tl_set:Nn \\tblrcontfootname {}
+\\ExplSyntaxOff
+
 \\usepackage{fancyhdr} % Custom headers and footers
 \\usepackage{xspace} % Consistent spacing after commands
 \\usepackage{listings}

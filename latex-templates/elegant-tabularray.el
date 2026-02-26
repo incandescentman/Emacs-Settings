@@ -41,7 +41,23 @@
 \\usepackage{booktabs}
 \\usepackage{tabularray}
 \\UseTblrLibrary{booktabs}
-\\SetTblrInner{rows={valign=m},rowsep=1.5pt,colsep=4pt}
+\\SetTblrInner{rows={valign=m},rowsep=0pt,colsep=4pt}
+\\DefTblrTemplate{caption-tag}{empty}{}
+\\DefTblrTemplate{caption-sep}{empty}{}
+\\DefTblrTemplate{caption-text}{empty}{}
+\\DefTblrTemplate{conthead}{empty}{}
+\\DefTblrTemplate{contfoot}{empty}{}
+\\SetTblrTemplate{caption-tag}{empty}
+\\SetTblrTemplate{caption-sep}{empty}
+\\SetTblrTemplate{caption-text}{empty}
+\\SetTblrTemplate{conthead}{empty}
+\\SetTblrTemplate{contfoot}{empty}
+\\DefTblrTemplate{conthead-text}{normal}{}
+\\ExplSyntaxOn
+\\tl_set:Nn \\tblrcontheadname {}
+\\tl_set:Nn \\tblrcontfootname {}
+\\ExplSyntaxOff
+
 
 % Define new column types for automatic text wrapping
 \\newcolumntype{L}[1]{>{\\RaggedRight\\arraybackslash}p{#1}}

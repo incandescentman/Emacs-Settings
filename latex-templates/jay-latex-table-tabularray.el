@@ -43,7 +43,7 @@
              (colspec (jay/latex--tabularray-colspec align)))
         (if colspec
             (let* ((new-begin
-                    (format "\\begin{tblr}{width=\\linewidth,colspec={%s}}" colspec))
+                    (format "\\begin{tblr}{width=\\linewidth,rows={font=\\fontsize{10}{12}\\selectfont},colspec={%s}}" colspec))
                    (updated (concat (substring text 0 (match-beginning 0))
                                     new-begin
                                     (substring text (match-end 0)))))
@@ -62,7 +62,7 @@
              (colspec (jay/latex--tabularray-colspec align)))
         (if colspec
             (let* ((new-begin
-                    (format "\\begin{tblr}{width=\\linewidth,colspec={%s}}" colspec))
+                    (format "\\begin{tblr}{width=\\linewidth,rows={font=\\fontsize{10}{12}\\selectfont},colspec={%s}}" colspec))
                    (updated (concat (substring text 0 (match-beginning 0))
                                     new-begin
                                     (substring text (match-end 0)))))
@@ -75,23 +75,38 @@
     text))
 
 (defun jay/latex--tabularray-convert-longtable (text)
-  "Convert longtable environments in TEXT into tabularray longtblr."
+  "Convert longtable environments in TEXT into tabularray tblr."
   (if (string-match "\\\\begin{longtable}\\(\\[[^]]*\\]\\)?{\\([^}\\n]+\\)}" text)
       (let* ((align (match-string 2 text))
              (colspec (jay/latex--tabularray-colspec align)))
         (if colspec
             (let* ((new-begin
-                    (format "\\begin{longtblr}{width=\\linewidth,colspec={%s}}" colspec))
+                    (format "\\begin{tblr}{width=\\linewidth,rows={font=\\fontsize{10}{12}\\selectfont},colspec={%s}}" colspec))
                    (updated (concat (substring text 0 (match-beginning 0))
                                     new-begin
                                     (substring text (match-end 0)))))
               (if (string-match "\\\\end{longtable}" updated)
                   (concat (substring updated 0 (match-beginning 0))
-                          "\\end{longtblr}"
+                          "\\end{tblr}"
                           (substring updated (match-end 0)))
                 updated))
           text))
     text))
+
+(defun jay/latex--tabularray-strip-center-wrapper (text)
+  "Remove surrounding center environment from converted tabularray TEXT."
+  (let ((updated text))
+    (setq updated
+          (replace-regexp-in-string
+           "\\\\begin{center}[[:space:]\n]*\\\\begin{\\(tblr\\|longtblr\\)}"
+           "\\\\begin{\\1}"
+           updated t))
+    (setq updated
+          (replace-regexp-in-string
+           "\\\\end{\\(tblr\\|longtblr\\)}[[:space:]\n]*\\\\end{center}"
+           "\\\\end{\\1}"
+           updated t))
+    updated))
 
 (defun jay/latex--convert-to-tabularray (text)
   "Convert supported table environments in TEXT into tabularray variants."
@@ -99,6 +114,7 @@
     (setq updated (jay/latex--tabularray-convert-longtable updated))
     (setq updated (jay/latex--tabularray-convert-tabularx updated))
     (setq updated (jay/latex--tabularray-convert-tabular updated))
+    (setq updated (jay/latex--tabularray-strip-center-wrapper updated))
     updated))
 
 (defun jay/latex-tabularray-org-tables-advice (orig-fun table contents info)
