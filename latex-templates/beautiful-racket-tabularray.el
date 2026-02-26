@@ -171,10 +171,6 @@ Contextuals=Alternate
 
 \\usepackage[font={large,bf}]{caption}
 
-\\usepackage{array}
-\\usepackage{booktabs} % Customized table styles: If you plan to use tables in your document, you might want to consider customizing their appearance with the `booktabs` package for professional-looking tables
-\\usepackage{tabularx} % Tables with auto-wrapping columns that fit page width
-\\usepackage{longtable} % Multi-page tables
 \\usepackage{tabularray} % Modern table engine
 \\UseTblrLibrary{booktabs}
 \\SetTblrInner{rows={valign=m},rowsep=0pt,colsep=4pt}
@@ -188,11 +184,6 @@ Contextuals=Alternate
 \\SetTblrTemplate{caption-text}{empty}
 \\SetTblrTemplate{conthead}{empty}
 \\SetTblrTemplate{contfoot}{empty}
-
-\\newcolumntype{Y}{>{\\RaggedRight\\arraybackslash}X}
-\\newcolumntype{Z}{>{\\Centering\\arraybackslash}X}
-\\newcolumntype{W}{>{\\RaggedLeft\\arraybackslash}X}
-\\renewcommand{\\tabularxcolumn}[1]{m{#1}}
 
 % Use the fancyhdr package to customize the headers and footers of your document for a professional appearance
 
@@ -288,7 +279,6 @@ Contextuals=Alternate
 %           minus 2pt means that TeX can shrink it by at most 2pt
 %       This is one example of the concept of, 'glue', in TeX
 
-\\onehalfspacing
 \\setstretch{1.2}
 
 \\usepackage{fancyvrb}

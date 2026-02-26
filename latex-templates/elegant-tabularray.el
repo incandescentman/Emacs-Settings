@@ -30,15 +30,10 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% TABLE CONFIGURATION FOR AUTOMATIC TEXT WRAPPING
+% TABLE CONFIGURATION — tabularray engine
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Load required packages for table handling
-\\usepackage{array}
 \\usepackage{ragged2e}
-\\usepackage{tabularx}
-\\usepackage{longtable}
-\\usepackage{booktabs}
 \\usepackage{tabularray}
 \\UseTblrLibrary{booktabs}
 \\SetTblrInner{rows={valign=m},rowsep=0pt,colsep=4pt}
@@ -52,33 +47,6 @@
 \\SetTblrTemplate{caption-text}{empty}
 \\SetTblrTemplate{conthead}{empty}
 \\SetTblrTemplate{contfoot}{empty}
-
-
-% Define new column types for automatic text wrapping
-\\newcolumntype{L}[1]{>{\\RaggedRight\\arraybackslash}p{#1}}
-\\newcolumntype{C}[1]{>{\\Centering\\arraybackslash}p{#1}}
-\\newcolumntype{R}[1]{>{\\RaggedLeft\\arraybackslash}p{#1}}
-\\newcolumntype{Y}{>{\\RaggedRight\\arraybackslash}X}
-\\newcolumntype{Z}{>{\\Centering\\arraybackslash}X}
-\\newcolumntype{W}{>{\\RaggedLeft\\arraybackslash}X}
-
-% Make default columns in tabularx wrap text
-\\renewcommand{\\tabularxcolumn}[1]{m{#1}}
-
-% Keep visible spacing between table cells
-\\newcommand{\\jaytableformat}{%
-  \\setlength{\\tabcolsep}{6pt}%
-  \\renewcommand{\\arraystretch}{1.05}%
-  \\fontsize{10}{12}\\selectfont}
-
-% Set default table font size
-\\AtBeginEnvironment{tabularx}{\\jaytableformat}
-\\AtBeginEnvironment{tabular}{\\jaytableformat}
-\\AtBeginEnvironment{longtable}{\\jaytableformat}
-
-% Enable automatic table width adjustment
-\\setlength{\\LTpre}{0pt}
-\\setlength{\\LTpost}{0pt}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

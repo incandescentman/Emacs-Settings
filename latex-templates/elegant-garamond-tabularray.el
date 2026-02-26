@@ -24,13 +24,9 @@
 \\usepackage{calc}
 \\usepackage{eso-pic}
 \\usepackage{etoolbox}
-\\usepackage{xcolor}
+\\usepackage[x11names]{xcolor}
 \\usepackage{microtype} % Improve typography
-\\usepackage{booktabs} % Professional-looking tables
-\\usepackage{array} % Column helpers for wrapping tables
 \\usepackage{ragged2e} % Ragged alignment with hyphenation
-\\usepackage{tabularx} % Auto-resizing/wrapping table columns
-\\usepackage{longtable} % Multi-page tables
 \\usepackage{tabularray} % Modern table engine
 \\UseTblrLibrary{booktabs}
 \\SetTblrInner{rows={valign=m},rowsep=0pt,colsep=4pt}
@@ -77,21 +73,6 @@
 \\usepackage{forloop}
 
 \\setlength{\\headheight}{14.49998pt}
-
-% Table configuration for automatic text wrapping
-\\newcolumntype{Y}{>{\\RaggedRight\\arraybackslash}X}
-\\newcolumntype{Z}{>{\\Centering\\arraybackslash}X}
-\\newcolumntype{W}{>{\\RaggedLeft\\arraybackslash}X}
-\\renewcommand{\\tabularxcolumn}[1]{m{#1}}
-\\newcommand{\\jaytableformat}{%
-  \\setlength{\\tabcolsep}{6pt}%
-  \\renewcommand{\\arraystretch}{1.05}%
-  \\fontsize{10}{12}\\selectfont}
-\\AtBeginEnvironment{tabularx}{\\jaytableformat}
-\\AtBeginEnvironment{tabular}{\\jaytableformat}
-\\AtBeginEnvironment{longtable}{\\jaytableformat}
-\\setlength{\\LTpre}{0pt}
-\\setlength{\\LTpost}{0pt}
 
 % Font Settings
 \\ifxetex
@@ -182,7 +163,6 @@
 % Paragraph and Indentation Settings
 \\setlength{\\parindent}{0pt}
 \\setlength{\\parskip}{12pt plus 2pt minus 1pt} % Space between paragraphs
-\\onehalfspacing
 \\setstretch{1.2}
 
 % Table of Contents Customization
