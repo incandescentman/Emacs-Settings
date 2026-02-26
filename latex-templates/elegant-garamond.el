@@ -3,6 +3,8 @@
 (add-to-list 'org-latex-classes
              '("elegant-garamond"
                "
+\\providecommand{\\DocumentMetadata}[1]{}
+\\DocumentMetadata{lang=en-US}
 \\documentclass[12pt]{article}
 \\usepackage[includeheadfoot, margin=1in]{geometry} % Standard proposal/document margins
 
@@ -16,6 +18,7 @@
 \\usepackage{ifxetex}
 \\usepackage{setspace}
 \\usepackage{url}
+\\usepackage{xurl}
 \\usepackage{paralist}
 \\usepackage{tikz}
 \\usepackage{calc}
@@ -127,7 +130,23 @@
 \\renewcommand{\\sectionmark}[1]{\\markboth{#1}{}}
 \\lhead{\\scshape\\href{\\the\\leftheaderurl}{\\the\\leftheader}}
 \\rhead{\\scshape{\\leftmark}}
-\\cfoot{\\thepage}
+
+% Optional storytelling.nyc footer (enabled)
+\\fancyfoot[C]{%
+  % Graphic
+  \\raisebox{0.025in}{% Increase this value to move the logo higher
+%\\fontsize{18}{18}\\selectfont\\sffamily\\color{spacegrey} STORYTELLING.NYC
+\\includegraphics[height=0.8in,keepaspectratio]{/Users/jay/Dropbox/writing/prosperous/design/storytelling-nyc-logo/current-2018/_better-storytelling-nyc-period-canonical-helvetica-condensed.png}
+  }%
+  \\hspace{0.05in}%
+  % Text / alternate logo block
+  \\raisebox{1.05in}{%
+%\\includegraphics[height=0.6in,keepaspectratio]{/Users/jay/Dropbox/github/incandescentman.github.io/assets/images/2023-10-final-new-logo_high-res-no-text.png}
+  }%
+}
+
+% Default footer
+%\\cfoot{\\thepage}
 
 % Paragraph and Indentation Settings
 \\setlength{\\parindent}{0pt}
@@ -145,8 +164,9 @@
 \\setlist[description]{style=nextline, before=\\vspace{\\baselineskip}}
 
 % List Environment Customization
-\\setlist{noitemsep, topsep=-8pt, after=\\vspace{12pt}} % Control spacing in lists
+\\setlist{noitemsep, topsep=-8pt} % Keep nested lists tight; no forced post-list gap
 \\setlistdepth{10}
+\\newenvironment{resumeenum}{\\begin{enumerate}[resume*]}{\\end{enumerate}}
 
 % Define a Custom Raised Bullet Command
 \\newcommand{\\raisedtinybullet}{\\raisebox{0.25ex}{\\tiny$\\bullet$}}

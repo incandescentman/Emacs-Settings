@@ -4,6 +4,8 @@
              '("beautiful-racket"
                "
 
+\\providecommand{\\DocumentMetadata}[1]{}
+\\DocumentMetadata{lang=en-US}
 \\documentclass[12pt]{article}
 
 % Use the geometry package to customize the page layout, margins, and other aspects of your document's appearance
@@ -290,9 +292,10 @@
 
 
                % control line spacing in bulleted list
-               \\setlist{noitemsep, topsep=-8pt, after=\\vspace{12pt}} % for no spacing between list items
+               \\setlist{noitemsep, topsep=-8pt} % keep nested lists tight; no forced post-list gap
                % see: https://tex.stackexchange.com/questions/199118/modifying-whitespace-before-and-after-list-separately-using-enumitem-package
                %\\setlist{topsep=0pt} % for a line between list items
+               \\newenvironment{resumeenum}{\\begin{enumerate}[resume*]}{\\end{enumerate}}
 
 
                \\renewcommand{\\labelitemi}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}

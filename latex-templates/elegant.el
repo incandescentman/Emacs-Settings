@@ -3,8 +3,10 @@
 (with-eval-after-load 'ox-latex
   (add-to-list 'org-latex-classes
                '("elegant"
-                 "
+"
 
+\\providecommand{\\DocumentMetadata}[1]{}
+\\DocumentMetadata{lang=en-US}
 \\documentclass[12pt]{article}
 \\usepackage{geometry}
 
@@ -16,6 +18,7 @@
 
 \\usepackage{fontspec}
 \\linespread{1.2}
+\\usepackage{microtype}
 
 \\usepackage[all]{nowidow}
 
@@ -109,6 +112,7 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 
 \\usepackage[obeyspaces]{url}
 \\PassOptionsToPackage{obeyspaces}{url}
+\\usepackage{xurl}
 
 \\usepackage{paralist}
 
@@ -273,12 +277,13 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 
 \\usepackage{enumitem}
 \\setlistdepth{10} % Allows up to 10 levels of nesting
+\\newenvironment{resumeenum}{\\begin{enumerate}[resume*]}{\\end{enumerate}}
 
 \\newlist{mylist}{enumerate}{10}
 
 
 % control line spacing in bulleted list
-\\setlist{noitemsep, topsep=-8pt, after=\\vspace{12pt}} % for no spacing between list items
+\\setlist{noitemsep, topsep=-8pt} % keep nested lists tight; no forced post-list gap
 % see: https://tex.stackexchange.com/questions/199118/modifying-whitespace-before-and-after-list-separately-using-enumitem-package
 %\\setlist{topsep=0pt} % for a line between list items
 
