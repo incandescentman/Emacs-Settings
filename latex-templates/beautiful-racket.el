@@ -461,7 +461,7 @@
 
                \\titleformat*{\\subsection}{\\sffamily\\setstretch{0.7}\\fontsize{24}{36}\\raggedright\\sffamily}
 
-               \\titleformat*{\\subsubsection}{\\ttfamily\\scshape\\fontsize{18}{16}\\raggedright\\ttfamily}\\color{spacegrey}
+               \\titleformat*{\\subsubsection}{\\ttfamily\\scshape\\fontsize{18}{16}\\raggedright\\ttfamily\\color{spacegrey}}
 
                \\titleformat*{\\paragraph}{\\ttfamily\\fontseries{sb}\\fontsize{13}{12}\\selectfont\\raggedright}
                \\titleformat*{\\subparagraph}{\\sffamily\\fontsize{16}{12}\\raggedright\\ttfamily\\bfseries}
