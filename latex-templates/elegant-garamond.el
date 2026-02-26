@@ -24,6 +24,9 @@
 \\usepackage{xcolor}
 \\usepackage{microtype} % Improve typography
 \\usepackage{booktabs} % Professional-looking tables
+\\usepackage{array} % Column helpers for wrapping tables
+\\usepackage{tabularx} % Auto-resizing/wrapping table columns
+\\usepackage{longtable} % Multi-page tables
 \\usepackage{fancyhdr} % Custom headers and footers
 \\usepackage{xspace} % Consistent spacing after commands
 \\usepackage{listings}
@@ -42,6 +45,17 @@
 \\usepackage{forloop}
 
 \\setlength{\\headheight}{14.49998pt}
+
+% Table configuration for automatic text wrapping
+\\newcolumntype{Y}{>{\\raggedright\\arraybackslash}X}
+\\newcolumntype{Z}{>{\\centering\\arraybackslash}X}
+\\newcolumntype{W}{>{\\raggedleft\\arraybackslash}X}
+\\renewcommand{\\tabularxcolumn}[1]{m{#1}}
+\\AtBeginEnvironment{tabularx}{\\fontsize{10}{12}\\selectfont}
+\\AtBeginEnvironment{tabular}{\\fontsize{10}{12}\\selectfont}
+\\AtBeginEnvironment{longtable}{\\fontsize{10}{12}\\selectfont}
+\\setlength{\\LTpre}{0pt}
+\\setlength{\\LTpost}{0pt}
 
 % Font Settings
 \\ifxetex
@@ -256,3 +270,43 @@
 (setq org-latex-to-pdf-process
       '("xelatex -interaction nonstopmode %f"
         "xelatex -interaction nonstopmode %f")) ;; for multiple passes
+
+(with-eval-after-load 'ox-latex
+  (defun jay/elegant-garamond--tabular-align-to-tabularx (align)
+    "Map simple ALIGN string from l/c/r columns to wrapping tabularx columns."
+    (apply #'string
+           (mapcar (lambda (ch)
+                     (pcase ch
+                       (?l ?Y)
+                       (?c ?Z)
+                       (?r ?W)
+                       (_ ch)))
+                   (string-to-list align))))
+
+  (defun jay/elegant-garamond-wrap-org-tables (text backend info)
+    "Convert simple tabular environments to wrapping tabularx for elegant-garamond."
+    (if (and (org-export-derived-backend-p backend 'latex)
+             (string= (plist-get info :latex-class) "elegant-garamond")
+             (string-match
+              "\\\\begin{tabular}\\(\\[[^]]*\\]\\)?{\\([^}\n]+\\)}" text))
+        (let* ((options (or (match-string 1 text) ""))
+               (align (match-string 2 text)))
+          (if (string-match-p "\\`[|lcr]+\\'" align)
+              (let* ((wrapped-align (jay/elegant-garamond--tabular-align-to-tabularx align))
+                     (new-begin
+                      (format "\\\\begin{tabularx}%s{\\\\linewidth}{%s}"
+                              options wrapped-align))
+                     (updated
+                      (concat (substring text 0 (match-beginning 0))
+                              new-begin
+                              (substring text (match-end 0)))))
+                (if (string-match "\\\\end{tabular}" updated)
+                    (concat (substring updated 0 (match-beginning 0))
+                            "\\end{tabularx}"
+                            (substring updated (match-end 0)))
+                  updated))
+            text))
+      text))
+
+  (add-to-list 'org-export-filter-table-functions
+               #'jay/elegant-garamond-wrap-org-tables))

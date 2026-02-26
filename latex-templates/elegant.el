@@ -41,6 +41,9 @@
 \\newcolumntype{L}[1]{>{\\raggedright\\arraybackslash}p{#1}}
 \\newcolumntype{C}[1]{>{\\centering\\arraybackslash}p{#1}}
 \\newcolumntype{R}[1]{>{\\raggedleft\\arraybackslash}p{#1}}
+\\newcolumntype{Y}{>{\\raggedright\\arraybackslash}X}
+\\newcolumntype{Z}{>{\\centering\\arraybackslash}X}
+\\newcolumntype{W}{>{\\raggedleft\\arraybackslash}X}
 
 % Make default columns in tabularx wrap text
 \\renewcommand{\\tabularxcolumn}[1]{m{#1}}
@@ -420,3 +423,42 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 (setq org-latex-to-pdf-process
       '("xelatex -interaction nonstopmode %f"
         "xelatex -interaction nonstopmode %f")) ;; for multiple passes
+
+(with-eval-after-load 'ox-latex
+  (defun jay/elegant--tabular-align-to-tabularx (align)
+    "Map simple ALIGN string from l/c/r columns to wrapping tabularx columns."
+    (apply #'string
+           (mapcar (lambda (ch)
+                     (pcase ch
+                       (?l ?Y)
+                       (?c ?Z)
+                       (?r ?W)
+                       (_ ch)))
+                   (string-to-list align))))
+
+  (defun jay/elegant-wrap-org-tables (text backend info)
+    "Convert simple tabular environments to wrapping tabularx for elegant class."
+    (if (and (org-export-derived-backend-p backend 'latex)
+             (string= (plist-get info :latex-class) "elegant")
+             (string-match
+              "\\\\begin{tabular}\\(\\[[^]]*\\]\\)?{\\([^}\n]+\\)}" text))
+        (let* ((options (or (match-string 1 text) ""))
+               (align (match-string 2 text)))
+          (if (string-match-p "\\`[|lcr]+\\'" align)
+              (let* ((wrapped-align (jay/elegant--tabular-align-to-tabularx align))
+                     (new-begin
+                      (format "\\\\begin{tabularx}%s{\\\\linewidth}{%s}"
+                              options wrapped-align))
+                     (updated
+                      (concat (substring text 0 (match-beginning 0))
+                              new-begin
+                              (substring text (match-end 0)))))
+                (if (string-match "\\\\end{tabular}" updated)
+                    (concat (substring updated 0 (match-beginning 0))
+                            "\\end{tabularx}"
+                            (substring updated (match-end 0)))
+                  updated))
+            text))
+      text))
+
+  (add-to-list 'org-export-filter-table-functions #'jay/elegant-wrap-org-tables))
