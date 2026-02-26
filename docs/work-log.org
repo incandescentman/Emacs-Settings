@@ -1,6 +1,20 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-02-26: Parity pass for tabularray/classic xcolor + tabularray bookmarks
+- Completed remaining xcolor option-loading fixes in templates still using the no-op pattern:
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-tabularray.el][latex-templates/elegant-tabularray.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket-tabularray.el][latex-templates/beautiful-racket-tabularray.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket-classic.el][latex-templates/beautiful-racket-classic.el]]
+- Change made:
+  - Replaced =\\usepackage{xcolor}= + =\\PassOptionsToPackage{hyperref,x11names}{xcolor}= with =\\usepackage[x11names]{xcolor}=.
+- Added =bookmark= package (after hyperref) to all tabularray proposal classes:
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-tabularray.el][latex-templates/elegant-tabularray.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond-tabularray.el][latex-templates/elegant-garamond-tabularray.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket-tabularray.el][latex-templates/beautiful-racket-tabularray.el]]
+- Bookmark defaults used:
+  - =\\bookmarksetup{numbered=false,open=true}=
+
 * 2026-02-26: Add bookmark package, fix xcolor bug, remove dead onehalfspacing
 - Added =bookmark= package (loaded after hyperref) to all three core templates:
   - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant.el][latex-templates/elegant.el]]

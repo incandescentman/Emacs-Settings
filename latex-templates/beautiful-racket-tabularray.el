@@ -67,8 +67,7 @@ Contextuals=Alternate
 \\usepackage{tikz}
 \\usepackage{calc}
 \\usepackage{eso-pic}
-\\usepackage{xcolor}
-\\PassOptionsToPackage{hyperref,x11names}{xcolor}
+\\usepackage[x11names]{xcolor}
 \\definecolor{pinterestred}{HTML}{C92228}
 \\definecolor{ulyssesbutterflyblue}{HTML}{1464F4}
 \\definecolor{signalflare}{HTML}{FB782C}
@@ -584,6 +583,8 @@ Contextuals=Alternate
 
                \\usepackage{xurl} % Better URL line breaking
                \\usepackage[breaklinks=true,linktocpage,xetex]{hyperref}
+               \\usepackage{bookmark}
+               \\bookmarksetup{numbered=false,open=true}
                \\usepackage{enotez}
 
                % Endnotes toggle (default OFF; keeps normal footnotes)

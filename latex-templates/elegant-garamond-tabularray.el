@@ -58,6 +58,8 @@
 \\usepackage{titlesec}
 \\usepackage{lipsum}
 \\usepackage[breaklinks=true, linktocpage, xetex]{hyperref}
+\\usepackage{bookmark}
+\\bookmarksetup{numbered=false,open=true}
 \\usepackage{enotez}
 \\usepackage[most]{tcolorbox} % For enhanced environments
 \\MakeOuterQuote{\"}

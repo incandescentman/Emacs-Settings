@@ -138,8 +138,7 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 %\\usepackage{calc}
 %\\usepackage{eso-pic}
 %\\usepackage{etoolbox}
-\\usepackage{xcolor}
-\\PassOptionsToPackage{hyperref,x11names}{xcolor}
+\\usepackage[x11names]{xcolor}
 \\definecolor{pinterestred}{HTML}{C92228}
 \\definecolor{ulyssesbutterflyblue}{HTML}{1464F4}
 \\definecolor{signalflare}{HTML}{FB782C}
@@ -460,6 +459,8 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 
 
 \\usepackage[breaklinks=true,linktocpage,xetex]{hyperref}
+\\usepackage{bookmark}
+\\bookmarksetup{numbered=false,open=true}
 \\usepackage{enotez}
 \\newif\\ifjayendnotes
 \\jayendnotesfalse
