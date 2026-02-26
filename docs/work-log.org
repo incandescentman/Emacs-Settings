@@ -1,6 +1,25 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-02-26: Add opt-in tabularray class family for modern table rendering
+- Added new opt-in LaTeX classes in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/][latex-templates/]]:
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-tabularray.el][elegant-tabularray.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond-tabularray.el][elegant-garamond-tabularray.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket-tabularray.el][beautiful-racket-tabularray.el]]
+- Added shared exporter helper:
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/jay-latex-table-tabularray.el][jay-latex-table-tabularray.el]]
+- Behavior of the new helper:
+  - Registers only the new ~*-tabularray~ classes (existing production classes unchanged).
+  - Converts Org-exported ~tabular/tabularx/longtable~ output into ~tblr/longtblr~.
+  - Preserves existing opt-out semantics via =#+ATTR_LATEX: :wrap nil=.
+- Class-level table defaults:
+  - Loads ~tabularray~ and ~\\UseTblrLibrary{booktabs}~.
+  - Sets baseline inner spacing/vertical centering with ~\\SetTblrInner{rows={valign=m}, rowsep=1.5pt, colsep=4pt}~.
+- Validation performed:
+  - Batch-loaded all new class files and helper in Emacs with ~ox-latex~.
+  - Org export smoke tests confirmed conversion emits ~\\begin{tblr}~ for all three new classes.
+  - XeLaTeX compile sanity check passed for exported sample (no hard LaTeX errors).
+
 * 2026-02-26: LaTeX cross-template consistency pass (quotes, subtitles, tables, OT features)
 - Updated the three primary proposal classes:
   - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant.el][latex-templates/elegant.el]]
