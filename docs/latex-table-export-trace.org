@@ -12,6 +12,18 @@ This document tracks the February 2026 table-export hardening work for:
 
 Goal: make table wrapping predictable for proposal workflows while preserving a per-table escape hatch.
 
+* Positioning: Classic vs Tabularray
+
+- The tabularray class family is intentionally opt-in and non-breaking.
+- Expected outcome for typical proposal tables is visual parity with existing classes, not a dramatic redesign.
+- Main value is structural:
+  - cleaner conversion internals,
+  - better stability for edge-case tables,
+  - easier future maintenance.
+- Practical guidance:
+  - Use classic classes by default.
+  - Use tabularray classes when a real table issue appears (overflow, continuation behavior, fragile layout cases).
+
 * Current Behavior (Post-Refactor)
 
 ** Defaults
@@ -122,4 +134,4 @@ git revert cfd8a168 416b2648 142662af be740319 672fe56e 2accd3d5 476e5e10
 
 - If rollback affects only one class, verify class registration lines at the bottom of each template file.
 - Keep this document updated if new table behavior is added to additional templates.
-
+- If side-by-side output looks very similar, that is expected and indicates the migration preserved house style while changing the table engine underneath.

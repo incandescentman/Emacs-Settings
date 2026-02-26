@@ -378,6 +378,23 @@ Implementation detail:
 - Shared helper: [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/jay-latex-table-wrap.el][latex-templates/jay-latex-table-wrap.el]]
 - Each class file registers itself with the shared wrapper.
 
+** Tabularray Classes (Opt-In, Same Look by Design)
+
+Additional opt-in classes are available:
+- =elegant-tabularray=
+- =elegant-garamond-tabularray=
+- =beautiful-racket-tabularray=
+
+These are intended to preserve the same visual style as the classic classes for normal proposal tables. In side-by-side exports, differences should usually be small or invisible at normal reading distance.
+
+Use this rule of thumb:
+- Keep classic classes for normal production work.
+- Switch to a tabularray class when a specific table misbehaves (pagination, overflow edge cases, or brittle conversion behavior).
+
+Why this exists:
+- The tabularray path is mainly an internal robustness/maintainability upgrade (modern table engine, cleaner conversion pipeline), not a redesign.
+- Think of it as an opt-in reliability path, not a mandatory style change.
+
 ** Table Regression / Rollback
 
 If table export regresses, use the detailed trace and commit-by-commit rollback guide:

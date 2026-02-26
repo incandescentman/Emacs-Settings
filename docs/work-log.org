@@ -1,6 +1,15 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-02-26: Document tabularray positioning (visual parity + opt-in guidance)
+- Updated docs to clarify expected outcomes of the tabularray migration:
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][docs/instructions.org]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/docs/latex-table-export-trace.org][docs/latex-table-export-trace.org]]
+- Documented decision framing:
+  - Side-by-side output is expected to look very similar for normal proposal tables.
+  - The value of tabularray is primarily internal robustness/maintainability, not visible redesign.
+  - Classic classes remain default production choice; tabularray classes are an opt-in path for table edge cases.
+
 * 2026-02-26: Tabularray regression fix pass (agenda tables)
 - Follow-up fixes to the new tabularray path after real-document testing exposed two issues:
   - 3-hour agenda looked blank in the first side-by-side comparison (page-mapping mismatch in comparison artifacts).

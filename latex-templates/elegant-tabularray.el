@@ -52,11 +52,6 @@
 \\SetTblrTemplate{caption-text}{empty}
 \\SetTblrTemplate{conthead}{empty}
 \\SetTblrTemplate{contfoot}{empty}
-\\DefTblrTemplate{conthead-text}{normal}{}
-\\ExplSyntaxOn
-\\tl_set:Nn \\tblrcontheadname {}
-\\tl_set:Nn \\tblrcontfootname {}
-\\ExplSyntaxOff
 
 
 % Define new column types for automatic text wrapping
