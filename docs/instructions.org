@@ -395,6 +395,71 @@ Why this exists:
 - The tabularray path is mainly an internal robustness/maintainability upgrade (modern table engine, cleaner conversion pipeline), not a redesign.
 - Think of it as an opt-in reliability path, not a mandatory style change.
 
+** Common LaTeX Toggles (Org Usage)
+
+*** Endnotes (default OFF)
+
+Supported classes:
+- =elegant=
+- =elegant-garamond=
+- =beautiful-racket=
+- =elegant-tabularray=
+- =elegant-garamond-tabularray=
+- =beautiful-racket-tabularray=
+
+Turn endnotes ON for a document:
+#+BEGIN_EXAMPLE
+#+LATEX_HEADER: \EnableEndnotes
+#+END_EXAMPLE
+
+Turn endnotes OFF explicitly:
+#+BEGIN_EXAMPLE
+#+LATEX_HEADER: \DisableEndnotes
+#+END_EXAMPLE
+
+Print endnotes where you want them:
+#+BEGIN_EXAMPLE
+#+LATEX: \printendnotes
+#+END_EXAMPLE
+
+*** Table Wrap Opt-Out (per table)
+
+For classic classes (=elegant=, =elegant-garamond=, =beautiful-racket=), table wrapping is ON by default.
+
+Disable wrapping for one table:
+#+BEGIN_EXAMPLE
+#+ATTR_LATEX: :wrap nil
+| A | B |
+|---+---|
+| 1 | 2 |
+#+END_EXAMPLE
+
+*** Table Engine Choice (class-level)
+
+Classic engine:
+#+BEGIN_EXAMPLE
+#+LATEX_CLASS: elegant
+#+END_EXAMPLE
+
+Opt-in modern engine:
+#+BEGIN_EXAMPLE
+#+LATEX_CLASS: elegant-tabularray
+#+END_EXAMPLE
+
+Swap similarly for Garamond / Beautiful Racket variants.
+
+*** Page Break Controls
+
+Hard page break:
+#+BEGIN_EXAMPLE
+#+LATEX: \newpage
+#+END_EXAMPLE
+
+Flush pending floats, then break:
+#+BEGIN_EXAMPLE
+#+LATEX: \clearpage
+#+END_EXAMPLE
+
 ** Table Regression / Rollback
 
 If table export regresses, use the detailed trace and commit-by-commit rollback guide:

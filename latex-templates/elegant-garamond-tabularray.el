@@ -58,8 +58,18 @@
 \\usepackage{titlesec}
 \\usepackage{lipsum}
 \\usepackage[breaklinks=true, linktocpage, xetex]{hyperref}
+\\usepackage{enotez}
 \\usepackage[most]{tcolorbox} % For enhanced environments
 \\MakeOuterQuote{\"}
+\\newif\\ifjayendnotes
+\\jayendnotesfalse
+\\newcommand{\\EnableEndnotes}{\\jayendnotestrue}
+\\newcommand{\\DisableEndnotes}{\\jayendnotesfalse}
+\\AtBeginDocument{%
+  \\ifjayendnotes
+    \\let\\footnote\\endnote
+  \\fi
+}
 
 \\newcounter{level} % Define the custom counter
 \\usepackage{forloop}

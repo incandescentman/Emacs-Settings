@@ -567,16 +567,18 @@ Contextuals=Alternate
 
                \\usepackage{xurl} % Better URL line breaking
                \\usepackage[breaklinks=true,linktocpage,xetex]{hyperref}
+               \\usepackage{enotez}
 
-               % Endnotes for Works Cited sections
-               \\usepackage{endnotes}
-               \\let\\footnote=\\endnote
-               % Remove the heading (we use org heading instead) and suppress page header
-               \\renewcommand{\\enoteheading}{\\thispagestyle{plain}}
-               % Numbered list with hanging indent and space between entries
-               \\renewcommand{\\enoteformat}{\\noindent\\hangindent=2em\\makebox[2em][l]{\\theenmark.}}
-               \\renewcommand{\\enotesize}{\\normalsize}
-               \\AtEndDocument{\\ifnum\\value{endnote}>0\\theendnotes\\fi}
+               % Endnotes toggle (default OFF; keeps normal footnotes)
+               \\newif\\ifjayendnotes
+               \\jayendnotesfalse
+               \\newcommand{\\EnableEndnotes}{\\jayendnotestrue}
+               \\newcommand{\\DisableEndnotes}{\\jayendnotesfalse}
+               \\AtBeginDocument{%
+                 \\ifjayendnotes
+                   \\let\\footnote\\endnote
+                 \\fi
+               }
                \\hypersetup{colorlinks, citecolor=elegantblue,filecolor=elegantblue,linkcolor=elegantblue,urlcolor=elegantblue}
 
                \\renewcommand\\maketitle{}

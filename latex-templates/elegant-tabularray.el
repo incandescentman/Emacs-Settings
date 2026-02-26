@@ -460,6 +460,16 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 
 
 \\usepackage[breaklinks=true,linktocpage,xetex]{hyperref}
+\\usepackage{enotez}
+\\newif\\ifjayendnotes
+\\jayendnotesfalse
+\\newcommand{\\EnableEndnotes}{\\jayendnotestrue}
+\\newcommand{\\DisableEndnotes}{\\jayendnotesfalse}
+\\AtBeginDocument{%
+  \\ifjayendnotes
+    \\let\\footnote\\endnote
+  \\fi
+}
 \\hypersetup{colorlinks, citecolor=libertyblue,filecolor=libertyblue,linkcolor=libertyblue,urlcolor=libertyblue}
 
 \\renewcommand\\maketitle{}

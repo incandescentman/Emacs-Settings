@@ -1,6 +1,23 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-02-26: Add opt-in enotez endnotes toggle across proposal classes
+- Replaced/standardized endnote behavior across:
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant.el][latex-templates/elegant.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][latex-templates/elegant-garamond.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el][latex-templates/beautiful-racket.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-tabularray.el][latex-templates/elegant-tabularray.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond-tabularray.el][latex-templates/elegant-garamond-tabularray.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket-tabularray.el][latex-templates/beautiful-racket-tabularray.el]]
+- New shared toggle pattern in each class:
+  - ~\\usepackage{enotez}~
+  - ~\\EnableEndnotes~ / ~\\DisableEndnotes~
+  - default remains normal footnotes unless explicitly enabled
+  - when enabled, ~\\footnote~ is remapped to ~\\endnote~ at begin-document
+- Updated user docs:
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][docs/instructions.org]] (new “Common LaTeX Toggles” section)
+  - Added matching notes in roaming doc: ~/Dropbox/roam/vibecoding/20260225235900-latex_org_mode_documentation.org
+
 * 2026-02-26: Document tabularray positioning (visual parity + opt-in guidance)
 - Updated docs to clarify expected outcomes of the tabularray migration:
   - [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][docs/instructions.org]]
