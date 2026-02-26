@@ -287,6 +287,26 @@
                        (_ ch)))
                    (string-to-list align))))
 
+  (defun jay/elegant-garamond--booktabsify-tabularx (text)
+    "Apply light booktabs rules to a converted tabularx table string."
+    (if (string-match-p "\\\\toprule\\|\\\\midrule\\|\\\\bottomrule" text)
+        text
+      (let ((updated text))
+        (when (string-match "\\\\begin{tabularx}[^\n]*\n" updated)
+          (setq updated
+                (replace-match
+                 (concat (match-string 0 updated) "\\toprule\n")
+                 t t updated)))
+        (setq updated
+              (replace-regexp-in-string
+               "\\\\hline" "\\midrule" updated t t))
+        (when (string-match "\n\\\\end{tabularx}" updated)
+          (setq updated
+                (replace-match
+                 "\n\\bottomrule\n\\end{tabularx}"
+                 t t updated)))
+        updated)))
+
   (defun jay/elegant-garamond-wrap-org-tables (text backend info)
     "Convert simple tabular environments to wrapping tabularx for elegant-garamond."
     (if (and (org-export-derived-backend-p backend 'latex)
@@ -305,9 +325,10 @@
                               new-begin
                               (substring text (match-end 0)))))
                 (if (string-match "\\\\end{tabular}" updated)
-                    (concat (substring updated 0 (match-beginning 0))
-                            "\\end{tabularx}"
-                            (substring updated (match-end 0)))
+                    (jay/elegant-garamond--booktabsify-tabularx
+                     (concat (substring updated 0 (match-beginning 0))
+                             "\\end{tabularx}"
+                             (substring updated (match-end 0))))
                   updated))
             text))
       text))
