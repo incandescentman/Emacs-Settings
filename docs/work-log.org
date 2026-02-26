@@ -1,6 +1,26 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-02-26: Tabularray regression fix pass (agenda tables)
+- Follow-up fixes to the new tabularray path after real-document testing exposed two issues:
+  - 3-hour agenda looked blank in the first side-by-side comparison (page-mapping mismatch in comparison artifacts).
+  - 2-hour agenda overflowed into footer in early conversion behavior.
+- Updated shared converter [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/jay-latex-table-tabularray.el][latex-templates/jay-latex-table-tabularray.el]]:
+  - Added table font normalization in converted tables: ~rows={font=\\fontsize{10}{12}\\selectfont}~.
+  - Added wrapper cleanup to strip Org’s surrounding ~center~ environment around converted tabularray blocks.
+  - Normalized conversion to ~tblr~ for Org-exported ~tabular~, ~tabularx~, and ~longtable~ output (instead of emitting ~longtblr~ for agenda tables).
+- Updated tabularray class preambles:
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-tabularray.el][latex-templates/elegant-tabularray.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond-tabularray.el][latex-templates/elegant-garamond-tabularray.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket-tabularray.el][latex-templates/beautiful-racket-tabularray.el]]
+  - Tightened tabularray inner spacing to ~rowsep=0pt~.
+  - Added explicit tabularray template controls for caption/continuation rendering (~SetTblrTemplate~ + ~DefTblrTemplate~ overrides) to keep output visually close to existing non-tabularray classes.
+- Validation:
+  - Re-exported the Ralph Lauren proposal with ~elegant-garamond-tabularray~ and confirmed:
+    - no blank agenda table page,
+    - no footer spill from the 2-hour table,
+    - both agenda tables render in full with expected row content.
+
 * 2026-02-26: Disable rare Garamond ligatures by default (remove ct join)
 - Updated Garamond fontspec defaults to disable rare ligatures while keeping common ligatures:
   - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][latex-templates/elegant-garamond.el]]
