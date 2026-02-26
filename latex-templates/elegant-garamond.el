@@ -51,9 +51,13 @@
 \\newcolumntype{Z}{>{\\centering\\arraybackslash}X}
 \\newcolumntype{W}{>{\\raggedleft\\arraybackslash}X}
 \\renewcommand{\\tabularxcolumn}[1]{m{#1}}
-\\AtBeginEnvironment{tabularx}{\\fontsize{10}{12}\\selectfont}
-\\AtBeginEnvironment{tabular}{\\fontsize{10}{12}\\selectfont}
-\\AtBeginEnvironment{longtable}{\\fontsize{10}{12}\\selectfont}
+\\newcommand{\\jaytableformat}{%
+  \\setlength{\\tabcolsep}{6pt}%
+  \\renewcommand{\\arraystretch}{1.05}%
+  \\fontsize{10}{12}\\selectfont}
+\\AtBeginEnvironment{tabularx}{\\jaytableformat}
+\\AtBeginEnvironment{tabular}{\\jaytableformat}
+\\AtBeginEnvironment{longtable}{\\jaytableformat}
 \\setlength{\\LTpre}{0pt}
 \\setlength{\\LTpost}{0pt}
 
@@ -273,13 +277,13 @@
 
 (with-eval-after-load 'ox-latex
   (defun jay/elegant-garamond--tabular-align-to-tabularx (align)
-    "Map simple ALIGN string from l/c/r columns to wrapping tabularx columns."
+    "Map simple ALIGN string to left-aligned wrapping tabularx columns."
     (apply #'string
            (mapcar (lambda (ch)
                      (pcase ch
                        (?l ?Y)
-                       (?c ?Z)
-                       (?r ?W)
+                       (?c ?Y)
+                       (?r ?Y)
                        (_ ch)))
                    (string-to-list align))))
 
@@ -294,7 +298,7 @@
           (if (string-match-p "\\`[|lcr]+\\'" align)
               (let* ((wrapped-align (jay/elegant-garamond--tabular-align-to-tabularx align))
                      (new-begin
-                      (format "\\\\begin{tabularx}%s{\\\\linewidth}{%s}"
+                      (format "\\begin{tabularx}%s{\\linewidth}{%s}"
                               options wrapped-align))
                      (updated
                       (concat (substring text 0 (match-beginning 0))

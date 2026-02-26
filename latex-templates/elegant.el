@@ -48,10 +48,16 @@
 % Make default columns in tabularx wrap text
 \\renewcommand{\\tabularxcolumn}[1]{m{#1}}
 
+% Keep visible spacing between table cells
+\\newcommand{\\jaytableformat}{%
+  \\setlength{\\tabcolsep}{6pt}%
+  \\renewcommand{\\arraystretch}{1.05}%
+  \\fontsize{10}{12}\\selectfont}
+
 % Set default table font size
-\\AtBeginEnvironment{tabularx}{\\fontsize{10}{12}\\selectfont}
-\\AtBeginEnvironment{tabular}{\\fontsize{10}{12}\\selectfont}
-\\AtBeginEnvironment{longtable}{\\fontsize{10}{12}\\selectfont}
+\\AtBeginEnvironment{tabularx}{\\jaytableformat}
+\\AtBeginEnvironment{tabular}{\\jaytableformat}
+\\AtBeginEnvironment{longtable}{\\jaytableformat}
 
 % Enable automatic table width adjustment
 \\setlength{\\LTpre}{0pt}
@@ -426,13 +432,13 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 
 (with-eval-after-load 'ox-latex
   (defun jay/elegant--tabular-align-to-tabularx (align)
-    "Map simple ALIGN string from l/c/r columns to wrapping tabularx columns."
+    "Map simple ALIGN string to left-aligned wrapping tabularx columns."
     (apply #'string
            (mapcar (lambda (ch)
                      (pcase ch
                        (?l ?Y)
-                       (?c ?Z)
-                       (?r ?W)
+                       (?c ?Y)
+                       (?r ?Y)
                        (_ ch)))
                    (string-to-list align))))
 
@@ -447,7 +453,7 @@ UprightFont = HelveticaNeueLTPro-MdCn,
           (if (string-match-p "\\`[|lcr]+\\'" align)
               (let* ((wrapped-align (jay/elegant--tabular-align-to-tabularx align))
                      (new-begin
-                      (format "\\\\begin{tabularx}%s{\\\\linewidth}{%s}"
+                      (format "\\begin{tabularx}%s{\\linewidth}{%s}"
                               options wrapped-align))
                      (updated
                       (concat (substring text 0 (match-beginning 0))
