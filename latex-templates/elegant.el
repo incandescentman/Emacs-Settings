@@ -230,6 +230,7 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 % overwrite the logo footer
 %\\cfoot{\\thepage} % Add page numbers
 
+\\makeatother
 
 %%%%%%%%%%%%%%%%
 
@@ -351,9 +352,6 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 }
 
 
-% Ensure the tcolorbox package is included with the 'skins' library
-\\usepackage[most]{tcolorbox}
-
 % Define custom colors if not already defined
 \\definecolor{powderblue}{HTML}{f5f7ff}
 \\definecolor{stormybluegrey}{HTML}{708090}
@@ -374,7 +372,8 @@ UprightFont = HelveticaNeueLTPro-MdCn,
     halign=flush left,
     before skip=1em,  % Vertical space before the box
     after skip=1em,   % Vertical space after the box
-    parskip=1em       % Space between paragraphs within the box
+    parskip=1em,
+    breakable         % Allow long quotes to span pages
   }
 }
 
@@ -430,84 +429,12 @@ UprightFont = HelveticaNeueLTPro-MdCn,
       '("xelatex -interaction nonstopmode %f"
         "xelatex -interaction nonstopmode %f")) ;; for multiple passes
 
-(with-eval-after-load 'ox-latex
-  (defun jay/elegant--tabular-align-to-tabularx (align)
-    "Map simple ALIGN string to left-aligned wrapping tabularx columns."
-    (apply #'string
-           (mapcar (lambda (ch)
-                     (pcase ch
-                       (?l ?Y)
-                       (?c ?Y)
-                       (?r ?Y)
-                       (_ ch)))
-                   (string-to-list align))))
+(let* ((this-file (or load-file-name buffer-file-name))
+       (helper (and this-file
+                    (expand-file-name "jay-latex-table-wrap.el"
+                                      (file-name-directory this-file)))))
+  (when (and helper (file-readable-p helper))
+    (load helper nil 'nomessage)))
 
-  (defun jay/elegant--booktabsify-tabularx (text)
-    "Apply light booktabs rules to a converted tabularx table string."
-    (if (string-match-p "\\\\toprule\\|\\\\midrule\\|\\\\bottomrule" text)
-        text
-      (let ((updated text))
-        (when (string-match "\\\\begin{tabularx}[^\n]*\n" updated)
-          (setq updated
-                (replace-match
-                 (concat (match-string 0 updated) "\\toprule\n")
-                 t t updated)))
-        (setq updated
-              (replace-regexp-in-string
-               "\\\\hline" "\\midrule" updated t t))
-        (when (string-match "\n\\\\end{tabularx}" updated)
-          (setq updated
-                (replace-match
-                 "\n\\bottomrule\n\\end{tabularx}"
-                 t t updated)))
-        updated)))
-
-  (defun jay/elegant--wrap-disabled-p (table)
-    "Return non-nil when TABLE has :wrap explicitly disabled."
-    (let* ((raw (org-element-property :attr_latex table))
-           (joined (downcase
-                    (mapconcat #'identity
-                               (cond
-                                ((null raw) nil)
-                                ((listp raw) raw)
-                                (t (list raw)))
-                               " "))))
-      (and (stringp joined)
-           (string-match-p
-            "\\(?:^\\|[[:space:]]\\):wrap[[:space:]]+\\(?:nil\\|no\\|false\\|off\\|0\\)\\(?:[[:space:]]\\|$\\)"
-            joined))))
-
-  (defun jay/elegant--convert-tabular-to-tabularx (text)
-    "Convert simple tabular environments in TEXT into wrapping tabularx."
-    (if (string-match
-         "\\\\begin{tabular}\\(\\[[^]]*\\]\\)?{\\([^}\n]+\\)}" text)
-        (let* ((options (or (match-string 1 text) ""))
-               (align (match-string 2 text)))
-          (if (string-match-p "\\`[|lcr]+\\'" align)
-              (let* ((wrapped-align (jay/elegant--tabular-align-to-tabularx align))
-                     (new-begin
-                      (format "\\begin{tabularx}%s{\\linewidth}{%s}"
-                              options wrapped-align))
-                     (updated
-                      (concat (substring text 0 (match-beginning 0))
-                              new-begin
-                              (substring text (match-end 0)))))
-                (if (string-match "\\\\end{tabular}" updated)
-                    (jay/elegant--booktabsify-tabularx
-                     (concat (substring updated 0 (match-beginning 0))
-                             "\\end{tabularx}"
-                             (substring updated (match-end 0))))
-                  updated))
-            text))
-      text))
-
-  (defun jay/elegant-wrap-org-tables-advice (orig-fun table contents info)
-    "Wrap Org tables in elegant class unless :wrap is explicitly disabled."
-    (let ((rendered (funcall orig-fun table contents info)))
-      (if (and (string= (plist-get info :latex-class) "elegant")
-               (not (jay/elegant--wrap-disabled-p table)))
-          (jay/elegant--convert-tabular-to-tabularx rendered)
-        rendered)))
-
-  (unless (advice-member-p #'jay/elegant-wrap-org-tables-advice 'org-latex-table)
-    (advice-add 'org-latex-table :around #'jay/elegant-wrap-org-tables-advice)))
+(when (fboundp 'jay/latex-register-wrap-class)
+  (jay/latex-register-wrap-class "elegant"))

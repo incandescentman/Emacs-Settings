@@ -572,84 +572,12 @@
       '("xelatex -interaction nonstopmode %f"
         "xelatex -interaction nonstopmode %f")) ;; for multiple passes
 
-(with-eval-after-load 'ox-latex
-  (defun jay/beautiful-racket--tabular-align-to-tabularx (align)
-    "Map simple ALIGN string to left-aligned wrapping tabularx columns."
-    (apply #'string
-           (mapcar (lambda (ch)
-                     (pcase ch
-                       (?l ?Y)
-                       (?c ?Y)
-                       (?r ?Y)
-                       (_ ch)))
-                   (string-to-list align))))
+(let* ((this-file (or load-file-name buffer-file-name))
+       (helper (and this-file
+                    (expand-file-name "jay-latex-table-wrap.el"
+                                      (file-name-directory this-file)))))
+  (when (and helper (file-readable-p helper))
+    (load helper nil 'nomessage)))
 
-  (defun jay/beautiful-racket--booktabsify-tabularx (text)
-    "Apply light booktabs rules to a converted tabularx table string."
-    (if (string-match-p "\\\\toprule\\|\\\\midrule\\|\\\\bottomrule" text)
-        text
-      (let ((updated text))
-        (when (string-match "\\\\begin{tabularx}[^\n]*\n" updated)
-          (setq updated
-                (replace-match
-                 (concat (match-string 0 updated) "\\toprule\n")
-                 t t updated)))
-        (setq updated
-              (replace-regexp-in-string
-               "\\\\hline" "\\midrule" updated t t))
-        (when (string-match "\n\\\\end{tabularx}" updated)
-          (setq updated
-                (replace-match
-                 "\n\\bottomrule\n\\end{tabularx}"
-                 t t updated)))
-        updated)))
-
-  (defun jay/beautiful-racket--wrap-disabled-p (table)
-    "Return non-nil when TABLE has :wrap explicitly disabled."
-    (let* ((raw (org-element-property :attr_latex table))
-           (joined (downcase
-                    (mapconcat #'identity
-                               (cond
-                                ((null raw) nil)
-                                ((listp raw) raw)
-                                (t (list raw)))
-                               " "))))
-      (and (stringp joined)
-           (string-match-p
-            "\\(?:^\\|[[:space:]]\\):wrap[[:space:]]+\\(?:nil\\|no\\|false\\|off\\|0\\)\\(?:[[:space:]]\\|$\\)"
-            joined))))
-
-  (defun jay/beautiful-racket--convert-tabular-to-tabularx (text)
-    "Convert simple tabular environments in TEXT into wrapping tabularx."
-    (if (string-match
-         "\\\\begin{tabular}\\(\\[[^]]*\\]\\)?{\\([^}\n]+\\)}" text)
-        (let* ((options (or (match-string 1 text) ""))
-               (align (match-string 2 text)))
-          (if (string-match-p "\\`[|lcr]+\\'" align)
-              (let* ((wrapped-align (jay/beautiful-racket--tabular-align-to-tabularx align))
-                     (new-begin
-                      (format "\\begin{tabularx}%s{\\linewidth}{%s}"
-                              options wrapped-align))
-                     (updated
-                      (concat (substring text 0 (match-beginning 0))
-                              new-begin
-                              (substring text (match-end 0)))))
-                (if (string-match "\\\\end{tabular}" updated)
-                    (jay/beautiful-racket--booktabsify-tabularx
-                     (concat (substring updated 0 (match-beginning 0))
-                             "\\end{tabularx}"
-                             (substring updated (match-end 0))))
-                  updated))
-            text))
-      text))
-
-  (defun jay/beautiful-racket-wrap-org-tables-advice (orig-fun table contents info)
-    "Wrap Org tables in beautiful-racket class unless :wrap is disabled."
-    (let ((rendered (funcall orig-fun table contents info)))
-      (if (and (string= (plist-get info :latex-class) "beautiful-racket")
-               (not (jay/beautiful-racket--wrap-disabled-p table)))
-          (jay/beautiful-racket--convert-tabular-to-tabularx rendered)
-        rendered)))
-
-  (unless (advice-member-p #'jay/beautiful-racket-wrap-org-tables-advice 'org-latex-table)
-    (advice-add 'org-latex-table :around #'jay/beautiful-racket-wrap-org-tables-advice)))
+(when (fboundp 'jay/latex-register-wrap-class)
+  (jay/latex-register-wrap-class "beautiful-racket"))
