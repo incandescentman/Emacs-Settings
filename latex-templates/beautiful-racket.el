@@ -9,9 +9,6 @@
 % Use the geometry package to customize the page layout, margins, and other aspects of your document's appearance
 
 
-\\usepackage{wrapfig}
-
-
 % To have more control over figure placement in your document, use the float package and its [H] option to place figures exactly where you want them in the text:
 \\usepackage{float}
 
@@ -152,9 +149,11 @@
 
 \\usepackage[font={large,bf}]{caption}
 
+\\usepackage{array}
 \\usepackage{booktabs} % Customized table styles: If you plan to use tables in your document, you might want to consider customizing their appearance with the `booktabs` package for professional-looking tables
 \\usepackage{tabularx} % Tables with auto-wrapping columns that fit page width
-\\renewcommand{\\tabularxcolumn}[1]{>{\\raggedright\\arraybackslash}p{#1}} % Ragged right in table cells
+\\newcolumntype{Y}{>{\\RaggedRight\\arraybackslash}X}
+\\renewcommand{\\tabularxcolumn}[1]{>{\\RaggedRight\\arraybackslash}p{#1}} % Ragged right in table cells
 
 % Use the fancyhdr package to customize the headers and footers of your document for a professional appearance
 
@@ -250,13 +249,10 @@
 %           minus 2pt means that TeX can shrink it by at most 2pt
 %       This is one example of the concept of, 'glue', in TeX
 
-
-\\usepackage{setspace}
 \\onehalfspacing
 \\setstretch{1.2}
 
 \\usepackage{fancyvrb}
-\\usepackage{enumerate}
 \\usepackage{ctable}
 
 
@@ -311,16 +307,16 @@
                \\renewcommand{\\labelitemx}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
 
                \\setlistdepth{10}
-               \\setlist[itemize,1]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-               \\setlist[itemize,2]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-               \\setlist[itemize,3]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-               \\setlist[itemize,4]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-               \\setlist[itemize,5]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-               \\setlist[itemize,6]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-               \\setlist[itemize,7]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-               \\setlist[itemize,8]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-               \\setlist[itemize,9]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-               \\setlist[itemize,10]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+               \\setlist[itemize,1]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+               \\setlist[itemize,2]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+               \\setlist[itemize,3]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+               \\setlist[itemize,4]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+               \\setlist[itemize,5]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+               \\setlist[itemize,6]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+               \\setlist[itemize,7]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+               \\setlist[itemize,8]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+               \\setlist[itemize,9]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+               \\setlist[itemize,10]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
                \\renewlist{itemize}{itemize}{10}
 
 
@@ -337,7 +333,6 @@
 
                \\definecolor{azure}{HTML}{f2feff}
 
-               \\usepackage{tikz}
                \\usetikzlibrary{backgrounds}
                \\makeatletter
 
@@ -387,19 +382,13 @@
 
 
                \\newenvironment{indentedsection}
-               {  {\\adjustwidth{2em}{0pt}}
+               {\\adjustwidth{2em}{0pt}}
                {\\endadjustwidth}
-               }
 
-               \\usepackage[HTML]{xcolor}    % For \\definecolor with the HTML model
                \\usepackage{tcolorbox}       % For creating and customizing colored boxes
                \\tcbuselibrary{breakable}
 
 
-
-               \\usepackage{setspace}        % For \\singlespacing (optional, if not already loaded)
-
-               \\usepackage{setspace}
                \\usepackage{lipsum}
 
 
@@ -463,16 +452,11 @@
                \\parbox{10cm}{\\raggedleft\\fontsize{40}{48}\\selectfont #1}
                }
 
-               \\usepackage{titlesec}
-               \\usepackage{xcolor}
-
                \\titleformat{\\section}
                {\\normalfont\\ttfamily\\scshape\\color{spacegrey}}
                {}
                {0em}
                {\\thispagestyle{plain}\\hfill\\mysectiontitle}
-
-               {\\raggedleft\\parbox[t]{10cm}{\\ttfamily\\scshape\\fontsize{40}{36}\\selectfont\\color{spacegrey}}}
 
 
                \\titleformat*{\\subsection}{\\sffamily\\setstretch{0.7}\\fontsize{24}{36}\\raggedright\\sffamily}
@@ -587,3 +571,85 @@
 (setq org-latex-pdf-process
       '("xelatex -interaction nonstopmode %f"
         "xelatex -interaction nonstopmode %f")) ;; for multiple passes
+
+(with-eval-after-load 'ox-latex
+  (defun jay/beautiful-racket--tabular-align-to-tabularx (align)
+    "Map simple ALIGN string to left-aligned wrapping tabularx columns."
+    (apply #'string
+           (mapcar (lambda (ch)
+                     (pcase ch
+                       (?l ?Y)
+                       (?c ?Y)
+                       (?r ?Y)
+                       (_ ch)))
+                   (string-to-list align))))
+
+  (defun jay/beautiful-racket--booktabsify-tabularx (text)
+    "Apply light booktabs rules to a converted tabularx table string."
+    (if (string-match-p "\\\\toprule\\|\\\\midrule\\|\\\\bottomrule" text)
+        text
+      (let ((updated text))
+        (when (string-match "\\\\begin{tabularx}[^\n]*\n" updated)
+          (setq updated
+                (replace-match
+                 (concat (match-string 0 updated) "\\toprule\n")
+                 t t updated)))
+        (setq updated
+              (replace-regexp-in-string
+               "\\\\hline" "\\midrule" updated t t))
+        (when (string-match "\n\\\\end{tabularx}" updated)
+          (setq updated
+                (replace-match
+                 "\n\\bottomrule\n\\end{tabularx}"
+                 t t updated)))
+        updated)))
+
+  (defun jay/beautiful-racket--wrap-disabled-p (table)
+    "Return non-nil when TABLE has :wrap explicitly disabled."
+    (let* ((raw (org-element-property :attr_latex table))
+           (joined (downcase
+                    (mapconcat #'identity
+                               (cond
+                                ((null raw) nil)
+                                ((listp raw) raw)
+                                (t (list raw)))
+                               " "))))
+      (and (stringp joined)
+           (string-match-p
+            "\\(?:^\\|[[:space:]]\\):wrap[[:space:]]+\\(?:nil\\|no\\|false\\|off\\|0\\)\\(?:[[:space:]]\\|$\\)"
+            joined))))
+
+  (defun jay/beautiful-racket--convert-tabular-to-tabularx (text)
+    "Convert simple tabular environments in TEXT into wrapping tabularx."
+    (if (string-match
+         "\\\\begin{tabular}\\(\\[[^]]*\\]\\)?{\\([^}\n]+\\)}" text)
+        (let* ((options (or (match-string 1 text) ""))
+               (align (match-string 2 text)))
+          (if (string-match-p "\\`[|lcr]+\\'" align)
+              (let* ((wrapped-align (jay/beautiful-racket--tabular-align-to-tabularx align))
+                     (new-begin
+                      (format "\\begin{tabularx}%s{\\linewidth}{%s}"
+                              options wrapped-align))
+                     (updated
+                      (concat (substring text 0 (match-beginning 0))
+                              new-begin
+                              (substring text (match-end 0)))))
+                (if (string-match "\\\\end{tabular}" updated)
+                    (jay/beautiful-racket--booktabsify-tabularx
+                     (concat (substring updated 0 (match-beginning 0))
+                             "\\end{tabularx}"
+                             (substring updated (match-end 0))))
+                  updated))
+            text))
+      text))
+
+  (defun jay/beautiful-racket-wrap-org-tables-advice (orig-fun table contents info)
+    "Wrap Org tables in beautiful-racket class unless :wrap is disabled."
+    (let ((rendered (funcall orig-fun table contents info)))
+      (if (and (string= (plist-get info :latex-class) "beautiful-racket")
+               (not (jay/beautiful-racket--wrap-disabled-p table)))
+          (jay/beautiful-racket--convert-tabular-to-tabularx rendered)
+        rendered)))
+
+  (unless (advice-member-p #'jay/beautiful-racket-wrap-org-tables-advice 'org-latex-table)
+    (advice-add 'org-latex-table :around #'jay/beautiful-racket-wrap-org-tables-advice)))
