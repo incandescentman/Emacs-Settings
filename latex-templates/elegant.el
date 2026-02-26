@@ -9,9 +9,9 @@
 \\usepackage{geometry}
 
 \\geometry{
-  margin=1.5in, % Set all margins to 1.5 inches
-  bottom=1.5in, % Bottom margin set to 1.25 inches
-  footskip=1.25in % Distance from the bottom of the text area to the baseline of the footer
+  margin=1in, % Standard proposal/document margins
+  bottom=1in, % Keep bottom margin consistent
+  footskip=0.5in % Typical footer spacing
 }
 
 \\usepackage{fontspec}

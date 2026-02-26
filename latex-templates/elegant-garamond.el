@@ -4,7 +4,7 @@
              '("elegant-garamond"
                "
 \\documentclass[12pt]{article}
-\\usepackage[includeheadfoot, margin=1.5in, hmargin=1.5in, vmargin=0.5in]{geometry} % Set margins
+\\usepackage[includeheadfoot, margin=1in]{geometry} % Standard proposal/document margins
 
 % Package Inclusions
 \\usepackage{wrapfig}
