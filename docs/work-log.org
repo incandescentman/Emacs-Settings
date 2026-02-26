@@ -1,6 +1,15 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-02-26: Harden elegant table export for client proposals
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant.el][latex-templates/elegant.el]] and [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][latex-templates/elegant-garamond.el]] to improve table behavior:
+  - Added ~ragged2e~ and switched wrapping columns to ~\\RaggedRight~ for better wrapping with hyphenation.
+  - Added per-table opt-out via =#+ATTR_LATEX: :wrap nil= (keeps native ~tabular~ output).
+  - Kept automatic wrapping default for plain Org tables (converted to ~tabularx~ with left-aligned wrapped columns).
+  - Applied light booktabs styling on wrapped tables (~\\toprule~, ~\\midrule~, ~\\bottomrule~).
+- Removed deprecated/unmaintained ~tabu~ package from ~elegant.el~.
+- Margin defaults for proposal templates are now standard 1-inch in both elegant classes.
+
 * 2026-02-24: Unify sprint timer engine on prolific
 - Replaced in-Emacs revenue timer logic in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-core.el]] with a process bridge to prolific:
   - =jay/prolific-pomo-start= launches [[file+emacs:/Users/jay/Dropbox/github/writing-trackers/prolific/bin/pomo][bin/pomo]]

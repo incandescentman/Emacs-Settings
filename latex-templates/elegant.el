@@ -32,18 +32,18 @@
 
 % Load required packages for table handling
 \\usepackage{array}
+\\usepackage{ragged2e}
 \\usepackage{tabularx}
 \\usepackage{longtable}
-\\usepackage{tabu}
 \\usepackage{booktabs}
 
 % Define new column types for automatic text wrapping
-\\newcolumntype{L}[1]{>{\\raggedright\\arraybackslash}p{#1}}
-\\newcolumntype{C}[1]{>{\\centering\\arraybackslash}p{#1}}
-\\newcolumntype{R}[1]{>{\\raggedleft\\arraybackslash}p{#1}}
-\\newcolumntype{Y}{>{\\raggedright\\arraybackslash}X}
-\\newcolumntype{Z}{>{\\centering\\arraybackslash}X}
-\\newcolumntype{W}{>{\\raggedleft\\arraybackslash}X}
+\\newcolumntype{L}[1]{>{\\RaggedRight\\arraybackslash}p{#1}}
+\\newcolumntype{C}[1]{>{\\Centering\\arraybackslash}p{#1}}
+\\newcolumntype{R}[1]{>{\\RaggedLeft\\arraybackslash}p{#1}}
+\\newcolumntype{Y}{>{\\RaggedRight\\arraybackslash}X}
+\\newcolumntype{Z}{>{\\Centering\\arraybackslash}X}
+\\newcolumntype{W}{>{\\RaggedLeft\\arraybackslash}X}
 
 % Make default columns in tabularx wrap text
 \\renewcommand{\\tabularxcolumn}[1]{m{#1}}
@@ -462,12 +462,25 @@ UprightFont = HelveticaNeueLTPro-MdCn,
                  t t updated)))
         updated)))
 
-  (defun jay/elegant-wrap-org-tables (text backend info)
-    "Convert simple tabular environments to wrapping tabularx for elegant class."
-    (if (and (org-export-derived-backend-p backend 'latex)
-             (string= (plist-get info :latex-class) "elegant")
-             (string-match
-              "\\\\begin{tabular}\\(\\[[^]]*\\]\\)?{\\([^}\n]+\\)}" text))
+  (defun jay/elegant--wrap-disabled-p (table)
+    "Return non-nil when TABLE has :wrap explicitly disabled."
+    (let* ((raw (org-element-property :attr_latex table))
+           (joined (downcase
+                    (mapconcat #'identity
+                               (cond
+                                ((null raw) nil)
+                                ((listp raw) raw)
+                                (t (list raw)))
+                               " "))))
+      (and (stringp joined)
+           (string-match-p
+            "\\(?:^\\|[[:space:]]\\):wrap[[:space:]]+\\(?:nil\\|no\\|false\\|off\\|0\\)\\(?:[[:space:]]\\|$\\)"
+            joined))))
+
+  (defun jay/elegant--convert-tabular-to-tabularx (text)
+    "Convert simple tabular environments in TEXT into wrapping tabularx."
+    (if (string-match
+         "\\\\begin{tabular}\\(\\[[^]]*\\]\\)?{\\([^}\n]+\\)}" text)
         (let* ((options (or (match-string 1 text) ""))
                (align (match-string 2 text)))
           (if (string-match-p "\\`[|lcr]+\\'" align)
@@ -488,4 +501,13 @@ UprightFont = HelveticaNeueLTPro-MdCn,
             text))
       text))
 
-  (add-to-list 'org-export-filter-table-functions #'jay/elegant-wrap-org-tables))
+  (defun jay/elegant-wrap-org-tables-advice (orig-fun table contents info)
+    "Wrap Org tables in elegant class unless :wrap is explicitly disabled."
+    (let ((rendered (funcall orig-fun table contents info)))
+      (if (and (string= (plist-get info :latex-class) "elegant")
+               (not (jay/elegant--wrap-disabled-p table)))
+          (jay/elegant--convert-tabular-to-tabularx rendered)
+        rendered)))
+
+  (unless (advice-member-p #'jay/elegant-wrap-org-tables-advice 'org-latex-table)
+    (advice-add 'org-latex-table :around #'jay/elegant-wrap-org-tables-advice)))
