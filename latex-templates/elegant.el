@@ -124,8 +124,7 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 %\\usepackage{calc}
 %\\usepackage{eso-pic}
 %\\usepackage{etoolbox}
-\\usepackage{xcolor}
-\\PassOptionsToPackage{hyperref,x11names}{xcolor}
+\\usepackage[x11names]{xcolor}
 \\definecolor{pinterestred}{HTML}{C92228}
 \\definecolor{ulyssesbutterflyblue}{HTML}{1464F4}
 \\definecolor{signalflare}{HTML}{FB782C}
@@ -446,6 +445,8 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 
 
 \\usepackage[breaklinks=true,linktocpage,xetex]{hyperref}
+\\usepackage{bookmark}
+\\bookmarksetup{numbered=false,open=true}
 \\usepackage{enotez}
 \\newif\\ifjayendnotes
 \\jayendnotesfalse
@@ -475,11 +476,16 @@ UprightFont = HelveticaNeueLTPro-MdCn,
         "xelatex -interaction nonstopmode %f")) ;; for multiple passes
 
 (let* ((this-file (or load-file-name buffer-file-name))
-       (helper (and this-file
-                    (expand-file-name "jay-latex-table-wrap.el"
-                                      (file-name-directory this-file)))))
-  (when (and helper (file-readable-p helper))
-    (load helper nil 'nomessage)))
+       (table-helper (and this-file
+                          (expand-file-name "jay-latex-table-wrap.el"
+                                            (file-name-directory this-file))))
+       (poetry-helper (and this-file
+                           (expand-file-name "jay-latex-poetry-blocks.el"
+                                             (file-name-directory this-file)))))
+  (when (and table-helper (file-readable-p table-helper))
+    (load table-helper nil 'nomessage))
+  (when (and poetry-helper (file-readable-p poetry-helper))
+    (load poetry-helper nil 'nomessage)))
 
 (when (fboundp 'jay/latex-register-wrap-class)
   (jay/latex-register-wrap-class "elegant"))

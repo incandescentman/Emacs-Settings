@@ -21,6 +21,23 @@
 \\usepackage{todonotes}
 % \\usepackage[asterism]{sectionbreak}
 % \\sectionbreakmark{❦}
+% Optional editorial accents (manual usage)
+\\usepackage{lettrine}
+\\setcounter{DefaultLines}{3}
+\\renewcommand{\\LettrineFontHook}{\\color{spacegrey}}
+\\usepackage{epigraph}
+\\setlength{\\epigraphwidth}{0.6\\textwidth}
+\\setlength{\\epigraphrule}{0pt}
+\\renewcommand{\\textflush}{flushright}
+\\renewcommand{\\sourceflush}{flushright}
+\\renewcommand{\\epigraphsize}{\\small}
+% Optional ornamental section divider (manual placement via \\sectionornament)
+\\IfFileExists{adforn.sty}{%
+  \\usepackage{adforn}
+  \\newcommand{\\sectionornament}{\\par\\medskip\\centerline{\\adforn{47}}\\medskip}
+}{%
+  \\newcommand{\\sectionornament}{\\par\\medskip\\centerline{\\textasteriskcentered\\textasteriskcentered\\textasteriskcentered}\\medskip}
+}
 
 
 \\usepackage{wrapfig}
@@ -599,11 +616,16 @@ Contextuals=Alternate
         "xelatex -interaction nonstopmode %f")) ;; for multiple passes
 
 (let* ((this-file (or load-file-name buffer-file-name))
-       (helper (and this-file
-                    (expand-file-name "jay-latex-table-tabularray.el"
-                                      (file-name-directory this-file)))))
-  (when (and helper (file-readable-p helper))
-    (load helper nil 'nomessage)))
+       (table-helper (and this-file
+                          (expand-file-name "jay-latex-table-tabularray.el"
+                                            (file-name-directory this-file))))
+       (poetry-helper (and this-file
+                           (expand-file-name "jay-latex-poetry-blocks.el"
+                                             (file-name-directory this-file)))))
+  (when (and table-helper (file-readable-p table-helper))
+    (load table-helper nil 'nomessage))
+  (when (and poetry-helper (file-readable-p poetry-helper))
+    (load poetry-helper nil 'nomessage)))
 
 (when (fboundp 'jay/latex-register-tabularray-class)
   (jay/latex-register-tabularray-class "beautiful-racket-tabularray"))

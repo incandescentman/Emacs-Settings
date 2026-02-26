@@ -22,6 +22,23 @@
 \\usepackage{todonotes}
 % \\usepackage[asterism]{sectionbreak}
 % \\sectionbreakmark{❦}
+% Optional editorial accents (manual usage)
+\\usepackage{lettrine}
+\\setcounter{DefaultLines}{3}
+\\renewcommand{\\LettrineFontHook}{\\color{spacegrey}}
+\\usepackage{epigraph}
+\\setlength{\\epigraphwidth}{0.6\\textwidth}
+\\setlength{\\epigraphrule}{0pt}
+\\renewcommand{\\textflush}{flushright}
+\\renewcommand{\\sourceflush}{flushright}
+\\renewcommand{\\epigraphsize}{\\small}
+% Optional ornamental section divider (manual placement via \\sectionornament)
+\\IfFileExists{adforn.sty}{%
+  \\usepackage{adforn}
+  \\newcommand{\\sectionornament}{\\par\\medskip\\centerline{\\adforn{47}}\\medskip}
+}{%
+  \\newcommand{\\sectionornament}{\\par\\medskip\\centerline{\\textasteriskcentered\\textasteriskcentered\\textasteriskcentered}\\medskip}
+}
 
 
 \\usepackage{wrapfig}
@@ -523,3 +540,10 @@
 (setq org-latex-pdf-process
       '("xelatex -interaction nonstopmode %f"
         "xelatex -interaction nonstopmode %f")) ;; for multiple passes
+
+(let* ((this-file (or load-file-name buffer-file-name))
+       (poetry-helper (and this-file
+                           (expand-file-name "jay-latex-poetry-blocks.el"
+                                             (file-name-directory this-file)))))
+  (when (and poetry-helper (file-readable-p poetry-helper))
+    (load poetry-helper nil 'nomessage)))

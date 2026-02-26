@@ -44,6 +44,8 @@
 \\usepackage{titlesec}
 \\usepackage{lipsum}
 \\usepackage[breaklinks=true, linktocpage, xetex]{hyperref}
+\\usepackage{bookmark}
+\\bookmarksetup{numbered=false,open=true}
 \\usepackage{enotez}
 \\usepackage[most]{tcolorbox} % For enhanced environments
 \\MakeOuterQuote{\"}
@@ -166,7 +168,6 @@
 % Paragraph and Indentation Settings
 \\setlength{\\parindent}{0pt}
 \\setlength{\\parskip}{12pt plus 2pt minus 1pt} % Space between paragraphs
-\\onehalfspacing
 \\setstretch{1.2}
 
 % Table of Contents Customization
@@ -311,11 +312,16 @@
         "xelatex -interaction nonstopmode %f")) ;; for multiple passes
 
 (let* ((this-file (or load-file-name buffer-file-name))
-       (helper (and this-file
-                    (expand-file-name "jay-latex-table-wrap.el"
-                                      (file-name-directory this-file)))))
-  (when (and helper (file-readable-p helper))
-    (load helper nil 'nomessage)))
+       (table-helper (and this-file
+                          (expand-file-name "jay-latex-table-wrap.el"
+                                            (file-name-directory this-file))))
+       (poetry-helper (and this-file
+                           (expand-file-name "jay-latex-poetry-blocks.el"
+                                             (file-name-directory this-file)))))
+  (when (and table-helper (file-readable-p table-helper))
+    (load table-helper nil 'nomessage))
+  (when (and poetry-helper (file-readable-p poetry-helper))
+    (load poetry-helper nil 'nomessage)))
 
 (when (fboundp 'jay/latex-register-wrap-class)
   (jay/latex-register-wrap-class "elegant-garamond"))

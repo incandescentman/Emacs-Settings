@@ -460,6 +460,22 @@ Flush pending floats, then break:
 #+LATEX: \clearpage
 #+END_EXAMPLE
 
+*** Poetry SRC Convenience
+
+For proposal classes, LaTeX export now treats these source block languages as poetry:
+- =verse=
+- =poetry=
+
+Example:
+#+BEGIN_EXAMPLE
+#+begin_src verse
+To live in this world
+you must be able
+#+end_src
+#+END_EXAMPLE
+
+On export, those blocks become true LaTeX =verse= environments. Normal code languages still export as code/verbatim.
+
 ** Table Regression / Rollback
 
 If table export regresses, use the detailed trace and commit-by-commit rollback guide:

@@ -21,6 +21,23 @@
 \\usepackage{todonotes}
 % \\usepackage[asterism]{sectionbreak}
 % \\sectionbreakmark{❦}
+% Optional editorial accents (manual usage)
+\\usepackage{lettrine}
+\\setcounter{DefaultLines}{3}
+\\renewcommand{\\LettrineFontHook}{\\color{spacegrey}}
+\\usepackage{epigraph}
+\\setlength{\\epigraphwidth}{0.6\\textwidth}
+\\setlength{\\epigraphrule}{0pt}
+\\renewcommand{\\textflush}{flushright}
+\\renewcommand{\\sourceflush}{flushright}
+\\renewcommand{\\epigraphsize}{\\small}
+% Optional ornamental section divider (manual placement via \\sectionornament)
+\\IfFileExists{adforn.sty}{%
+  \\usepackage{adforn}
+  \\newcommand{\\sectionornament}{\\par\\medskip\\centerline{\\adforn{47}}\\medskip}
+}{%
+  \\newcommand{\\sectionornament}{\\par\\medskip\\centerline{\\textasteriskcentered\\textasteriskcentered\\textasteriskcentered}\\medskip}
+}
 
 
 \\usepackage{wrapfig}
@@ -50,8 +67,7 @@ Contextuals=Alternate
 \\usepackage{tikz}
 \\usepackage{calc}
 \\usepackage{eso-pic}
-\\usepackage{xcolor}
-\\PassOptionsToPackage{hyperref,x11names}{xcolor}
+\\usepackage[x11names]{xcolor}
 \\definecolor{pinterestred}{HTML}{C92228}
 \\definecolor{ulyssesbutterflyblue}{HTML}{1464F4}
 \\definecolor{signalflare}{HTML}{FB782C}
@@ -258,7 +274,6 @@ Contextuals=Alternate
 %           minus 2pt means that TeX can shrink it by at most 2pt
 %       This is one example of the concept of, 'glue', in TeX
 
-\\onehalfspacing
 \\setstretch{1.2}
 
 \\usepackage{fancyvrb}
@@ -553,6 +568,8 @@ Contextuals=Alternate
 
                \\usepackage{xurl} % Better URL line breaking
                \\usepackage[breaklinks=true,linktocpage,xetex]{hyperref}
+               \\usepackage{bookmark}
+               \\bookmarksetup{numbered=false,open=true}
                \\usepackage{enotez}
 
                % Endnotes toggle (default OFF; keeps normal footnotes)
@@ -585,11 +602,16 @@ Contextuals=Alternate
         "xelatex -interaction nonstopmode %f")) ;; for multiple passes
 
 (let* ((this-file (or load-file-name buffer-file-name))
-       (helper (and this-file
-                    (expand-file-name "jay-latex-table-wrap.el"
-                                      (file-name-directory this-file)))))
-  (when (and helper (file-readable-p helper))
-    (load helper nil 'nomessage)))
+       (table-helper (and this-file
+                          (expand-file-name "jay-latex-table-wrap.el"
+                                            (file-name-directory this-file))))
+       (poetry-helper (and this-file
+                           (expand-file-name "jay-latex-poetry-blocks.el"
+                                             (file-name-directory this-file)))))
+  (when (and table-helper (file-readable-p table-helper))
+    (load table-helper nil 'nomessage))
+  (when (and poetry-helper (file-readable-p poetry-helper))
+    (load poetry-helper nil 'nomessage)))
 
 (when (fboundp 'jay/latex-register-wrap-class)
   (jay/latex-register-wrap-class "beautiful-racket"))

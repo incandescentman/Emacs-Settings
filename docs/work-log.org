@@ -1,6 +1,37 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-02-26: Add bookmark package, fix xcolor bug, remove dead onehalfspacing
+- Added =bookmark= package (loaded after hyperref) to all three core templates:
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant.el][latex-templates/elegant.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][latex-templates/elegant-garamond.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el][latex-templates/beautiful-racket.el]]
+- Fixes PDF bookmark ordering issues that hyperref alone can have.
+- Fixed xcolor =\PassOptionsToPackage= bug in elegant.el and beautiful-racket.el:
+  - Replaced no-op =\usepackage{xcolor}= + =\PassOptionsToPackage{hyperref,x11names}{xcolor}= with =\usepackage[x11names]{xcolor}=.
+  - The =\PassOptionsToPackage= call after =\usepackage= does nothing — options must be passed before loading.
+- Removed dead =\onehalfspacing= from beautiful-racket.el and elegant-garamond.el:
+  - =\setstretch{1.2}= on the next line was already overriding it completely.
+
+* 2026-02-26: Export src verse/poetry as real LaTeX verse blocks
+- Added shared helper:
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/jay-latex-poetry-blocks.el][latex-templates/jay-latex-poetry-blocks.el]]
+- Behavior:
+  - For LaTeX exports, =#+begin_src verse= and =#+begin_src poetry= are rewritten to Org =VERSE= blocks before parsing.
+  - Resulting LaTeX uses proper =\\begin{verse}...\\end{verse}= output.
+  - Other src languages remain unchanged and continue exporting as code/verbatim blocks.
+- Wired helper loading into proposal class files:
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant.el][latex-templates/elegant.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][latex-templates/elegant-garamond.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el][latex-templates/beautiful-racket.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-tabularray.el][latex-templates/elegant-tabularray.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond-tabularray.el][latex-templates/elegant-garamond-tabularray.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket-tabularray.el][latex-templates/beautiful-racket-tabularray.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket-classic.el][latex-templates/beautiful-racket-classic.el]]
+- Updated usage docs:
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][docs/instructions.org]]
+  - ~/Dropbox/roam/vibecoding/20260225235900-latex_org_mode_documentation.org
+
 * 2026-02-26: Add opt-in enotez endnotes toggle across proposal classes
 - Replaced/standardized endnote behavior across:
   - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant.el][latex-templates/elegant.el]]
