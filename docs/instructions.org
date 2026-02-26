@@ -354,6 +354,42 @@ The default template (=org-latex-default-class=). Features:
 
 The original beautiful-racket template without Tufte enhancements.
 
+** Table Export Behavior (2026-02)
+
+For =elegant=, =elegant-garamond=, and =beautiful-racket= classes:
+
+- Default: plain Org tables are auto-converted to wrapping =tabularx= output.
+- Wrapped output uses left-aligned wrapping columns and light booktabs rules:
+  - =\toprule=
+  - =\midrule=
+  - =\bottomrule=
+- Per-table opt-out:
+
+#+BEGIN_EXAMPLE
+#+ATTR_LATEX: :wrap nil
+| Col A | Col B |
+|-------+-------|
+| ...   | ...   |
+#+END_EXAMPLE
+
+With =:wrap nil=, export stays native =tabular= for that table.
+
+Implementation detail:
+- Shared helper: [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/jay-latex-table-wrap.el][latex-templates/jay-latex-table-wrap.el]]
+- Each class file registers itself with the shared wrapper.
+
+** Table Regression / Rollback
+
+If table export regresses, use the detailed trace and commit-by-commit rollback guide:
+
+- [[file+emacs:/Users/jay/emacs/emacs-settings/docs/latex-table-export-trace.org][docs/latex-table-export-trace.org]]
+
+That file includes:
+- Exact commit sequence for Feb 2026 table changes
+- Affected files per step
+- Quick smoke-test commands
+- Targeted revert commands (single-step and full rollback)
+
 * Troubleshooting
 
 ** Emacs won't start / error on startup

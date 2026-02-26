@@ -1,14 +1,27 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
-* 2026-02-26: Harden elegant table export for client proposals
-- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant.el][latex-templates/elegant.el]] and [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][latex-templates/elegant-garamond.el]] to improve table behavior:
-  - Added ~ragged2e~ and switched wrapping columns to ~\\RaggedRight~ for better wrapping with hyphenation.
-  - Added per-table opt-out via =#+ATTR_LATEX: :wrap nil= (keeps native ~tabular~ output).
-  - Kept automatic wrapping default for plain Org tables (converted to ~tabularx~ with left-aligned wrapped columns).
-  - Applied light booktabs styling on wrapped tables (~\\toprule~, ~\\midrule~, ~\\bottomrule~).
-- Removed deprecated/unmaintained ~tabu~ package from ~elegant.el~.
-- Margin defaults for proposal templates are now standard 1-inch in both elegant classes.
+* 2026-02-26: LaTeX table export hardening + shared wrapper refactor
+- Added/updated table-export behavior across:
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant.el][latex-templates/elegant.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][latex-templates/elegant-garamond.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el][latex-templates/beautiful-racket.el]]
+- Introduced shared helper [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/jay-latex-table-wrap.el][latex-templates/jay-latex-table-wrap.el]] so table wrapping logic is no longer duplicated in each class file.
+- Current default behavior for those classes:
+  - Plain Org tables export as wrapping ~tabularx~ tables.
+  - Wrapped tables use left-aligned columns with hyphenation-friendly ragged text.
+  - Wrapped tables get light booktabs rules (~\\toprule~, ~\\midrule~, ~\\bottomrule~).
+  - Per-table opt-out works via =#+ATTR_LATEX: :wrap nil= (keeps native ~tabular~).
+- Preamble cleanup in the same pass:
+  - Standardized proposal margins to 1 inch in elegant classes.
+  - Removed deprecated ~tabu~ from ~elegant.el~.
+  - Fixed duplicate package loads and malformed LaTeX snippets in ~beautiful-racket.el~.
+  - Switched ~org-latex-to-pdf-process~ to ~org-latex-pdf-process~ where needed.
+  - Added missing breakability/cleanup items in quote and preamble blocks (see trace doc below).
+- Full detailed trace + rollback plan:
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/docs/latex-table-export-trace.org][docs/latex-table-export-trace.org]]
+- Commit chain for this sequence (oldest → newest):
+  - =476e5e10=, =2accd3d5=, =672fe56e=, =be740319=, =142662af=, =416b2648=, =cfd8a168=
 
 * 2026-02-24: Unify sprint timer engine on prolific
 - Replaced in-Emacs revenue timer logic in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-core.el]] with a process bridge to prolific:

@@ -1,0 +1,125 @@
+#+TITLE: LaTeX Table Export Trace and Rollback Guide
+#+DATE: 2026-02-26
+#+DESCRIPTION: Detailed change log, architecture, and rollback playbook for February 2026 LaTeX template table-export updates.
+
+* Scope
+
+This document tracks the February 2026 table-export hardening work for:
+- [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant.el][latex-templates/elegant.el]]
+- [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][latex-templates/elegant-garamond.el]]
+- [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el][latex-templates/beautiful-racket.el]]
+- [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/jay-latex-table-wrap.el][latex-templates/jay-latex-table-wrap.el]] (new shared helper)
+
+Goal: make table wrapping predictable for proposal workflows while preserving a per-table escape hatch.
+
+* Current Behavior (Post-Refactor)
+
+** Defaults
+- For classes =elegant=, =elegant-garamond=, and =beautiful-racket=:
+  - Plain Org table export that would normally emit =tabular= is converted to =tabularx=.
+  - Columns are mapped to left-aligned wrapping columns.
+  - Booktabs-style horizontal rules are injected: =\toprule=, =\midrule=, =\bottomrule=.
+
+** Opt-Out
+- Per-table opt-out is supported:
+  #+begin_example
+  #+ATTR_LATEX: :wrap nil
+  | ... |
+  #+end_example
+- With =:wrap nil=, export remains native =tabular= for that table.
+
+** Shared Architecture
+- One shared advice now wraps =org-latex-table=:
+  - =jay/latex-wrap-org-tables-advice= in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/jay-latex-table-wrap.el][latex-templates/jay-latex-table-wrap.el]]
+- Each class file only registers itself:
+  - =(jay/latex-register-wrap-class "elegant")=
+  - =(jay/latex-register-wrap-class "elegant-garamond")=
+  - =(jay/latex-register-wrap-class "beautiful-racket")=
+
+This replaced three copy-pasted class-specific advice blocks.
+
+* Commit Trace (In Order)
+
+1. =476e5e10= - initial wrap support for elegant classes
+2. =2accd3d5= - switch elegant/elegant-garamond margins to standard 1 inch
+3. =672fe56e= - fix malformed tabularx output + left alignment + reduced spacing
+4. =be740319= - add booktabs rule conversion for wrapped tables
+5. =142662af= - add =:wrap nil= opt-out and =ragged2e= in elegant templates; remove =tabu=
+6. =416b2648= - fix beautiful-racket structural issues and add matching table wrap behavior
+7. =cfd8a168= - centralize shared table logic, clean remaining preamble duplication/issues
+
+* What Was Cleaned in Preambles
+
+** elegant.el
+- Removed duplicate =\usepackage[most]{tcolorbox}= line.
+- Added missing =\makeatother= close for earlier =\makeatletter= block.
+- Added =breakable= to quote box style.
+- Switched exporter process var to =org-latex-pdf-process=.
+
+** elegant-garamond.el
+- Removed duplicate =\usepackage{enumitem}=.
+- Switched exporter process var to =org-latex-pdf-process=.
+
+** beautiful-racket.el
+- Fixed broken itemize label syntax.
+- Fixed malformed =indentedsection= environment.
+- Removed duplicate package lines (including wrapfig/setspace/tikz/xcolor/titlesec duplicates addressed in the class string).
+- Removed orphaned line after =\titleformat{\section}=.
+- Added table wrap support parity with the elegant classes.
+
+* Fast Verification Commands
+
+Run from repo root:
+
+#+begin_src sh
+emacs --batch --eval "(progn (require 'ox-latex) (load-file \"latex-templates/elegant.el\") (load-file \"latex-templates/elegant-garamond.el\") (load-file \"latex-templates/beautiful-racket.el\") (princ \"OK\"))"
+#+end_src
+
+Default wrap smoke test:
+#+begin_src sh
+emacs --batch --eval "(progn (require 'ox-latex) (load-file \"latex-templates/elegant.el\") (princ (org-export-string-as \"#+LATEX_CLASS: elegant\n| A | B |\n|---+---|\n| 1 | long text long text |\n\" 'latex t)))"
+#+end_src
+
+Opt-out smoke test:
+#+begin_src sh
+emacs --batch --eval "(progn (require 'ox-latex) (load-file \"latex-templates/beautiful-racket.el\") (princ (org-export-string-as \"#+LATEX_CLASS: beautiful-racket\n#+ATTR_LATEX: :wrap nil\n| A | B |\n|---+---|\n| 1 | 2 |\n\" 'latex t)))"
+#+end_src
+
+* Rollback Playbook
+
+** Revert only the latest refactor (shared helper)
+- Use when table behavior regresses and you want to return to previous per-template advice.
+
+#+begin_src sh
+git revert cfd8a168
+#+end_src
+
+** Revert beautiful-racket integration only
+- Use when elegant templates are fine but beautiful-racket regression appears.
+
+#+begin_src sh
+git revert 416b2648
+#+end_src
+
+** Revert opt-out/ragged2e pass in elegant templates
+#+begin_src sh
+git revert 142662af
+#+end_src
+
+** Revert booktabs conversion only
+#+begin_src sh
+git revert be740319
+#+end_src
+
+** Revert all February 2026 table work
+- Revert in reverse order to preserve dependency chain.
+
+#+begin_src sh
+git revert cfd8a168 416b2648 142662af be740319 672fe56e 2accd3d5 476e5e10
+#+end_src
+
+* Notes
+
+- If rollback affects only one class, verify class registration lines at the bottom of each template file.
+- Keep this document updated if new table behavior is added to additional templates.
+
