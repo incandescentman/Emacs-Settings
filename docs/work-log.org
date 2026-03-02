@@ -1,6 +1,34 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-03-02: Fix org-agenda layout breakage + simplify daily view readability
+- Symptom: Daily agenda view was visually broken (wrapped/ghost lines, tag spillover, hard-to-scan long prefixes).
+- Updated agenda config in:
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/goals-agenda.org][goals-agenda.org]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/goals-agenda.el][goals-agenda.el]]
+- Changes made:
+  - Added =jay/org-agenda-make-it-not-deranged= to force stable agenda rendering:
+    - disable visual-line wrapping
+    - enable truncate-lines
+    - force fixed-pitch face in agenda buffer
+    - set local tags column for right-side stability
+  - Hooked it on both =org-agenda-mode-hook= and =org-agenda-finalize-hook= so redraws keep the same formatting.
+  - Simplified =org-agenda-prefix-format= to reduce left-column overflow.
+  - Enabled =org-agenda-remove-tags= to eliminate tag spill lines.
+- One-time operational cleanup performed in live Emacs session:
+  - Rescheduled 7 recurring items (daily/weekly repeaters) from 2024–2025 dates to today across:
+    - [[file+emacs:/Users/jay/Dropbox/roam/velocity/projects/substack-launch.org][substack-launch.org]]
+    - [[file+emacs:/Users/jay/Dropbox/roam/velocity/projects/daily-writing.org][daily-writing.org]]
+    - [[file+emacs:/Users/jay/Dropbox/roam/velocity/projects/video-content-strategy.org][video-content-strategy.org]]
+    - [[file+emacs:/Users/jay/Dropbox/roam/velocity/projects/revenue-generation-q4.org][revenue-generation-q4.org]]
+    - [[file+emacs:/Users/jay/Dropbox/roam/velocity/projects/socratic-ai-execution.org][socratic-ai-execution.org]]
+    - [[file+emacs:/Users/jay/Dropbox/roam/velocity/goals/20250519215301-master-task-list.org][master-task-list.org]]
+  - Marked 4 completed one-time items as DONE (welcome post, welcome email, Dan Ariely email, YouTube studio).
+  - Rescheduled "Create proposal template" to today (still needed).
+  - ~60 additional stale one-time TODOs remain across project files — triage deferred.
+- Commit:
+  - =48e63835= — =fix(agenda): stabilize layout and simplify prefixes=
+
 * 2026-03-02: Fix org-roam-dailies navigation — stray daily note at roam root
 - Found that =s-u p= (=org-roam-dailies-goto-previous-note=) was navigating to a random org-roam file instead of the previous daily note.
 - Root cause: A stray =2026-03-02.org= existed at =~/Dropbox/roam/= (the roam root) instead of in =~/Dropbox/roam/journal/= where dailies are configured to live (=org-roam-dailies-directory= is ="journal/"=).
