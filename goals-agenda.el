@@ -53,6 +53,23 @@
 ;; Dim blocked tasks (tasks that depend on incomplete prerequisites)
 (setq org-agenda-dim-blocked-tasks t)
 
+;; Keep agenda visually stable (monospace + no soft wrapping).
+(defun jay/org-agenda-make-it-not-deranged ()
+  "Keep org-agenda aligned: fixed-pitch, no wrapping."
+  (visual-line-mode -1)
+  (setq-local truncate-lines t)
+  (setq-local word-wrap nil)
+  (setq-local line-spacing 0)
+  (setq-local org-agenda-tags-column -80)
+
+  ;; Force monospace in agenda even if variable-pitch is enabled elsewhere.
+  (when (fboundp 'buffer-face-mode)
+    (setq-local buffer-face-mode-face 'fixed-pitch)
+    (buffer-face-mode 1)))
+
+(add-hook 'org-agenda-mode-hook #'jay/org-agenda-make-it-not-deranged)
+(add-hook 'org-agenda-finalize-hook #'jay/org-agenda-make-it-not-deranged)
+
 ;; Use a more readable date format
 (setq org-agenda-format-date
       (lambda (date)
@@ -63,7 +80,10 @@
 ;; Add effort estimates to your agenda view (optional)
 ;; Shows how long you estimated each task will take
 (setq org-agenda-prefix-format
-      '((agenda . " %i %-12:c%?-12t% s")
-        (todo . " %i %-12:c")
-        (tags . " %i %-12:c")
-        (search . " %i %-12:c")))
+      '((agenda . " %?-12t% s")
+        (todo . " %s")
+        (tags . " %s")
+        (search . " %s")))
+
+;; Avoid tag spillover in narrow windows.
+(setq org-agenda-remove-tags t)
