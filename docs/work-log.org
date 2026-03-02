@@ -1,6 +1,13 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-03-02: Fix org-roam-dailies navigation — stray daily note at roam root
+- Found that =s-u p= (=org-roam-dailies-goto-previous-note=) was navigating to a random org-roam file instead of the previous daily note.
+- Root cause: A stray =2026-03-02.org= existed at =~/Dropbox/roam/= (the roam root) instead of in =~/Dropbox/roam/journal/= where dailies are configured to live (=org-roam-dailies-directory= is ="journal/"=).
+- The stray file was an 11-line stub with a different ID; the real daily note (287 lines) was already in =journal/=.
+- Removed the stray stub.
+- Added instruction to [[file+emacs:/Users/jay/Dropbox/github/writing-trackers/prolific/scripts/cli/morning-claude-instructions.md][morning-claude-instructions.md]] that daily notes must always go in the =journal/= subdirectory.
+
 * 2026-02-26: Parity pass for tabularray/classic xcolor + tabularray bookmarks
 - Completed remaining xcolor option-loading fixes in templates still using the no-op pattern:
   - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-tabularray.el][latex-templates/elegant-tabularray.el]]

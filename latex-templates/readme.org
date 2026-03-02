@@ -1,4 +1,31 @@
-* TODO increase spacing between paragraphs
-* TODO increase spacing between numbered list items
-* TODO increase spacing between bulleted list items
-* TODO in the right header (rhead), remove space between @title and : character
+#+TITLE: LaTeX Templates Documentation
+
+* Header Configuration
+
+Templates that use =fancyhdr= (e.g., =elegant-garamond=, =blue-ruin=) define =\leftheader= and =\leftheaderurl= as empty token registers. You *must* set these in each org file's export settings for the author name to appear in the top-left page header:
+
+#+begin_example
+#+LATEX_HEADER: \leftheader{Jay Dixit}
+#+LATEX_HEADER: \leftheaderurl{https://storytelling.nyc}
+#+end_example
+
+The right header (=\rhead=) auto-populates from the current section name via =\leftmark=.
+
+** Templates requiring =\leftheader=
+- =elegant-garamond= ([[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][📄 elegant-garamond.el]])
+- =blue-ruin= (also uses =\coverimage=)
+- =blue-ruin-no-cover= (also uses =\coverimage=)
+- Any template that loads =fancyhdr= and references =\the\leftheader=
+
+** Yasnippet templates
+The corresponding yasnippet snippets in [[file+emacs:/Users/jay/emacs/interesting-snippets/org-mode/][📄 org-mode snippets]] include these headers automatically:
+- =elegant= → =elegant.yasnippet=
+- =elegantgaramond= → =elegantgaramond.yasnippet=
+- =blueruin= → =blue-ruin.yasnippet=
+- =brnc= → =blue-ruin-no-cover.yasnippet=
+
+* TODOs
+- [ ] Increase spacing between paragraphs
+- [ ] Increase spacing between numbered list items
+- [ ] Increase spacing between bulleted list items
+- [ ] In the right header (rhead), remove space between @title and : character
