@@ -1,6 +1,33 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-03-03: Replace tag-driven agenda with dynamic TODO dashboard (while preserving existing agenda files)
+- Updated agenda config in:
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/goals-agenda.org][goals-agenda.org]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/goals-agenda.el][goals-agenda.el]]
+- Replaced static/stale agenda source assumptions with dynamic discovery:
+  - journal files from =~/Dropbox/roam/journal/=
+  - project files from =~/Dropbox/roam/velocity/projects/=
+  - lead files from =~/Dropbox/roam/lead-tracking/=
+- Preserved all existing agenda sources:
+  - captured prior =org-agenda-files= as baseline
+  - merged baseline + dynamic files instead of replacing
+  - deduped and filtered unreadable/missing paths
+- Fixed agenda refresh timing:
+  - moved refresh to before agenda build via =advice-add= on =org-agenda=
+  - guarded advice with =advice-member-p= to prevent duplicate advice on re-eval
+- Simplified the =d= custom view:
+  - =TODAY= block (scheduled today)
+  - =ALL OPEN TASKS= block (all TODOs, file/category-prefixed)
+  - no dependency on =#focus/=#admin/=#connect/=#batch= tags
+- Improved journal carry-forward behavior:
+  - now uses today's daily note (if present) + previous 3 existing dated journal files
+  - fallback: latest 4 existing dated journal files when today is missing
+- Validation:
+  - extracted elisp block to =goals-agenda.el=
+  - ran =check-parens=
+  - batch-loaded agenda config and confirmed dynamic file list populated
+
 * 2026-03-02: Fix org-agenda layout breakage + simplify daily view readability
 - Symptom: Daily agenda view was visually broken (wrapped/ghost lines, tag spillover, hard-to-scan long prefixes).
 - Updated agenda config in:

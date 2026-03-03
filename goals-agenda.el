@@ -1,59 +1,106 @@
 ;; ============================================================================
-;; JAY'S DAILY ACTION MENU --- Energy-Based Task View
+;; JAY'S DAILY ACTION MENU — What To Do Next (At a Glance)
 ;; ============================================================================
+;;
+;; This shows all TODOs from your actual working files:
+;; - Today's journal (and last 3 days for carry-forward)
+;; - Velocity project files (execution dashboard, pipelines, etc.)
+;; - Lead tracking files
+;;
+;; No special tags required. Just plain TODO headings.
+;; Open with: C-c a d
 
-;; First, set up the projects directory
-(setq jay-projects-dir "~/Library/CloudStorage/Dropbox/github/velocity/projects/")
+(setq jay-journal-dir "~/Dropbox/roam/journal/")
+(setq jay-projects-dir "~/Dropbox/roam/velocity/projects/")
+(setq jay-lead-tracking-dir "~/Dropbox/roam/lead-tracking/")
 
-;; Make sure org-agenda knows to look in the projects directory
-(setq org-agenda-files
-      (list "~/Library/CloudStorage/Dropbox/github/velocity/goals/20250519215301-master-task-list.org"
-            jay-projects-dir))
+;; Keep any agenda files already configured elsewhere.
+(defvar jay/static-org-agenda-files nil
+  "Baseline `org-agenda-files' captured before dynamic agenda refresh.")
+
+(defun jay/capture-static-org-agenda-files ()
+  "Capture existing `org-agenda-files' so dynamic sources can be appended."
+  (unless jay/static-org-agenda-files
+    (setq jay/static-org-agenda-files
+           (cond
+            ((null org-agenda-files) nil)
+            ((listp org-agenda-files) (copy-tree org-agenda-files))
+           (t (list org-agenda-files))))))
+
+(defun jay/recent-journal-files ()
+  "Return today's journal plus previous 3 existing journal files.
+If today's journal does not exist, return the latest 4 existing files."
+  (let* ((dir (expand-file-name jay-journal-dir))
+         (today (format-time-string "%Y-%m-%d"))
+         (today-file (expand-file-name (concat today ".org") dir))
+         (all-files (if (file-directory-p dir)
+                        (directory-files
+                         dir t "^[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\.org$")
+                      nil))
+         (sorted (sort (copy-sequence all-files) #'string<))
+         (past-files nil))
+    (dolist (f sorted)
+      (let ((base (file-name-base f)))
+        (when (and (string< base today) (file-readable-p f))
+          (push f past-files))))
+    (setq past-files (nreverse past-files))
+    (if (file-readable-p today-file)
+        (append (last past-files 3) (list today-file))
+      (last past-files 4))))
+
+(defun jay/agenda-files ()
+  "Build agenda file list from existing files + journal + projects + leads."
+  (jay/capture-static-org-agenda-files)
+  (let* ((dynamic-files
+          (append
+           (jay/recent-journal-files)
+           (when (file-directory-p (expand-file-name jay-projects-dir))
+             (directory-files jay-projects-dir t "\\.org$"))
+           (when (file-directory-p (expand-file-name jay-lead-tracking-dir))
+             (directory-files jay-lead-tracking-dir t "\\.org$"))))
+         (all-files (append jay/static-org-agenda-files dynamic-files)))
+    (delete-dups
+     (delq nil
+           (mapcar (lambda (path)
+                     (let ((p (expand-file-name path)))
+                       (when (or (file-readable-p p) (file-directory-p p))
+                         path)))
+                   all-files)))))
+
+;; Refresh agenda files each time agenda is opened
+(defun jay/refresh-agenda-files (&rest _)
+  "Update org-agenda-files before building agenda."
+  (setq org-agenda-files (jay/agenda-files)))
+
+(unless (advice-member-p #'jay/refresh-agenda-files 'org-agenda)
+  (advice-add 'org-agenda :before #'jay/refresh-agenda-files))
+(jay/refresh-agenda-files)
 
 ;; Custom agenda command: Daily Action Menu
 (setq org-agenda-custom-commands
       '(("d" "Daily Action Menu"
-         ((tags-todo "#focus/TODO|#focus/NEXT"
-                     ((org-agenda-overriding-header "\n🔥 FOCUS WORK (90+ min blocks, deep attention required)\n")
-                      (org-agenda-sorting-strategy '(priority-down deadline-up))
-                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled 'past))))
-          
-          (tags-todo "#admin/TODO|#admin/NEXT"
-                     ((org-agenda-overriding-header "\n⚙️  ADMIN TASKS (5-30 min, light cognitive load)\n")
-                      (org-agenda-sorting-strategy '(priority-down effort-up))
-                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled 'past))))
-          
-          (tags-todo "#connect/TODO|#connect/NEXT"
-                     ((org-agenda-overriding-header "\n🤝 CONNECT (Email, calls, relationship building)\n")
-                      (org-agenda-sorting-strategy '(priority-down))
-                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled 'past))))
-          
-          (tags-todo "#batch/TODO|#batch/NEXT"
-                     ((org-agenda-overriding-header "\n📦 BATCH (Do several together, context switching penalty)\n")
-                      (org-agenda-sorting-strategy '(priority-down))
-                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled 'past))))
-          
-          (agenda ""
-                  ((org-agenda-overriding-header "\n📅 SCHEDULED FOR TODAY\n")
+         ((agenda ""
+                  ((org-agenda-overriding-header "\n📅 TODAY\n")
                    (org-agenda-span 1)
-                   (org-agenda-start-day nil))))
-         
+                   (org-agenda-start-day nil)))
+
+          (alltodo ""
+                   ((org-agenda-overriding-header "\n📋 ALL OPEN TASKS\n")
+                    (org-agenda-sorting-strategy '(priority-down category-up))
+                    (org-agenda-prefix-format " %c: "))))
+
          ((org-agenda-compact-blocks t)
           (org-agenda-block-separator "")))))
 
-;; Optional: Quick access binding moved to keys.el
-
 ;; ============================================================================
-;; RELATED SETTINGS (Optional but recommended)
+;; DISPLAY SETTINGS
 ;; ============================================================================
 
-;; Show inherited tags in agenda (so project context shows up)
-(setq org-agenda-show-inherited-tags t)
-
-;; Dim blocked tasks (tasks that depend on incomplete prerequisites)
+;; Show which file each task comes from
+(setq org-agenda-show-inherited-tags nil)
 (setq org-agenda-dim-blocked-tasks t)
 
-;; Keep agenda visually stable (monospace + no soft wrapping).
+;; Keep agenda visually stable
 (defun jay/org-agenda-make-it-not-deranged ()
   "Keep org-agenda aligned: fixed-pitch, no wrapping."
   (visual-line-mode -1)
@@ -61,8 +108,6 @@
   (setq-local word-wrap nil)
   (setq-local line-spacing 0)
   (setq-local org-agenda-tags-column -80)
-
-  ;; Force monospace in agenda even if variable-pitch is enabled elsewhere.
   (when (fboundp 'buffer-face-mode)
     (setq-local buffer-face-mode-face 'fixed-pitch)
     (buffer-face-mode 1)))
@@ -70,20 +115,20 @@
 (add-hook 'org-agenda-mode-hook #'jay/org-agenda-make-it-not-deranged)
 (add-hook 'org-agenda-finalize-hook #'jay/org-agenda-make-it-not-deranged)
 
-;; Use a more readable date format
+;; Readable date separator
 (setq org-agenda-format-date
       (lambda (date)
-        (concat "\n" 
+        (concat "\n"
                 (make-string 79 ?─) "\n"
                 (org-agenda-format-date-aligned date))))
 
-;; Add effort estimates to your agenda view (optional)
-;; Shows how long you estimated each task will take
+;; Show file category (filename) as prefix so you know where each task lives
 (setq org-agenda-prefix-format
       '((agenda . " %?-12t% s")
-        (todo . " %s")
-        (tags . " %s")
-        (search . " %s")))
+        (todo . " %c: ")
+        (tags . " %c: ")
+        (search . " %c: ")))
 
-;; Avoid tag spillover in narrow windows.
+;; Hide tags in agenda to reduce clutter
 (setq org-agenda-remove-tags t)
+
