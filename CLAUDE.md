@@ -49,6 +49,8 @@ The following documentation files provide detailed information about various asp
 #### 3. Org-Mode & Knowledge Management
 - `jay-org-roam-suite/` - **Core Architecture**: Modular Org Roam system (Core, Profiles, Templates)
 - `org-roam-config.el` - Legacy entry point (delegates to suite)
+- `goals-agenda.org` / `goals-agenda.el` - Dynamic org-agenda config (journal + projects + leads)
+- `jay-goals-system.el` - Goals workflow (rep counter, anti-stall, revenue block)
 - `org-yt.el` - YouTube link support
 - `org-visual-style.el` - Visual enhancements for org-mode
 
@@ -80,7 +82,15 @@ The following documentation files provide detailed information about various asp
 
 ## Recent Major Updates
 
-### 0. Org 9.8 Compatibility & Navigation (Feb 2026)
+### 0. Org-Agenda Dynamic Dashboard & Dailies Fix (Mar 2026)
+- **Agenda Rewrite**: Replaced static tag-driven agenda (`#focus`/`#admin`/`#connect`/`#batch`) with dynamic TODO dashboard in `goals-agenda.org`.
+- **Dynamic Sources**: Agenda files built on every open via `:before` advice on `org-agenda` — pulls from today's journal + last 3 journal files + all velocity project files + lead tracking files.
+- **No Tags Required**: Plain `TODO` headings are sufficient for agenda visibility. Energy tags are optional organizational sugar.
+- **Journal Carry-Forward**: `jay/recent-journal-files` lists the journal directory and picks the actual last 3-4 files by filename sort (not calendar math), so skipped days don't break the chain.
+- **Dailies Navigation Fix**: Removed stray daily note at roam root that was confusing `org-roam-dailies-goto-previous-note`. Daily notes live in `~/Dropbox/roam/journal/`.
+- **Recurring Reset**: Rescheduled 7 recurring items (daily/weekly repeaters) from 2024–2025 dates to current, eliminating "Sched.400x" clutter.
+
+### 0a. Org 9.8 Compatibility & Navigation (Feb 2026)
 - **Link Preview Migration**: Migrated `org-yt.el` and `shared-functions` from deprecated `org-toggle-inline-images`/`org-display-inline-images` to new `org-link-preview` API.
 - **Backward Compatibility**: Added version-checking wrappers that work on Org 9.6+ and will use native Org 9.8 features when available.
 - **Repeat-mode Navigation**: Enabled `repeat-mode` with custom repeat maps for Org heading/block/link navigation (press `C-c C-n`, then just `n` to continue).
