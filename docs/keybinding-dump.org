@@ -28,7 +28,7 @@ Do NOT edit — add notes in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/k
 - ~s-F~ :: =pasteboard-search-for-clipboard-contents=
 - ~s-h~ :: =replace-string=
 - ~s-g~ :: =isearch-repeat-forward=
-- ~C-s-g ~ :: =consult-ripgrep-current-directory=
+- ~C-s-g ~ :: =jay/smart-ripgrep= (in org-roam buffer: search all roam files; ~C-u~ prefix: search current directory only; outside roam: search current directory)
 - ~s-G~ :: =counsel-projectile-ag=
 - ~C-s-f~ :: =isearch-forward-word-at-point=
 - ~s-k ag~ :: =affe-grep=

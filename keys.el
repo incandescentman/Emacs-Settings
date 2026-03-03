@@ -112,7 +112,7 @@
     ("s-F"           . pasteboard-search-for-clipboard-contents)
     ("s-h"           . replace-string)
     ("s-g"           . isearch-repeat-forward)
-    ("C-s-g "        . consult-ripgrep-current-directory)
+    ("C-s-g "        . jay/smart-ripgrep)
     ("s-G"           . counsel-projectile-ag)
     ("C-s-f"         . isearch-forward-word-at-point)
     ("s-k ag"        . affe-grep)
