@@ -1,6 +1,13 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-03-03: Update goals documentation to reflect new agenda behavior
+- Updated [[file+emacs:/Users/jay/Dropbox/roam/velocity/goals-system/goals-instructions-for-Claude.org][goals-instructions-for-Claude.org]]:
+  - Corrected "Jay does NOT use org-agenda" → org-agenda is optional but configured and working (=s-k a d=).
+  - Marked energy tags (#focus, #admin, etc.) as optional organizational sugar throughout — plain =TODO= headings are all that's needed for agenda visibility.
+  - Clarified that =TODO= state is the required element, not tags.
+  - Updated task delivery section: journal is the guaranteed path, but SCHEDULED timestamps also appear in org-agenda if Jay opens it.
+
 * 2026-03-03: Replace tag-driven agenda with dynamic TODO dashboard (while preserving existing agenda files)
 - Updated agenda config in:
   - [[file+emacs:/Users/jay/emacs/emacs-settings/goals-agenda.org][goals-agenda.org]]
