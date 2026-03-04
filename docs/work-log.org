@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-03-04: Restyle org-code face to GitHub-style inline code
+- Replaced old org-code face (green text, grey box, shadow inherit) with cleaner GitHub-inspired style
+- New face: dark red =#a0222b= on light gray =#f6f8fa= background, Monaco font at 0.85 height
+- Removed =:box= and =:inherit shadow= for a cleaner, less cluttered look
+
 * 2026-03-03: Update goals documentation to reflect new agenda behavior
 - Updated [[file+emacs:/Users/jay/Dropbox/roam/velocity/goals-system/goals-instructions-for-Claude.org][goals-instructions-for-Claude.org]]:
   - Corrected "Jay does NOT use org-agenda" → org-agenda is optional but configured and working (=s-k a d=).

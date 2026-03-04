@@ -1186,7 +1186,7 @@ This function is called at the very end of Spacemacs initialization."
    '(font-lock-comment-face ((t (:foreground "red" :slant italic))))
    '(italic ((t (:foreground "DarkViolet" :slant italic :height 1.2 :family "Garamond"))))
    '(marginalia-documentation ((t (:inherit marginalia-key :foreground "dark red"))))
-   '(org-code ((t (:inherit shadow :box (:line-width (2 . 2) :color "grey75" :style released-button) :underline nil))))
+   '(org-code ((t (:foreground "#a0222b" :background "#f6f8fa" :family "Monaco" :height 0.85))))
    '(org-done ((t (:background "light green"))))
    '(org-drill-visible-cloze-face ((t (:background "#FFFFD7" :foreground "black"))))
    '(org-ellipsis ((t (:family "Iosevka Nerd Font" :foreground "LightGray" :underline nil))))
