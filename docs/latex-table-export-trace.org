@@ -5,7 +5,7 @@
 * Scope
 
 This document tracks the February 2026 table-export hardening work for:
-- [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant.el][latex-templates/elegant.el]]
+- [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-helvetica.el][latex-templates/elegant-helvetica.el]]
 - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][latex-templates/elegant-garamond.el]]
 - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el][latex-templates/beautiful-racket.el]]
 - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/jay-latex-table-wrap.el][latex-templates/jay-latex-table-wrap.el]] (new shared helper)
@@ -44,7 +44,7 @@ Goal: make table wrapping predictable for proposal workflows while preserving a 
 - One shared advice now wraps =org-latex-table=:
   - =jay/latex-wrap-org-tables-advice= in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/jay-latex-table-wrap.el][latex-templates/jay-latex-table-wrap.el]]
 - Each class file only registers itself:
-  - =(jay/latex-register-wrap-class "elegant")=
+  - =(jay/latex-register-wrap-class "elegant-helvetica")=
   - =(jay/latex-register-wrap-class "elegant-garamond")=
   - =(jay/latex-register-wrap-class "beautiful-racket")=
 
@@ -62,7 +62,7 @@ This replaced three copy-pasted class-specific advice blocks.
 
 * What Was Cleaned in Preambles
 
-** elegant.el
+** elegant-helvetica.el
 - Removed duplicate =\usepackage[most]{tcolorbox}= line.
 - Added missing =\makeatother= close for earlier =\makeatletter= block.
 - Added =breakable= to quote box style.
@@ -84,12 +84,12 @@ This replaced three copy-pasted class-specific advice blocks.
 Run from repo root:
 
 #+begin_src sh
-emacs --batch --eval "(progn (require 'ox-latex) (load-file \"latex-templates/elegant.el\") (load-file \"latex-templates/elegant-garamond.el\") (load-file \"latex-templates/beautiful-racket.el\") (princ \"OK\"))"
+emacs --batch --eval "(progn (require 'ox-latex) (load-file \"latex-templates/elegant-helvetica.el\") (load-file \"latex-templates/elegant-garamond.el\") (load-file \"latex-templates/beautiful-racket.el\") (princ \"OK\"))"
 #+end_src
 
 Default wrap smoke test:
 #+begin_src sh
-emacs --batch --eval "(progn (require 'ox-latex) (load-file \"latex-templates/elegant.el\") (princ (org-export-string-as \"#+LATEX_CLASS: elegant\n| A | B |\n|---+---|\n| 1 | long text long text |\n\" 'latex t)))"
+emacs --batch --eval "(progn (require 'ox-latex) (load-file \"latex-templates/elegant-helvetica.el\") (princ (org-export-string-as \"#+LATEX_CLASS: elegant-helvetica\n| A | B |\n|---+---|\n| 1 | long text long text |\n\" 'latex t)))"
 #+end_src
 
 Opt-out smoke test:

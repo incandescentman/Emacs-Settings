@@ -1,8 +1,8 @@
-(provide 'elegant)
+(provide 'elegant-helvetica)
 
 (with-eval-after-load 'ox-latex
   (add-to-list 'org-latex-classes
-               '("elegant"
+               '("elegant-helvetica"
 "
 
 \\providecommand{\\DocumentMetadata}[1]{}
@@ -193,45 +193,26 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 %\\renewcommand{\\footrulewidth}{0.4pt}
 
 
-\\fancyfoot[C]{%
-  % Graphic
-  \\raisebox{0.025in}{% Increase this value to move the logo higher
-%\\fontsize{43}{42}\\selectfont\\sffamily\\color{darklibertyblue} STORYTELLING.NYC % large storytelling.NYC text footer
-
-%\\includegraphics[height=0.4in,keepaspectratio]{/Users/jay/Dropbox/writing/prosperous/design/storytelling-nyc-logo/current-2018/_better-storytelling-nyc-canonical-helvetica-condensed-wide.png} % The whole thing with NO period
-
-  }%
-  % Space between the graphic and the text (adjust as needed)
-  %\\hspace{0.05in}%
-  % Text
-  \\raisebox{1.05in}{% Adjust this value to align the text with the image
-
-
-
-% \\includegraphics[height=0.6in,keepaspectratio]{/Users/jay/Dropbox/writing/prosperous/design/storytelling-nyc-logo/current-2018/_better-storytelling-nyc-canonical-helvetica-condensed-wide.png} % The whole thing
-
-% \\includegraphics[height=0.8in,keepaspectratio]{/Users/jay/Dropbox/writing/prosperous/design/storytelling-nyc-logo/current-2018/_better-storytelling-nyc-period-canonical-helvetica-condensed.png} % The whole thing with a period
-
-%\\includegraphics[height=0.8in,keepaspectratio]{/Users/jay/Dropbox/writing/prosperous/design/storytelling-nyc-logo/current-2018/_better-storytelling-nyc-canonical-helvetica-condensed-wide.png} % The whole thing with NO period
-
-%\\includegraphics[height=0.6in,keepaspectratio]{/Users/jay/Dropbox/github/incandescentman.github.io/assets/images/2023-10-final-new-logo_high-res-no-text.png} % logo of just lady liberty
-  }%
-  % Space between the graphic and the text (adjust as needed)
-  \\hspace{0.05in}%
-  % Text
-  \\raisebox{0.35in}{% Adjust this value to align the text with the image
-
-
-
-%\\fontsize{16}{16}\\sffamily\\color{black}All materials Copyright Jay Dixit. % copyright
-
-
-
-  }%
+% Footer configuration (controlled from org file)
+\\newif\\ifjaylogofooter
+\\jaylogofooterfalse
+\\newcommand{\\EnableLogoFooter}{\\jaylogofootertrue}
+\\newif\\ifjaynofooter
+\\jaynofooterfalse
+\\newcommand{\\DisableFooter}{\\jaynofootertrue}
+\\AtBeginDocument{%
+  \\ifjaynofooter
+    \\fancyfoot{}%
+  \\else\\ifjaylogofooter
+    \\fancyfoot[C]{%
+      \\raisebox{0.025in}{%
+        \\includegraphics[height=0.4in,keepaspectratio]{/Users/jay/Dropbox/writing/prosperous/design/storytelling-nyc-logo/current-2018/_better-storytelling-nyc-canonical-helvetica-condensed-wide.png}
+      }%
+    }%
+  \\else
+    \\cfoot{\\thepage}%
+  \\fi\\fi
 }
-
-% overwrite the logo footer
-%\\cfoot{\\thepage} % Add page numbers
 
 \\makeatother
 
@@ -488,4 +469,4 @@ UprightFont = HelveticaNeueLTPro-MdCn,
     (load poetry-helper nil 'nomessage)))
 
 (when (fboundp 'jay/latex-register-wrap-class)
-  (jay/latex-register-wrap-class "elegant"))
+  (jay/latex-register-wrap-class "elegant-helvetica"))

@@ -3269,7 +3269,7 @@ I hope this is somewhat helpful to someone else, happy hacking! Source: [[https:
 (defun jay-load-latex ()
   (interactive)
   (let ((base "/Users/jay/emacs/emacs-settings/latex-templates/")
-        (files '("elegant.el"
+        (files '("elegant-helvetica.el"
                  "beautiful-racket.el"
                  "elegant-garamond.el"
                  "blue-invoice.el"

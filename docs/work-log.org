@@ -77,13 +77,13 @@
 
 * 2026-02-26: Parity pass for tabularray/classic xcolor + tabularray bookmarks
 - Completed remaining xcolor option-loading fixes in templates still using the no-op pattern:
-  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-tabularray.el][latex-templates/elegant-tabularray.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-helvetica-tabularray.el][latex-templates/elegant-helvetica-tabularray.el]]
   - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket-tabularray.el][latex-templates/beautiful-racket-tabularray.el]]
   - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket-classic.el][latex-templates/beautiful-racket-classic.el]]
 - Change made:
   - Replaced =\\usepackage{xcolor}= + =\\PassOptionsToPackage{hyperref,x11names}{xcolor}= with =\\usepackage[x11names]{xcolor}=.
 - Added =bookmark= package (after hyperref) to all tabularray proposal classes:
-  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-tabularray.el][latex-templates/elegant-tabularray.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-helvetica-tabularray.el][latex-templates/elegant-helvetica-tabularray.el]]
   - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond-tabularray.el][latex-templates/elegant-garamond-tabularray.el]]
   - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket-tabularray.el][latex-templates/beautiful-racket-tabularray.el]]
 - Bookmark defaults used:
@@ -112,7 +112,7 @@
   - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant.el][latex-templates/elegant.el]]
   - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][latex-templates/elegant-garamond.el]]
   - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el][latex-templates/beautiful-racket.el]]
-  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-tabularray.el][latex-templates/elegant-tabularray.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-helvetica-tabularray.el][latex-templates/elegant-helvetica-tabularray.el]]
   - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond-tabularray.el][latex-templates/elegant-garamond-tabularray.el]]
   - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket-tabularray.el][latex-templates/beautiful-racket-tabularray.el]]
   - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket-classic.el][latex-templates/beautiful-racket-classic.el]]
@@ -125,7 +125,7 @@
   - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant.el][latex-templates/elegant.el]]
   - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][latex-templates/elegant-garamond.el]]
   - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el][latex-templates/beautiful-racket.el]]
-  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-tabularray.el][latex-templates/elegant-tabularray.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-helvetica-tabularray.el][latex-templates/elegant-helvetica-tabularray.el]]
   - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond-tabularray.el][latex-templates/elegant-garamond-tabularray.el]]
   - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket-tabularray.el][latex-templates/beautiful-racket-tabularray.el]]
 - New shared toggle pattern in each class:
@@ -155,7 +155,7 @@
   - Added wrapper cleanup to strip Org’s surrounding ~center~ environment around converted tabularray blocks.
   - Normalized conversion to ~tblr~ for Org-exported ~tabular~, ~tabularx~, and ~longtable~ output (instead of emitting ~longtblr~ for agenda tables).
 - Updated tabularray class preambles:
-  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-tabularray.el][latex-templates/elegant-tabularray.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-helvetica-tabularray.el][latex-templates/elegant-helvetica-tabularray.el]]
   - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond-tabularray.el][latex-templates/elegant-garamond-tabularray.el]]
   - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket-tabularray.el][latex-templates/beautiful-racket-tabularray.el]]
   - Tightened tabularray inner spacing to ~rowsep=0pt~.
@@ -181,7 +181,7 @@
 
 * 2026-02-26: Add opt-in tabularray class family for modern table rendering
 - Added new opt-in LaTeX classes in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/][latex-templates/]]:
-  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-tabularray.el][elegant-tabularray.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-helvetica-tabularray.el][elegant-helvetica-tabularray.el]]
   - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond-tabularray.el][elegant-garamond-tabularray.el]]
   - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket-tabularray.el][beautiful-racket-tabularray.el]]
 - Added shared exporter helper:

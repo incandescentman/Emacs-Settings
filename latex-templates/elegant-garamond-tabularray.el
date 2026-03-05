@@ -143,22 +143,26 @@
 \\lhead{\\scshape\\href{\\the\\leftheaderurl}{\\the\\leftheader}}
 \\rhead{\\scshape{\\leftmark}}
 
-% Optional storytelling.nyc footer (enabled)
-\\fancyfoot[C]{%
-  % Graphic
-  \\raisebox{0.025in}{% Increase this value to move the logo higher
-%\\fontsize{18}{18}\\selectfont\\sffamily\\color{spacegrey} STORYTELLING.NYC
-\\includegraphics[height=0.8in,keepaspectratio]{/Users/jay/Dropbox/writing/prosperous/design/storytelling-nyc-logo/current-2018/_better-storytelling-nyc-period-canonical-helvetica-condensed.png}
-  }%
-  \\hspace{0.05in}%
-  % Text / alternate logo block
-  \\raisebox{1.05in}{%
-%\\includegraphics[height=0.6in,keepaspectratio]{/Users/jay/Dropbox/github/incandescentman.github.io/assets/images/2023-10-final-new-logo_high-res-no-text.png}
-  }%
+% Footer configuration (controlled from org file)
+\\newif\\ifjaylogofooter
+\\jaylogofooterfalse
+\\newcommand{\\EnableLogoFooter}{\\jaylogofootertrue}
+\\newif\\ifjaynofooter
+\\jaynofooterfalse
+\\newcommand{\\DisableFooter}{\\jaynofootertrue}
+\\AtBeginDocument{%
+  \\ifjaynofooter
+    \\fancyfoot{}%
+  \\else\\ifjaylogofooter
+    \\fancyfoot[C]{%
+      \\raisebox{0.025in}{%
+        \\includegraphics[height=0.8in,keepaspectratio]{/Users/jay/Dropbox/writing/prosperous/design/storytelling-nyc-logo/current-2018/_better-storytelling-nyc-period-canonical-helvetica-condensed.png}
+      }%
+    }%
+  \\else
+    \\cfoot{\\thepage}%
+  \\fi\\fi
 }
-
-% Default footer
-%\\cfoot{\\thepage}
 
 % Paragraph and Indentation Settings
 \\setlength{\\parindent}{0pt}
