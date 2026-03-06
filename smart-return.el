@@ -216,15 +216,24 @@ Supports plain URLs and Org links (e.g., [[/path/to/file.jpg]])."
 
 (defun org-link-at-point-p ()
   "Return non-nil when point is directly on an Org link.
+Handles both bracket links ([[...]]) and plain URLs.
 Treat point at the first character *after* the link as not on the link so
 that pressing Return there falls back to normal newline behavior."
   (let ((pos (point)))
     (save-excursion
-      (when (org-in-regexp org-link-bracket-re 1)
-        (let ((beg (match-beginning 0))
-              (end (match-end 0)))
-          (and (<= beg pos)
-               (< pos end)))))))
+      (or
+       ;; Bracket-style links: [[url][desc]]
+       (when (org-in-regexp org-link-bracket-re 1)
+         (let ((beg (match-beginning 0))
+               (end (match-end 0)))
+           (and (<= beg pos)
+                (< pos end))))
+       ;; Plain URLs: https://..., http://..., etc.
+       (when (org-in-regexp org-link-plain-re 1)
+         (let ((beg (match-beginning 0))
+               (end (match-end 0)))
+           (and (<= beg pos)
+                (< pos end))))))))
 
 
 ;;------------------------------------------------------------------------------

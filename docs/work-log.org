@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-03-06: Fix smart-return to follow plain URLs
+- =org-link-at-point-p= previously only matched bracket-style links (=[​[...]​]=)
+- Added =org-link-plain-re= check so bare URLs (e.g., =https://example.com/path=) are also recognized
+- Smart-return now opens plain URLs on RET, consistent with bracket link behavior
+
 * 2026-03-04: Restyle org-code face to GitHub-style inline code
 - Replaced old org-code face (green text, grey box, shadow inherit) with cleaner GitHub-inspired style
 - New face: dark red =#a0222b= on light gray =#f6f8fa= background, Monaco font at 0.85 height
