@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-03-06: Clean up org-roam profile templates
+- Merged default profile's two template lists (=jay/org-roam-default-template-specs= and =jay/org-roam-default-factory-template-specs=) into a single alphabetically sorted list (A a B b C c...)
+- Simplified parents profile: replaced 6 over-engineered templates (care log, medical note, parent dossier, etc.) with 7 standard ones (conversation, document, interview, note, person, story, task)
+- All profiles now use clean =jay/roam-template= helper with minimal bodies
+
 * 2026-03-06: Fix smart-return to follow plain URLs
 - =org-link-at-point-p= previously only matched bracket-style links (=[​[...]​]=)
 - Added =org-link-plain-re= check so bare URLs (e.g., =https://example.com/path=) are also recognized
