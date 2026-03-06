@@ -135,66 +135,60 @@ Additional keyword ARGS allow callers to override pieces of the template:
      props)))
 
 (defconst jay/org-roam-default-template-specs
-  '(("A" "accountability and task capture" "accountability" "accountability")
+  '(("$" "consumerist" "consumerist" "consumerist")
+    ("A" "accountability and task capture" "accountability" "accountability")
+    ("a" "article notes or books and articles" "literature-notes" "literaturenote")
+    ("B" "Business (Socratic AI)" "business-socratic" "project")
+    ("b" "books" "books" "books")
+    ("C" "corpus (transcripts and examples)" "corpus" "corpus")
+    ("c" "Conversation" "conversations" "conversation")
     ("D" "Developing, vibecoding" "vibecoding" "document")
+    ("d" "documents and deliverables" "documents" "document")
     ("E" "Exercise" "exercise" "exercise")
+    ("e" "emacs" "emacs" "emacs")
+    ("f" "finances and housekeeping" "finances" "finances")
+    ("g" "ChatGPT Outputs" "chatgpt-outputs" "gpt")
     ("H" "Plans" "project" "project")
     ("I" "intelligence" "AI" "intelligence"
      :body "- Links ::\n- Source ::\n\n\n* ${title}\n%?")
-    ("L" "Learning, lectures, and classes" "lectures" "learning")
-    ("M" "Momentum --- 2025 job hunt" "job-hunt-2025" "momentum")
-    ("O" "Outline / Structure / Schelling Points" "structure" "structure")
-    ("W" "writers" "writers" "writers"
-     :filetags ":writers:person:")
-    ("a" "article notes or books and articles" "literature-notes" "literaturenote")
-    ("c" "Conversation" "conversations" "conversation")
-    ("d" "documents and deliverables" "documents" "document")
-    ("f" "finances and housekeeping" "finances" "finances")
-    ("g" "ChatGPT Outputs" "chatgpt-outputs" "gpt")
     ("j" "job application" "job-applications" "job")
     ("k" "kanban" "kanban" "kanban")
+    ("L" "Learning, lectures, and classes" "lectures" "learning")
     ("l" "logistics of OpenAI" "logistics" "library")
+    ("M" "Momentum --- 2025 job hunt" "job-hunt-2025" "momentum")
+    ("m" "mantras and intentions" "mantras" "mantras")
+    ("n" "note" "notes" "note")
+    ("O" "Outline / Structure / Schelling Points" "structure" "structure")
+    ("o" "OpenAI, i.e. work" "notes" "work")
+    ("P" "photography" "photography" "photography")
     ("p" "person" "person" "person"
      :body "- Links :: [[id:20240426T130414.177117][🌐 People]]\n- Source ::\n\n* ${title}\n%?")
+    ("q" "quotes about AI" "quotes" "quote")
+    ("R" "recipe" "recipes" "recipe")
+    ("r" "social / relationships" "social" "social")
+    ("S" "Socratic AI" "socratic" "socratic")
+    ("s" "Storytelling and Writing" "storytelling" "storytelling")
+    ("T" "Travel" "travel" "travel")
     ("u" "approved language" "approved-language" "language")
+    ("W" "writers" "writers" "writers"
+     :filetags ":writers:person:")
+    ("w" "lectures and public talks" "lectures" "lectures")
+    ("X" "exemplars" "exemplars" "exemplars")
+    ("x" "cuts" "cuts" "cuts")
+    ("y" "YouTube" "youtube" "youtube"
+     :body "- Links ::\n- URL :: %?\n- Channel ::\n\n* ${title}\n\n** Notes\n")
     ("z" "CRM (custom path)" "" "crm"
      :body "- Links ::\nSource ::\n\n\n* ${title}\n%?"
      :target (file+head (lambda ()
                           (concat (read-string "Enter file path: ")
                                   "/%<%Y%m%d%H%M%S>-${slug}.org"))
                         "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n#+FILETAGS: :crm:")))
-  "Data-driven specs for the default profile's bespoke templates.")
-
-(defconst jay/org-roam-default-factory-template-specs
-  '(("$" "consumerist" "consumerist" "consumerist")
-    ("B" "Business (Socratic AI)" "business-socratic" "project")
-    ("C" "corpus (transcripts and examples)" "corpus" "corpus")
-    ("P" "photography" "photography" "photography")
-    ("R" "recipe" "recipes" "recipe")
-    ("S" "Socratic AI" "socratic" "socratic")
-    ("T" "Travel" "travel" "travel")
-    ("X" "exemplars" "exemplars" "exemplars")
-    ("b" "books" "books" "books")
-    ("e" "emacs" "emacs" "emacs")
-    ("m" "mantras and intentions" "mantras" "mantras")
-    ("n" "note" "notes" "note")
-    ("o" "OpenAI, i.e. work" "notes" "work")
-    ("q" "quotes about AI" "quotes" "quote")
-    ("r" "social / relationships" "social" "social")
-    ("s" "Storytelling and Writing" "storytelling" "storytelling")
-    ("w" "lectures and public talks" "lectures" "lectures")
-    ("x" "cuts" "cuts" "cuts")
-    ("y" "YouTube" "youtube" "youtube"
-     :body "- Links ::\n- URL :: %?\n- Channel ::\n\n* ${title}\n\n** Notes\n"))
-  "Factory-style template specs that also lean on `jay/roam-template`.")
+  "Data-driven specs for the default profile's capture templates.")
 
 ;; DEFAULT PROFILE TEMPLATES (Your current work setup)
 (defvar jay/org-roam-capture-templates-default
-  (append
-   (mapcar (lambda (spec) (apply #'jay/roam-template spec))
-           jay/org-roam-default-template-specs)
-   (mapcar (lambda (spec) (apply #'jay/roam-template spec))
-           jay/org-roam-default-factory-template-specs))
+  (mapcar (lambda (spec) (apply #'jay/roam-template spec))
+          jay/org-roam-default-template-specs)
   "Capture templates for the default (work) profile.")
 
 ;; MY-LIFE PROFILE TEMPLATES (Personal/life notes)
@@ -325,37 +319,19 @@ Additional keyword ARGS allow callers to override pieces of the template:
     "t" "thought" "thoughts" "thought"))
   "Capture templates for the roam-social (relationships/networking) profile.")
 
-;; ROAM-PARENTS PROFILE TEMPLATES (Family HQ / caretaking)
+;; ROAM-PARENTS PROFILE TEMPLATES (Family HQ)
 (defvar jay/org-roam-capture-templates-parents
   (list
-   ;; Templates sorted alphabetically by key
-   (jay/roam-template
-    "a" "appointment" "appointments" "appointment"
-    :body "- Links ::\n- Parent :: \n- When :: %<%Y-%m-%d %H:%M>\n- Location :: \n\n* ${title}\n\n** Prep Checklist\n- [ ] %?\n\n** Outcomes\n- \n")
-
-   (jay/roam-template
-    "c" "care log" "care-log" "care"
-    :body "- Links ::\n- Parent :: \n- Date :: %<%Y-%m-%d>\n- Time :: %<%H:%M>\n\n* ${title}\n\n** Summary\n%?\n\n** Mood / Energy\n- \n\n** Notes\n- \n")
-
-   (jay/roam-template
-    "m" "medical note" "medical" "medical"
-    :body "- Links ::\n- Parent :: \n- Provider :: \n- Facility :: \n- Date :: %<%Y-%m-%d>\n\n* ${title}\n\n** Observations\n%?\n\n** Medications / Dosage\n- \n\n** Questions\n- \n"
-    :filetags ":medical:parents:")
-
-   (jay/roam-template
-    "p" "parent dossier" "profiles" "profile"
-    :body "- Links ::\n- Birthdate :: \n- Primary Doctor :: \n- Emergency Contacts :: \n\n* ${title}\n\n** Health Snapshot\n- Conditions :: \n- Allergies :: \n\n** Stories / Values\n%?\n"
-    :filetags ":parents:profile:")
-
-   (jay/roam-template
-    "s" "support reflection" "reflections" "reflection"
-    :body "- Links ::\n- Date :: %<%Y-%m-%d>\n- Theme :: \n\n* ${title}\n\n** What Went Well\n%?\n\n** Hard Moments\n\n** Next Actions\n- [ ] ")
-
-   (jay/roam-template
-    "t" "task / errand" "tasks" "task"
-    :body "- Links ::\n- Parent :: \n- Deadline :: %<%Y-%m-%d>\n\n* ${title}\n\n** Steps\n- [ ] %?\n"
-    :filetags ":parents:task:"))
-  "Capture templates for the roam-parents (family operations) profile.")
+   (jay/roam-template "c" "conversation" "conversations" "conversation")
+   (jay/roam-template "d" "document" "documents" "document")
+   (jay/roam-template "i" "interview" "interviews" "interview")
+   (jay/roam-template "n" "note" "notes" "note")
+   (jay/roam-template "p" "person" "people" "person"
+    :body "- Links ::\n\n* ${title}\n%?")
+   (jay/roam-template "s" "story" "stories" "story")
+   (jay/roam-template "t" "task" "tasks" "task"
+    :body "- Links ::\n\n* ${title}\n\n- [ ] %?"))
+  "Capture templates for the roam-parents (family) profile.")
 
 
 ;; -----------------------------------------------------------------------------

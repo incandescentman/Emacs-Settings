@@ -108,10 +108,11 @@ The following documentation files provide detailed information about various asp
   - Remove blank lines between headings and body text (proper org-mode style)
   - Convert bold lines that look like headings to actual org headings
 
-### 2. Org Roam Profile System (Nov 2025)
+### 2. Org Roam Profile System (Nov 2025, updated Mar 2026)
 - **Multi-Graph Support**: Distinct profiles for 'Work' (default), 'My Life', 'Social', and 'Parents'.
 - **Architecture**: Modularized into `jay-org-roam-suite/` (Core, Profiles, Templates).
 - **Features**: Independent databases, capture templates, and export paths per profile.
+- **Template Cleanup (Mar 2026)**: Merged default profile's two template lists into one alphabetically sorted list (A a B b C c...). Simplified parents profile to standard templates (conversation, document, interview, note, person, story, task).
 - **Commands**: `s-u P` to switch, `s-u 1/2/3/4` shortcuts.
 
 ### 3. Documentation Overhaul (Oct 2025)
