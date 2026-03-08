@@ -6553,26 +6553,26 @@ c: cook-ideas-over-time\n"))
     'my-org-latex-strip-emoji)
 
 ;; Add line breaks in email signature blocks in HTML export
-;; Handles: Best, / Warm regards, / Name / urls becoming separate lines
+;; Applies only when "Best," or "Warm regards," is followed by an actual line break.
 (defun jay/org-html-filter-signature-line-breaks (text backend info)
   "Add line breaks in email signature blocks in HTML export."
   (when (org-export-derived-backend-p backend 'html)
-    ;; Match "Best, Name Name url.tld url.tld" and add <br> between parts
+    ;; Match signature block shape: "Best,\nName\nurl.tld\nurl.tld".
     (let ((result text))
-      ;; First: closing salutation followed by a name
+      ;; First: "Best," or "Warm regards," followed by a line break, then a name.
       (setq result (replace-regexp-in-string
-                    "\\(Best,\\|Warm regards,\\)\\([[:space:]]+\\)\\([A-Z][a-z]+\\)"
-                    "\\1<br>\\3"
+                    "\\(Best,\\|Warm regards,\\)[ \t]*\n[ \t]*\\([A-Z][a-z]+\\)"
+                    "\\1<br>\\2"
                     result))
       ;; Then: name followed by a URL (word.tld pattern)
       (setq result (replace-regexp-in-string
-                    "\\([A-Z][a-z]+\\)\\([[:space:]]+\\)\\([a-z]+\\.[a-z]+\\)"
-                    "\\1<br>\\3"
+                    "\\([A-Z][a-z]+\\)[ \t]*\n[ \t]*\\([a-z]+\\.[a-z]+\\)"
+                    "\\1<br>\\2"
                     result))
       ;; Then: URL followed by another URL
       (setq result (replace-regexp-in-string
-                    "\\([a-z]+\\.[a-z]+\\)\\([[:space:]]+\\)\\([a-z]+\\.[a-z]+\\)"
-                    "\\1<br>\\3"
+                    "\\([a-z]+\\.[a-z]+\\)[ \t]*\n[ \t]*\\([a-z]+\\.[a-z]+\\)"
+                    "\\1<br>\\2"
                     result))
       result)))
 
