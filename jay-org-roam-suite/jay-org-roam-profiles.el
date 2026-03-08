@@ -169,6 +169,8 @@ Additional keyword ARGS allow callers to override pieces of the template:
     ("S" "Socratic AI" "socratic" "socratic")
     ("s" "Storytelling and Writing" "storytelling" "storytelling")
     ("T" "Travel" "travel" "travel")
+    ("t" "AI conversation topic" "ongoing-conversations-with-ai" "note"
+     :body "- Links :: [[id:ca89a85b-c00e-437b-b6b7-0876faac73ca][AI Conversation Briefings]]\n\n- ${title}\n%?")
     ("u" "approved language" "approved-language" "language")
     ("W" "writers" "writers" "writers"
      :filetags ":writers:person:")
