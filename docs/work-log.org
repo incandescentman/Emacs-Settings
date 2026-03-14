@@ -1,6 +1,14 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-03-14: Fix org export hook crash from replace-regexp
+- Replaced the anonymous =org-export-before-parsing-functions= lambda in =shared-functions.org= that emphasized leading =Label:= prefixes.
+- Root cause: the hook used buffer-level =replace-regexp= during export, which calls =replace-dehighlight= and can crash inside Magit's =isearch-clean-overlays= advice when a stale overlay is present.
+- Added named helper =jay/org-export-emphasize-leading-labels= that uses =re-search-forward= + =replace-match= instead of interactive replacement machinery.
+- Kept the same behavior: emphasize line-start labels like =Question:= while still avoiding URL schemes such as =https:=.
+- Updated docs:
+  - Added a prevention note to =docs/codebase-wisdom.org=
+
 * 2026-03-06: Clean up org-roam profile templates
 - Merged default profile's two template lists (=jay/org-roam-default-template-specs= and =jay/org-roam-default-factory-template-specs=) into a single alphabetically sorted list (A a B b C c...)
 - Simplified parents profile: replaced 6 over-engineered templates (care log, medical note, parent dossier, etc.) with 7 standard ones (conversation, document, interview, note, person, story, task)

@@ -2,6 +2,37 @@
 #+DATE: 2025-09-24
 #+DESCRIPTION: Debugging post-mortems and prevention checklists.
 
+* Org Export Hooks: Avoid `replace-regexp` In Before-Parsing Hooks
+  Date: 2026-03-14
+
+** The Bug
+Astro export crashed with:
+=wrong-type-argument number-or-marker-p nil=
+inside =isearch-clean-overlays= / Magit advice, even though the exporter itself was fine.
+
+** The Truth
+- A global =org-export-before-parsing-functions= hook in =shared-functions.org= used buffer-level =replace-regexp= to emphasize leading =Label:= prefixes.
+- =replace-regexp= runs interactive replacement cleanup (=replace-dehighlight=), which calls =isearch-clean-overlays=.
+- If another package leaves behind a stale overlay, Magit's overlay cleanup advice can fail during export.
+- Anonymous export-hook lambdas are also harder to inspect, remove, or selectively sanitize later.
+
+** The Fix
+Replace the anonymous hook with a named function that edits the buffer directly via =re-search-forward= and =replace-match=:
+#+begin_src elisp
+(defun jay/org-export-emphasize-leading-labels (_backend)
+  "Emphasize leading \"Label:\" prefixes without touching URL schemes."
+  (save-excursion
+    (goto-char (point-min))
+    (while (re-search-forward "^\\([A-Za-z]+:\\)\\([^/]\\|/[^/]\\|$\\)" nil t)
+      (replace-match "*\\1*\\2" nil nil))))
+#+end_src
+
+** Lessons Learned / Prevention Checklist
+- Avoid =replace-regexp= / =query-replace= inside export hooks when a plain scan-and-replace will do.
+- Prefer named functions over anonymous lambdas in hooks so they can be debugged and removed cleanly.
+- If an export crash looks like an exporter bug but the stack mentions =replace-regexp=, inspect global export hooks first.
+- Gate hook behavior by backend when appropriate; global export hooks leak into every exporter, including custom ones like =ox-astro=.
+
 * Org 9.8 Preview Migration: Guard For Mixed Runtime Versions
   Date: 2026-02-24
 

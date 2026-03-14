@@ -3170,7 +3170,16 @@ I hope this is somewhat helpful to someone else, happy hacking! Source: [[https:
 ;; old code (works for HTML export, breaks http links)
 ;; (add-hook 'org-export-before-parsing-functions (lambda (backend) (replace-regexp "^[A-Za-z]+:" "*\\&*")))
 
-(add-hook 'org-export-before-parsing-functions (lambda (backend) (replace-regexp "^\\([A-Za-z]+:\\)\\([^/]\\|/[^/]\\|$\\)" "*\\1*\\2")))
+(defun jay/org-export-emphasize-leading-labels (_backend)
+  "Emphasize leading \"Label:\" prefixes without touching URL schemes.
+This avoids `replace-regexp', which can trip overlay cleanup in some setups."
+  (save-excursion
+    (goto-char (point-min))
+    (while (re-search-forward "^\\([A-Za-z]+:\\)\\([^/]\\|/[^/]\\|$\\)" nil t)
+      (replace-match "*\\1*\\2" nil nil))))
+
+(add-hook 'org-export-before-parsing-functions
+          #'jay/org-export-emphasize-leading-labels)
 
 ;; (add-hook 'org-export-before-parsing-functions (lambda (backend) (replace-regexp "^\\(.*:\\)[ ]*$" "*\\1*")))
  ;; any line that ends with a colon
