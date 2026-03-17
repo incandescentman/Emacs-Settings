@@ -1,6 +1,19 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-03-17: Split whittle into conservative cleanup and transcript mode
+- Reworked [[file+emacs:/Users/jay/emacs/emacs-settings/whittle.el][whittle.el]] so =whittle= stays conservative and a new =whittle-transcript= command handles aggressive transcript cleanup.
+- Fixed the original command-path bug where =M-x whittle= errored with no active region; both commands now work on region or whole buffer.
+- Improved cleanup behavior:
+  - filler-chain removal for transcript junk like =um, uh, you know,=
+  - sentence-edge filler removal for words like =well=, =right=, =you know=, and sentence-start =Like,=
+  - smarter duplicate and false-start collapsing such as =I I I think= and =we were we were ready=
+  - stronger punctuation cleanup for stray commas, space-before-punctuation, and ellipsis normalization
+  - transcript line joining and sentence/lone-=i= capitalization
+  - preserved intentional repeats like =go go= and =bye bye=
+- Updated docs:
+  - Added a new “Transcript Cleanup” section to [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][docs/instructions.org]]
+
 * 2026-03-14: Fix org export hook crash from replace-regexp
 - Replaced the anonymous =org-export-before-parsing-functions= lambda in =shared-functions.org= that emphasized leading =Label:= prefixes.
 - Root cause: the hook used buffer-level =replace-regexp= during export, which calls =replace-dehighlight= and can crash inside Magit's =isearch-clean-overlays= advice when a stale overlay is present.

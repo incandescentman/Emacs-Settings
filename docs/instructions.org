@@ -148,6 +148,45 @@ Example to enable timestamps:
 
 =double-line-breaks-in-region= is useful for converting single-spaced text to double-spaced paragraphs. It normalizes line endings, collapses 3+ newlines to exactly 2, and only doubles single newlines (leaving existing paragraph breaks unchanged).
 
+*** Transcript Cleanup
+
+Use =M-x whittle= for safe everyday cleanup and =M-x whittle-transcript= when you're cleaning raw spoken transcripts.
+
+| Command                | Best For                                  | What It Does |
+|------------------------+-------------------------------------------+--------------|
+| =whittle=              | Light cleanup of prose or lightly messy text | Removes safer fillers, collapses duplicated words, and fixes punctuation spacing without being too aggressive |
+| =whittle-transcript=   | Raw transcripts, dictated text, pasted captions | Joins mid-sentence line breaks, removes filler chains, strips sentence-edge fillers, collapses false starts, normalizes punctuation, and fixes capitalization |
+
+Both commands work on the active region if one is selected, otherwise on the whole buffer.
+
+*Conservative =whittle=*
+- Safe defaults for ordinary prose
+- Keeps legitimate phrases like =I like cats=
+- Cleans repeated words like =hello hello=
+- Fixes spacing such as =Hello , world= -> =Hello, world=
+
+*Aggressive =whittle-transcript=*
+- Designed for transcript junk rather than polished prose
+- Removes filler chains like =um, uh, you know,=
+- Removes sentence-edge fillers like =Like,= at the start of a sentence
+- Collapses false starts like =I was I was thinking= or =we were we were ready=
+- Joins awkward single newlines when the sentence clearly continues
+- Capitalizes sentence starts and lone =i=
+- Preserves some intentional repeats such as =go go= and =bye bye=
+
+*Example*
+
+Input:
+#+begin_example
+Um, the dog ran. well, i think
+this is fine
+#+end_example
+
+After =whittle-transcript=:
+#+begin_example
+The dog ran. I think this is fine
+#+end_example
+
 ** Org-Roam Profiles
 
 Switch between completely separate note databases:

@@ -122,7 +122,8 @@
   (pcase-let* ((`(,start . ,limit) (whittle--region-bounds beg end))
                (limit-marker (copy-marker limit))
                (case-fold-search t)
-               (dup-regexp "\\b\\([[:alpha:]']+\\)\\b\\(?:[[:space:]\n–—]+\\1\\b\\)+")
+               ;; Use explicit Emacs word boundaries (\</\>) for readability.
+               (dup-regexp "\\<\\([[:alpha:]']+\\)\\>\\(?:[[:space:]\n–—]+\\1\\>\\)+")
                (removed (make-hash-table :test #'equal)))
     (unwind-protect
         (save-excursion
@@ -141,9 +142,9 @@
 (defun whittle--remove-false-starts (beg end)
   "Collapse repeated transcript phrases like \"I was I was\" between BEG and END."
   (let* ((prefixes (regexp-opt whittle/false-start-prefixes t))
-         (regexp (concat "\\b\\(" prefixes
+         (regexp (concat "\\<\\(" prefixes
                          "\\(?:[[:space:]\n]+[[:alpha:]']+\\)\\{0,2\\}\\)"
-                         "\\(?:[[:space:]\n]+\\)\\1\\b")))
+                         "\\(?:[[:space:]\n]+\\)\\1\\>")))
     (pcase-let* ((`(,start . ,limit) (whittle--region-bounds beg end))
                  (limit-marker (copy-marker limit))
                  (case-fold-search t)
