@@ -1195,6 +1195,7 @@ This function is called at the very end of Spacemacs initialization."
    '(org-link ((t (:inherit link :underline nil))))
    '(org-list-dt ((t (:box nil :weight bold :height 1.4))))
    '(org-quote ((t (:inherit default :background "#f5f7ff" :foreground "Charcoal" :slant normal :height 0.8 :family "Consolas"))))
+   '(org-roam-title ((t (:foreground "darkgreen" :underline t :weight bold))))
    '(org-transclusion ((t (:extend t :background "white smoke" :foreground "black"))))
    '(org-transclusion-fringe ((t (:background "yellow" :foreground "yellow"))))
    '(org-transclusion-source ((t nil)))
