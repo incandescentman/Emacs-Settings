@@ -1,36 +1,43 @@
-;;; whittle.el --- Strip filler & duplicates  -*- lexical-binding: t; -*-
+;;; whittle.el --- Clean filler and transcript artifacts -*- lexical-binding: t; -*-
 
-(require 'subr-x)   ;; for `string-trim'
+(require 'cl-lib)
+(require 'subr-x)   ;; for `string-join'
 (require 'rx)
 
-;;; Customisation -------------------------------------------------------------
+;;; Customization -------------------------------------------------------------
 
-(defvar whittle/filler-word-replacements
-  ;; (PATTERN‑STRING . REPLACEMENT)
-  (let ((base '(("kind of like")
-                ("you know")
-                ("i mean")
-                ("\\(um+\\|uh\\)")   ; escaped once
-                ("right[.?!]" . ".")
-                (",[[:space:]]*like[[:space:]]*," . " ")   ; <‑‑ NEW
-                ))) ; already a char‑class; fine as string
-    (mapcar
-     (pcase-lambda (`(,pat . ,rep))
-       ;; prepend/append word‑boundaries + optional space/punct
-       (cons (concat "\\<" pat "\\>[[:space:][:punct:]]*")
-             (or rep "")))
-     base))
-  "Alist mapping filler phrases (as `rx' patterns) to replacements.")
+(defvar whittle/conservative-filler-rules
+  '(("kind of like" "\\<kind of like\\>[[:space:][:punct:]]*" "")
+    ("i mean" "\\<i mean\\>[[:space:][:punct:]]*" "")
+    ("um/uh" "\\<\\(um+\\|uh\\)\\>[[:space:][:punct:]]*" "")
+    (", like," ",[[:space:]]*like[[:space:]]*," " "))
+  "Conservative filler cleanup rules as (LABEL REGEXP REPLACEMENT).")
 
-(defun whittle--strip-comma-like (beg end)
-  (save-excursion
-    (goto-char beg)
-    (while (re-search-forward ",[[:space:]]*like[[:space:]]*," end t)
-      (replace-match " "))))
+(defvar whittle/transcript-edge-filler-rules
+  '(("edge filler"
+     "^[[:space:]]*\\(?:so\\|well\\|ok\\(?:ay\\)?\\|right\\|you know\\|like\\)[,[:space:]-]*"
+     "")
+    ("edge filler"
+     "\\([.!?][[:space:]\n]+\\)\\(?:so\\|well\\|ok\\(?:ay\\)?\\|right\\|you know\\|like\\)[,[:space:]-]*"
+     "\\1")
+    ("edge filler"
+     "[[:space:]]*,?[[:space:]]*\\(?:right\\|you know\\|ok\\(?:ay\\)?\\)\\([.?!]?\\)[[:space:]]*$"
+     "\\1"))
+  "Aggressive transcript rules for sentence-edge fillers.")
+
+(defconst whittle/transcript-filler-chain-regexp
+  "\\(?:\\<\\(?:um+\\|uh\\|erm\\|ah\\|like\\|you know\\|i mean\\|so\\|well\\|ok\\(?:ay\\)?\\|right\\)\\>[[:space:][:punct:]]*\\)\\{2,\\}"
+  "Regexp matching transcript-style chains of filler phrases.")
 
 (defconst whittle/duplicate-word-exclusions
-  '("that" "so" "very" "really" "yes" "no" "ha" "wow" "well" "yeah")
-  "Words that *can* appear twice legitimately (case‑insensitive).")
+  '("that" "so" "very" "really" "yes" "no" "ha" "wow" "well" "yeah"
+    "go" "bye" "oh")
+  "Words that can appear twice legitimately (case-insensitive).")
+
+(defconst whittle/false-start-prefixes
+  '("a" "an" "he" "her" "his" "i" "it" "my" "our" "she" "the" "their"
+    "these" "they" "this" "those" "we" "you" "your")
+  "Words that commonly begin transcript false starts.")
 
 ;;; Helpers -------------------------------------------------------------------
 
@@ -38,78 +45,280 @@
   "Return (START . END) covering either the active region or the buffer."
   (if (use-region-p)
       (cons beg end)
-      (cons (point-min) (point-max))))
+    (cons (point-min) (point-max))))
 
-;;; Main functions ------------------------------------------------------------
+(defun whittle--interactive-bounds ()
+  "Return interactive bounds for the active region, or nils for the buffer."
+  (if (use-region-p)
+      (list (region-beginning) (region-end))
+    (list nil nil)))
 
-(defun whittle/remove-filler-words (beg end)
-  "Remove filler phrases between BEG and END (region if active)."
-  (interactive "r")
+(defun whittle--increment (table key &optional amount)
+  "Increment TABLE entry KEY by AMOUNT, defaulting to 1."
+  (puthash key (+ (gethash key table 0) (or amount 1)) table))
+
+(defun whittle--apply-rules (beg end rules)
+  "Apply RULES between BEG and END and return a hash table of match counts."
   (pcase-let* ((`(,start . ,limit) (whittle--region-bounds beg end))
+               (limit-marker (copy-marker limit))
                (case-fold-search t)
                (counts (make-hash-table :test #'equal)))
-    (save-excursion
-      (dolist (pair whittle/filler-word-replacements)
-        (goto-char start)
-        (let ((count 0))
-          (while (re-search-forward (car pair) limit t)
-            (replace-match (cdr pair) t t)
-            (setq count (1+ count)))
-          (when (> count 0)
-            (puthash (string-trim (car pair) "\\\\<" "\\\\>") count counts)))))
-    ;; doubled punctuation / spaces
-    (whittle--cleanup-punctuation start limit)
-    (whittle--strip-comma-like start limit)
-    (whittle--report counts "filler phrase")))
+    (unwind-protect
+        (save-excursion
+          (dolist (rule rules)
+            (pcase-let ((`(,label ,regexp ,replacement) rule))
+              (goto-char start)
+              (while (re-search-forward regexp limit-marker t)
+                (replace-match replacement t nil)
+                (whittle--increment counts label)))))
+      (set-marker limit-marker nil))
+    counts))
 
-(defun whittle/remove-duplicated-words (beg end)
-  "Collapse accidental duplicated words in the region or buffer."
-  (interactive "r")
+(defun whittle--format-table-summary (table label)
+  "Return a summary string for TABLE under LABEL, or nil if TABLE is empty."
+  (unless (= (hash-table-count table) 0)
+    (let (parts)
+      (maphash
+       (lambda (key value)
+         (push (format "\"%s\" x %d" key value) parts))
+       table)
+      (format "%s %s" label (string-join (nreverse parts) ", ")))))
+
+(defun whittle--format-count-summary (count label)
+  "Return a summary string for COUNT and LABEL, or nil if COUNT is zero."
+  (when (> count 0)
+    (format "%s %d" label count)))
+
+(defun whittle--report-summaries (prefix summaries)
+  "Display PREFIX followed by joined non-nil SUMMARIES."
+  (let ((parts (delq nil summaries)))
+    (if parts
+        (message "%s: %s" prefix (string-join parts "; "))
+      (message "%s: no changes" prefix))))
+
+;;; Core passes ----------------------------------------------------------------
+
+(defun whittle--remove-filler-words (beg end rules)
+  "Apply filler RULES between BEG and END and return a counts table."
+  (whittle--apply-rules beg end rules))
+
+(defun whittle--remove-filler-chains (beg end)
+  "Remove chains of repeated transcript fillers between BEG and END."
   (pcase-let* ((`(,start . ,limit) (whittle--region-bounds beg end))
+               (limit-marker (copy-marker limit))
                (case-fold-search t)
-               (rx-dup (rx word-start (group (+ word)) word-end
-                           (+ (any blank "\n" "–" "—"))
-                           (backref 1) word-end))
+               (count 0))
+    (unwind-protect
+        (save-excursion
+          (goto-char start)
+          (while (re-search-forward whittle/transcript-filler-chain-regexp limit-marker t)
+            (replace-match "" t t)
+            (setq count (1+ count))))
+      (set-marker limit-marker nil))
+    count))
+
+(defun whittle--remove-duplicated-words (beg end)
+  "Collapse accidental duplicated words between BEG and END."
+  (pcase-let* ((`(,start . ,limit) (whittle--region-bounds beg end))
+               (limit-marker (copy-marker limit))
+               (case-fold-search t)
+               (dup-regexp "\\b\\([[:alpha:]']+\\)\\b\\(?:[[:space:]\n–—]+\\1\\b\\)+")
                (removed (make-hash-table :test #'equal)))
-    (save-excursion
-      (goto-char start)
-      (while (re-search-forward rx-dup limit t)
-        (let ((w (downcase (match-string 1))))
-          (unless (member w whittle/duplicate-word-exclusions)
-            (puthash w (1+ (gethash w removed 0)) removed)
-            (replace-match (match-string 1))))))
-    (whittle--report removed "duplicated word")))
+    (unwind-protect
+        (save-excursion
+          (goto-char start)
+          (while (re-search-forward dup-regexp limit-marker t)
+            (let ((word (downcase (match-string 1))))
+              (unless (member word whittle/duplicate-word-exclusions)
+                (let ((match-beg (match-beginning 0))
+                      (replacement (match-string 1)))
+                  (whittle--increment removed word)
+                  (replace-match replacement t t)
+                  (goto-char match-beg))))))
+      (set-marker limit-marker nil))
+    removed))
 
-(defun whittle (&optional beg end)
-  "Run both filler‑word and duplicate‑word cleaners on region or buffer."
-  (interactive "r")
-  (whittle/remove-filler-words beg end)
-  (whittle/remove-duplicated-words beg end))
+(defun whittle--remove-false-starts (beg end)
+  "Collapse repeated transcript phrases like \"I was I was\" between BEG and END."
+  (let* ((prefixes (regexp-opt whittle/false-start-prefixes t))
+         (regexp (concat "\\b\\(" prefixes
+                         "\\(?:[[:space:]\n]+[[:alpha:]']+\\)\\{0,2\\}\\)"
+                         "\\(?:[[:space:]\n]+\\)\\1\\b")))
+    (pcase-let* ((`(,start . ,limit) (whittle--region-bounds beg end))
+                 (limit-marker (copy-marker limit))
+                 (case-fold-search t)
+                 (removed (make-hash-table :test #'equal)))
+      (unwind-protect
+          (save-excursion
+            (goto-char start)
+            (while (re-search-forward regexp limit-marker t)
+              (let ((phrase (downcase (match-string 1)))
+                    (match-beg (match-beginning 0))
+                    (replacement (match-string 1)))
+                (whittle--increment removed phrase)
+                (replace-match replacement t t)
+                (goto-char match-beg))))
+        (set-marker limit-marker nil))
+      removed)))
 
-;;; Internals -----------------------------------------------------------------
+(defun whittle--join-transcript-lines (beg end)
+  "Join mid-sentence line breaks between BEG and END."
+  (pcase-let* ((`(,start . ,limit) (whittle--region-bounds beg end))
+               (limit-marker (copy-marker limit))
+               (count 0))
+    (unwind-protect
+        (save-excursion
+          (goto-char start)
+          (while (re-search-forward
+                  "\\([[:alnum:])\"']\\)\n\\([[:space:]]*[[:lower:][:digit:]\"'([]\\)"
+                  limit-marker t)
+            (replace-match "\\1 \\2" t)
+            (setq count (1+ count))))
+      (set-marker limit-marker nil))
+    count))
+
+(defun whittle--replace-punctuation-cluster ()
+  "Return a normalized replacement for the current punctuation cluster."
+  (let* ((cluster (match-string 0))
+         (dots (cl-loop for char across cluster count (eq char ?.)))
+         (commas (cl-loop for char across cluster count (eq char ?,))))
+    (cond
+     ((>= dots 3) "...")
+     ((> dots 0) ".")
+     ((> commas 0) ",")
+     (t cluster))))
 
 (defun whittle--cleanup-punctuation (beg end)
-  "Collapse doubled punctuation and spaces between BEG and END."
-  (let ((case-fold-search nil)
-        (rx-doubles (rx (group (any ",.")) (group (backref 1))))
-        (rx-spaces  (rx (>= 2 blank))))
-    (save-excursion
-      (goto-char beg)
-      (while (re-search-forward rx-doubles end t)
-        (replace-match (match-string 1) t t))
-      (goto-char beg)
-      (while (re-search-forward rx-spaces end t)
-        (replace-match " " t t)))))
+  "Normalize punctuation and spacing between BEG and END."
+  (pcase-let* ((`(,start . ,limit) (whittle--region-bounds beg end))
+               (limit-marker (copy-marker limit))
+               (count 0))
+    (unwind-protect
+        (save-excursion
+          (goto-char start)
+          (while (re-search-forward "^[[:space:]]*,+[[:space:]]*" limit-marker t)
+            (replace-match "" t t)
+            (setq count (1+ count)))
+          (goto-char start)
+          (while (re-search-forward "\\([.!?\n]\\)[[:space:]]*,+[[:space:]]*" limit-marker t)
+            (replace-match
+             (if (string= (match-string 1) "\n")
+                 "\n"
+               (concat (match-string 1) " "))
+             t t)
+            (setq count (1+ count)))
+          (goto-char start)
+          (while (re-search-forward "[[:space:]]+\\([,.;:?!]\\)" limit-marker t)
+            (replace-match "\\1" t)
+            (setq count (1+ count)))
+          (goto-char start)
+          (while (re-search-forward "\\.\\(?:[[:space:]]*\\.\\)\\{2,\\}" limit-marker t)
+            (replace-match "..." t t)
+            (setq count (1+ count)))
+          (goto-char start)
+          (while (re-search-forward "[,.]\\(?:[[:space:]]*[,.]\\)+" limit-marker t)
+            (replace-match (whittle--replace-punctuation-cluster) t t)
+            (setq count (1+ count)))
+          (goto-char start)
+          (while (re-search-forward "\\([?!]\\)\\(?:[[:space:]]*\\1\\)+" limit-marker t)
+            (replace-match "\\1" t)
+            (setq count (1+ count)))
+          (goto-char start)
+          (while (re-search-forward "\\([[:space:]]\\)\\{2,\\}" limit-marker t)
+            (replace-match " " t t)
+            (setq count (1+ count))))
+      (set-marker limit-marker nil))
+    count))
 
-(defun whittle--report (table what)
-  "Display a message summarising TABLE about WHAT was removed."
-  (if (= (hash-table-count table) 0)
-      (message "No %ss removed." what)
-      (let ((parts '()))
-        (maphash (lambda (k v) (push (format "\"%s\" × %d" k v) parts)) table)
-        (message "Removed %s: %s"
-                 what
-                 (string-join (nreverse parts) ", ")))))
+(defun whittle--normalize-case (beg end)
+  "Capitalize lone i and sentence starts between BEG and END."
+  (pcase-let* ((`(,start . ,limit) (whittle--region-bounds beg end))
+               (limit-marker (copy-marker limit))
+               (case-fold-search nil)
+               (count 0))
+    (unwind-protect
+        (save-excursion
+          (goto-char start)
+          (while (re-search-forward "\\_<i\\_>" limit-marker t)
+            (replace-match "I" t t)
+            (setq count (1+ count)))
+          (goto-char start)
+          (skip-chars-forward " \t\n\"'([{" limit-marker)
+          (when (looking-at "[[:lower:]]")
+            (replace-match (upcase (match-string 0)) t t)
+            (setq count (1+ count)))
+          (goto-char start)
+          (while (re-search-forward "[.?!][[:space:]\n]+" limit-marker t)
+            (let ((punct-pos (match-beginning 0)))
+              (unless (and (eq (char-after punct-pos) ?.)
+                           (eq (char-before punct-pos) ?.))
+                (save-excursion
+                  (skip-chars-forward " \t\n\"'([{" limit-marker)
+                  (when (looking-at "[[:lower:]]")
+                    (replace-match (upcase (match-string 0)) t t)
+                    (setq count (1+ count))))))))
+      (set-marker limit-marker nil))
+    count))
+
+;;; Interactive commands ------------------------------------------------------
+
+(defun whittle/remove-filler-words (beg end)
+  "Remove conservative filler phrases between BEG and END."
+  (interactive (whittle--interactive-bounds))
+  (let* ((counts (whittle--remove-filler-words beg end whittle/conservative-filler-rules))
+         (punctuation (whittle--cleanup-punctuation beg end)))
+    (whittle--report-summaries
+     "Whittle filler cleanup"
+     (list (whittle--format-table-summary counts "removed")
+           (whittle--format-count-summary punctuation "punctuation fixes")))
+    counts))
+
+(defun whittle/remove-duplicated-words (beg end)
+  "Collapse accidental duplicated words between BEG and END."
+  (interactive (whittle--interactive-bounds))
+  (let* ((counts (whittle--remove-duplicated-words beg end))
+         (punctuation (whittle--cleanup-punctuation beg end)))
+    (whittle--report-summaries
+     "Whittle duplicate cleanup"
+     (list (whittle--format-table-summary counts "removed")
+           (whittle--format-count-summary punctuation "punctuation fixes")))
+    counts))
+
+(defun whittle (&optional beg end)
+  "Run conservative cleanup on the region or buffer."
+  (interactive (whittle--interactive-bounds))
+  (let* ((filler-counts (whittle--remove-filler-words beg end whittle/conservative-filler-rules))
+         (duplicate-counts (whittle--remove-duplicated-words beg end))
+         (punctuation (whittle--cleanup-punctuation beg end)))
+    (whittle--report-summaries
+     "Whittle"
+     (list (whittle--format-table-summary filler-counts "fillers")
+           (whittle--format-table-summary duplicate-counts "duplicates")
+           (whittle--format-count-summary punctuation "punctuation fixes")))))
+
+(defun whittle-transcript (&optional beg end)
+  "Run aggressive transcript cleanup on the region or buffer."
+  (interactive (whittle--interactive-bounds))
+  (let* ((line-joins (whittle--join-transcript-lines beg end))
+         (filler-chains (whittle--remove-filler-chains beg end))
+         (conservative-fillers
+          (whittle--remove-filler-words beg end whittle/conservative-filler-rules))
+         (edge-fillers
+          (whittle--remove-filler-words beg end whittle/transcript-edge-filler-rules))
+         (false-starts (whittle--remove-false-starts beg end))
+         (duplicate-counts (whittle--remove-duplicated-words beg end))
+         (punctuation (whittle--cleanup-punctuation beg end))
+         (case-fixes (whittle--normalize-case beg end)))
+    (whittle--report-summaries
+     "Whittle transcript"
+     (list (whittle--format-count-summary line-joins "joined lines")
+           (whittle--format-count-summary filler-chains "filler chains")
+           (whittle--format-table-summary conservative-fillers "fillers")
+           (whittle--format-table-summary edge-fillers "edge fillers")
+           (whittle--format-table-summary false-starts "false starts")
+           (whittle--format-table-summary duplicate-counts "duplicates")
+           (whittle--format-count-summary punctuation "punctuation fixes")
+           (whittle--format-count-summary case-fixes "case fixes")))))
 
 (provide 'whittle)
 ;;; whittle.el ends here
