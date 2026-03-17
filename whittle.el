@@ -17,7 +17,7 @@
     (mapcar
      (pcase-lambda (`(,pat . ,rep))
        ;; prepend/append word‑boundaries + optional space/punct
-       (cons (concat "\\b" pat "\\b[[:space:][:punct:]]*")
+       (cons (concat "\\<" pat "\\>[[:space:][:punct:]]*")
              (or rep "")))
      base))
   "Alist mapping filler phrases (as `rx' patterns) to replacements.")
@@ -56,9 +56,9 @@
             (replace-match (cdr pair) t t)
             (setq count (1+ count)))
           (when (> count 0)
-            (puthash (string-trim (car pair) "\\\\b" "\\\\b") count counts)))))
+            (puthash (string-trim (car pair) "\\\\<" "\\\\>") count counts)))))
     ;; doubled punctuation / spaces
-    (whittle--cleanup-punctuation start end)
+    (whittle--cleanup-punctuation start limit)
     (whittle--strip-comma-like start limit)
     (whittle--report counts "filler phrase")))
 
