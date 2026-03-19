@@ -10,7 +10,7 @@
   '(("kind of like" "\\<kind of like\\>[[:space:][:punct:]]*" "")
     ("i mean" "\\<i mean\\>[[:space:][:punct:]]*" "")
     ("um/uh" "\\<\\(um+\\|uh\\)\\>[[:space:][:punct:]]*" "")
-    (", like," ",[[:space:]]*like[[:space:]]*," " "))
+    (", like," ",[[:space:]]*like[[:space:]]*," ", "))
   "Conservative filler cleanup rules as (LABEL REGEXP REPLACEMENT).")
 
 (defvar whittle/transcript-edge-filler-rules
