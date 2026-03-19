@@ -7,6 +7,7 @@
   - "collapse multiple spaces" was merging paragraphs by replacing =\n\n= with a single space
 - Added =whittle--normalize-case= call to the conservative =whittle= command — previously only =whittle-transcript= fixed capitalization after filler removal
 - Added post-heading capitalization rule to =whittle--normalize-case= so text after org headings (e.g. =*** Speaker:=) gets capitalized when a leading filler like =Um,= is removed
+- Fixed =, like,= filler rule eating both commas — =bias, like, oh= became =bias oh= instead of =bias, oh=; replacement changed from =" "= to =", "=
 
 * 2026-03-17: Split whittle into conservative cleanup and transcript mode
 - Reworked [[file+emacs:/Users/jay/emacs/emacs-settings/whittle.el][whittle.el]] so =whittle= stays conservative and a new =whittle-transcript= command handles aggressive transcript cleanup.
