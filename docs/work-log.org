@@ -1,6 +1,13 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-03-19: Fix whittle punctuation cleanup destroying newlines and capitalization
+- Fixed =whittle--cleanup-punctuation= using =[[:space:]]= (which includes newlines) instead of =[[:blank:]]= (space/tab only) in two regexps:
+  - "strip whitespace before punctuation" was collapsing =:PROPERTIES:= drawers onto one line
+  - "collapse multiple spaces" was merging paragraphs by replacing =\n\n= with a single space
+- Added =whittle--normalize-case= call to the conservative =whittle= command — previously only =whittle-transcript= fixed capitalization after filler removal
+- Added post-heading capitalization rule to =whittle--normalize-case= so text after org headings (e.g. =*** Speaker:=) gets capitalized when a leading filler like =Um,= is removed
+
 * 2026-03-17: Split whittle into conservative cleanup and transcript mode
 - Reworked [[file+emacs:/Users/jay/emacs/emacs-settings/whittle.el][whittle.el]] so =whittle= stays conservative and a new =whittle-transcript= command handles aggressive transcript cleanup.
 - Fixed the original command-path bug where =M-x whittle= errored with no active region; both commands now work on region or whole buffer.

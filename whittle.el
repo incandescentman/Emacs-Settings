@@ -257,7 +257,14 @@
                   (skip-chars-forward " \t\n\"'([{" limit-marker)
                   (when (looking-at "[[:lower:]]")
                     (replace-match (upcase (match-string 0)) t t)
-                    (setq count (1+ count))))))))
+                    (setq count (1+ count)))))))
+          ;; Capitalize after org headings (e.g. *** Speaker:\ntext)
+          (goto-char start)
+          (while (re-search-forward "^\\*+[^\n]*\n" limit-marker t)
+            (skip-chars-forward " \t\n\"'([{" limit-marker)
+            (when (looking-at "[[:lower:]]")
+              (replace-match (upcase (match-string 0)) t t)
+              (setq count (1+ count)))))
       (set-marker limit-marker nil))
     count))
 
@@ -290,12 +297,14 @@
   (interactive (whittle--interactive-bounds))
   (let* ((filler-counts (whittle--remove-filler-words beg end whittle/conservative-filler-rules))
          (duplicate-counts (whittle--remove-duplicated-words beg end))
-         (punctuation (whittle--cleanup-punctuation beg end)))
+         (punctuation (whittle--cleanup-punctuation beg end))
+         (case-fixes (whittle--normalize-case beg end)))
     (whittle--report-summaries
      "Whittle"
      (list (whittle--format-table-summary filler-counts "fillers")
            (whittle--format-table-summary duplicate-counts "duplicates")
-           (whittle--format-count-summary punctuation "punctuation fixes")))))
+           (whittle--format-count-summary punctuation "punctuation fixes")
+           (whittle--format-count-summary case-fixes "case fixes")))))
 
 (defun whittle-transcript (&optional beg end)
   "Run aggressive transcript cleanup on the region or buffer."
