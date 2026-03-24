@@ -583,6 +583,7 @@ Contextuals=Alternate
                \\newcommand{\\EnableEndnotes}{\\jayendnotestrue}
                \\newcommand{\\DisableEndnotes}{\\jayendnotesfalse}
                \\AtBeginDocument{%
+                 \\thispagestyle{empty}% Suppress header/footer on first page
                  \\ifjayendnotes
                    \\let\\footnote\\endnote
                  \\fi

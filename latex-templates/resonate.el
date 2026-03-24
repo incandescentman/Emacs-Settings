@@ -80,6 +80,7 @@
 
 \\usepackage{fancyhdr}
 \\pagestyle{fancy}
+\\AtBeginDocument{\\thispagestyle{empty}} % Suppress header/footer on first page
 \\renewcommand{\\sectionmark}[1]{\\markboth{#1}{}}
 \\lhead{\\href{\\the\\leftheaderurl}{\\the\\leftheader}}
 \\chead{}

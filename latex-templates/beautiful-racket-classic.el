@@ -139,7 +139,7 @@
 }
 
 \\pagestyle{fancy}
-
+\\AtBeginDocument{\\thispagestyle{empty}} % Suppress header/footer on first page
 
 
 

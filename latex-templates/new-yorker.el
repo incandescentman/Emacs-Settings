@@ -107,7 +107,7 @@
 \\fancyhf{} % sets both header and footer to nothing
 \\renewcommand{\\headrulewidth}{0pt}
 \\pagestyle{fancy}
-
+\\AtBeginDocument{\\thispagestyle{empty}} % Suppress header/footer on first page
 
 \\renewcommand{\\sectionmark}[1]{\\markboth{#1}{}}
 \\lhead{\\scshape\\href{\\the\\leftheaderurl}{\\the\\leftheader}}

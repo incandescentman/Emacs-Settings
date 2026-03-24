@@ -54,6 +54,7 @@
 \\newcommand{\\EnableEndnotes}{\\jayendnotestrue}
 \\newcommand{\\DisableEndnotes}{\\jayendnotesfalse}
 \\AtBeginDocument{%
+  \\thispagestyle{empty}% Suppress header/footer on first page
   \\ifjayendnotes
     \\let\\footnote\\endnote
   \\fi
@@ -244,10 +245,10 @@
 }
 
 % Subtitle environments for different heading levels
-% For section (40pt heading -> ~28pt subtitle, 70% size)
+% For section (40pt heading -> 14pt subtitle, compact)
 \\newenvironment{subtitle}%
 {% begin code
-\\vspace{-0.7\\baselineskip}\\fontsize{28}{32}\\selectfont\\itshape
+\\vspace{-0.7\\baselineskip}\\fontsize{14}{18}\\selectfont\\itshape
 }%
 {% end code
 \\par\\bigskip
@@ -273,7 +274,7 @@
 
 % Titlesec Configuration
 \\titlespacing*{\\section}{0pt}{48pt}{0pt}
-\\titlespacing*{\\subsubsection}{0pt}{16pt}{0pt}
+\\titlespacing*{\\subsubsection}{0pt}{6pt}{0pt} % Reduced from 16pt
 \\titlespacing{\\paragraph}{0pt}{0pt}{.5em}[]
 
 \\newcommand{\\mysectiontitle}[1]{%

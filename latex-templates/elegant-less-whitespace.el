@@ -103,6 +103,7 @@
 \\fancyhf{} % Clear all header and footer fields
 \\renewcommand{\\headrulewidth}{0pt}
 \\pagestyle{fancy}
+\\AtBeginDocument{\\thispagestyle{empty}} % Suppress header/footer on first page
 \\newtoks\\leftheader
 \\newtoks\\leftheaderurl
 \\newtoks\\coverimage

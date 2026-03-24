@@ -201,6 +201,7 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 \\jaynofooterfalse
 \\newcommand{\\DisableFooter}{\\jaynofootertrue}
 \\AtBeginDocument{%
+  \\thispagestyle{empty}% Suppress header/footer on first page
   \\ifjaynofooter
     \\fancyfoot{}%
   \\else\\ifjaylogofooter
