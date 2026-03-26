@@ -139,7 +139,7 @@ Additional keyword ARGS allow callers to override pieces of the template:
     ("A" "accountability and task capture" "accountability" "accountability")
     ("a" "article notes or books and articles" "literature-notes" "literaturenote")
     ("B" "Business (Socratic AI)" "business-socratic" "project")
-    ("b" "books" "books" "books")
+    ("b" "books" "book" "books")
     ("C" "corpus (transcripts and examples)" "corpus" "corpus")
     ("c" "Conversation" "conversations" "conversation")
     ("D" "Developing, vibecoding" "vibecoding" "document")
@@ -166,13 +166,13 @@ Additional keyword ARGS allow callers to override pieces of the template:
     ("q" "quotes about AI" "quotes" "quote")
     ("R" "recipe" "recipes" "recipe")
     ("r" "social / relationships" "social" "social")
-    ("S" "Socratic AI" "socratic" "socratic")
+    ("S" "Socratic AI" "socratic-ideas" "socratic")
     ("s" "Storytelling and Writing" "storytelling" "storytelling")
     ("T" "Travel" "travel" "travel")
     ("t" "AI conversation topic" "ongoing-conversations-with-ai" "note"
      :body "- Links :: [[id:ca89a85b-c00e-437b-b6b7-0876faac73ca][AI Conversation Briefings]]\n\n- ${title}\n%?")
     ("u" "approved language" "approved-language" "language")
-    ("W" "writers" "writers" "writers"
+    ("W" "writers" "writing" "writers"
      :filetags ":writers:person:")
     ("w" "lectures and public talks" "lectures" "lectures")
     ("X" "exemplars" "exemplars" "exemplars")
@@ -325,10 +325,10 @@ Additional keyword ARGS allow callers to override pieces of the template:
 (defvar jay/org-roam-capture-templates-parents
   (list
    (jay/roam-template "c" "conversation" "conversations" "conversation")
-   (jay/roam-template "d" "document" "documents" "document")
+   (jay/roam-template "d" "document" "reference" "document")
    (jay/roam-template "i" "interview" "interviews" "interview")
    (jay/roam-template "n" "note" "notes" "note")
-   (jay/roam-template "p" "person" "people" "person"
+   (jay/roam-template "p" "person" "profiles" "person"
     :body "- Links ::\n\n* ${title}\n%?")
    (jay/roam-template "s" "story" "stories" "story")
    (jay/roam-template "t" "task" "tasks" "task"
