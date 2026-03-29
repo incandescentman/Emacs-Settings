@@ -9321,6 +9321,49 @@ saved first and reverted after formatting."
 (setq org-link-elisp-confirm-function nil) 
 #+end_src
 
+* jay-nav-repeat 
+
+#+begin_src emacs-lisp
+(repeat-mode 1)
+
+;; Global line navigation repeat map
+(defvar jay-line-repeat-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "n") #'next-line)
+    (define-key map (kbd "p") #'previous-line)
+    (define-key map (kbd "k") #'kill-whole-line)
+    map)
+  "Repeat map for line movement and line killing.")
+
+(dolist (cmd '(next-line previous-line kill-whole-line))
+  (put cmd 'repeat-map 'jay-line-repeat-map))
+
+(with-eval-after-load 'org
+  ;; Wrapper so k stays inside the Org heading repeat map
+  (defun jay/org-repeat-kill-whole-line ()
+    (interactive)
+    (kill-whole-line))
+
+  ;; Use capital N/P for heading navigation, plus u for up-heading
+  (define-key org-navigation-repeat-map (kbd "N") #'org-next-visible-heading)
+  (define-key org-navigation-repeat-map (kbd "P") #'org-previous-visible-heading)
+  (define-key org-navigation-repeat-map (kbd "u") #'outline-up-heading)
+  (define-key org-navigation-repeat-map (kbd "k") #'jay/org-repeat-kill-whole-line)
+
+  ;; Remove lowercase n/p from Org heading repeat, so the distinction is clean
+  (define-key org-navigation-repeat-map (kbd "n") nil)
+  (define-key org-navigation-repeat-map (kbd "p") nil)
+
+  ;; Make sure these commands keep the Org repeat map active
+  (dolist (cmd '(org-next-visible-heading
+                 org-previous-visible-heading
+                 outline-up-heading
+                 jay/org-repeat-kill-whole-line))
+    (put cmd 'repeat-map 'org-navigation-repeat-map))) 
+#+end_src
+
+
+
 * Local Variables & The End
 These have to be at the end.
 
