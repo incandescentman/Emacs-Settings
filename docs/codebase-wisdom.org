@@ -2,6 +2,32 @@
 #+DATE: 2025-09-24
 #+DESCRIPTION: Debugging post-mortems and prevention checklists.
 
+* Transcript Cleanup Regex: `[[:space:]]*$` Can Destroy Org Structure
+  Date: 2026-04-01
+
+** The Bug
+Running =whittle-transcript= on a diarized Org transcript could remove the blank line before the next paragraph or =*** Speaker:= heading.
+
+** The Truth
+- In =whittle/transcript-edge-filler-rules=, the sentence-final filler rule matched trailing =okay/right/you know= with =[[:space:]]*$=.
+- In Emacs regexps, =[[:space:]]= includes newlines, not just spaces and tabs.
+- That meant cleaning a line like =Is everything okay?= could also consume the following paragraph break, collapsing transcript structure even though the command was only meant to remove a filler phrase.
+- The same rule family also lacked word boundaries, so =so= at sentence start could match the first two letters of a real word like =Sometimes=.
+
+** The Fix
+Use =[[:blank:]]*= in end-of-line cleanup rules that should preserve layout, do not classify sentence-final =okay= as filler, and require word boundaries around filler tokens:
+#+begin_src elisp
+"^[[:space:]]*\\(?:\\<so\\>\\|\\<well\\>\\|\\<ok\\(?:ay\\)?\\>\\|\\<right\\>\\|\\<you know\\>\\|\\<like\\>\\)[,[:space:]-]*"
+"[[:blank:]]*,?[[:blank:]]*\\(?:\\<right\\>\\|\\<you know\\>\\)\\([.?!]?\\)[[:blank:]]*$"
+#+end_src
+
+** Lessons Learned / Prevention Checklist
+- In cleanup regexps, treat =[[:space:]]= as "may eat newlines" unless you explicitly want multiline behavior.
+- For prose/transcript normalization, prefer =[[:blank:]]= when trimming inline spacing near punctuation or end-of-line fillers.
+- Be especially conservative with common content words like =okay=; they often carry real semantic meaning in transcripts.
+- Add word boundaries around short filler tokens like =so= and =like=, or they can silently damage legitimate words.
+- If a text-cleanup command mysteriously collapses Org headings or paragraph breaks, audit any regex that ends with =$= and includes =[[:space:]]=.
+
 * Org Export Hooks: Avoid `replace-regexp` In Before-Parsing Hooks
   Date: 2026-03-14
 

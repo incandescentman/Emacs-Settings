@@ -1,6 +1,13 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-01: Fix whittle-transcript trailing filler rule eating paragraph breaks
+- Fixed =whittle/transcript-edge-filler-rules= in [[file+emacs:/Users/jay/emacs/emacs-settings/whittle.el][whittle.el]] so the sentence-final filler cleanup no longer uses =[[:space:]]*$=.
+- Root cause: =[[:space:]]= includes newlines, so removing trailing =okay/right/you know= at end of a line could also consume the blank line before the next paragraph or =*** Speaker:= heading.
+- Changed the rule to =[[:blank:]]*= so it only trims spaces/tabs and preserves real line structure in Org transcripts.
+- Tightened the rule further so sentence-final =okay= is no longer removed at all; phrases like =Is everything okay?= are meaningful content, not filler.
+- Added word boundaries around transcript edge fillers so sentence-start =so= no longer clips the first letters off real words like =Sometimes=.
+
 * 2026-03-24: LaTeX template refinements
 - Suppressed header/footer on first page across all document templates (10 files) via =\thispagestyle{empty}= in =\AtBeginDocument=
   - Templates updated: elegant-garamond, elegant-garamond-tabularray, elegant-helvetica, elegant-helvetica-tabularray, elegant-less-whitespace, beautiful-racket, beautiful-racket-tabularray, beautiful-racket-classic, new-yorker, resonate

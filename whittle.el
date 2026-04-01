@@ -15,13 +15,13 @@
 
 (defvar whittle/transcript-edge-filler-rules
   '(("edge filler"
-     "^[[:space:]]*\\(?:so\\|well\\|ok\\(?:ay\\)?\\|right\\|you know\\|like\\)[,[:space:]-]*"
+     "^[[:space:]]*\\(?:\\<so\\>\\|\\<well\\>\\|\\<ok\\(?:ay\\)?\\>\\|\\<right\\>\\|\\<you know\\>\\|\\<like\\>\\)[,[:space:]-]*"
      "")
     ("edge filler"
-     "\\([.!?][[:space:]\n]+\\)\\(?:so\\|well\\|ok\\(?:ay\\)?\\|right\\|you know\\|like\\)[,[:space:]-]*"
+     "\\([.!?][[:space:]\n]+\\)\\(?:\\<so\\>\\|\\<well\\>\\|\\<ok\\(?:ay\\)?\\>\\|\\<right\\>\\|\\<you know\\>\\|\\<like\\>\\)[,[:space:]-]*"
      "\\1")
     ("edge filler"
-     "[[:space:]]*,?[[:space:]]*\\(?:right\\|you know\\|ok\\(?:ay\\)?\\)\\([.?!]?\\)[[:space:]]*$"
+     "[[:blank:]]*,?[[:blank:]]*\\(?:\\<right\\>\\|\\<you know\\>\\)\\([.?!]?\\)[[:blank:]]*$"
      "\\1"))
   "Aggressive transcript rules for sentence-edge fillers.")
 

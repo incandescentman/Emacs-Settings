@@ -20,6 +20,7 @@
         jay/right-char
         kill-clause
         kill-region
+        kill-sentence
         kill-word-correctly-and-capitalize
         mac-mwheel-scroll
         meta-return
