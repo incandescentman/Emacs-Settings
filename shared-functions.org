@@ -4249,6 +4249,19 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
   (when (eq exporter 'html)
     (when (eq my-org-selected-css 'unset)
       (select-org-export-css))
+    ;; Force export to use only the manually selected stylesheet.
+    ;; Without this, Org can still inject additional style blocks from other
+    ;; export variables, which then override the chosen Gmail CSS.
+    (setq org-html-head-extra nil
+          org-html-style nil
+          org-html-style-default ""
+          org-export-preserve-breaks
+          (if (and (stringp my-org-selected-css)
+                   (string-match-p "gmail\\.css\\'" my-org-selected-css))
+              nil
+            org-export-preserve-breaks)
+          org-html-head-include-scripts nil
+          org-html-validation-link nil)
     (if (and my-org-selected-css (not (eq my-org-selected-css 'unset)))
         (let ((final my-org-selected-css))
           (when (file-exists-p final)
@@ -4265,6 +4278,9 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
       (setq org-html-head nil))))
 
 (add-hook 'org-export-before-processing-functions 'my-org-inline-css-hook)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
 #+END_SRC
 
 * hashtags

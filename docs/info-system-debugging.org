@@ -1,4 +1,4 @@
-#+TITLE: Handoff Message: Emacs Info Debugging Session
+#+TITLE: Emacs Info System Debugging
 #+DATE: 2025-10-14
 
 * Summary

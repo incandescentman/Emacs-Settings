@@ -1259,7 +1259,7 @@ To restore the asterisk-to-dash conversion:
 ** Summary
 - Tracked down why `M-x info` was hiding Calendar/Diary nodes; removed old buffer-killing hooks and normalized `Info-directory-list` handling.
 - Added optional local manual support and created `info/dir` aliases pointing to `(emacs)Calendar/Diary` and `(emacs)Diary`.
-- Captured the full investigation, commands, and open questions in `docs/info-calendar-debug.org` for follow-up.
+- Captured the full investigation, commands, and open questions in `docs/info-system-debugging.org` for follow-up.
 
 ** Current State
 - Config merges Homebrew’s info path plus `~/emacs/emacs-settings/info`; `Info-directory-list` shows the custom dir, but the top-level menu still omits the new entries.

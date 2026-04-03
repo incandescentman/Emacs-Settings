@@ -65,7 +65,7 @@ Note: =pasteboard-copy-and-paste-functions.el= is now pure elisp and does not ta
 | =org-yt.el=           | YouTube link support in org               |
 | =keys.el=             | Global keybinding overrides               |
 | =smart-return.el=     | Context-aware Enter key behavior          |
-| =hydras.el=           | Hydra menus for quick commands            |
+| =hydras.org=          | Hydra notes and quick-command snippets    |
 | =skeletons.el=        | Code templates and snippets               |
 | =search-commands.el=  | Enhanced search functionality             |
 

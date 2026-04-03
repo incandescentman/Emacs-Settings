@@ -66,7 +66,7 @@ The following documentation files provide detailed information about various asp
 
 #### 6. Utility Modules
 - `search-commands.el` - Enhanced search functionality
-- `hydras.el` - Hydra configurations for quick commands
+- `hydras.org` - Hydra notes and quick-command snippets
 - `skeletons.el` - Code templates and snippets
 - `auto-capitalize.el` - Smart capitalization
 
