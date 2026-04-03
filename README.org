@@ -47,9 +47,7 @@ This is a sophisticated Emacs configuration that uses Spacemacs as its foundatio
 
 *** Utility Modules
 - [[file:search-commands.el][search-commands.el]] - Enhanced search functionality
-- [[file:hydras.org][hydras.org]] - Hydra notes and quick-command snippets
 - [[file:skeletons.el][skeletons.el]] - Code templates and snippets
-- [[file:auto-capitalize.el][auto-capitalize.el]] - Smart capitalization
 
 ** Loading Order
 1. Spacemacs core initialization

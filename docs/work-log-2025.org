@@ -1283,7 +1283,7 @@ To restore the asterisk-to-dash conversion:
 ** Files & Commits
 - `shared-functions.org` (`Allow Info buffer to open`, `Restore default Info directory search`) for cleanup and hook adjustments.
 - `spacemacs.d/init.el`, `spacemacs.d/init-working.el` synced with new Info lookup logic.
-- New notes: `docs/info-calendar-debug.org`, `info/dir`.
+- New notes: `docs/info-system-debugging.org`, `info/dir`.
 - New regression script: `scripts/check-info-calendar.el` validates all Calendar submenu nodes via batch Info runs.
 
 ** Solution

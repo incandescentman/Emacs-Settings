@@ -48,9 +48,9 @@ keys.el already has ~270 bindings in a clean declarative alist plus ~with-eval-a
 
 ** Do NOT move
 - [[file+emacs:/Users/jay/emacs/emacs-settings/jay-osx.el][jay-osx.el]] — preserved entirely
-- Third-party / vendored package files: ~dired+.el~, ~frame-cmds.el~, ~buffer-stack.el~, ~pomidor.el~, ~key-seq.el~, ~ivy-smex.el~, ~wc-goal-mode.el~, ~forecast.el~, ~auto-capitalize.el~ — these define their own mode-specific maps, not Jay's global bindings
+- Third-party / vendored package files: ~dired+.el~, ~frame-cmds.el~, ~buffer-stack.el~, ~pomidor.el~, ~key-seq.el~, ~ivy-smex.el~, ~wc-goal-mode.el~, ~forecast.el~, ~elpa-supplement/auto-capitalize.el~ — these define their own mode-specific maps, not Jay's global bindings
 - [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/][timeline/*.el]] — self-contained calendar-mode-map bindings
-- [[file+emacs:/Users/jay/emacs/emacs-settings/aibo-config.el][aibo-config.el]] / [[file+emacs:/Users/jay/emacs/emacs-settings/aibo-power-pack.el][aibo-power-pack.el]] — internal mode maps
+- [[file+emacs:/Users/jay/emacs/emacs-settings/archive/aibo-config.el][archive/aibo-config.el]] / [[file+emacs:/Users/jay/emacs/emacs-settings/archive/aibo-power-pack.el][archive/aibo-power-pack.el]] — internal mode maps
 - [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]] — Spacemacs layer config (1-2 bindings only)
 - Bindings inside a ~defun~ that are meant to be set up conditionally (e.g., mode hooks that toggle bindings on/off) — these stay with their function, with a comment pointing to keys.el
 

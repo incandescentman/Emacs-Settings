@@ -60,7 +60,7 @@ alias emacs-debug='/Applications/Emacs.app/Contents/MacOS/Emacs --debug-init'
 alias emacs-vanilla='/Applications/Emacs.app/Contents/MacOS/Emacs -Q'
 alias emacs-check='ls -ld ~/.emacs.d ~/.spacemacs ~/.spacemacs.d ~/starship'
 alias emacs-known-good='SPACEMACSDIR=/Users/jay/emacs/emacs-settings-known-good/spacemacs.d /Applications/Emacs.app/Contents/MacOS/Emacs'
-alias emacs-min='/Applications/Emacs.app/Contents/MacOS/Emacs -Q -l /Users/jay/emacs/emacs-settings/minimal-init.el'
+alias emacs-min='/Applications/Emacs.app/Contents/MacOS/Emacs -Q -l /Users/jay/emacs/emacs-settings/archive/minimal-init.el'
 #+end_src
 
 *Why these use explicit paths*: Your =em= alias uses =open -a= which can't pass flags like =--debug-init=. These aliases invoke the Emacs.app binary directly.
@@ -119,7 +119,7 @@ Spacemacs will re-download all ~500 packages. Takes 5-10 minutes.
 
 #+begin_src sh
 emacs-vanilla  # Emacs with zero config
-emacs-min      # Emacs with minimal-init.el
+emacs-min      # Emacs with archive/minimal-init.el
 #+end_src
 
 =emacs-vanilla= is useful for:

@@ -65,7 +65,6 @@ Note: =pasteboard-copy-and-paste-functions.el= is now pure elisp and does not ta
 | =org-yt.el=           | YouTube link support in org               |
 | =keys.el=             | Global keybinding overrides               |
 | =smart-return.el=     | Context-aware Enter key behavior          |
-| =hydras.org=          | Hydra notes and quick-command snippets    |
 | =skeletons.el=        | Code templates and snippets               |
 | =search-commands.el=  | Enhanced search functionality             |
 
@@ -336,7 +335,7 @@ This config uses these Spacemacs layers:
 *Decision*: For a personal config, convenience trumps modularity. Could split if working with a team.
 
 *If splitting ever becomes necessary*, start with low-coupling blocks:
-- Keybindings + key-chord setup (move to =keys.el= / =key-chord.org=)
+- Keybindings + key-chord setup (move to =keys.el= / [[file+emacs:/Users/jay/emacs/emacs-settings/archive/key-chord.org][archive/key-chord.org]])
 - Search/completion stack (isearch, swiper, consult, rg, deadgrep)
 - Org-roam + org-roam-ui config stubs
 - UI/appearance + font/frame logic (move to =fonts-and-themes.org=)
