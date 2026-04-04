@@ -1,0 +1,186 @@
+#+TITLE: Kill Commands Behavior
+#+DATE: 2026-04-04
+#+DESCRIPTION: Desired behavior for kill-clause and kill-sentence-maybe-else-kill-line
+
+* Overview
+
+This document is the behavior spec for the writing-oriented kill commands used in this configuration.
+
+The current implementations live in:
+- [[file+emacs:/Users/jay/emacs/emacs-settings/spacecraft-mode.org][/Users/jay/emacs/emacs-settings/spacecraft-mode.org]]
+- [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org][/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org]]
+- [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][/Users/jay/emacs/emacs-settings/keys.el]]
+
+This file is intended to be the clearer, human-readable source of truth for desired behavior. If the implementation and this document disagree, treat that as something to resolve explicitly rather than silently preserving whichever behavior happens to exist.
+
+* Commands
+
+- =kill-clause=: Usually bound to =M-k= in Org writing contexts. It should remove the smallest forward grammatical chunk that feels like a clause, then repair punctuation and spacing so the remaining sentence still reads naturally.
+- =kill-sentence-maybe-else-kill-line=: Currently bound to =M-K= in Org mode. It should kill the rest of the current sentence when point is inside text, but fall back to line-oriented killing when point is already at end of line.
+
+* Shared Principles
+
+These commands are for writing, not raw structural deletion.
+
+They should prefer producing clean prose over preserving literal surrounding characters.
+
+Before deleting text, they should expand pending abbrevs so the kill operation works on the intended final text, not on an intermediate shorthand.
+
+After deleting text, they should leave the buffer in a readable state:
+- no doubled spaces unless a mode-specific construct requires them
+- no stray space before punctuation
+- no doubled punctuation created by the edit
+- no orphaned comma, semicolon, or colon left hanging awkwardly
+- capitalization repaired when the deletion makes an existing sentence fragment become the start of a sentence
+
+In Org headings and other line-sensitive contexts, these commands should avoid damaging headline or list syntax.
+
+* kill-clause
+
+** Intent
+
+=kill-clause= is the prose-level "trim this phrase" command.
+
+It is for cases like:
+- deleting a parenthetical or trailing phrase from a sentence
+- removing a leading clause after a comma or semicolon
+- cutting a clause while keeping the sentence grammatically smooth
+
+It should feel smaller and more surgical than sentence kill.
+
+** Desired Behavior
+
+1. Expand abbrevs first.
+2. If point is sitting on a clause separator such as a comma, semicolon, or colon, absorb that separator rather than leaving it behind.
+3. If point is just after a clause separator, absorb the separator behind point when appropriate so the surviving text does not end up with doubled punctuation or odd spacing.
+4. Delete forward through the next clause boundary.
+5. When deleting a middle clause that is set off by paired punctuation, preserve whichever separator still belongs to the surviving outer sentence.
+6. If point is at the start of a sentence and the deleted region naturally includes sentence-ending punctuation, it is acceptable to absorb that punctuation too.
+7. Normalize spacing and punctuation around the join point.
+8. If the join point now starts a sentence, capitalize it unless doing so would corrupt Org syntax.
+
+** Clause Boundary Heuristic
+
+The command does not need deep grammar parsing. A practical writing heuristic is enough.
+
+By default, the forward kill target should stop at the next strong boundary, such as:
+- a comma
+- a semicolon
+- a colon
+- sentence-ending punctuation
+- an em dash or double-hyphen break
+- end of line
+
+The exact regex can evolve, but the editing feel should remain "remove the next clause-sized phrase."
+
+** kill-clause Examples
+
+#+BEGIN_EXAMPLE
+We shipped the fix, |after a long night of debugging, and went home.
+=> We shipped the fix, and went home.
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+We shipped the fix, and |after a long night of debugging, went home.
+=> We shipped the fix, and went home.
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+We shipped the fix; |after a long night of debugging, we finally slept.
+=> We shipped the fix; we finally slept.
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+|After a long night of debugging, we shipped the fix.
+=> We shipped the fix.
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+|After a long night of debugging -- and several bad ideas -- we shipped the fix.
+=> We shipped the fix.
+#+END_EXAMPLE
+
+** Non-Goals
+
+=kill-clause= is not trying to preserve the exact original punctuation layout.
+
+It is also not a syntax-aware structural editing command for Lisp forms or Org subtree manipulation.
+
+* kill-sentence-maybe-else-kill-line
+
+** Intent
+
+=kill-sentence-maybe-else-kill-line= is the larger writing deletion command.
+
+It should remove sentence-sized text when point is in prose, while still behaving usefully at end of line by delegating to the line-oriented kill command instead of doing nothing.
+
+** Decision Rule
+
+1. If point is not at end of line, perform sentence-oriented killing.
+2. If point is at end of line, call the line-oriented kill behavior instead.
+
+In practice, the sentence-oriented path is implemented by =my/kill-sentence-dwim= and the line-oriented path by =my/kill-line-dwim= in [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org][/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org]].
+
+** Desired Sentence Behavior
+
+When point is at the beginning of a sentence:
+- kill the whole current sentence
+- collapse any now-redundant whitespace
+- avoid leaving indentation junk at the start of the line
+
+When point is in the middle of a sentence:
+- kill from point to the end of the current sentence
+- preserve the sentence-ending punctuation when that produces more natural prose
+
+Afterward:
+- collapse spacing around the join point
+- remove doubled periods if the edit created them
+- repair awkward comma-plus-period combinations
+
+** Examples
+
+#+BEGIN_EXAMPLE
+|We shipped the fix. Then we went home.
+=> Then we went home.
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+We shipped |the fix after midnight.
+=> We shipped.
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+We shipped the fix.| 
+=> Use line-oriented kill behavior instead of sentence logic.
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+* TODO Write the launch email|
+=> Use line-oriented kill behavior that respects Org headline structure.
+#+END_EXAMPLE
+
+** Relationship To kill-clause
+
+=kill-sentence-maybe-else-kill-line= should feel broader than =kill-clause=.
+
+Use =kill-clause= when the user wants to trim a phrase while preserving the rest of the sentence.
+
+Use =kill-sentence-maybe-else-kill-line= when the user wants to remove the rest of the sentence, or the whole sentence from its start, with a sensible fallback at end of line.
+
+* Edge Cases Worth Preserving
+
+- If a deletion causes a surviving lowercase word to become sentence-initial, capitalize it unless the text is an Org heading or another syntax-sensitive construct.
+- If point starts on punctuation that clearly belongs to the removable clause, absorb it.
+- If point is just after punctuation that should disappear with the removed clause, absorb that too.
+- Do not leave =,.=, =..=, = ;=, or similar broken joins behind.
+- In Org headings, lists, and checklist lines, do not damage the structural marker just to satisfy prose cleanup.
+
+* Open Questions
+
+These are the places where the current implementation is pragmatic but not fully specified:
+
+- Whether =kill-clause= should treat em dashes, parentheses, and quotation marks more explicitly than it does now.
+- Whether sentence detection should be stricter in Org headings and looser in plain text paragraphs.
+- Whether both commands should share one normalization helper so punctuation cleanup is consistent.
+
+If we refine those behaviors later, update this file first and then adjust the implementation in [[file+emacs:/Users/jay/emacs/emacs-settings/spacecraft-mode.org][/Users/jay/emacs/emacs-settings/spacecraft-mode.org]] or [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org][/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org]] to match.

@@ -25,6 +25,7 @@
 (autoload 'capitalize-or-endless/capitalize "/Users/jay/emacs/emacs-settings/spacecraft-mode" nil t)
 (autoload 'smart-space "/Users/jay/emacs/emacs-settings/spacecraft-mode" nil t)
 (autoload 'smart-period "/Users/jay/emacs/emacs-settings/spacecraft-mode" nil t)
+(autoload 'kill-clause "/Users/jay/emacs/emacs-settings/spacecraft-mode" nil t)
 (autoload 'comma-or-smart-comma "/Users/jay/emacs/emacs-settings/spacecraft-mode" nil t)
 (autoload 'smart-question-mark "/Users/jay/emacs/emacs-settings/spacecraft-mode" nil t)
 (autoload 'smart-exclamation-point "/Users/jay/emacs/emacs-settings/spacecraft-mode" nil t)
@@ -587,6 +588,7 @@
     ("<left>"         . jay/left-char)
     ("<right>"        . jay/right-char)
     ("DEL"            . new-org-delete-backward-char)
+    ("M-k"            . kill-clause)
     ("M-K"            . kill-sentence-maybe-else-kill-line))
   "Bindings installed into `org-mode-map'.")
 
