@@ -1,5 +1,5 @@
 #+TITLE: Kill Commands Behavior
-#+DATE: 2026-04-04
+#+DATE: 2026-04-05
 #+DESCRIPTION: Desired behavior for kill-clause and kill-sentence-maybe-else-kill-line
 
 * Overview
@@ -12,6 +12,14 @@ The current implementations live in:
 - [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][/Users/jay/emacs/emacs-settings/keys.el]]
 
 This file is intended to be the clearer, human-readable source of truth for desired behavior. If the implementation and this document disagree, treat that as something to resolve explicitly rather than silently preserving whichever behavior happens to exist.
+
+* Status Legend
+
+This document uses three labels:
+- *Current*: behavior the present implementation appears to have today
+- *Desired*: behavior we want the command to have, even if the code is not fully there yet
+- *Mixed*: behavior whose broad intent exists today, but whose exact wording overstates what the current implementation guarantees
+- *Open question*: behavior that still needs an explicit decision
 
 * Commands
 
@@ -50,14 +58,35 @@ It should feel smaller and more surgical than sentence kill.
 
 ** Desired Behavior
 
-1. Expand abbrevs first.
-2. If point is sitting on a clause separator such as a comma, semicolon, or colon, absorb that separator rather than leaving it behind.
-3. If point is just after a clause separator, absorb the separator behind point when appropriate so the surviving text does not end up with doubled punctuation or odd spacing.
-4. Delete forward through the next clause boundary.
-5. When deleting a middle clause that is set off by paired punctuation, preserve whichever separator still belongs to the surviving outer sentence.
-6. If point is at the start of a sentence and the deleted region naturally includes sentence-ending punctuation, it is acceptable to absorb that punctuation too.
-7. Normalize spacing and punctuation around the join point.
-8. If the join point now starts a sentence, capitalize it unless doing so would corrupt Org syntax.
+1. *Current*: Expand abbrevs first.
+2. *Current*: If point is sitting on a clause separator such as a comma, semicolon, or colon, absorb that separator rather than leaving it behind.
+3. *Current*: If point is just after a clause separator, absorb the separator behind point when appropriate so the surviving text does not end up with doubled punctuation or odd spacing.
+4. *Current*: Delete forward through the next clause boundary.
+5. *Current*: When deleting a middle clause that is set off by paired punctuation, preserve whichever separator still belongs to the surviving outer sentence.
+6. *Current*: If point is at the start of a sentence and the deleted region naturally includes sentence-ending punctuation, absorb that punctuation and capitalize the surviving sentence start.
+7. *Current*: If the removable clause runs to end of line with no sentence-final punctuation, keep the surviving separator exactly as confirmed by the examples below.
+8. *Current*: Normalize spacing and punctuation around the join point.
+9. *Current*: If the join point now starts a sentence, capitalize it unless doing so would corrupt Org syntax.
+
+** Confirmed Behavior Choices
+
+These are explicit behavior choices confirmed during debugging:
+- =Alpha; |beta; gamma.= -> =Alpha; gamma.=
+- =Alpha, |beta= -> =Alpha,=
+- =Alpha, |beta.= followed by a blank line -> =Alpha.= while preserving the blank line
+- =|After a long night, we shipped the fix.= -> =We shipped the fix.=
+- =Alpha, |(beta), gamma.= -> =Alpha, gamma.=
+- In Org headings, =kill-clause= should kill from point to the end of heading text without damaging the heading prefix
+
+** Current Implementation Notes
+
+- *Current*: The implementation expands abbrevs first.
+- *Current*: It explicitly absorbs a comma, semicolon, or colon at point or just behind point before the main kill.
+- *Current*: It kills forward to the first clause boundary matched by the regex, not to an arbitrarily distant grammatical boundary.
+- *Current*: It has a special-case path for parenthetical clauses in parentheses, so =Alpha, |(beta), gamma.= cleans up as =Alpha, gamma.=
+- *Current*: It performs a large amount of punctuation and spacing cleanup after the kill.
+- *Current*: It now treats Org headings separately, so heading text is trimmed without running the prose clause heuristics over the headline prefix.
+- *Current*: It attempts capitalization repair when the surviving text now starts a sentence.
 
 ** Clause Boundary Heuristic
 
@@ -74,6 +103,8 @@ By default, the forward kill target should stop at the next strong boundary, suc
 The exact regex can evolve, but the editing feel should remain "remove the next clause-sized phrase."
 
 ** kill-clause Examples
+
+*Current*:
 
 #+BEGIN_EXAMPLE
 We shipped the fix, |after a long night of debugging, and went home.
@@ -96,8 +127,38 @@ We shipped the fix; |after a long night of debugging, we finally slept.
 #+END_EXAMPLE
 
 #+BEGIN_EXAMPLE
-|After a long night of debugging -- and several bad ideas -- we shipped the fix.
-=> We shipped the fix.
+|After a long night -- and several bad ideas -- we shipped the fix.
+=> And several bad ideas -- we shipped the fix.
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+Alpha, |(beta), gamma.
+=> Alpha, gamma.
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+Alpha, |beta
+=> Alpha,
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+Alpha, |beta.
+
+Next para.
+
+=> Alpha.
+
+Next para.
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+* TODO |Write launch email
+=> * TODO
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+* TODO Write |launch email
+=> * TODO Write
 #+END_EXAMPLE
 
 ** Non-Goals
@@ -121,23 +182,34 @@ It should remove sentence-sized text when point is in prose, while still behavin
 
 In practice, the sentence-oriented path is implemented by =my/kill-sentence-dwim= and the line-oriented path by =my/kill-line-dwim= in [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org][/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org]].
 
+** Current Implementation Notes
+
+- *Current*: The implementation checks =looking-at "$"= to decide whether point is at end of line.
+- *Current*: It delegates sentence killing to =my/kill-sentence-dwim= and line killing to =my/kill-line-dwim=.
+- *Current*: The wrapper uses an explicit =if= so the command takes the sentence-kill path or the line-kill path, not both.
+
 ** Desired Sentence Behavior
 
 When point is at the beginning of a sentence:
-- kill the whole current sentence
-- collapse any now-redundant whitespace
-- avoid leaving indentation junk at the start of the line
+- *Current*: kill the whole current sentence
+- *Current*: collapse any now-redundant whitespace
+- *Current*: avoid leaving indentation junk at the start of the line
 
 When point is in the middle of a sentence:
-- kill from point to the end of the current sentence
-- preserve the sentence-ending punctuation when that produces more natural prose
+- *Current*: kill from point to the end of the current sentence
+- *Current*: preserve the sentence-ending punctuation when that produces more natural prose
+- *Current*: if there is no sentence-ending punctuation, kill to end of line or end of buffer without inventing punctuation
+- *Current*: if the killed tail includes closing quotes or parentheses, remove those with the killed material and keep the surviving sentence clean
 
 Afterward:
-- collapse spacing around the join point
-- remove doubled periods if the edit created them
-- repair awkward comma-plus-period combinations
+- *Current*: collapse spacing around the join point
+- *Current*: remove doubled periods if the edit created them
+- *Current*: repair awkward comma-plus-period combinations
+- *Current*: preserve paragraph breaks exactly rather than collapsing blank lines between paragraphs
 
 ** Examples
+
+*Current*:
 
 #+BEGIN_EXAMPLE
 |We shipped the fix. Then we went home.
@@ -150,13 +222,33 @@ We shipped |the fix after midnight.
 #+END_EXAMPLE
 
 #+BEGIN_EXAMPLE
-We shipped the fix.| 
-=> Use line-oriented kill behavior instead of sentence logic.
+We shipped |the fix
+=> We shipped
 #+END_EXAMPLE
 
 #+BEGIN_EXAMPLE
-* TODO Write the launch email|
-=> Use line-oriented kill behavior that respects Org headline structure.
+He said |"hello there." Then he left.
+=> He said. Then he left.
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+He realized |(too late) that he was wrong. Next sentence.
+=> He realized. Next sentence.
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+So she was considering in her own mind (as well as she could, for the hot day made her feel very sleepy and stupid), whether the pleasure of making a daisy-chain would be worth the trouble of getting up and picking the daisies, |when suddenly a White Rabbit with pink eyes ran close by her.
+
+There was nothing so very remarkable in that; nor did Alice think it so very much out of the way to hear the Rabbit say to itself, "Oh dear! Oh dear! I shall be late!"
+
+=> So she was considering in her own mind (as well as she could, for the hot day made her feel very sleepy and stupid), whether the pleasure of making a daisy-chain would be worth the trouble of getting up and picking the daisies.
+
+There was nothing so very remarkable in that; nor did Alice think it so very much out of the way to hear the Rabbit say to itself, "Oh dear! Oh dear! I shall be late!"
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+We shipped the fix.|
+=> Use line-oriented kill behavior instead of sentence logic.
 #+END_EXAMPLE
 
 ** Relationship To kill-clause
@@ -179,7 +271,6 @@ Use =kill-sentence-maybe-else-kill-line= when the user wants to remove the rest 
 
 These are the places where the current implementation is pragmatic but not fully specified:
 
-- Whether =kill-clause= should treat em dashes, parentheses, and quotation marks more explicitly than it does now.
 - Whether sentence detection should be stricter in Org headings and looser in plain text paragraphs.
 - Whether both commands should share one normalization helper so punctuation cleanup is consistent.
 

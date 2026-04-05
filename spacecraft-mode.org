@@ -473,17 +473,35 @@ Also converts full stops to commas."
   (left-char 1))
 
       (if
-	  (let ((sm (string-match "*+\s" (thing-at-point 'line)))) (and sm (= sm 0)))
-	  (kill-line)
+	  (save-excursion
+            (beginning-of-line)
+            (looking-at "^\\*+ "))
+	  (progn
+            (kill-line)
+            (save-excursion
+              (end-of-line)
+              (skip-chars-backward " \t")
+              (delete-region (point) (line-end-position))))
 
 	(let ((old-point (point))
 	      (kill-punct (my/beginning-of-sentence-p)))
-	  ;; Stop at a period followed by a space, or the end of the line
-	  (when (re-search-forward "--\\|[][,;:?!…\"”()}\\.]+\\|$" nil t)
-	    (kill-region old-point
-			 (if kill-punct
-			     (match-end 0)
-			   (match-beginning 0)))))
+          (cond
+           ((save-excursion
+              (skip-chars-forward " \t")
+              (looking-at "("))
+            (skip-chars-forward " \t")
+            (when (looking-at "(")
+              (forward-sexp 1)
+              (when (looking-at "[,;:]")
+                (forward-char 1))
+              (kill-region old-point (point))))
+           (t
+	    ;; Stop at a period followed by a space, or the end of the line
+	    (when (re-search-forward "--\\|[][,;:?!…\"”()}\\.]+\\|$" nil t)
+	      (kill-region old-point
+			   (if kill-punct
+			       (match-end 0)
+			     (match-beginning 0)))))))
 	(my/fix-space)
 	(save-excursion
 	  (when (my/beginning-of-sentence-p)
@@ -629,7 +647,17 @@ Also converts full stops to commas."
 (when (looking-at ",")
   (when (looking-back-safe ", ")
     (delete-backward-char 2)
-    (insert ", "))))
+    (insert ", ")))
+
+(save-excursion
+  (beginning-of-line)
+  (when (re-search-forward ";; " (line-end-position) t)
+    (replace-match "; " t t)))
+
+(save-excursion
+  (end-of-line)
+  (skip-chars-backward " \t")
+  (delete-region (point) (line-end-position))))
 
 
 
