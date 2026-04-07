@@ -2,6 +2,41 @@
 #+DATE: 2025-09-24
 #+DESCRIPTION: Debugging post-mortems and prevention checklists.
 
+* Old `use-package` + VC Installs: `:vc` May Parse Fine In Theory And Still Do Nothing In Practice
+  Date: 2026-04-06
+
+** The Bug
+Adding
+= (use-package org-mindmap :vc (...)) =
+to [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] looked reasonable on Emacs 29, but the package never actually installed or loaded in the running Spacemacs session.
+
+** The Truth
+- Emacs 29 has =package-vc-install=, but this setup still loads an older ELPA =use-package= build from =/Users/jay/.emacs.d/elpa/use-package-20210207.1926/=.
+- That build does not recognize the =:vc= keyword, so relying on inline VC installation inside =use-package= is brittle here.
+- Even after installing =org-mindmap= with =package-vc-install=, the package was not automatically visible to the running session through the normal package activation path.
+- The reliable signal came from the live server, not batch bootstrap:
+  - =emacsclient -e '(locate-library "org-mindmap")'= was initially =nil=
+  - evaluating the exact =use-package= form with an explicit =:load-path= made =(featurep 'org-mindmap)= return =t=
+
+** The Fix
+Use the repo's existing VC-package pattern and point the package at the installed checkout explicitly:
+#+begin_src elisp
+;; /Users/jay/emacs/emacs-settings/spacemacs.d/init.el
+(org-mindmap :vc-backend Git :url "https://github.com/krvkir/org-mindmap.git")
+
+;; /Users/jay/emacs/emacs-settings/shared-functions.org
+(use-package org-mindmap
+  :ensure nil
+  :load-path "/Users/jay/.emacs.d/elpa/org-mindmap"
+  :after org)
+#+end_src
+
+** Lessons Learned / Prevention Checklist
+- Do not assume Emacs 29 implies modern =use-package= keyword support; check the actual installed =use-package= version.
+- If this config already has a package-vc convention, follow it instead of mixing in inline =:vc= declarations.
+- For packages that are present on disk but invisible at runtime, test in the live server with =emacsclient= before trusting batch bootstrap output.
+- When package activation is flaky, an explicit =:load-path= to the VC checkout can be the least risky fix.
+
 * Transcript Cleanup Regex: `[[:space:]]*$` Can Destroy Org Structure
   Date: 2026-04-01
 

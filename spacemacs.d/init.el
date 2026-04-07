@@ -1166,6 +1166,7 @@ This function is called at the very end of Spacemacs initialization."
      '(emacsql-sqlite s mw-thesaurus org-bookmark-heading org-mac-link org-pomodoro org-sticky-header ox-clip ox-tufte palimpsest paredit point-stack quelpa-use-package rainbow-mode re-builder recentf regex-tool rspec-mode sudo-edit titlecase unfill visible-mark wc-mode wrap-region xah-replace-pairs))
    '(package-vc-selected-packages
      '((lisp-fsrs :vc-backend Git :url "https://github.com/open-spaced-repetition/lisp-fsrs")
+       (org-mindmap :vc-backend Git :url "https://github.com/krvkir/org-mindmap.git")
        (org-srs :vc-backend Git :url "https://github.com/bohonghuang/org-srs")))
    '(paradox-github-token t)
    '(smex-save-file "/Users/jay/emacs/local-emacs-config/smex-items")

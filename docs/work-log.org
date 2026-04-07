@@ -1,6 +1,19 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-06: Install org-mindmap and add live mindmap examples
+- Added =org-mindmap= to =package-vc-selected-packages= in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]] so the package is tracked in the same VC-install path as =org-srs= and =lisp-fsrs=.
+- Added an =org mindmaps= section to [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] with:
+  - a =use-package= stanza for =org-mindmap=
+  - live =#+begin_mindmap= examples for list conversion and the three layouts
+  - a larger interactive example adapted from the upstream README
+- Avoided =:vc= inside =use-package=: this setup is still on the older ELPA =use-package= build, which does not understand the =:vc= keyword.
+- Pointed the package explicitly at =/Users/jay/.emacs.d/elpa/org-mindmap= via =:load-path= so the running Spacemacs session can load the VC-installed checkout reliably.
+- Verified in the live Emacs server:
+  - =(locate-library "org-mindmap")= resolves to =/Users/jay/.emacs.d/elpa/org-mindmap/org-mindmap.elc=
+  - =(featurep 'org-mindmap)= returns =t=
+- Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] and ran =check-parens= on [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]].
+
 * 2026-04-01: Fix whittle-transcript trailing filler rule eating paragraph breaks
 - Fixed =whittle/transcript-edge-filler-rules= in [[file+emacs:/Users/jay/emacs/emacs-settings/whittle.el][whittle.el]] so the sentence-final filler cleanup no longer uses =[[:space:]]*$=.
 - Root cause: =[[:space:]]= includes newlines, so removing trailing =okay/right/you know= at end of a line could also consume the blank line before the next paragraph or =*** Speaker:= heading.

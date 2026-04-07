@@ -9379,6 +9379,131 @@ saved first and reverted after formatting."
 #+end_src
 
 
+* org mindmaps
+#+begin_src emacs-lisp
+
+(use-package org-mindmap
+  :ensure nil  ;; installed via package-vc-selected-packages
+  :load-path "/Users/jay/.emacs.d/elpa/org-mindmap"
+  :after org) 
+
+#+end_src
+
+** From a list
+[[https://github.com/krvkir/org-mindmap#from-a-list][]]
+
+Lists and mindmaps are mostly isomorphic: any list can be transformed to
+a corresponding mindmap without loss of data (except that bullet types
+and enumerated lists are not supported for now), and vice versa.
+
+If you have a list, you can transform it to mindmap
+with ~org-mindmap-list-to-mindmap~:
+
+- For want of a nail
+  - the shoe was lost,
+- For want of a shoe
+  - the horse was lost,
+- For want of a horse
+  - the rider was lost,
+- For want of a rider
+  - the battle was lost,
+- For want of a battle
+  - the kingdom was lost,
+- And all for the want
+  - of horseshoe nail.
+
+#+begin_mindmap
+┬─ For want of a nail ── the shoe was lost,
+├─ For want of a shoe ── the horse was lost,
+├─ For want of a horse ── the rider was lost,
+├─ For want of a rider ── the battle was lost,
+├─ For want of a battle ── the kingdom was lost,
+╰─ And all for the want ── of horseshoe nail.
+#+end_mindmap
+
+
+... and back to list with ~org-mindmap-to-list~.
+
+** Layouts
+[[https://github.com/krvkir/org-mindmap#layouts][]]
+
+Mindmaps are only left to right. Two-sided mindmaps are not supported.
+Formatting inside nodes text is also not supported.
+
+There are three layouts:
+
+1. ~left~, the simplest and the default one
+
+#+begin_mindmap :layout left
+┬─ root ng ┬─ node b ┬─ node d
+│          │         ├─ node c
+│          │         ╰─ node e ── node f
+│          ╰─ node a
+╰─ disk c: ┬─ Windows
+           ╰─ Users
+#+end_mindmap
+
+
+2. ~compact~, the one where nodes float up if there's space for them
+   (like node a here).
+
+#+begin_mindmap :layout compact
+┬─ root ng ┬─ node b ┬─ node d
+│          ╰─ node a ├─ node c
+│                    ╰─ node e ── node f
+╰─ disk c: ┬─ Windows
+           ╰─ Users
+#+end_mindmap
+
+
+3. ~centered~, like above, but the root nodes are vertically centered
+   against their children.
+
+#+begin_mindmap :layout centered
+                     ╭─ node d
+┬─ root ng ┬─ node b ┼─ node c
+│          ╰─ node a ╰─ node e ── node f
+╰─ disk c: ┬─ Windows
+           ╰─ Users
+#+end_mindmap
+
+** Examples
+[[https://github.com/krvkir/org-mindmap#examples][]]
+
+Here's one more complex example mindmap for a chapter from Sönke Ahrens
+--- How to Take Smart Notes.
+
+#+begin_mindmap :layout centered
+                            ╭─ thinking
+                            ├─ studying
+┬─ Writing ── is an aid for ┼─ generating ideas
+│                           ├─ reading
+│                           ╰─ understanding
+├─ Thinking ── happens on paper
+├─ Rules ── keep a pen at hand
+├─ fleeting                 ╭─ fleeting :: reminders of thoughts ┬─ put in one place
+│                           │             ╭─ when reading        ╰─ process later
+│                           │             ├─ briefly
+│                           ├─ literature ┼─ selectively ── for your own topics
+│                           │             ├─ in your own words
+│                           │             ├─ with bibliographic data
+│                           │             ╰─ put to the reference system
+│          ╭─ collect notes ┤                            ╭─ fleeting
+│          │                │            ╭─ review notes ┼─ literature
+│          │                │            │               ╰─ once a day  ╭─ research
+│          │                │            ├─ think ── how they relate to ┼─ reflections
+╰─ Process ┤                │            ├─ one note for each idea      ╰─ interests
+           │                │            │                        ╭─ full sentences
+           │                │            │                        ├─ sources
+           │                ╰─ permanent ┼─ as for another person ┼─ links
+           ├─ turn into draft            ├─ discard ── fleeting   ├─ precisely
+           ╰─ edit                       │                        ├─ clearly
+                                         │                        ╰─ briefly
+                                         ├─ add ┬─ behind the note it relates to directly
+                                         │      ╰─ links
+                                         ╰─ make sure ── you can find it ┬─ in the index
+                                                                         ╰─ at entry point
+#+end_mindmap
 
 * Local Variables & The End
 These have to be at the end.
