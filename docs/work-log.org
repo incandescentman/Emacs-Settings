@@ -14,6 +14,12 @@
   - =(featurep 'org-mindmap)= returns =t=
 - Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] and ran =check-parens= on [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]].
 
+* 2026-04-08: Improve visit-most-recent-file behavior
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] and [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]] to make =visit-most-recent-file= more reliable.
+- Changed the command to open the true most-recent unvisited local regular file with resilient path normalization.
+- Added fallback completion when no auto-match exists, with compact recent entries shown as `#1 — parent/filename`, `#2 — ...`, etc.
+- Hardened selection by skipping remote, non-regular, and missing files and by avoiding stale/invalid `recentf` entries.
+
 * 2026-04-01: Fix whittle-transcript trailing filler rule eating paragraph breaks
 - Fixed =whittle/transcript-edge-filler-rules= in [[file+emacs:/Users/jay/emacs/emacs-settings/whittle.el][whittle.el]] so the sentence-final filler cleanup no longer uses =[[:space:]]*$=.
 - Root cause: =[[:space:]]= includes newlines, so removing trailing =okay/right/you know= at end of a line could also consume the blank line before the next paragraph or =*** Speaker:= heading.
