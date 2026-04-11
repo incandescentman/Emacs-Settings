@@ -545,3 +545,34 @@ Add the emoji stripping filter to BOTH plain-text and headline filters:
 - Check the org-export-filter-* variables to ensure you're filtering at the right level
 - When a filter "doesn't work," verify the content type actually passes through that filter
 - Test with emoji in different locations (body text, headings, lists) to catch all cases
+
+* Tangled Parser Errors: Fix the Org Source, Not the Generated Elisp
+  Date: 2026-04-11
+
+** Trigger
+Spacemacs reported two misleading startup errors from [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]]:
+- ~Invalid read syntax: "#"~
+- ~End of file during parsing~
+
+The visible failure was in the tangled file, but the real bugs lived in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] inside ~visit-most-recent-file~.
+
+** Mechanism
+Literate config failures can show up in the generated ~.el~ with line numbers that look like direct code bugs, even when the real fix belongs in the source Org block.
+
+Two repeatable failure modes showed up here:
+- A Lisp string inside an Org source block contained literal escaped quotes (~\"...\"~), which tangled into unreadable Elisp
+- A long ~let*~ form in the Org source was missing a closing parenthesis, which only became obvious after the reader got past the first syntax error
+
+Useful debugging pattern:
+- Read the tangled file with bare ~read~ to find the first true reader error
+- Use ~forward-sexp~ or ~check-parens~ after fixing the first error, because the next structural problem may be masked until then
+- Once the source block is fixed, delete the stale tangled file, retangle immediately, and only then re-run batch checks
+
+** Actionable insight
+- When a startup error points at [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]], inspect the corresponding block in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] before editing the generated file
+- Expect parser debugging to be iterative: the first reader error may hide a second unbalanced form
+- Keep the loop tight:
+  - edit [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]]
+  - delete [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]]
+  - retangle
+  - run a batch parse/load check

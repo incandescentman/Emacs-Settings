@@ -2215,7 +2215,7 @@ Source: [[https://emacs.stackexchange.com/questions/10707/in-org-mode-how-to-rem
           (delq nil
                 (mapcar (lambda (file)
                           (ignore-errors (file-truename file)))
-                        (mapcar 'buffer-file-name (buffer-list))))
+                        (mapcar #'buffer-file-name (buffer-list)))))
          (recent-files-names
           (delete-dups (mapcar #'expand-file-name recentf-list)))
          (most-recent-filename
@@ -2230,34 +2230,35 @@ Source: [[https://emacs.stackexchange.com/questions/10707/in-org-mode-how-to-rem
                   (throw 'visit-most-recent-file filename)))))))
     (if most-recent-filename
         (find-file most-recent-filename)
-      (let ((fallback-recent-files
-             (cl-remove-if
-              (lambda (filename)
-                (let ((filename (ignore-errors (file-truename filename))))
-                  (or (not filename)
-                      (file-remote-p filename)
-                      (not (file-regular-p filename))
-                      (not (file-exists-p filename))
-                      (member filename buffer-file-name-list))))
-              (delete-dups (mapcar #'expand-file-name recentf-list)))
-             (fallback-recent-file-pairs
-              (cl-loop for filename in fallback-recent-files
-                       for i from 1
-                       for display-name = (format "%s/%s"
-                                                 (file-name-nondirectory
-                                                  (directory-file-name
-                                                   (or (file-name-directory filename) "")))
-                                                 (file-name-nondirectory filename))
-                       collect (cons (format \"#%d — %s\" i display-name)
-                                     filename))))
-        (if fallback-recent-file-pairs
-            (let* ((chosen-label
-                    (completing-read
-                     "Open recent local file (#1=most recent): "
-                     fallback-recent-file-pairs nil t))
-                   (chosen-filename (cdr (assoc chosen-label fallback-recent-file-pairs))))
-              (find-file chosen-filename))
-          (message "No unvisited local file in recentf."))))))
+        (let* ((fallback-recent-files
+                (cl-remove-if
+                 (lambda (filename)
+                   (let ((filename (ignore-errors (file-truename filename))))
+                     (or (not filename)
+                         (file-remote-p filename)
+                         (not (file-regular-p filename))
+                         (not (file-exists-p filename))
+                         (member filename buffer-file-name-list))))
+                 (delete-dups (mapcar #'expand-file-name recentf-list))))
+               (fallback-recent-file-pairs
+                (cl-loop for filename in fallback-recent-files
+                         for i from 1
+                         for display-name = (format "%s/%s"
+                                                    (file-name-nondirectory
+                                                     (directory-file-name
+                                                      (or (file-name-directory filename) "")))
+                                                    (file-name-nondirectory filename))
+                         collect (cons (format "#%d — %s" i display-name)
+                                       filename))))
+          (if fallback-recent-file-pairs
+              (let* ((chosen-label
+                      (completing-read
+                       "Open recent local file (#1=most recent): "
+                       fallback-recent-file-pairs nil t))
+                     (chosen-filename
+                      (cdr (assoc chosen-label fallback-recent-file-pairs))))
+                (find-file chosen-filename))
+            (message "No unvisited local file in recentf."))))))
 
 #+END_SRC
 
