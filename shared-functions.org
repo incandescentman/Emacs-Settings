@@ -124,9 +124,6 @@ I should probably eventually break these out of custom-set-variables and organiz
       osx-browse-prefer-browser "com.google.Chrome"
       osx-browse-prefer-new-window t)
 
-;; Smex Settings
-(setq smex-prompt-string "I love you. ")
-
 ;; Org Export Settings
 (setq org-latex-image-default-option "width=20.5cm"
       org-export-time-stamp-file nil
@@ -734,12 +731,6 @@ Aquamacs:
 
 *** Disable autocorrect in minibuffer
 #+BEGIN_SRC emacs-lisp
-(defun conditionally-disable-abbrev ()
-  "Disable `abbrev-mode` if the current command starts with 'smex-'."
-  (if (string-match "smex-" (format "%s" this-command))
-      (abbrev-mode -1)))
-
-(add-hook 'minibuffer-setup-hook 'conditionally-disable-abbrev)
 (add-hook 'minibuffer-exit-hook (lambda () (abbrev-mode 1)))
 (add-hook 'minibuffer-setup-hook (lambda ()
                                    (abbrev-mode -1)))

@@ -23,6 +23,7 @@ That means the preferred direction remains:
 
 - Switched [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][📄 /Users/jay/emacs/emacs-settings/spacemacs.d/init.el]] from =all-the-icons= to =nerd-icons= via =dotspacemacs-default-icons-font=.
 - Stopped loading [[file+emacs:/Users/jay/emacs/emacs-settings/ivy-smex.el][📄 /Users/jay/emacs/emacs-settings/ivy-smex.el]] from [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][📄 /Users/jay/emacs/emacs-settings/spacemacs-new-config.el]] after Jay confirmed he does not care about distinct Smex behavior.
+- Removed the clearly stale residual =smex= config from [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][📄 /Users/jay/emacs/emacs-settings/shared-functions.org]] and [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][📄 /Users/jay/emacs/emacs-settings/spacemacs.d/init.el]].
 
 * Audit Snapshot
 
@@ -126,14 +127,11 @@ The direction is now clearer than before:
 
 ** What to review later
 
-- Review whether any leftover =smex= settings are still needed, especially:
-- =smex-save-file= in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][📄 /Users/jay/emacs/emacs-settings/spacemacs.d/init.el]]
-- =smex-prompt-string= or other residual =smex=-named variables in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][📄 /Users/jay/emacs/emacs-settings/shared-functions.org]]
+- If any Smex-specific behavior is unexpectedly missed, re-audit that behavior directly rather than restoring generic residue.
 
 ** Likely future cleanup path
 
 After removing the startup load:
-- review whether the =smex-save-file= custom variable in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][📄 /Users/jay/emacs/emacs-settings/spacemacs.d/init.el]] is still needed
 - keep =amx= as the surviving command-selection layer unless Jay explicitly wants a different replacement
 
 * Ivy / Swiper vs Consult Audit

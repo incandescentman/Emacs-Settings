@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-17: Remove stale smex residue after ivy-smex cleanup
+- Removed the old =smex-save-file= custom variable from [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]].
+- Removed stale =smex=-specific leftovers from [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]], including the unused =smex-prompt-string= setting and the no-op minibuffer abbrev guard that only looked for =smex-= commands.
+- Kept the generic minibuffer abbrev disable/restore behavior in place.
+
 * 2026-04-17: Stop loading ivy-smex at startup
 - Removed the [[file+emacs:/Users/jay/emacs/emacs-settings/ivy-smex.el][ivy-smex.el]] load from [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][spacemacs-new-config.el]] after Jay confirmed he does not care about distinct Smex behavior.
 - Left =amx= in place as the live command-palette path.

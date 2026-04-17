@@ -1169,7 +1169,6 @@ This function is called at the very end of Spacemacs initialization."
        (org-mindmap :vc-backend Git :url "https://github.com/krvkir/org-mindmap.git")
        (org-srs :vc-backend Git :url "https://github.com/bohonghuang/org-srs")))
    '(paradox-github-token t)
-   '(smex-save-file "/Users/jay/emacs/local-emacs-config/smex-items")
    '(sp-escape-wrapped-region nil)
    '(tab-bar-close-button-show nil)
    '(tab-bar-new-button-show nil)
