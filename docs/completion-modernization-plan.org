@@ -22,6 +22,7 @@ That means the preferred direction remains:
 * Completed Now
 
 - Switched [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][📄 /Users/jay/emacs/emacs-settings/spacemacs.d/init.el]] from =all-the-icons= to =nerd-icons= via =dotspacemacs-default-icons-font=.
+- Stopped loading [[file+emacs:/Users/jay/emacs/emacs-settings/ivy-smex.el][📄 /Users/jay/emacs/emacs-settings/ivy-smex.el]] from [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][📄 /Users/jay/emacs/emacs-settings/spacemacs-new-config.el]] after Jay confirmed he does not care about distinct Smex behavior.
 
 * Audit Snapshot
 
@@ -104,7 +105,7 @@ The current command-selection setup has two overlapping ranking/history systems.
 - [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][📄 /Users/jay/emacs/emacs-settings/shared-functions.org]] enables =amx= and turns on =amx-mode=.
 - [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][📄 /Users/jay/emacs/emacs-settings/keys.el]] binds ~=~ to =amx=.
 - [[file+emacs:/Users/jay/emacs/emacs-settings/prelude-key-chord.el][📄 /Users/jay/emacs/emacs-settings/prelude-key-chord.el]] now binds =XX= to =amx=.
-- [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][📄 /Users/jay/emacs/emacs-settings/spacemacs-new-config.el]] still loads [[file+emacs:/Users/jay/emacs/emacs-settings/ivy-smex.el][📄 /Users/jay/emacs/emacs-settings/ivy-smex.el]].
+- Before this cleanup, [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][📄 /Users/jay/emacs/emacs-settings/spacemacs-new-config.el]] loaded [[file+emacs:/Users/jay/emacs/emacs-settings/ivy-smex.el][📄 /Users/jay/emacs/emacs-settings/ivy-smex.el]].
 - [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][📄 /Users/jay/emacs/emacs-settings/spacemacs.d/init.el]] still carries a =smex-save-file= custom setting.
 
 ** What this means
@@ -117,23 +118,21 @@ However, they are not equally central anymore:
 
 ** Safe conclusion for now
 
-Do not remove =ivy-smex.el= yet.
+The load point for =ivy-smex.el= is now removed.
 
-But the direction is now clearer than before:
+The direction is now clearer than before:
 - =amx= is the live command-palette preference to preserve
-- =ivy-smex.el= looks like a likely future cleanup candidate once Jay confirms he is not relying on any of its distinct behavior
+- =ivy-smex.el= no longer needs to be in the startup path, though some leftover =smex= config may still remain
 
-** What to test later before removal
+** What to review later
 
-Before retiring =ivy-smex.el=, verify whether Jay still uses or wants any of the following:
-- Smex-specific command ordering behavior
-- Smex helper commands like function lookup / describe / where-is from that file
-- Any workflow that still expects =smex-save-file= history rather than =amx= history
+- Review whether any leftover =smex= settings are still needed, especially:
+- =smex-save-file= in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][📄 /Users/jay/emacs/emacs-settings/spacemacs.d/init.el]]
+- =smex-prompt-string= or other residual =smex=-named variables in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][📄 /Users/jay/emacs/emacs-settings/shared-functions.org]]
 
 ** Likely future cleanup path
 
-If later testing confirms =ivy-smex.el= is no longer needed:
-- stop loading [[file+emacs:/Users/jay/emacs/emacs-settings/ivy-smex.el][📄 /Users/jay/emacs/emacs-settings/ivy-smex.el]] from [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][📄 /Users/jay/emacs/emacs-settings/spacemacs-new-config.el]]
+After removing the startup load:
 - review whether the =smex-save-file= custom variable in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][📄 /Users/jay/emacs/emacs-settings/spacemacs.d/init.el]] is still needed
 - keep =amx= as the surviving command-selection layer unless Jay explicitly wants a different replacement
 

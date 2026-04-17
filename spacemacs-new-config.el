@@ -424,7 +424,6 @@ With prefix arg FIX-HINTS, append actionable remediation commands."
 (jay/load-with-timing "/Users/jay/emacs/emacs-settings/poetry_JD.el")
 ;; (load "/Users/jay/emacs/emacs-settings/define-word.el")
 ;; (load "/Users/jay/emacs/emacs-settings/searchlink/searchlink-new.el")
-(jay/load-with-timing "/Users/jay/emacs/emacs-settings/ivy-smex.el")
 ;; (load "/Users/jay/emacs/emacs-settings/emacs_friends.el")
 ;; (load "/Users/jay/gnulisp/org-image.el")
 
