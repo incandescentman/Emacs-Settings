@@ -187,6 +187,11 @@ The following documentation files provide detailed information about various asp
 - When touching any literate Org file (e.g., `pasteboard-copy-and-paste-functions.org`), delete the stale tangled `.el`, retangle immediately, and run `emacs --batch <file.el> --eval '(check-parens)'` before restarting.
 - Treat regex tweaks with extra caution: smoke-test them in a scratch buffer (`re-search-forward`) to avoid `invalid-regexp` surprises.
 - Keep the edit loop tight—edit → tangle → `check-parens` (or byte-compile)—to catch structural errors before they reach Spacemacs startup.
+- **Test runtime behavior instead of theorizing**: When uncertain whether a keybinding, function, package, or config setting actually works at runtime, do not speculate — ask Jay to test it, or run a direct safe test yourself if appropriate.
+- **Config analysis is not runtime proof**: Static config inspection tells you what should happen, not what does happen. Autoloads, stale installs, indirect loading, compatibility shims, and cached state can all keep something working even when the config looks contradictory.
+- **No “probably broken” claims without evidence**: Avoid phrases like “likely failing silently” unless you have reproduced the failure or Jay has reported the exact behavior.
+- **For keybinding questions, ask for the shortest live check**: If the real question is “does this binding still work?”, ask Jay to press the binding and report the result before recommending cleanup or replacement.
+- **State hypotheses as hypotheses**: If you must reason before testing, label conclusions as tentative and explicitly defer to the runtime test.
 
 ### Checkpoint Protocol
 - At each checkpoint, update `/Users/jay/emacs/emacs-settings/docs/work-log.org` before handing off.

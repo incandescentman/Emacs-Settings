@@ -1,6 +1,10 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-17: Strengthen CLAUDE guidance against runtime speculation
+- Expanded the AI editing guidance in [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.org][CLAUDE.org]] / [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.md][CLAUDE.md]] to make runtime-testing expectations explicit.
+- Added rules to distinguish static config analysis from actual runtime behavior, forbid unsupported "probably broken" claims, and require a direct Jay test for uncertain keybinding/function behavior.
+
 * 2026-04-17: Add helm conflict audit to modernization plan
 - Added a dedicated =helm= conflict audit to [[file+emacs:/Users/jay/emacs/emacs-settings/docs/completion-modernization-plan.org][docs/completion-modernization-plan.org]].
 - Main finding: [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]] excludes =helm=, but [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/jay/packages.el][spacemacs.d/jay/packages.el]] and [[file+emacs:/Users/jay/emacs/emacs-settings/prelude-key-chord.el][prelude-key-chord.el]] still rely on Helm commands and bindings.
