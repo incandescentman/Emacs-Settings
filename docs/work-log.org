@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-17: Fix stale proposal/book search paths
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][search-commands.org]] so the proposal/book search helpers no longer hardcode the old missing directories =/Users/jay/Dropbox/writing/proposal= and =/Users/jay/Dropbox/writing/book=.
+- Added path-resolution helpers that prefer the live directories [[file+emacs:/Users/jay/Dropbox/writing/both/proposal][/Users/jay/Dropbox/writing/both/proposal]] and [[file+emacs:/Users/jay/Dropbox/writing/both/book][/Users/jay/Dropbox/writing/both/book]], while still checking CloudStorage and older fallback paths.
+- This fixes the runtime failure in =search-filename-both-book-and-proposal-directories= and also updates the single-directory and ripgrep helpers to use the resolved paths.
+
 * 2026-04-17: Modernize remaining direct ivy-read helpers
 - Replaced the remaining direct =ivy-read= usage in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] and [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][search-commands.org]] with plain =completing-read= so those commands now use the current minibuffer completion UI naturally.
 - Updated =bjm/ivy-dired-recent-dirs= to use =completing-read= while keeping the command name stable for existing bindings.

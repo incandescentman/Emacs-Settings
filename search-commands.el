@@ -93,29 +93,54 @@
  (let ((default-directory "/Users/jay/emacs/interesting-snippets/org-mode/"))
  (counsel-find-file)))
 
+(defconst jay/proposal-directory-candidates
+  '("/Users/jay/Dropbox/writing/both/proposal"
+    "/Users/jay/Library/CloudStorage/Dropbox/writing/both/proposal"
+    "/Users/jay/Dropbox/writing/proposal"
+    "/Users/jay/Library/CloudStorage/Dropbox/writing/proposal"))
+
+(defconst jay/book-directory-candidates
+  '("/Users/jay/Dropbox/writing/both/book"
+    "/Users/jay/Library/CloudStorage/Dropbox/writing/both/book"
+    "/Users/jay/Dropbox/writing/book"
+    "/Users/jay/Library/CloudStorage/Dropbox/writing/book"))
+
+(defun jay/first-existing-directory (candidates label)
+  "Return the first existing directory from CANDIDATES for LABEL.
+Signal a helpful error if none of the directories exist."
+  (or (seq-find #'file-directory-p candidates)
+      (user-error "No %s directory found. Checked: %s"
+                  label
+                  (mapconcat #'identity candidates ", "))))
+
+(defun jay/proposal-directory ()
+  "Return Jay's live proposal directory."
+  (jay/first-existing-directory jay/proposal-directory-candidates "proposal"))
+
+(defun jay/book-directory ()
+  "Return Jay's live book directory."
+  (jay/first-existing-directory jay/book-directory-candidates "book"))
+
 (defun fzf-find-file--proposal-directory ()
- "Use counsel-fzf to search for files in the /Users/jay/Dropbox/writing/proposal/ directory."
+ "Use counsel-fzf to search for files in Jay's proposal directory."
  (interactive)
- ;; Use counsel-fzf with the specified directory as the root for searching.
- (counsel-fzf nil "/Users/jay/Dropbox/writing/proposal/"))
+ (counsel-fzf nil (jay/proposal-directory)))
 
 (defalias 'search-filename-proposal-directory 'fzf-find-file--proposal-directory)
 
 
 (defun fzf-find-file--book-directory ()
- "Use counsel-fzf to search for files in the /Users/jay/Dropbox/writing/book/ directory."
+ "Use counsel-fzf to search for files in Jay's book directory."
  (interactive)
- ;; Use counsel-fzf with the specified directory as the root for searching.
- (counsel-fzf nil "/Users/jay/Dropbox/writing/book/"))
+ (counsel-fzf nil (jay/book-directory)))
 
 (defalias 'search-filename-book-directory 'fzf-find-file--book-directory)
 
 (defun counsel-fzf-both-proposal-and-book-dirs ()
-  "Search in both /Users/jay/Dropbox/writing/proposal/ and /Users/jay/Dropbox/writing/book/ directories."
+  "Search in both Jay's proposal and book directories."
   (interactive)
-  ;; Define the directories to search in as dir1 and dir2.
-  (let* ((dir1 "/Users/jay/Dropbox/writing/proposal/")
-         (dir2 "/Users/jay/Dropbox/writing/book/")
+  (let* ((dir1 (jay/proposal-directory))
+         (dir2 (jay/book-directory))
          ;; Use directory-files-recursively to list all files in dir1.
          ;; This function recursively lists files in a directory and its subdirectories.
          (files1 (directory-files-recursively dir1 ""))
@@ -132,15 +157,19 @@
 
 ;; works but is overly complex. Do not use. use counsel-projectile-ag instead.
 (defun rg-search-book-and-proposal-dirs (&optional initial-input)
- "Search using ripgrep in the book and proposal directories with optional INITIAL-INPUT."
+ "Search using ripgrep in Jay's book and proposal directories with optional INITIAL-INPUT."
  (interactive "sEnter search pattern: ")
- (let* ((input (if (and initial-input (not (equal initial-input "")))
-          initial-input
-         ".*"))
-     (rg-cmd (concat "rg --vimgrep --color=always --hidden -g '!.git' '"
-             input "' "
-             "/Users/jay/Dropbox/writing/book "
-             "/Users/jay/Dropbox/writing/proposal")))
+ (let* ((dir1 (jay/book-directory))
+        (dir2 (jay/proposal-directory))
+        (input (if (and initial-input (not (equal initial-input "")))
+                   initial-input
+                 ".*"))
+        (rg-cmd (mapconcat #'identity
+                           (list "rg --vimgrep --color=always --hidden -g '!.git'"
+                                 (shell-quote-argument input)
+                                 (shell-quote-argument dir1)
+                                 (shell-quote-argument dir2))
+                           " ")))
   (compilation-start rg-cmd 'grep-mode)))
 
 ;; don't need any of this. I put both directories in the same projectile project ("both"), so just use counsel-projectile-ag
