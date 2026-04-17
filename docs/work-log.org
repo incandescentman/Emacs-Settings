@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-17: Record completion overlap audit in modernization plan
+- Added an audit snapshot to [[file+emacs:/Users/jay/emacs/emacs-settings/docs/completion-modernization-plan.org][docs/completion-modernization-plan.org]] summarizing which completion-era packages are clearly still live, which ones overlap, and which ones look like likely future cleanup candidates.
+- Important result: =counsel= family, =key-chord=, =helm-make=, =amx=, =affe=, and =fasd= all still have live workflow footprints, so they should not be treated as automatic cleanup targets.
+- Also recorded that the main current overlap area is the mixed =compleseus= plus =ivy/swiper/smex/helm= residue rather than a single obsolete package.
+
 * 2026-04-17: Add checkpoint protocol to CLAUDE docs
 - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.org][CLAUDE.org]] (symlinked to [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.md][CLAUDE.md]]) to record the checkpoint protocol for future editing sessions.
 - The documented protocol is: update [[file+emacs:/Users/jay/emacs/emacs-settings/docs/work-log.org][docs/work-log.org]], commit the checkpoint, have Jay relaunch Emacs and confirm clean startup, and only then continue.

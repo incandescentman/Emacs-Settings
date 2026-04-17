@@ -23,6 +23,34 @@ That means the preferred direction remains:
 
 - Switched [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][📄 /Users/jay/emacs/emacs-settings/spacemacs.d/init.el]] from =all-the-icons= to =nerd-icons= via =dotspacemacs-default-icons-font=.
 
+* Audit Snapshot
+
+The current state is not "old stack removed, new stack only". It is a modern =compleseus=-centered setup with several live legacy overlaps still in use.
+
+** Clearly still live
+
+- =counsel= family remains active in [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.el][📄 /Users/jay/emacs/emacs-settings/search-commands.el]] and is intentionally being kept for now.
+- =key-chord= remains active in [[file+emacs:/Users/jay/emacs/emacs-settings/prelude-key-chord.el][📄 /Users/jay/emacs/emacs-settings/prelude-key-chord.el]] and is part of real workflow.
+- =helm-make= remains tied to the compile-prefix flow and should not be removed before a replacement is tested.
+- =amx= is more live than expected: it is configured in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][📄 /Users/jay/emacs/emacs-settings/shared-functions.org]] and bound in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][📄 /Users/jay/emacs/emacs-settings/keys.el]].
+- =affe= still has custom wrappers in [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.el][📄 /Users/jay/emacs/emacs-settings/search-commands.el]].
+- =fasd= is still used from Emacs-side commands in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][📄 /Users/jay/emacs/emacs-settings/shared-functions.org]].
+
+** Clearly overlapping
+
+- =ivy= and =swiper= era commands still exist alongside =consult= commands.
+- =ivy-smex.el= is still loaded from [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][📄 /Users/jay/emacs/emacs-settings/spacemacs-new-config.el]].
+- =fuzzy= is still explicitly installed in the custom Jay layer.
+- =helm= itself is messy: excluded in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][📄 /Users/jay/emacs/emacs-settings/spacemacs.d/init.el]] but still referenced by the custom Jay layer and old key-chord bindings.
+
+** Most likely future cleanup candidates
+
+- =ivy-smex.el=
+- =fuzzy=
+- stale =company= config that remains even though =company= is excluded
+
+These are candidates for future checkpoints, not immediate removals.
+
 * Deferred Work
 
 ** Corfu migration
