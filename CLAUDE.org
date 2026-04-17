@@ -195,6 +195,9 @@ The following documentation files provide detailed information about various asp
 - *No "probably broken" claims without evidence*: Avoid phrases like "likely failing silently" unless you have reproduced the failure or Jay has reported the exact behavior.
 - *For keybinding questions, ask for the shortest live check*: If the real question is "does this binding still work?", ask Jay to press the binding and report the result before recommending cleanup or replacement.
 - *State hypotheses as hypotheses*: If you must reason before testing, label conclusions as tentative and explicitly defer to the runtime test.
+- *Ask only for relevant post-checkpoint tests*: After a checkpoint, request tests only for startup and for the exact commands or behaviors that actually changed or were directly plausibly affected by the diff.
+- *Do not broaden the test scope without cause*: If a checkpoint only removes stale config, do not ask Jay to retest unrelated commands just because they live in the same conceptual area.
+- *If you ask for a non-obvious test, explain why*: Name the exact changed file or behavior that makes the requested test relevant.
 
 ** Checkpoint Protocol
 - At each checkpoint, update [[file+emacs:docs/work-log.org][📄 work-log.org]] before handing off.
@@ -202,6 +205,7 @@ The following documentation files provide detailed information about various asp
 - Then Jay launches Emacs and confirms startup is clean with no parsing or startup errors.
 - Only after Jay confirms Emacs launches correctly should the next step begin.
 - If the checkpoint changed a literate Org file, make sure the corresponding tangled =.el= has been regenerated and validated before the checkpoint commit.
+- For docs-only checkpoints, do not ask Jay to relaunch Emacs.
 
 ** Note on File Size
 - =shared-functions.org=: ~316KB (9983 lines)
