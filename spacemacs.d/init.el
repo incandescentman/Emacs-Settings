@@ -996,11 +996,12 @@ before packages are loaded."
   (add-hook 'after-revert-hook #'my/disable-file-notify-for-cloud-storage)
 
   ;; Suppress file-notify errors globally
-  (defadvice file-notify-add-watch (around suppress-file-notify-errors activate)
+  (defun jay/suppress-file-notify-errors (orig-fn &rest args)
     "Suppress errors from file-notify-add-watch."
     (condition-case nil
-        ad-do-it
+        (apply orig-fn args)
       (error nil)))
+  (advice-add 'file-notify-add-watch :around #'jay/suppress-file-notify-errors)
 
   ;; Handle undo-fu-session issues with synced files
   (with-eval-after-load 'undo-fu-session

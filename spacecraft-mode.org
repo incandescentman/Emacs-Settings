@@ -1068,59 +1068,12 @@ No space. Does that make sense? Thanks!
 )
 #+END_SRC
 
-** defadvice capitalize-word
+** capitalize-word advice
 #+BEGIN_SRC emacs-lisp
-(defadvice capitalize-word (after capitalize-word-advice activate)
-  "After capitalizing the new first word in a sentence, downcase the next word which is no longer starting the sentence."
-
-  (unless
-
-      (or
-       (looking-at "[ ]*\"")          ; if looking at a quote? Might not work
-
-       (looking-at "[[:punct:]]*[ ]*I\\b")          ; never downcase the word "I"
-       (looking-at "[[:punct:]]*[ ]*I'")          ; never downcase words like I'm, I'd
-       (looking-at "[[:punct:]]*[ ]*\"*I'")    ; never downcase words like I'm, I'd
-
-(looking-at "[ ]*I\'")   ; never downcase the word "I'
-
-       (looking-at "[[:punct:]]*[ ]*\"I\\b")          ; never downcase the word "I"
-       (looking-at "[[:punct:]]*[ ]*OK\\b")          ; never downcase the word "OK"
-
-       ;; (looking-at "\\") ; how do you search for a literal backslash?
-       (looking-at (sentence-end))
-
-       (looking-at "[[:punct:]]*[ ]*$") ; don't downcase past line break
-
-       (looking-at "[[:punct:]]*[ ]*\"$") ; don't downcase past quotation then line break
-       (looking-at "[[:punct:]]*[ ]*)$") ; don't downcase past a right paren then line break
-       (looking-at "[[:punct:]]*[ ]*\")$") ; don't downcase past a quotation then a right paren then a line break
-
-       (looking-at "[[:punct:]]*[ ]*http") ; never capitalize http
-
-(looking-at "\"[[:punct:]]*[ ]*$") ; a quotation mark followed by "zero or more whitespace then end of line?"
-
-(looking-at ")[ ]*$") ; A right paren followed by "zero or more" whitespace, then end of line
-
-(looking-at ")[ ]*$") ; a right paren followed by "zero or more" whitespace, then end of line
-(looking-at ")$") ; a right paren followed by "zero or more" whitespace, then end of line
-
-(looking-at "[ ]*-*[ ]*$") ; dashes at the end of a line
-
-
-       (looking-at (user-full-name))
-
-       )
-
-    (save-excursion
-      (downcase-word 1))))
-
-
-(defadvice capitalize-word (after capitalize-word-advice activate)
+(defun jay/capitalize-word-then-downcase-next (&rest _)
   "After capitalizing the new first word in a sentence, downcase the
 next word if it's no longer the start of the sentence. We skip downcasing
 certain words/contexts (like \"I\")."
-
   (unless (or
            ;; If looking at a quote right after capitalizing, skip downcasing
            (looking-at "[ ]*\"")
@@ -1139,10 +1092,9 @@ certain words/contexts (like \"I\")."
            (looking-at "[[:punct:]]*[ ]*$")      ; line break
            (looking-at "\"[[:punct:]]*[ ]*$")    ; quote + line break
            (looking-at ")[ ]*$")                ; right paren + line break
-           ;; (looking-at ")[ ]*$") <-- removed to avoid unmatched )
            (looking-at "\")[ ]*$")              ; quote + right paren + line break
-(looking-at ")[[:space:]]*$")    ; Right paren, optional whitespace to EOL
-(looking-at "\")[[:space:]]*$")  ; Quote, then right paren, optional whitespace to EOL
+           (looking-at ")[[:space:]]*$")         ; right paren, optional whitespace to EOL
+           (looking-at "\")[[:space:]]*$")       ; quote + right paren, optional whitespace to EOL
            (looking-at "[[:punct:]]*[ ]*\")$")   ; alternate right-paren check
            (looking-at "[[:punct:]]*[ ]*http")   ; "http" etc.
 
@@ -1152,6 +1104,7 @@ certain words/contexts (like \"I\")."
     ;; Move ahead by one word and downcase it
     (save-excursion
       (downcase-word 1))))
+(advice-add 'capitalize-word :after #'jay/capitalize-word-then-downcase-next)
 #+END_SRC
 
 I tried to add exceptions for "line-end" and also for user-full name.

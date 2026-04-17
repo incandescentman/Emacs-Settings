@@ -841,8 +841,10 @@ Adds an empty line before the cloned subtree."
 
 * disable color themes
 #+BEGIN_SRC emacs-lisp
-(defadvice load-theme (before theme-dont-propagate activate)
+(defun jay/disable-themes-before-load (&rest _)
+ "Disable all active themes before loading a new one."
  (mapc #'disable-theme custom-enabled-themes))
+(advice-add 'load-theme :before #'jay/disable-themes-before-load)
 #+END_SRC
 
 * toggle item or hyphenation
