@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-17: Switch icons to nerd-icons and add modernization plan
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]] to use =dotspacemacs-default-icons-font 'nerd-icons= instead of =all-the-icons=.
+- Added [[file+emacs:/Users/jay/emacs/emacs-settings/docs/completion-modernization-plan.org][docs/completion-modernization-plan.org]] to capture deferred cleanup work for the completion stack instead of removing packages ad hoc.
+- Explicitly kept current user-preferred tools for now: =counsel= family, =ctrlf=, =key-chord=, and the existing compile-prefix workflow that still depends on =helm-make=.
+
 * 2026-04-17: Remove stray Astro Eglot notes from shared-functions.org
 - Cleaned up the =* Astro= section in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] by deleting old Eglot-specific notes and code that were sitting outside a source block.
 - Rationale: this setup does not want Eglot for Astro, and the text was misleading because it looked like live config even though it did not tangle into [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]].

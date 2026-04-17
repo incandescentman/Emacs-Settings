@@ -1,0 +1,87 @@
+#+TITLE: Completion Modernization Plan
+#+DATE: 2026-04-17
+#+DESCRIPTION: Deferred cleanup plan for Jay's Emacs completion and command-selection stack
+
+* Purpose
+
+This file records the modernization work that looks useful but is intentionally deferred until there is time to test it carefully.
+
+The goal is to preserve Jay's current workflow while gradually reducing legacy overlap.
+
+* Current Direction
+
+The main modern stack is already centered on [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][📄 /Users/jay/emacs/emacs-settings/spacemacs.d/init.el]] with =compleseus= enabled.
+
+That means the preferred direction remains:
+- Vertico-style minibuffer completion
+- Consult for search and navigation
+- Orderless matching
+- Marginalia annotations
+- Cape for CAPF helpers
+
+* Completed Now
+
+- Switched [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][📄 /Users/jay/emacs/emacs-settings/spacemacs.d/init.el]] from =all-the-icons= to =nerd-icons= via =dotspacemacs-default-icons-font=.
+
+* Deferred Work
+
+** Corfu migration
+
+Potential future improvement:
+- add =corfu= as the in-buffer completion UI
+- pair it with the existing =cape= setup
+- only do this as a deliberate migration, not as a quick cleanup pass
+
+Before doing it:
+- audit where current in-buffer completion behavior comes from
+- verify it does not disrupt Org writing, minibuffer habits, or existing keybindings
+
+** Ivy / Counsel / Smex cleanup
+
+Potential future improvement:
+- review the remaining =ivy=, =counsel=, and =smex= era code in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][📄 /Users/jay/emacs/emacs-settings/shared-functions.org]] and [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][📄 /Users/jay/emacs/emacs-settings/spacemacs-new-config.el]]
+- remove only the pieces that are truly unused
+
+Important constraint:
+- do not remove =counsel=, =counsel-fd=, or =counsel-projectile= casually; Jay wants to keep them for now
+
+** helm-make replacement
+
+Potential future improvement:
+- replace the current =helm-make= dependency with a more modern project compile workflow
+
+Important constraint:
+- preserve Jay's compile prefix workflow on the right-bracket prefix
+- do not remove =helm-make= until the replacement is tested and feels at least as good in practice
+
+Candidates worth evaluating later:
+- built-in =project-compile=
+- =compile-multi=
+- another lightweight project task picker if it preserves target selection comfortably
+
+** Stale completion config cleanup
+
+Potential future improvement:
+- clean up stale configuration that refers to packages no longer central to the stack
+
+Candidate example:
+- review old =company=-related config such as [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][📄 /Users/jay/emacs/emacs-settings/spacemacs-new-config.el]] when doing a broader completion cleanup pass
+
+* Explicit Non-Goals
+
+The following are not active modernization targets right now:
+- adding Eglot
+- prioritizing tree-sitter work
+- removing =ctrlf=
+- removing =key-chord=
+
+Those are either unwanted for this setup or too workflow-dependent to treat as cleanup by default.
+
+* Next Safe Step
+
+When returning to this plan later, start with an audit rather than a removal pass:
+
+- identify the exact commands Jay still uses from =counsel=, =ivy=, =smex=, =ctrlf=, =key-chord=, and =helm-make=
+- only then decide what to retire
+
+That keeps modernization grounded in real workflow rather than abstract package fashion.
