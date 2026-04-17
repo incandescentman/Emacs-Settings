@@ -1,6 +1,16 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-17: Add visit-most-recent-org-or-txt with s-\ binding
+- Added =jay/recent-prose-file-p= helper and =visit-most-recent-org-or-txt= command to [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]].
+- Same logic as =visit-most-recent-file= but filters =recentf-list= to =.org= and =.txt= files only.
+- Rebound =s-\= in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] to the new prose-focused command; =s-|= now opens the original all-file-types version.
+
+* 2026-04-17: Include prose inside org example/src blocks in Jinx
+- Removed =org-block= from =jinx-exclude-faces= in the =org-mode= entry via =:config= on the =use-package jinx= block in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]].
+- Jinx now spell-checks prose inside =#+begin_example=, =#+begin_quote=, and =#+begin_src= blocks. Begin/end marker lines stay excluded.
+- Trade-off: variable/function names inside real src blocks will also be checked; will tighten if it becomes annoying.
+
 * 2026-04-17: Wire Jinx into existing personal word dictionary
 - Jinx uses =enchant=, which on this macOS system is backed by =aspell= (not hunspell — Homebrew's enchant build has no hunspell plugin).
 - Existing personal word list at =/Users/jay/emacs/Spelling/personal.dic= (4057 words, plain format) was not being read by enchant.
