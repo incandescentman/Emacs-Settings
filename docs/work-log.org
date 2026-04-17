@@ -1,6 +1,18 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-17: Refresh modernization plan after successful runtime checkpoints
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/docs/completion-modernization-plan.org][docs/completion-modernization-plan.org]] so it reflects the current confirmed state rather than the intermediate audit state.
+- Marked the completed work more clearly: key-chord modernization, =ivy-smex= startup removal, stale =smex= cleanup, direct =ivy-read= helper modernization, proposal/book path fixes, and live =jinx= + backtick correction workflow.
+- Corrected the older audit sections so they no longer imply that =helm-imenu= / =helm-M-x= bindings, direct =ivy-read= helpers, or =swiper= key-chords are still the current live state.
+
+* 2026-04-17: Migrate defadvice to modern advice-add
+- Converted 3 active =defadvice= calls to =advice-add= across tracked source files:
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org][gnu-emacs-startup.org]]: =load-theme= =:before= advice to disable active themes before loading a new one
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]]: =file-notify-add-watch= =:around= advice to suppress file-notify errors
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/spacecraft-mode.org][spacecraft-mode.org]]: =capitalize-word= =:after= advice to downcase the next word after capitalizing
+- Removed duplicate dead =defadvice= on =capitalize-word= in spacecraft-mode (first copy was overwritten by second)
+
 * 2026-04-17: Rewrite backtick auto-correct to use Jinx internals
 - Rewrote =jay/jinx-correct-word-near-point= in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] to auto-apply the first Jinx suggestion instead of opening a minibuffer chooser.
 - Uses =jinx--bounds-of-word= for accurate word detection and =jinx--force-overlays= to ensure the word has been spell-checked before correction.

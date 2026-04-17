@@ -24,6 +24,15 @@ That means the preferred direction remains:
 - Switched [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][📄 /Users/jay/emacs/emacs-settings/spacemacs.d/init.el]] from =all-the-icons= to =nerd-icons= via =dotspacemacs-default-icons-font=.
 - Stopped loading [[file+emacs:/Users/jay/emacs/emacs-settings/ivy-smex.el][📄 /Users/jay/emacs/emacs-settings/ivy-smex.el]] from [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][📄 /Users/jay/emacs/emacs-settings/spacemacs-new-config.el]] after Jay confirmed he does not care about distinct Smex behavior.
 - Removed the clearly stale residual =smex= config from [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][📄 /Users/jay/emacs/emacs-settings/shared-functions.org]] and [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][📄 /Users/jay/emacs/emacs-settings/spacemacs.d/init.el]].
+- Modernized the most visible key-chords:
+  - =KK= → =consult-imenu=
+  - =XX= → =amx=
+  - =SS= → =consult-line=
+  - =BB= → =consult-line-multi=
+- Fixed =DD= by making its helper live first, then modernizing it internally to use =completing-read= instead of direct =ivy-read=.
+- Modernized the remaining direct =ivy-read= helper code in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][📄 /Users/jay/emacs/emacs-settings/shared-functions.org]] and [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][📄 /Users/jay/emacs/emacs-settings/search-commands.org]].
+- Fixed the stale proposal/book search helpers to resolve the live directories under [[file+emacs:/Users/jay/Dropbox/writing/both][/Users/jay/Dropbox/writing/both]].
+- Made =jinx= live and replaced the old backtick correction workflow with a Jinx-based auto-correct command that preserves the one-key correction habit.
 
 * Audit Snapshot
 
@@ -41,7 +50,6 @@ The current state is not "old stack removed, new stack only". It is a modern =co
 ** Clearly overlapping
 
 - =ivy= and =swiper= era commands still exist alongside =consult= commands.
-- =ivy-smex.el= is still loaded from [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][📄 /Users/jay/emacs/emacs-settings/spacemacs-new-config.el]].
 - =fuzzy= is still explicitly installed in the custom Jay layer.
 - =helm= itself is messy: excluded in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][📄 /Users/jay/emacs/emacs-settings/spacemacs.d/init.el]] but still referenced by the custom Jay layer and old key-chord bindings.
 
@@ -67,8 +75,8 @@ So the present state is neither "Helm removed" nor "Helm intentionally first-cla
 
 ** What is still live
 
-- =KK= is bound to =helm-imenu= in [[file+emacs:/Users/jay/emacs/emacs-settings/prelude-key-chord.el][📄 /Users/jay/emacs/emacs-settings/prelude-key-chord.el]].
-- =XX= is bound to =helm-M-x= in [[file+emacs:/Users/jay/emacs/emacs-settings/prelude-key-chord.el][📄 /Users/jay/emacs/emacs-settings/prelude-key-chord.el]].
+- =KK= is now bound to =consult-imenu= in [[file+emacs:/Users/jay/emacs/emacs-settings/prelude-key-chord.el][📄 /Users/jay/emacs/emacs-settings/prelude-key-chord.el]].
+- =XX= is now bound to =amx= in [[file+emacs:/Users/jay/emacs/emacs-settings/prelude-key-chord.el][📄 /Users/jay/emacs/emacs-settings/prelude-key-chord.el]].
 - The Jay layer still initializes =helm-cmd-t= in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/jay/packages.el][📄 /Users/jay/emacs/emacs-settings/spacemacs.d/jay/packages.el]].
 - Helm packages are still physically installed in =/Users/jay/.emacs.d/elpa/=, so stale references may continue to appear to work depending on load order.
 
@@ -83,7 +91,7 @@ Possible outcomes of leaving it alone:
 
 ** Safe conclusion for now
 
-Do not remove Helm-related commands yet.
+Do not remove Helm-related packages yet.
 
 Instead, treat this as a clarification task for a future checkpoint:
 - decide whether =helm-imenu= and =helm-M-x= are still genuinely preferred
@@ -115,7 +123,7 @@ This is not just historical residue on disk. Both systems still have live footpr
 
 However, they are not equally central anymore:
 - =amx= is directly on active bindings
-- =ivy-smex.el= is still loaded, but its primary role is less obvious from the current keybinding surface
+- =ivy-smex.el= was loaded during the audit, but has since been removed from startup
 
 ** Safe conclusion for now
 
@@ -140,12 +148,8 @@ The current search and selection setup is a true mixed stack, not a clean migrat
 
 ** What is live on the Ivy / Swiper side
 
-- [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][📄 /Users/jay/emacs/emacs-settings/shared-functions.org]] still enables =ivy= alongside =fasd=.
-- [[file+emacs:/Users/jay/emacs/emacs-settings/prelude-key-chord.el][📄 /Users/jay/emacs/emacs-settings/prelude-key-chord.el]] still binds:
-  - =DD= → =bjm/ivy-dired-recent-dirs=
-  - =SS= → =swiper=
-  - =BB= → =swiper-all=
-- [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.el][📄 /Users/jay/emacs/emacs-settings/search-commands.el]] still contains direct =counsel-find-file=, =counsel-fzf=, and =ivy-read= helpers.
+- [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.el][📄 /Users/jay/emacs/emacs-settings/search-commands.el]] still contains live =counsel-find-file= and =counsel-fzf= helpers.
+- Ivy is still relevant because the kept =counsel= stack and =ivy-minibuffer-map= customizations are still live.
 
 ** What is live on the Consult side
 
@@ -154,14 +158,16 @@ The current search and selection setup is a true mixed stack, not a clean migrat
   - =KK= → =consult-imenu=
   - =kk= → =consult-outline=
   - =WW= → =consult-git-grep=
+  - =SS= → =consult-line=
+  - =BB= → =consult-line-multi=
 - [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.el][📄 /Users/jay/emacs/emacs-settings/search-commands.el]] also contains a strong Consult-based search path, including =consult-ripgrep= helpers.
 
 ** What this means
 
-This overlap is not a simple case of "old stack unused".
+This overlap is no longer primarily about =swiper= or direct =ivy-read= helpers.
 
 Instead, it looks like a layered, workflow-specific split:
-- some quick muscle-memory search and file-jump habits still use Ivy / Swiper
+- the kept =counsel= stack still pulls in Ivy-era minibuffer behavior
 - newer structured search and navigation habits use Consult
 
 ** Safe conclusion for now
@@ -176,20 +182,15 @@ The real future question is preference:
 
 ** What to test later before any cleanup
 
-Before removing Ivy / Swiper pieces, Jay should test the live commands and decide whether their exact behavior is still preferred:
-- =DD= current recent-directory picker
-- =SS= current in-buffer search behavior
-- =BB= current multi-buffer search behavior
+Before removing Ivy-related pieces entirely, Jay should decide whether the kept =counsel= commands and =ivy-minibuffer-map= customizations are still preferred.
 
 Only after that should the code be migrated or retired.
 
 ** Likely future cleanup path
 
-If later testing shows the old behavior is no longer preferred:
-- replace =DD= with a Consult-native directory/history workflow
-- replace =SS= with =consult-line=
-- replace =BB= with =consult-line-multi= or another preferred multi-buffer search
-- then review whether the remaining =ivy= enablement in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][📄 /Users/jay/emacs/emacs-settings/shared-functions.org]] is still justified
+If later testing shows the old Ivy-era behavior is no longer preferred:
+- review whether the remaining =ivy= enablement in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][📄 /Users/jay/emacs/emacs-settings/shared-functions.org]] is still justified
+- review whether the =ivy-minibuffer-map= customizations in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][📄 /Users/jay/emacs/emacs-settings/keys.el]] should migrate to the kept completion surfaces or be removed
 
 * Deferred Work
 
