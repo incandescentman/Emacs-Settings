@@ -5911,28 +5911,36 @@ It will open the link in Emacs with typing C-c C-o.
 
 
 *** open recent directories
-#+BEGIN_EXAMPLE emacs-lisp
+#+BEGIN_SRC emacs-lisp
 ;; open recent directory, rquires ivy (part of swiper)
 ;; borrows from http://stackoverflow.com/questions/23328037/in-emacs-how-to-maintain-a-list-of-recent-directories
 (defun bjm/ivy-dired-recent-dirs ()
  "Present a list of recently used directories and open the selected one in dired"
  (interactive)
+ (require 'recentf)
+ (unless recentf-mode
+   (recentf-mode 1))
  (let ((recent-dirs
-     (delete-dups
-     (mapcar (lambda (file)
-          (if (file-directory-p file) file (file-name-directory file)))
-         recentf-list))))
+        (delete-dups
+         (delq nil
+               (mapcar (lambda (file)
+                         (cond
+                          ((file-directory-p file) file)
+                          ((stringp file) (file-name-directory file))))
+                       recentf-list)))))
 
-  (let ((dir (ivy-read "Directory: "
-             recent-dirs
-             :re-builder #'ivy--regex
-             :sort nil
-             :initial-input nil)))
-   (dired dir))))
+  (if recent-dirs
+      (let ((dir (ivy-read "Directory: "
+                           recent-dirs
+                           :re-builder #'ivy--regex
+                           :sort nil
+                           :initial-input nil)))
+        (dired dir))
+    (user-error "No recent directories available"))))
 
 ;; (define-key key-minor-mode-map (kbd "C-x d") 'bjm/ivy-dired-recent-dirs)
 ;; c-x C-d runs the command ido-list-directory
-#+END_EXAMPLE
+#+END_SRC
 
 **** dired-quick-sort
 #+BEGIN_SRC emacs-lisp

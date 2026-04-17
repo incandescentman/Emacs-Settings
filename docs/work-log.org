@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-17: Make DD recent-directories command live
+- Converted =bjm/ivy-dired-recent-dirs= from documentation/example text into live code in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]].
+- Root cause: the function existed only inside an example block, so it never tangled into [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]] even though [[file+emacs:/Users/jay/emacs/emacs-settings/prelude-key-chord.el][prelude-key-chord.el]] bound =DD= to it.
+- Hardened the command by ensuring =recentf= is available, enabling =recentf-mode= if needed, skipping nil directory entries, and showing a clear error when there are no recent directories.
+
 * 2026-04-17: Add ivy/swiper vs consult audit to modernization plan
 - Added a dedicated Ivy / Swiper vs Consult audit to [[file+emacs:/Users/jay/emacs/emacs-settings/docs/completion-modernization-plan.org][docs/completion-modernization-plan.org]].
 - Main finding: the current state is a genuinely mixed stack, not a cleanly completed migration. Ivy / Swiper still powers live muscle-memory bindings like =DD=, =SS=, and =BB=, while Consult already powers other active bindings and search helpers.
