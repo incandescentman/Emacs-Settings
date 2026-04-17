@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-17: Add amx vs ivy-smex audit to modernization plan
+- Added a dedicated =amx= vs =ivy-smex= audit to [[file+emacs:/Users/jay/emacs/emacs-settings/docs/completion-modernization-plan.org][docs/completion-modernization-plan.org]].
+- Main finding: =amx= is now the clearly live command-palette surface (direct bindings in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] and [[file+emacs:/Users/jay/emacs/emacs-settings/prelude-key-chord.el][prelude-key-chord.el]]), while [[file+emacs:/Users/jay/emacs/emacs-settings/ivy-smex.el][ivy-smex.el]] still loads but looks more like a future cleanup candidate than a first-class preferred path.
+- Recorded the safe conclusion: do not remove =ivy-smex.el= yet, but treat it as a likely later cleanup once Jay confirms no distinct Smex behavior is still wanted.
+
 * 2026-04-17: Replace remaining Helm key-chords with modern commands
 - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/prelude-key-chord.el][prelude-key-chord.el]] so =KK= now runs =consult-imenu= instead of =helm-imenu=.
 - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/prelude-key-chord.el][prelude-key-chord.el]] so =XX= now runs =amx= instead of =helm-M-x=.

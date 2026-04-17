@@ -95,6 +95,48 @@ Instead, treat this as a clarification task for a future checkpoint:
 
 No change should happen here until the preferred replacements feel good in real use.
 
+* Amx vs Ivy-Smex Audit
+
+The current command-selection setup has two overlapping ranking/history systems.
+
+** What is live
+
+- [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][📄 /Users/jay/emacs/emacs-settings/shared-functions.org]] enables =amx= and turns on =amx-mode=.
+- [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][📄 /Users/jay/emacs/emacs-settings/keys.el]] binds ~=~ to =amx=.
+- [[file+emacs:/Users/jay/emacs/emacs-settings/prelude-key-chord.el][📄 /Users/jay/emacs/emacs-settings/prelude-key-chord.el]] now binds =XX= to =amx=.
+- [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][📄 /Users/jay/emacs/emacs-settings/spacemacs-new-config.el]] still loads [[file+emacs:/Users/jay/emacs/emacs-settings/ivy-smex.el][📄 /Users/jay/emacs/emacs-settings/ivy-smex.el]].
+- [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][📄 /Users/jay/emacs/emacs-settings/spacemacs.d/init.el]] still carries a =smex-save-file= custom setting.
+
+** What this means
+
+This is not just historical residue on disk. Both systems still have live footprints.
+
+However, they are not equally central anymore:
+- =amx= is directly on active bindings
+- =ivy-smex.el= is still loaded, but its primary role is less obvious from the current keybinding surface
+
+** Safe conclusion for now
+
+Do not remove =ivy-smex.el= yet.
+
+But the direction is now clearer than before:
+- =amx= is the live command-palette preference to preserve
+- =ivy-smex.el= looks like a likely future cleanup candidate once Jay confirms he is not relying on any of its distinct behavior
+
+** What to test later before removal
+
+Before retiring =ivy-smex.el=, verify whether Jay still uses or wants any of the following:
+- Smex-specific command ordering behavior
+- Smex helper commands like function lookup / describe / where-is from that file
+- Any workflow that still expects =smex-save-file= history rather than =amx= history
+
+** Likely future cleanup path
+
+If later testing confirms =ivy-smex.el= is no longer needed:
+- stop loading [[file+emacs:/Users/jay/emacs/emacs-settings/ivy-smex.el][📄 /Users/jay/emacs/emacs-settings/ivy-smex.el]] from [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][📄 /Users/jay/emacs/emacs-settings/spacemacs-new-config.el]]
+- review whether the =smex-save-file= custom variable in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][📄 /Users/jay/emacs/emacs-settings/spacemacs.d/init.el]] is still needed
+- keep =amx= as the surviving command-selection layer unless Jay explicitly wants a different replacement
+
 * Deferred Work
 
 ** Corfu migration
