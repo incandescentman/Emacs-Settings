@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-17: Add helm conflict audit to modernization plan
+- Added a dedicated =helm= conflict audit to [[file+emacs:/Users/jay/emacs/emacs-settings/docs/completion-modernization-plan.org][docs/completion-modernization-plan.org]].
+- Main finding: [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]] excludes =helm=, but [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/jay/packages.el][spacemacs.d/jay/packages.el]] and [[file+emacs:/Users/jay/emacs/emacs-settings/prelude-key-chord.el][prelude-key-chord.el]] still rely on Helm commands and bindings.
+- Conclusion recorded for future work: do not remove Helm yet; first decide whether =helm-imenu= and =helm-M-x= are still preferred or should be replaced with modern equivalents.
+
 * 2026-04-17: Record completion overlap audit in modernization plan
 - Added an audit snapshot to [[file+emacs:/Users/jay/emacs/emacs-settings/docs/completion-modernization-plan.org][docs/completion-modernization-plan.org]] summarizing which completion-era packages are clearly still live, which ones overlap, and which ones look like likely future cleanup candidates.
 - Important result: =counsel= family, =key-chord=, =helm-make=, =amx=, =affe=, and =fasd= all still have live workflow footprints, so they should not be treated as automatic cleanup targets.

@@ -51,6 +51,50 @@ The current state is not "old stack removed, new stack only". It is a modern =co
 
 These are candidates for future checkpoints, not immediate removals.
 
+* Helm Conflict Audit
+
+The current =helm= situation is not cleanly unified.
+
+** What is contradictory
+
+- [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][📄 /Users/jay/emacs/emacs-settings/spacemacs.d/init.el]] excludes =helm= in =dotspacemacs-excluded-packages=.
+- But [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/jay/packages.el][📄 /Users/jay/emacs/emacs-settings/spacemacs.d/jay/packages.el]] still lists =helm= and =helm-cmd-t= in the custom Jay layer.
+- [[file+emacs:/Users/jay/emacs/emacs-settings/prelude-key-chord.el][📄 /Users/jay/emacs/emacs-settings/prelude-key-chord.el]] still binds live key-chords to =helm-imenu= and =helm-M-x=.
+
+So the present state is neither "Helm removed" nor "Helm intentionally first-class".
+
+** What is still live
+
+- =KK= is bound to =helm-imenu= in [[file+emacs:/Users/jay/emacs/emacs-settings/prelude-key-chord.el][📄 /Users/jay/emacs/emacs-settings/prelude-key-chord.el]].
+- =XX= is bound to =helm-M-x= in [[file+emacs:/Users/jay/emacs/emacs-settings/prelude-key-chord.el][📄 /Users/jay/emacs/emacs-settings/prelude-key-chord.el]].
+- The Jay layer still initializes =helm-cmd-t= in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/jay/packages.el][📄 /Users/jay/emacs/emacs-settings/spacemacs.d/jay/packages.el]].
+- Helm packages are still physically installed in =/Users/jay/.emacs.d/elpa/=, so stale references may continue to appear to work depending on load order.
+
+** Why this matters
+
+This kind of mixed state is riskier than an obviously old package that is simply still used.
+
+Possible outcomes of leaving it alone:
+- bindings appear to work until package loading changes
+- future cleanup gets harder because "excluded" does not mean "unused"
+- it becomes unclear whether Helm is intentionally part of the workflow or just surviving by inertia
+
+** Safe conclusion for now
+
+Do not remove Helm-related commands yet.
+
+Instead, treat this as a clarification task for a future checkpoint:
+- decide whether =helm-imenu= and =helm-M-x= are still genuinely preferred
+- if yes, stop pretending Helm is excluded and document that exception clearly
+- if no, replace those bindings with modern alternatives before cleaning up Helm references
+
+** Likely replacement targets if Jay wants to modernize later
+
+- =helm-imenu= → =consult-outline= or a similar Consult-native outline jump
+- =helm-M-x= → existing command selection flow based on =amx= or standard =M-x= with the current minibuffer stack
+
+No change should happen here until the preferred replacements feel good in real use.
+
 * Deferred Work
 
 ** Corfu migration
