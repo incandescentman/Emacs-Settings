@@ -2356,7 +2356,8 @@ is corrected, matching the old Org writing workflow on the backtick key."
   (pcase-let ((`(,start . ,end)
                (or (jinx--bounds-of-word)
                    (user-error "No word at point"))))
-    (when-let* ((ov (car (jinx--force-overlays start end)))
+    (when-let* ((ov (car (ignore-errors
+                           (jinx--force-overlays start end))))
                 (word (buffer-substring-no-properties
                        (overlay-start ov) (overlay-end ov)))
                 (suggestions (jinx--correct-suggestions word)))
