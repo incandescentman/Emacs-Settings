@@ -242,7 +242,7 @@ This function should only modify configuration layer settings."
                                       (org-web-tools :location "/Users/jay/emacs/emacs-settings/org-web-tools-master/")
                                       )
    ;; A list of packages that cannot be updated.
-   dotspacemacs-frozen-packages '()
+   dotspacemacs-frozen-packages '(helm-make)
 
    ;; A list of packages that will not be installed and loaded.
    dotspacemacs-excluded-packages '(

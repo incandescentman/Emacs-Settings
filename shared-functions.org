@@ -8728,49 +8728,6 @@ Supported extensions: png, jpg, jpeg, gif, svg, webp."
 ;; overwrite mdx files
 (setq revert-without-query '(".*\\.mdx$")) 
 #+end_src
-------------------------------------------------------------------
-Prerequisites outside Emacs (run in your project or globally):
-  npm install -g @astrojs/language-server      # or: npm i -D @astrojs/language-server
-  npm install -D typescript                    # if you didn't enable TS at project creation
-------------------------------------------------------------------
-
-
-no eglot:
-
-
-(use-package eglot
-  :ensure t
-  :config
-  ;; Use project.el's built-in vc-project type
-  (require 'project)
-
-  ;; Add package.json as a project root marker
-  (add-to-list 'project-vc-extra-root-markers "package.json")
-
-  ;; IMPORTANT: Clear any existing astro-mode entries first
-  (setq eglot-server-programs
-        (assq-delete-all 'astro-mode eglot-server-programs))
-
-(add-to-list
- 'eglot-server-programs
- `(astro-mode
-   . ("npx" "@astrojs/language-server" "--stdio"
-      :initializationOptions
-      (:typescript
-       (:tsdk ,(expand-file-name
-                "/Users/jay/Dropbox/github/socratic-astro/node_modules/typescript/lib"))))))
-
-  ;; Start the LS automatically when you open an .astro file
-  (add-hook 'astro-mode-hook #'eglot-ensure))
-
-;; Format-on-save only if Eglot is already managing the buffer
-(defun my/astro-format-before-save ()
-  (when (and (derived-mode-p 'astro-mode)
-             (eglot-managed-p))
-    (eglot-format-buffer)))
-(add-hook 'before-save-hook #'my/astro-format-before-save)
-
-
 * Notch Management
 #+begin_src emacs-lisp
 ;; Display-aware tab bar management to hide hardware notches (built-in or external).

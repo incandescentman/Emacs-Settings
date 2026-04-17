@@ -2,6 +2,48 @@
 #+DATE: 2025-09-24
 #+DESCRIPTION: Debugging post-mortems and prevention checklists.
 
+* In Literate Org, Naked Lisp After `#+end_src` Is Just Text
+  Date: 2026-04-17
+
+** The Bug
+An Astro section in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] contained real-looking Emacs Lisp after a =#+end_src=. That made the section look like live config even though the code never tangled into [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]].
+
+** The Truth
+- Example blocks are intentional documentation and are fine.
+- The real gotcha is naked Lisp-looking text outside source blocks: it is easy to mistake for active config when reading the Org file.
+- The safest test is the tangled file, not the Org prose. If the code is absent from [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]], it is not live.
+
+** The Fix
+Either move intended live code back into a =#+begin_src emacs-lisp= block or delete stale text if the feature is no longer wanted.
+
+** Lessons Learned / Prevention Checklist
+- Do not treat =#+begin_example= as a bug by itself; that is often intentional documentation.
+- When an Org section looks suspicious, compare it directly against the tangled =.el= file before changing behavior.
+- If a setup is intentionally not used anymore, delete stale pseudo-config instead of leaving it in ambiguous plain text.
+
+* `helm-make` Update Failures Come From Spacemacs Layer Recipes, Not `shared-functions.org`
+  Date: 2026-04-17
+
+** The Bug
+Updating packages in Spacemacs failed inside Quelpa while cloning =helm-make= from:
+=https://github.com/myrgy/helm-make.git= on branch =add_emacs_completion=.
+
+At first glance this looked like it might be caused by local config in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]], because that file carries a lot of custom package setup.
+
+** The Truth
+- The live =helm-make= recipe does not come from [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]].
+- It comes from Spacemacs’s =compleseus= layer at [[file+emacs:/Users/jay/emacs/spacemacs/layers/+completion/compleseus/packages.el][/Users/jay/emacs/spacemacs/layers/+completion/compleseus/packages.el]].
+- That layer uses a forked repo because upstream =abo-abo/helm-make= still lacks the =emacs= completion choice needed by this config’s =helm-make-completion-method 'emacs=.
+- The fork and branch still exist, so a clone error here is not automatically evidence of a dead upstream; it can also be a transient Quelpa/build-dir failure.
+
+** The Fix
+Freeze =helm-make= in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][/Users/jay/emacs/emacs-settings/spacemacs.d/init.el]] via =dotspacemacs-frozen-packages= so bulk package updates do not keep re-entering that fragile forked-recipe path.
+
+** Lessons Learned / Prevention Checklist
+- When a Spacemacs package update fails, search both your personal config and the relevant Spacemacs layer before assuming the recipe is yours.
+- If a package depends on a fork-only Quelpa recipe and is already working locally, freezing it can be safer than patching vendor code or chasing intermittent update failures.
+- Before changing a recipe, verify whether the fork exists and whether the exact =git clone= command works outside Emacs.
+
 * Old `use-package` + VC Installs: `:vc` May Parse Fine In Theory And Still Do Nothing In Practice
   Date: 2026-04-06
 

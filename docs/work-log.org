@@ -1,6 +1,18 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-17: Remove stray Astro Eglot notes from shared-functions.org
+- Cleaned up the =* Astro= section in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] by deleting old Eglot-specific notes and code that were sitting outside a source block.
+- Rationale: this setup does not want Eglot for Astro, and the text was misleading because it looked like live config even though it did not tangle into [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]].
+- Kept the actual live Astro setup minimal: =web-mode= foundation, =astro-mode= derivation, =auto-mode-alist= entry, and the =revert-without-query= tweak for =.mdx= files.
+
+* 2026-04-17: Freeze helm-make to avoid fragile Quelpa fork updates
+- Investigated a package-update failure that looked like it might live in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][/Users/jay/emacs/emacs-settings/shared-functions.org]], but the real recipe lives in Spacemacs itself at [[file+emacs:/Users/jay/emacs/spacemacs/layers/+completion/compleseus/packages.el][/Users/jay/emacs/spacemacs/layers/+completion/compleseus/packages.el]].
+- Root cause: the =compleseus= layer pulls =helm-make= from the fork [[file+emacs:https://github.com/myrgy/helm-make][https://github.com/myrgy/helm-make]] on branch =add_emacs_completion= because upstream =abo-abo/helm-make= still lacks the =emacs= completion method that this setup enables.
+- Verified the fork and branch still exist and that the exact clone command succeeds from the shell, which means the failure is best treated as an update-time fragility around a forked Quelpa recipe rather than a missing repository.
+- Chose the least invasive fix in user config: froze =helm-make= in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][/Users/jay/emacs/emacs-settings/spacemacs.d/init.el]] so Spacemacs no longer tries to update that package during bulk package refreshes.
+- Rationale: =helm-make= is already installed locally, the special fork is only needed to preserve =helm-make-completion-method 'emacs=, and freezing avoids repeated Quelpa checkout failures without patching Spacemacs vendor code.
+
 * 2026-04-17: Repair stale Homebrew Emacs cask warning and shell PATH init
 - Investigated a Homebrew warning about invalid cask metadata under [[file+emacs:/opt/homebrew/Caskroom/emacs-mac-spacemacs-icon][/opt/homebrew/Caskroom/emacs-mac-spacemacs-icon]] while the real installed Emacs cask was [[file+emacs:/opt/homebrew/Caskroom/emacs-mac][/opt/homebrew/Caskroom/emacs-mac]].
 - Verified the live app and binary were intact at [[file+emacs:/Applications/Emacs.app][/Applications/Emacs.app]] and [[file+emacs:/opt/homebrew/bin/emacs][/opt/homebrew/bin/emacs]].
