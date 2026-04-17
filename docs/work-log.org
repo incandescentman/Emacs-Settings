@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-17: Replace remaining Helm key-chords with modern commands
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/prelude-key-chord.el][prelude-key-chord.el]] so =KK= now runs =consult-imenu= instead of =helm-imenu=.
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/prelude-key-chord.el][prelude-key-chord.el]] so =XX= now runs =amx= instead of =helm-M-x=.
+- Rationale: both bindings were part of the live Helm overlap. These replacements preserve the same rough workflows (jump to headings, command palette) while aligning better with the current completion stack.
+- Left [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.md][CLAUDE.md]] / [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.org][CLAUDE.org]] exactly as currently arranged per Jay's instruction.
+
 * 2026-04-17: Strengthen CLAUDE guidance against runtime speculation
 - Expanded the AI editing guidance in [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.org][CLAUDE.org]] / [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.md][CLAUDE.md]] to make runtime-testing expectations explicit.
 - Added rules to distinguish static config analysis from actual runtime behavior, forbid unsupported "probably broken" claims, and require a direct Jay test for uncertain keybinding/function behavior.
