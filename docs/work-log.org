@@ -6,6 +6,8 @@
 - Existing personal word list at =/Users/jay/emacs/Spelling/personal.dic= (4057 words, plain format) was not being read by enchant.
 - Created =~/.config/enchant/enchant.ordering= with =en_US:hunspell,aspell= for future hunspell support (no-op for now, harmless).
 - Symlinked =~/.config/enchant/en_US.dic -> /Users/jay/emacs/Spelling/personal.dic= so enchant reads the existing personal word list directly.
+- Added startup automation in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so Jinx re-creates that Enchant bridge automatically on machines or profiles where it is missing.
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/docs/design-architecture.org][docs/design-architecture.org]], [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][docs/instructions.org]], and the keybinding docs so they reflect the live Jinx + Enchant setup and the backtick Jinx correction command.
 - Jinx now recognizes personal words (e.g. "Jay", "Dixit"). New words added via Jinx will write back to =personal.dic= through the symlink, keeping a single source of truth.
 
 * 2026-04-17: Refresh modernization plan after successful runtime checkpoints

@@ -30,7 +30,7 @@ Key features:
 
 3. *Install external dependencies* (macOS)
    #+BEGIN_SRC sh
-   brew install ripgrep pandoc hunspell
+   brew install ripgrep pandoc hunspell enchant aspell
    #+END_SRC
 
 4. *Launch Emacs*

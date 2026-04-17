@@ -12,7 +12,7 @@ Think of this configuration as three layers:
 
 1. *Foundation*: Spacemacs provides the base (layers, package management, keybindings)
 2. *Custom Modules*: Org files that tangle to Elisp (themes, utilities) plus pure elisp modules like pasteboard integration
-3. *Integration*: macOS-specific features, external tools (ripgrep, hunspell), custom workflows
+3. *Integration*: macOS-specific features, external tools (ripgrep, hunspell, enchant/aspell), custom workflows
 
 * Architecture Components
 
@@ -225,14 +225,16 @@ pasteboard-paste-adaptive (detects buffer type)
 
 | Tool      | Purpose                    | How Used                          |
 |-----------+----------------------------+-----------------------------------|
-| ripgrep   | Fast text search           | =SPC /= project search            |
-| pandoc    | Document conversion        | Org export to various formats     |
-| hunspell  | Spell checking             | =M-$= spell check word            |
-| emacsql   | SQLite database            | Org-roam database queries         |
-| pbcopy    | macOS clipboard (copy)     | Clipboard integration             |
-| pbpaste   | macOS clipboard (paste)    | Clipboard integration             |
+| ripgrep   | Fast text search                | =SPC /= project search                       |
+| pandoc    | Document conversion             | Org export to various formats                |
+| hunspell  | Ispell/Flyspell backend         | =M-$= spell check word, legacy spell flows   |
+| enchant   | Jinx spell backend              | Real-time spelling via =jinx=                |
+| aspell    | Enchant provider on this system | Personal dictionary access for =jinx=        |
+| emacsql   | SQLite database                 | Org-roam database queries                    |
+| pbcopy    | macOS clipboard (copy)          | Clipboard integration                        |
+| pbpaste   | macOS clipboard (paste)         | Clipboard integration                        |
 
-Install via: =brew install ripgrep pandoc hunspell=
+Install via: =brew install ripgrep pandoc hunspell enchant aspell=
 
 ** Spacemacs Layers
 
@@ -241,7 +243,7 @@ This config uses these Spacemacs layers:
 - *org*: Org-mode with org-roam support
 - *auto-completion*: Company-mode completion
 - *compleseus*: Completion framework (alternative to Helm/Ivy)
-- *spell-checking*: Flyspell with hunspell
+- *spell-checking*: Jinx for live spell checking via Enchant, plus Ispell/Flyspell with hunspell for older commands and compatibility
 - *osx*: macOS-specific settings
 - *emacs-lisp*: Elisp development tools
 
