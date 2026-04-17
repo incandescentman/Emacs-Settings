@@ -128,7 +128,7 @@ This function should only modify configuration layer settings."
                                       google-this
                                       ;; helpful
                                       ;; ido-hacks
-                                      ;; jinx
+                                      jinx
                                       js2-mode
                                       key-seq
                                       ;; lister ;; (for delve)

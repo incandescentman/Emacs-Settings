@@ -6237,12 +6237,12 @@ Smart jump to beginning / end of lines.
 #+end_src
 
 * jinx
-#+begin_EXAMPLE emacs-lisp
+#+begin_src emacs-lisp
 (use-package jinx
 :defer)
 (dolist (hook '(text-mode-hook org-mode-hook conf-mode-hook))
  (add-hook hook #'jinx-mode))
-#+END_EXAMPLE
+#+end_src
 
 * ox-timeline
 #+begin_src emacs-lisp

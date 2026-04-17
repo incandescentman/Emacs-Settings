@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-17: Make jinx live
+- Added =jinx= to [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]] so the package is actually installed in the Emacs config.
+- Converted the =jinx= snippet in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] from an example block into live code so =jinx-mode= is enabled for text, org, and conf buffers.
+- This follows the earlier runtime test: =embark= already worked at runtime, but =jinx-mode= did not exist yet.
+
 * 2026-04-17: Fix stale proposal/book search paths
 - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][search-commands.org]] so the proposal/book search helpers no longer hardcode the old missing directories =/Users/jay/Dropbox/writing/proposal= and =/Users/jay/Dropbox/writing/book=.
 - Added path-resolution helpers that prefer the live directories [[file+emacs:/Users/jay/Dropbox/writing/both/proposal][/Users/jay/Dropbox/writing/both/proposal]] and [[file+emacs:/Users/jay/Dropbox/writing/both/book][/Users/jay/Dropbox/writing/both/book]], while still checking CloudStorage and older fallback paths.
