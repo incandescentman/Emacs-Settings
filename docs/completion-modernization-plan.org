@@ -137,6 +137,63 @@ If later testing confirms =ivy-smex.el= is no longer needed:
 - review whether the =smex-save-file= custom variable in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][📄 /Users/jay/emacs/emacs-settings/spacemacs.d/init.el]] is still needed
 - keep =amx= as the surviving command-selection layer unless Jay explicitly wants a different replacement
 
+* Ivy / Swiper vs Consult Audit
+
+The current search and selection setup is a true mixed stack, not a clean migration.
+
+** What is live on the Ivy / Swiper side
+
+- [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][📄 /Users/jay/emacs/emacs-settings/shared-functions.org]] still enables =ivy= alongside =fasd=.
+- [[file+emacs:/Users/jay/emacs/emacs-settings/prelude-key-chord.el][📄 /Users/jay/emacs/emacs-settings/prelude-key-chord.el]] still binds:
+  - =DD= → =bjm/ivy-dired-recent-dirs=
+  - =SS= → =swiper=
+  - =BB= → =swiper-all=
+- [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.el][📄 /Users/jay/emacs/emacs-settings/search-commands.el]] still contains direct =counsel-find-file=, =counsel-fzf=, and =ivy-read= helpers.
+
+** What is live on the Consult side
+
+- The active completion direction still centers on =compleseus=.
+- [[file+emacs:/Users/jay/emacs/emacs-settings/prelude-key-chord.el][📄 /Users/jay/emacs/emacs-settings/prelude-key-chord.el]] already uses modern Consult commands too:
+  - =KK= → =consult-imenu=
+  - =kk= → =consult-outline=
+  - =WW= → =consult-git-grep=
+- [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.el][📄 /Users/jay/emacs/emacs-settings/search-commands.el]] also contains a strong Consult-based search path, including =consult-ripgrep= helpers.
+
+** What this means
+
+This overlap is not a simple case of "old stack unused".
+
+Instead, it looks like a layered, workflow-specific split:
+- some quick muscle-memory search and file-jump habits still use Ivy / Swiper
+- newer structured search and navigation habits use Consult
+
+** Safe conclusion for now
+
+Do not remove =ivy=, =swiper=, or their bindings yet.
+
+The current overlap is functional, not obviously broken.
+
+The real future question is preference:
+- whether Jay still likes =DD=, =SS=, and =BB= as they currently behave
+- whether the Consult equivalents feel better enough to justify migration
+
+** What to test later before any cleanup
+
+Before removing Ivy / Swiper pieces, Jay should test the live commands and decide whether their exact behavior is still preferred:
+- =DD= current recent-directory picker
+- =SS= current in-buffer search behavior
+- =BB= current multi-buffer search behavior
+
+Only after that should the code be migrated or retired.
+
+** Likely future cleanup path
+
+If later testing shows the old behavior is no longer preferred:
+- replace =DD= with a Consult-native directory/history workflow
+- replace =SS= with =consult-line=
+- replace =BB= with =consult-line-multi= or another preferred multi-buffer search
+- then review whether the remaining =ivy= enablement in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][📄 /Users/jay/emacs/emacs-settings/shared-functions.org]] is still justified
+
 * Deferred Work
 
 ** Corfu migration

@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-17: Add ivy/swiper vs consult audit to modernization plan
+- Added a dedicated Ivy / Swiper vs Consult audit to [[file+emacs:/Users/jay/emacs/emacs-settings/docs/completion-modernization-plan.org][docs/completion-modernization-plan.org]].
+- Main finding: the current state is a genuinely mixed stack, not a cleanly completed migration. Ivy / Swiper still powers live muscle-memory bindings like =DD=, =SS=, and =BB=, while Consult already powers other active bindings and search helpers.
+- Recorded the safe conclusion: do not remove Ivy / Swiper yet; first have Jay test whether those exact live behaviors are still preferred before migrating them.
+
 * 2026-04-17: Add amx vs ivy-smex audit to modernization plan
 - Added a dedicated =amx= vs =ivy-smex= audit to [[file+emacs:/Users/jay/emacs/emacs-settings/docs/completion-modernization-plan.org][docs/completion-modernization-plan.org]].
 - Main finding: =amx= is now the clearly live command-palette surface (direct bindings in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] and [[file+emacs:/Users/jay/emacs/emacs-settings/prelude-key-chord.el][prelude-key-chord.el]]), while [[file+emacs:/Users/jay/emacs/emacs-settings/ivy-smex.el][ivy-smex.el]] still loads but looks more like a future cleanup candidate than a first-class preferred path.
