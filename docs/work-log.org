@@ -1,6 +1,13 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-17: Wire Jinx into existing personal word dictionary
+- Jinx uses =enchant=, which on this macOS system is backed by =aspell= (not hunspell — Homebrew's enchant build has no hunspell plugin).
+- Existing personal word list at =/Users/jay/emacs/Spelling/personal.dic= (4057 words, plain format) was not being read by enchant.
+- Created =~/.config/enchant/enchant.ordering= with =en_US:hunspell,aspell= for future hunspell support (no-op for now, harmless).
+- Symlinked =~/.config/enchant/en_US.dic -> /Users/jay/emacs/Spelling/personal.dic= so enchant reads the existing personal word list directly.
+- Jinx now recognizes personal words (e.g. "Jay", "Dixit"). New words added via Jinx will write back to =personal.dic= through the symlink, keeping a single source of truth.
+
 * 2026-04-17: Refresh modernization plan after successful runtime checkpoints
 - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/docs/completion-modernization-plan.org][docs/completion-modernization-plan.org]] so it reflects the current confirmed state rather than the intermediate audit state.
 - Marked the completed work more clearly: key-chord modernization, =ivy-smex= startup removal, stale =smex= cleanup, direct =ivy-read= helper modernization, proposal/book path fixes, and live =jinx= + backtick correction workflow.
