@@ -8725,6 +8725,19 @@ Supported extensions: png, jpg, jpeg, gif, svg, webp."
 (define-derived-mode astro-mode web-mode "Astro")
 (add-to-list 'auto-mode-alist '("\\.astro\\'" . astro-mode))
 
+;; overwrite mdx files
+(setq revert-without-query '(".*\\.mdx$")) 
+#+end_src
+------------------------------------------------------------------
+Prerequisites outside Emacs (run in your project or globally):
+  npm install -g @astrojs/language-server      # or: npm i -D @astrojs/language-server
+  npm install -D typescript                    # if you didn't enable TS at project creation
+------------------------------------------------------------------
+
+
+no eglot:
+
+
 (use-package eglot
   :ensure t
   :config
@@ -8757,14 +8770,6 @@ Supported extensions: png, jpg, jpeg, gif, svg, webp."
     (eglot-format-buffer)))
 (add-hook 'before-save-hook #'my/astro-format-before-save)
 
-;; overwrite mdx files
-(setq revert-without-query '(".*\\.mdx$")) 
-#+end_src
-------------------------------------------------------------------
-Prerequisites outside Emacs (run in your project or globally):
-  npm install -g @astrojs/language-server      # or: npm i -D @astrojs/language-server
-  npm install -D typescript                    # if you didn't enable TS at project creation
-------------------------------------------------------------------
 
 * Notch Management
 #+begin_src emacs-lisp

@@ -1,6 +1,15 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-17: Repair stale Homebrew Emacs cask warning and shell PATH init
+- Investigated a Homebrew warning about invalid cask metadata under [[file+emacs:/opt/homebrew/Caskroom/emacs-mac-spacemacs-icon][/opt/homebrew/Caskroom/emacs-mac-spacemacs-icon]] while the real installed Emacs cask was [[file+emacs:/opt/homebrew/Caskroom/emacs-mac][/opt/homebrew/Caskroom/emacs-mac]].
+- Verified the live app and binary were intact at [[file+emacs:/Applications/Emacs.app][/Applications/Emacs.app]] and [[file+emacs:/opt/homebrew/bin/emacs][/opt/homebrew/bin/emacs]].
+- Removed the stale caskroom metadata directory after confirming it was only leftover metadata, not the active installation.
+- Confirmed the reinstall path Homebrew suggested was not appropriate here because =emacs-mac-spacemacs-icon= conflicted with the already-installed =emacs-mac= cask.
+- Traced the remaining =brew doctor= PATH warning to shell startup config: [[file+emacs:/Users/jay/.bash_profile][/Users/jay/.bash_profile]] loaded Homebrew only for interactive shells via [[file+emacs:/Users/jay/Dropbox/apps/bash-profile/bashrc-master.sh][/Users/jay/Dropbox/apps/bash-profile/bashrc-master.sh]], leaving non-interactive login shells with =/usr/bin= ahead of =/opt/homebrew/bin=.
+- Fixed the root cause in the bash profile repo by extracting shared PATH setup into [[file+emacs:/Users/jay/Dropbox/apps/bash-profile/shared-path-init.sh][/Users/jay/Dropbox/apps/bash-profile/shared-path-init.sh]] and sourcing it from both [[file+emacs:/Users/jay/.bash_profile][/Users/jay/.bash_profile]] and [[file+emacs:/Users/jay/Dropbox/apps/bash-profile/bashrc-master.sh][/Users/jay/Dropbox/apps/bash-profile/bashrc-master.sh]].
+- Verified in fresh shells that =brew=, =jq=, and =python3= now resolve to =/opt/homebrew/bin= and that =brew doctor= reports a clean setup.
+
 * 2026-04-06: Install org-mindmap and add live mindmap examples
 - Added =org-mindmap= to =package-vc-selected-packages= in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]] so the package is tracked in the same VC-install path as =org-srs= and =lisp-fsrs=.
 - Added an =org mindmaps= section to [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] with:
