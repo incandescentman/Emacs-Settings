@@ -5310,10 +5310,8 @@ This is my goto way for navigating. It feels like it is reading your mind.
 
 ;;;; 1.  fasd ----------------------------------------------------
 
-(use-package ivy :ensure t)
 (use-package fasd
-  :ensure t
-  :after ivy)
+  :ensure t)
 
 (use-package fasd
   :commands (fasd-find-file)
@@ -5903,7 +5901,7 @@ It will open the link in Emacs with typing C-c C-o.
 
 *** open recent directories
 #+BEGIN_SRC emacs-lisp
-;; open recent directory, rquires ivy (part of swiper)
+;; open a recent directory using the current completion UI
 ;; borrows from http://stackoverflow.com/questions/23328037/in-emacs-how-to-maintain-a-list-of-recent-directories
 (defun bjm/ivy-dired-recent-dirs ()
  "Present a list of recently used directories and open the selected one in dired"
@@ -5921,11 +5919,7 @@ It will open the link in Emacs with typing C-c C-o.
                        recentf-list)))))
 
   (if recent-dirs
-      (let ((dir (ivy-read "Directory: "
-                           recent-dirs
-                           :re-builder #'ivy--regex
-                           :sort nil
-                           :initial-input nil)))
+      (let ((dir (completing-read "Directory: " recent-dirs nil t)))
         (dired dir))
     (user-error "No recent directories available"))))
 

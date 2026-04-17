@@ -222,7 +222,7 @@ In this function:
 - ~directory-files-recursively~ is used to get a list of all files in
   each directory (~dir1~ and ~dir2~).
 - These lists are concatenated into ~all-files~.
-- ~ivy-read~ is then used to create an interactive selection interface
+- ~completing-read~ is then used to create an interactive selection interface
   with the combined file list.
 
 *** Explanation of How the Code Works:
@@ -234,13 +234,13 @@ In this function:
    - ~directory-files-recursively~ is used for both ~dir1~ and ~dir2~ to create a list of all files within these directories and their subdirectories. The empty string ~""~ argument means it lists all types of files without filtering by extension.
 4. *Combining File Lists*: The lists ~files1~ and ~files2~ are combined into a single list ~all-files~ using ~append~. This list now contains file paths from both directories.
 5. *Interactive File Selection*:
-   - ~ivy-read~ is used to create an interactive selection interface. It takes ~all-files~ as the list of choices to present to the user.
+   - ~completing-read~ is used to create an interactive selection interface. It takes ~all-files~ as the list of choices to present to the user.
    - The prompt ~"Find file: "~ is displayed to the user.
 6. *File Selection Action*:
    - The ~:action~ argument defines what to do when the user selects a file.
    - It uses a lambda function ~(lambda (f) (when f (find-file f)))~ to open the selected file. The ~when~ statement ensures that an action is only taken if a file is actually selected (i.e., ~f~ is not ~nil~).
 
-This function provides a user-friendly way to search and open files from two different directories using Emacs's ~ivy~ completion system, offering a seamless integration with your Emacs workflow.
+This function provides a user-friendly way to search and open files from two different directories using Emacs's current completion system, offering a seamless integration with your Emacs workflow.
 
 #+begin_src emacs-lisp
 (defun counsel-fzf-both-proposal-and-book-dirs ()
@@ -256,13 +256,9 @@ This function provides a user-friendly way to search and open files from two dif
          (files2 (directory-files-recursively dir2 ""))
          ;; Combine the file lists from both directories into all-files.
          (all-files (append files1 files2)))
-    ;; Use ivy-read to present an interactive interface with the combined file list.
-    ;; ivy-read is a part of the ivy completion framework, providing a simple and
-    ;; efficient way to select an item from a list.
-    (ivy-read "Find file: " all-files
-              ;; Define an action to be performed when a file is selected.
-              ;; In this case, it opens the selected file with find-file.
-              :action (lambda (f) (when f (find-file f))))))
+    (let ((file (completing-read "Find file: " all-files nil t)))
+      (when (and file (not (string-empty-p file)))
+        (find-file file)))))
 
 
 (defalias 'search-filename-both-book-and-proposal-directories 'counsel-fzf-both-proposal-and-book-dirs)

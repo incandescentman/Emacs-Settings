@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-17: Modernize remaining direct ivy-read helpers
+- Replaced the remaining direct =ivy-read= usage in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] and [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][search-commands.org]] with plain =completing-read= so those commands now use the current minibuffer completion UI naturally.
+- Updated =bjm/ivy-dired-recent-dirs= to use =completing-read= while keeping the command name stable for existing bindings.
+- Updated =counsel-fzf-both-proposal-and-book-dirs= to use =completing-read= for the final file selection step.
+- Removed the now-unnecessary explicit =use-package ivy= / =:after ivy= coupling from the =fasd= block in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]].
+
 * 2026-04-17: Tighten CLAUDE guidance on post-checkpoint test scope
 - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.org][CLAUDE.org]] / [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.md][CLAUDE.md]] to require narrowly scoped post-checkpoint test requests.
 - Added explicit rules to ask only for startup checks and tests of behaviors actually changed by the diff, avoid broadening test scope without cause, explain any non-obvious test request, and skip Emacs relaunches for docs-only checkpoints.

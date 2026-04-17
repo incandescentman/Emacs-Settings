@@ -16,20 +16,6 @@
  (interactive)
  (consult-ripgrep default-directory))
 
-(defun jay/smart-ripgrep (&optional arg)
-  "Context-aware ripgrep search.
-In an org-roam buffer: search all of `org-roam-directory'.
-With prefix ARG in an org-roam buffer: search current directory only.
-Outside org-roam: always search current directory."
-  (interactive "P")
-  (if (and (not arg)
-           (bound-and-true-p org-roam-directory)
-           (buffer-file-name)
-           (string-prefix-p (expand-file-name org-roam-directory)
-                            (expand-file-name (buffer-file-name))))
-      (roam-rg-search)
-    (consult-ripgrep-current-directory)))
-
 
 (defun deadgrep-current-directory ()
  "Search current directory using deadgrep."
@@ -43,7 +29,7 @@ Outside org-roam: always search current directory."
 (defalias 'rg-project-directory 'rg-dwim-project-dir)
 (defalias 'rg-current-file 'rg-dwim-current-file)
 
- (use-package consult-org-roam
+(use-package consult-org-roam
   :ensure t
   :after org-roam
   :init
@@ -137,13 +123,9 @@ Outside org-roam: always search current directory."
          (files2 (directory-files-recursively dir2 ""))
          ;; Combine the file lists from both directories into all-files.
          (all-files (append files1 files2)))
-    ;; Use ivy-read to present an interactive interface with the combined file list.
-    ;; ivy-read is a part of the ivy completion framework, providing a simple and
-    ;; efficient way to select an item from a list.
-    (ivy-read "Find file: " all-files
-              ;; Define an action to be performed when a file is selected.
-              ;; In this case, it opens the selected file with find-file.
-              :action (lambda (f) (when f (find-file f))))))
+    (let ((file (completing-read "Find file: " all-files nil t)))
+      (when (and file (not (string-empty-p file)))
+        (find-file file)))))
 
 
 (defalias 'search-filename-both-book-and-proposal-directories 'counsel-fzf-both-proposal-and-book-dirs)
@@ -251,7 +233,7 @@ Outside org-roam: always search current directory."
 ;  (define-key isearch-mode-map (kbd "<right>") 'isearch-repeat-forward) ; single key, useful
  )
 
- ;;; Tell ispell.el that ’ can be part of a word.
+;;; Tell ispell.el that ’ can be part of a word.
 (setq ispell-local-dictionary-alist
       `((nil "[[:alpha:]]" "[^[:alpha:]]"
              "['\x2019]" nil ("-B") nil utf-8)))
@@ -421,7 +403,7 @@ Outside org-roam: always search current directory."
 (use-package deadgrep
   :defer)
 
- (defun timu/search-org-files ()
+(defun timu/search-org-files ()
   "Grep for a string in the `~/org' using `rg'."
   (interactive)
 (consult-ripgrep "~/org" ""))
