@@ -1,6 +1,10 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-17: Tighten CLAUDE guidance on post-checkpoint test scope
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.org][CLAUDE.org]] / [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.md][CLAUDE.md]] to require narrowly scoped post-checkpoint test requests.
+- Added explicit rules to ask only for startup checks and tests of behaviors actually changed by the diff, avoid broadening test scope without cause, explain any non-obvious test request, and skip Emacs relaunches for docs-only checkpoints.
+
 * 2026-04-17: Remove stale smex residue after ivy-smex cleanup
 - Removed the old =smex-save-file= custom variable from [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]].
 - Removed stale =smex=-specific leftovers from [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]], including the unused =smex-prompt-string= setting and the no-op minibuffer abbrev guard that only looked for =smex-= commands.
