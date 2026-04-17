@@ -62,10 +62,10 @@
 ;; (key-chord-define-global "ZZ" 'repeat-complex-command)
 (key-chord-define-global "ZZ" 'undo-tree-undo)
 (key-chord-define-global "RR" 'replace-regexp)
-(key-chord-define-global "SS" 'swiper)
+(key-chord-define-global "SS" 'consult-line)
 
 ;; (key-chord-define-global "bb" 'multi-occur-all-buffers)
-(key-chord-define-global "BB" 'swiper-all) ; same, but better
+(key-chord-define-global "BB" 'consult-line-multi)
 
 (key-chord-define-global "FF" 'isearch-forward-regexp)
 ;; (key-chord-define-global "HH" 'cheatsheet-show)
@@ -110,4 +110,3 @@
 (provide 'prelude-key-chord)
 
 ;;; prelude-key-chord.el ends here
-

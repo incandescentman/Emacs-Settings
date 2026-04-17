@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-17: Switch SS and BB to Consult search commands
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/prelude-key-chord.el][prelude-key-chord.el]] so =SS= now runs =consult-line= instead of =swiper=.
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/prelude-key-chord.el][prelude-key-chord.el]] so =BB= now runs =consult-line-multi= instead of =swiper-all=.
+- This is a deliberate workflow experiment to test whether a more unified Consult-based search flow feels better in real use than the remaining Ivy/Swiper bindings.
+
 * 2026-04-17: Make DD recent-directories command live
 - Converted =bjm/ivy-dired-recent-dirs= from documentation/example text into live code in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]].
 - Root cause: the function existed only inside an example block, so it never tangled into [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]] even though [[file+emacs:/Users/jay/emacs/emacs-settings/prelude-key-chord.el][prelude-key-chord.el]] bound =DD= to it.
