@@ -37,6 +37,20 @@ Status indicators:
 
 * High Priority (Active)
 
+** [ACTIVE] Captain-mode fails to capitalize after "word space period"
+Date: 2026-04-17
+
+Captain-mode auto-capitalization doesn't fire when typing a period after a trailing space:
+- "this." then typing → capitalizes next word (correct)
+- "this " then "." then typing → does NOT capitalize next word (broken)
+
+*Diagnostic steps (not yet done):*
+1. Test with =C-q .= (literal period insert) after "word space" — if captain capitalizes, then =smart-period= is the culprit
+2. Check =smart-period= implementation in [[file+emacs:/Users/jay/emacs/emacs-settings/spacecraft-mode.el][spacecraft-mode.el]] for how it inserts the period character
+3. Check whether this is a pre-existing issue or was introduced by the 2026-04-17 defadvice migration (the migration only changed =capitalize-word= :after advice, which should be unrelated to captain auto-capitalization)
+
+*Context:* Noticed during the defadvice-to-advice-add migration session. May be pre-existing — user was not certain it previously worked.
+
 ** [ACTIVE] Harden Pasteboard Regression Tests
 
 *Why it matters*:

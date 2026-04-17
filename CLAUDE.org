@@ -174,6 +174,9 @@ The following documentation files provide detailed information about various asp
 - *Internal*: =key-minor-mode-map= (defined in jay-osx.el)
 - *Paths*: =~/emacs/Spelling/=, =~/Dropbox/writing/=, various project directories
 
+** Open Bugs
+- *Captain-mode "word space period" capitalization failure*: See [[file+emacs:docs/critical-next-steps.org][📄 critical-next-steps.org]] — captain-mode doesn't capitalize after "this .". Likely =smart-period= interaction. Diagnostic steps documented there.
+
 ** Notes for Next Session
 1. Review startup messages for any remaining warnings
 2. Profile load times to identify bottlenecks (if performance becomes an issue)
