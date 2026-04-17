@@ -563,7 +563,7 @@
     ("C-c e"          . eval-adaptive)
     ("C-c C-s"        . org-schedule)
     ("C-c C-r"        . palimpsest-move-region-to-bottom)
-    ("`"              . flyspell-auto-correct-word-correct-space)
+    ("`"              . jay/jinx-correct-word-near-point)
     ("."              . smart-period)
     (","              . comma-or-smart-comma)
     ("?"              . smart-question-mark)

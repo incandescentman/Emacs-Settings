@@ -2345,6 +2345,23 @@ Redefine help shortcut:
 
 ** flyspell-correct-space
 #+begin_src emacs-lisp
+(defun jay/jinx-correct-word-near-point ()
+  "Auto-correct word at or before point using Jinx's first suggestion.
+If point is after a space, move back one character first so the previous word
+is corrected, matching the old Org writing workflow on the backtick key."
+  (interactive)
+  (when (and (> (point) (point-min))
+             (looking-back " " 1))
+    (left-char 1))
+  (pcase-let ((`(,start . ,end)
+               (or (jinx--bounds-of-word)
+                   (user-error "No word at point"))))
+    (when-let* ((ov (car (jinx--force-overlays start end)))
+                (word (buffer-substring-no-properties
+                       (overlay-start ov) (overlay-end ov)))
+                (suggestions (jinx--correct-suggestions word)))
+      (jinx--correct-replace ov (car suggestions)))))
+
 (defun flyspell-auto-correct-word-correct-space ()
   (interactive)
   (when (looking-back " " nil)

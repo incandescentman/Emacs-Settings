@@ -1,6 +1,16 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-17: Rewrite backtick auto-correct to use Jinx internals
+- Rewrote =jay/jinx-correct-word-near-point= in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] to auto-apply the first Jinx suggestion instead of opening a minibuffer chooser.
+- Uses =jinx--bounds-of-word= for accurate word detection and =jinx--force-overlays= to ensure the word has been spell-checked before correction.
+- Preserves the old backtick ergonomics: one press auto-corrects, steps back over trailing space if needed.
+- Backtick binding in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] unchanged (still =jay/jinx-correct-word-near-point=).
+- Old Flyspell helper kept but no longer used.
+
+* 2026-04-17: Move backtick correction key from Flyspell helper to Jinx (initial)
+- Initial version that called =jinx-correct-word= (minibuffer chooser) — replaced by rewrite above.
+
 * 2026-04-17: Make jinx live
 - Added =jinx= to [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]] so the package is actually installed in the Emacs config.
 - Converted the =jinx= snippet in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] from an example block into live code so =jinx-mode= is enabled for text, org, and conf buffers.
