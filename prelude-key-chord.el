@@ -38,7 +38,7 @@
 ;; (key-chord-define-global "jj" 'imenu)
 
 
-(key-chord-define-global "KK" 'helm-imenu) ;
+(key-chord-define-global "KK" 'consult-imenu) ;
 (key-chord-define-global "kk" 'consult-outline) ;
 
 
@@ -50,7 +50,7 @@
 ;; (key-chord-define-global "jk" 'ace-jump-char-mode)
 ;; (key-chord-define-global "JJ" 'prelude-switch-to-previous-buffer)
 (key-chord-define-global "UU" 'undo-tree-visualize)
-(key-chord-define-global "XX" 'helm-M-x)
+(key-chord-define-global "XX" 'amx)
 (key-chord-define-global "YY" 'repeat-last-command)
 ;; (key-chord-define-global "yy" 'browse-kill-ring)
 (key-chord-define-global "WW" 'consult-git-grep)
