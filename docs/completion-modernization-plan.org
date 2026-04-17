@@ -32,7 +32,7 @@ That means the preferred direction remains:
 - Fixed =DD= by making its helper live first, then modernizing it internally to use =completing-read= instead of direct =ivy-read=.
 - Modernized the remaining direct =ivy-read= helper code in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][📄 /Users/jay/emacs/emacs-settings/shared-functions.org]] and [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][📄 /Users/jay/emacs/emacs-settings/search-commands.org]].
 - Fixed the stale proposal/book search helpers to resolve the live directories under [[file+emacs:/Users/jay/Dropbox/writing/both][/Users/jay/Dropbox/writing/both]].
-- Made =jinx= live and replaced the old backtick correction workflow with a Jinx-based auto-correct command that preserves the one-key correction habit.
+- Made =jinx= live and replaced the old backtick correction workflow with a Jinx-based auto-correct command that preserves both the one-key correction habit and the old abbrev-saving side effect.
 
 * Audit Snapshot
 

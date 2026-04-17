@@ -2345,10 +2345,20 @@ Redefine help shortcut:
 
 ** flyspell-correct-space
 #+begin_src emacs-lisp
+(defun jay/jinx-save-correction-as-abbrev (wrong right)
+  "Save WRONG -> RIGHT using Flyspell's abbrev behavior."
+  (when (and (require 'flyspell nil t)
+             (bound-and-true-p flyspell-abbrev-p))
+    (let ((table (flyspell-abbrev-table)))
+      (if (flyspell-already-abbrevp table wrong)
+          (flyspell-change-abbrev table wrong right)
+        (flyspell-define-abbrev wrong right)))))
+
 (defun jay/jinx-correct-word-near-point ()
   "Auto-correct word at or before point using Jinx's first suggestion.
 If point is after a space, move back one character first so the previous word
-is corrected, matching the old Org writing workflow on the backtick key."
+is corrected, matching the old Org writing workflow on the backtick key.
+Accepted corrections are also saved as abbrevs, like the old Flyspell path."
   (interactive)
   (when (and (> (point) (point-min))
              (looking-back " " 1))
@@ -2361,7 +2371,9 @@ is corrected, matching the old Org writing workflow on the backtick key."
                 (word (buffer-substring-no-properties
                        (overlay-start ov) (overlay-end ov)))
                 (suggestions (jinx--correct-suggestions word)))
-      (jinx--correct-replace ov (car suggestions)))))
+      (when-let ((choice (car suggestions)))
+        (jay/jinx-save-correction-as-abbrev word choice)
+        (jinx--correct-replace ov choice)))))
 
 (defun flyspell-auto-correct-word-correct-space ()
   (interactive)

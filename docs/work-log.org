@@ -8,6 +8,7 @@
 - Symlinked =~/.config/enchant/en_US.dic -> /Users/jay/emacs/Spelling/personal.dic= so enchant reads the existing personal word list directly.
 - Added startup automation in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so Jinx re-creates that Enchant bridge automatically on machines or profiles where it is missing.
 - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/docs/design-architecture.org][docs/design-architecture.org]], [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][docs/instructions.org]], and the keybinding docs so they reflect the live Jinx + Enchant setup and the backtick Jinx correction command.
+- Restored the old Flyspell side effect in the Jinx backtick path: accepted Jinx corrections now save abbrevs again via Flyspell's abbrev helpers before replacing the word.
 - Jinx now recognizes personal words (e.g. "Jay", "Dixit"). New words added via Jinx will write back to =personal.dic= through the symlink, keeping a single source of truth.
 
 * 2026-04-17: Refresh modernization plan after successful runtime checkpoints
@@ -23,7 +24,7 @@
 - Removed duplicate dead =defadvice= on =capitalize-word= in spacecraft-mode (first copy was overwritten by second)
 
 * 2026-04-17: Rewrite backtick auto-correct to use Jinx internals
-- Rewrote =jay/jinx-correct-word-near-point= in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] to auto-apply the first Jinx suggestion instead of opening a minibuffer chooser.
+- Rewrote =jay/jinx-correct-word-near-point= in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] to auto-apply the first Jinx suggestion instead of opening a minibuffer chooser, while preserving the old abbrev-saving side effect via Flyspell's abbrev helpers.
 - Uses =jinx--bounds-of-word= for accurate word detection and =jinx--force-overlays= to ensure the word has been spell-checked before correction.
 - Preserves the old backtick ergonomics: one press auto-corrects, steps back over trailing space if needed.
 - Backtick binding in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] unchanged (still =jay/jinx-correct-word-near-point=).
