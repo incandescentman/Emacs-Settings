@@ -1,6 +1,10 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-17: Add checkpoint protocol to CLAUDE docs
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.org][CLAUDE.org]] (symlinked to [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.md][CLAUDE.md]]) to record the checkpoint protocol for future editing sessions.
+- The documented protocol is: update [[file+emacs:/Users/jay/emacs/emacs-settings/docs/work-log.org][docs/work-log.org]], commit the checkpoint, have Jay relaunch Emacs and confirm clean startup, and only then continue.
+
 * 2026-04-17: Switch icons to nerd-icons and add modernization plan
 - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]] to use =dotspacemacs-default-icons-font 'nerd-icons= instead of =all-the-icons=.
 - Added [[file+emacs:/Users/jay/emacs/emacs-settings/docs/completion-modernization-plan.org][docs/completion-modernization-plan.org]] to capture deferred cleanup work for the completion stack instead of removing packages ad hoc.

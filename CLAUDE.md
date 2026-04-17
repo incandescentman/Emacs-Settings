@@ -188,6 +188,13 @@ The following documentation files provide detailed information about various asp
 - Treat regex tweaks with extra caution: smoke-test them in a scratch buffer (`re-search-forward`) to avoid `invalid-regexp` surprises.
 - Keep the edit loop tight—edit → tangle → `check-parens` (or byte-compile)—to catch structural errors before they reach Spacemacs startup.
 
+### Checkpoint Protocol
+- At each checkpoint, update `/Users/jay/emacs/emacs-settings/docs/work-log.org` before handing off.
+- Then commit the current checkpoint in git before moving on.
+- Then Jay launches Emacs and confirms startup is clean with no parsing or startup errors.
+- Only after Jay confirms Emacs launches correctly should the next step begin.
+- If the checkpoint changed a literate Org file, make sure the corresponding tangled `.el` has been regenerated and validated before the checkpoint commit.
+
 ## Note on File Size
 - `shared-functions.org`: ~316KB (9983 lines) 
   - **Splitting not recommended**: For a personal config, having everything in one searchable file is actually more convenient than managing multiple files with inter-dependencies. The monolithic approach is working well - Emacs handles it fine, and it's easier to maintain when you know where everything is
