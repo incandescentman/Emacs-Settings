@@ -77,7 +77,22 @@
         (insert (format "| %s | %.4f |\n" (car entry) (cdr entry))))
       (write-region (point-min) (point-max) jay/startup-profile-file nil 'silent))))
 
-(add-hook 'emacs-startup-hook #'jay/startup-write-profile)
+(defvar jay/startup-profile-written nil
+  "Non-nil once the current Emacs session has written a startup profile.")
+
+(defun jay/startup-write-profile-once ()
+  "Write the startup timing profile once per Emacs session."
+  (unless jay/startup-profile-written
+    (setq jay/startup-profile-written t)
+    (jay/startup-write-profile)))
+
+(add-hook 'emacs-startup-hook #'jay/startup-write-profile-once)
+
+;; `spacemacs-new-config.el' loads late enough that `emacs-startup-hook' may
+;; already have fired in some startup paths. Schedule a one-shot fallback so
+;; the profile file is still written for this session.
+(when after-init-time
+  (run-with-idle-timer 1 nil #'jay/startup-write-profile-once))
 
 (defun jay/startup-health-check ()
   "Show a quick startup health report for Org and Org-roam glue code."
