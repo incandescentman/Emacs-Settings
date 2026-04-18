@@ -1,0 +1,30 @@
+#+TITLE: Startup Timing Profile
+#+STARTUP: showall
+* 2026-04-18 18:54:17
+- Emacs: 29.4
+- Org: 9.8.2
+- Total init time: 2.595s
+- Measured module loads:
+| Step | Seconds |
+|------+---------|
+| org-babel-load shared-functions.org | 5.2712 |
+| org-babel-load search-commands.org | 1.2859 |
+| require jay-org-roam-core | 0.0862 |
+| org-babel-load gnu-emacs-startup.org | 0.0739 |
+| load frame-cmds.el | 0.0273 |
+| require jay-editor-extras | 0.0241 |
+| load keys.el | 0.0194 |
+| org-babel-load goals-agenda.org | 0.0150 |
+| load jay-osx.el | 0.0071 |
+| load poetry_JD.el | 0.0067 |
+| load skeletons.el | 0.0064 |
+| org-babel-load spacecraft-mode.org | 0.0055 |
+| load prelude-core.el | 0.0036 |
+| load pasteboard-copy-and-paste-functions.el | 0.0035 |
+| load auto-capitalize.el | 0.0025 |
+| org-babel-load fonts-and-themes.org | 0.0014 |
+| load jay-goals-system.el | 0.0014 |
+| load prelude-key-chord.el | 0.0011 |
+| load buffer-stack.el | 0.0010 |
+| load xah-replace-pairs.el | 0.0009 |
+| load chatgpt2org.el | 0.0008 |

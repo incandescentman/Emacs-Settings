@@ -43,7 +43,7 @@ Outside org-roam: always search current directory."
 (defalias 'rg-project-directory 'rg-dwim-project-dir)
 (defalias 'rg-current-file 'rg-dwim-current-file)
 
-(use-package consult-org-roam
+ (use-package consult-org-roam
   :ensure t
   :after org-roam
   :init
@@ -276,7 +276,7 @@ Signal a helpful error if none of the directories exist."
 ;  (define-key isearch-mode-map (kbd "<right>") 'isearch-repeat-forward) ; single key, useful
  )
 
-;;; Tell ispell.el that ’ can be part of a word.
+ ;;; Tell ispell.el that ’ can be part of a word.
 (setq ispell-local-dictionary-alist
       `((nil "[[:alpha:]]" "[^[:alpha:]]"
              "['\x2019]" nil ("-B") nil utf-8)))
@@ -446,7 +446,7 @@ Signal a helpful error if none of the directories exist."
 (use-package deadgrep
   :defer)
 
-(defun timu/search-org-files ()
+ (defun timu/search-org-files ()
   "Grep for a string in the `~/org' using `rg'."
   (interactive)
 (consult-ripgrep "~/org" ""))

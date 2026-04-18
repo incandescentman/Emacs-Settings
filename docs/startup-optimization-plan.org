@@ -1,0 +1,165 @@
+#+TITLE: Startup Optimization Plan
+#+DATE: 2026-04-18
+#+DESCRIPTION: Measure-first plan for reducing Emacs startup time without cutting needed functionality
+
+* Goal
+
+Reduce Emacs startup time only by removing unnecessary startup work.
+
+Do not cut features just because they are expensive.
+Do not assume that the largest file is the most disposable.
+Prefer deferring or restructuring important code over deleting it.
+
+* Current Evidence
+
+The first real timing snapshot is in:
+- [[file+emacs:/Users/jay/emacs/emacs-settings/docs/lab/startup-profile.org][/Users/jay/emacs/emacs-settings/docs/lab/startup-profile.org]]
+
+The main startup loader is:
+- [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][/Users/jay/emacs/emacs-settings/spacemacs-new-config.el]]
+
+Current measured hotspots from the first snapshot:
+- =org-babel-load shared-functions.org= is by far the largest item
+- =org-babel-load search-commands.org= is the second-largest item
+- =require jay-org-roam-core= is much smaller
+- =org-babel-load gnu-emacs-startup.org= is small in comparison
+
+Important interpretation:
+- [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][/Users/jay/emacs/emacs-settings/shared-functions.org]] is also most of the config in one file, so its large timing number may mostly reflect structural load cost rather than unnecessary functionality
+- [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][/Users/jay/emacs/emacs-settings/search-commands.org]] is a better candidate for avoidable startup work because it is smaller but still relatively expensive
+
+* Working Principles
+
+1. Measure first, then optimize.
+2. Preserve important behavior unless there is clear evidence it is unused.
+3. Prefer delaying interactive helpers until first use.
+4. Prefer changing how code is loaded before deleting code.
+5. Treat large literate files as structural hotspots, not automatic deletion targets.
+
+* Phase 1: Collect Better Data
+
+1. Let Emacs write several normal-launch snapshots to:
+   [[file+emacs:/Users/jay/emacs/emacs-settings/docs/lab/startup-profile.org][/Users/jay/emacs/emacs-settings/docs/lab/startup-profile.org]]
+2. Compare at least 3 to 5 launches before making structural decisions.
+3. Check whether the same top entries remain expensive across launches.
+4. Ignore one-off spikes unless they repeat.
+
+* Phase 2: Audit the Hotspots
+
+** Audit A: shared-functions.org
+
+Audit:
+- [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][/Users/jay/emacs/emacs-settings/shared-functions.org]]
+- [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][/Users/jay/emacs/emacs-settings/shared-functions.el]]
+
+Question:
+- Is the cost mostly due to loading a giant literate Org file, or due to eager runtime work inside it?
+
+Look for:
+- hooks that run immediately at startup
+- package setup that could be deferred
+- interactive helpers that do not need to exist on launch
+- expensive scans, filesystem work, or org-roam work triggered during load
+
+Do not assume:
+- that the file should be split
+- that functions in it are unnecessary
+- that large size alone means waste
+
+** Audit B: search-commands.org
+
+Audit:
+- [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][/Users/jay/emacs/emacs-settings/search-commands.org]]
+- [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.el][/Users/jay/emacs/emacs-settings/search-commands.el]]
+
+Question:
+- Why is this file expensive enough to show up near the top despite being much smaller?
+
+Look for:
+- eager setup for commands that are only used interactively
+- package initialization that could move behind autoloads or command wrappers
+- consult/counsel/org-roam glue that does not need to execute at startup
+
+This file is a stronger candidate for reducing unnecessary startup work than [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][/Users/jay/emacs/emacs-settings/shared-functions.org]].
+
+** Audit C: gnu-emacs-startup.org
+
+Audit:
+- [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org][/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org]]
+- [[file+emacs:/Users/jay/emacs/emacs-settings/docs/critical-next-steps.org][/Users/jay/emacs/emacs-settings/docs/critical-next-steps.org]]
+
+Question:
+- Is this worth touching for startup speed right now?
+
+Current answer:
+- Probably not first, because it is not a major timing hotspot in the initial profile
+
+This may still be worth simplifying for maintenance reasons, but not as the first startup optimization pass.
+
+* Phase 3: Choose the Least Disruptive Optimization
+
+Only pick from the options below after the audits.
+
+** Option 1: Defer unnecessary startup work
+
+Use when:
+- code is genuinely only needed after the first command invocation
+
+Examples:
+- search helpers
+- optional interactive packages
+- non-essential mode setup
+
+This is the safest kind of performance improvement.
+
+** Option 2: Keep features, change load strategy
+
+Use when:
+- the code is important
+- the file is expensive because of literate loading or eager startup structure
+
+Examples:
+- keep the same functionality but avoid paying startup =org-babel-load-file= cost for every launch
+- load tangled =.el= files directly when appropriate
+- move expensive setup behind idle timers or command entry points
+
+This is the likely path for [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][/Users/jay/emacs/emacs-settings/shared-functions.org]] if the functionality is still needed.
+
+** Option 3: Remove dead code
+
+Use only when:
+- the code is clearly unused
+- the behavior is obsolete
+- there is no workflow loss
+
+This should be the last option, not the default one.
+
+* Decision Rules
+
+Make changes only if one of these is true:
+
+1. The code is loaded at startup but not needed until later.
+2. The code is duplicated or obsolete.
+3. The expensive part is structural and can be loaded more cheaply without losing behavior.
+
+Do not make changes just because:
+
+1. a file is large
+2. a feature is old
+3. a setting looks messy
+4. a package is not fashionable
+
+* Recommended Next Session
+
+1. Read the newest entries in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/lab/startup-profile.org][/Users/jay/emacs/emacs-settings/docs/lab/startup-profile.org]]
+2. Confirm whether the same hotspots repeat
+3. Audit [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][/Users/jay/emacs/emacs-settings/search-commands.org]] first
+4. Audit [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][/Users/jay/emacs/emacs-settings/shared-functions.org]] second
+5. Propose the smallest behavior-preserving startup change supported by the data
+
+* Related Files
+
+- [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][/Users/jay/emacs/emacs-settings/spacemacs-new-config.el]]
+- [[file+emacs:/Users/jay/emacs/emacs-settings/docs/lab/startup-profile.org][/Users/jay/emacs/emacs-settings/docs/lab/startup-profile.org]]
+- [[file+emacs:/Users/jay/emacs/emacs-settings/docs/critical-next-steps.org][/Users/jay/emacs/emacs-settings/docs/critical-next-steps.org]]
+- [[file+emacs:/Users/jay/emacs/emacs-settings/docs/work-log.org][/Users/jay/emacs/emacs-settings/docs/work-log.org]]

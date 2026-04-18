@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-18: Capture first startup timing snapshot and write optimization plan
+- Confirmed the startup timing writer now creates [[file+emacs:/Users/jay/emacs/emacs-settings/docs/lab/startup-profile.org][docs/lab/startup-profile.org]] during a normal Emacs launch.
+- First real snapshot shows the dominant startup costs are =org-babel-load shared-functions.org= and =org-babel-load search-commands.org=, while =gnu-emacs-startup.org= is comparatively small in this profile.
+- Added a dedicated measure-first roadmap in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/startup-optimization-plan.org][docs/startup-optimization-plan.org]].
+- Guiding rule for the plan: reduce startup time by cutting unnecessary startup work only, not by removing important features simply because they are expensive.
+
 * 2026-04-17: Restore jay/smart-ripgrep (regression from ivy cleanup)
 - Commit =a23f7c58= "Modernize direct ivy-read helpers" accidentally deleted the entire =jay/smart-ripgrep= function from [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.el][search-commands.el]], but left the =C-s-g= keybinding in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] still pointing at it. Result: =C-s-g= threw =wrong-type-argument commandp jay/smart-ripgrep=.
 - Restored the function in [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][search-commands.org]] (the canonical source — tangled to =search-commands.el= by =org-babel-load-file= on startup). Originally added to =.el= directly in commit =9012cad3=, which meant the fix never persisted across re-tangles. Now it lives where it should.
