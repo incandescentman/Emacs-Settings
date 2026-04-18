@@ -38,14 +38,14 @@ That cross-check matters because the Org source includes example blocks and note
 Current findings:
 - No single smoking-gun line in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][/Users/jay/emacs/emacs-settings/shared-functions.el]] obviously explains the whole =5.27s= by itself.
 - The strongest live heavyweight candidates are:
-  - =projectile-mode= enabled inside the palimpsest after-init block
+  - =projectile-mode=, which is still part of the live search workflow but should be owned from one place only
   - Flycheck startup scope, which has now been narrowed from global activation to =prog-mode= / =conf-mode= hooks
-  - duplicate global Smartparens enablement
+  - duplicate global Smartparens enablement, which has now been consolidated into one setup path
 - Several other live global toggles appear real but more routine:
   - =yas-global-mode=
   - =savehist-mode=
   - =global-auto-revert-mode=
-  - =global-display-line-numbers-mode=
+  - =global-display-line-numbers-mode=, which has now been narrowed to =prog-mode= buffers only
 - Working conclusion:
   - treat [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][/Users/jay/emacs/emacs-settings/shared-functions.org]] as a structural hotspot first
   - do not assume the file should be split or aggressively cut
@@ -91,8 +91,10 @@ Do not assume:
 
 Current status:
 - The initial audit supports the idea that this file is expensive partly because it is huge and literate.
-- The first concrete things worth testing later are =projectile-mode= and duplicate Smartparens setup.
+- The duplicate Projectile activation inside [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][/Users/jay/emacs/emacs-settings/shared-functions.org]] has been removed; Projectile still lives in [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][/Users/jay/emacs/emacs-settings/search-commands.org]].
 - Flycheck has already been narrowed from =global-flycheck-mode= to mode-scoped hooks, so it is no longer an open "global startup noise" candidate in the same way.
+- Smartparens has already been consolidated so it no longer has duplicate global enablement.
+- Line numbers have already been narrowed from global activation to programming buffers only, so they are no longer a whole-editor display tax.
 - This audit did not uncover evidence that the whole file is full of dead or obviously wasteful startup work.
 
 ** Audit B: search-commands.org

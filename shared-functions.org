@@ -2469,8 +2469,7 @@ Accepted corrections are also saved as abbrevs, like the old Flyspell path."
   (add-hook 'after-init-hook
             (lambda ()
               (palimpsest-mode 1)
-              (global-hl-todo-mode 1)
-              (projectile-mode  1)))
+              (global-hl-todo-mode 1)))
   ;; org-mode keybinding moved to keys.el
   )
 #+END_SRC
@@ -6449,12 +6448,10 @@ This tells Emacs to simply insert a "<" whenever you press that key, bypassing a
 (use-package smartparens
   :defer nil                       ; <--- load immediately
   :config
-(smartparens-mode 1)
-(smartparens-global-mode 1)
-
-(setq sp-escape-quotes-after-insert nil)
-
-)
+  (require 'smartparens-config)
+  (smartparens-global-mode 1)
+  (show-smartparens-global-mode 1)
+  (setq sp-escape-quotes-after-insert nil))
 #+end_src
 
 * archive tasks based on date
@@ -7472,11 +7469,7 @@ Only required if Emacs < 29.3.
 
 * smartparens fix
 #+begin_src emacs-lisp
-;; smartparens configuration
-(use-package smartparens-config
-:defer t)
-(smartparens-global-mode t)
-(show-smartparens-global-mode t)
+;; smartparens is configured earlier in the file
 
 ;; web-mode configuration
 ;;(require 'web-mode)
@@ -8518,7 +8511,7 @@ It returns a list, so you can later jump to the first culprit:
       comp-deferred-compilation           t           ; JIT-compile packages in the background
       comp-deferred-compilation-black-list '("/mu4e.*\\.el$")) ; skip anything poky
 
-(global-display-line-numbers-mode 1)
+(add-hook 'prog-mode-hook #'display-line-numbers-mode)
 
 (setq native-comp-jit-compilation t
 package-native-compile    t)

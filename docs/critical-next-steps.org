@@ -305,7 +305,7 @@ Identify top 5 slowest items, estimate potential gains, decide if worth optimizi
 1. The timing writer is now working, and [[file+emacs:/Users/jay/emacs/emacs-settings/docs/lab/startup-profile.org][docs/lab/startup-profile.org]] exists.
 2. The first real snapshot confirms that =org-babel-load shared-functions.org= and =org-babel-load search-commands.org= dominate the current profile.
 3. A first audit of [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] suggests the file is mainly a structural hotspot, not an obvious pile of dead startup work.
-4. The strongest specific candidates inside that file are =projectile-mode= and duplicate global Smartparens setup. Flycheck has already been narrowed from global activation to mode-scoped hooks for =prog-mode= and =conf-mode=.
+4. The duplicate Projectile activation inside [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] has already been removed. Projectile still appears to be part of the live workflow, but its ownership now sits in [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][search-commands.org]]. Flycheck has already been narrowed from global activation to mode-scoped hooks for =prog-mode= and =conf-mode=, Smartparens has already been consolidated to a single global setup path, and line numbers now come on only in programming buffers.
 5. The next startup optimization pass should still focus on unnecessary startup work only, with [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][search-commands.org]] remaining the stronger candidate for easy deferral wins.
 
 ** [OPTIONAL] Convert Remaining Literate Org Files to Pure Elisp

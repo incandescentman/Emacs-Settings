@@ -1,6 +1,20 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-18: Remove duplicate Projectile activation from shared-functions
+- Removed the extra =projectile-mode= startup activation from the palimpsest after-init block in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]].
+- Projectile is still configured and enabled from [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][search-commands.org]], so this change removes duplication rather than dropping the Projectile workflow.
+- Rationale: the startup audit showed Projectile was still live, but it was being turned on from two different places.
+
+* 2026-04-18: Scope line numbers to programming buffers
+- Changed the live line-number setup in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] from =global-display-line-numbers-mode= to a =prog-mode-hook= that enables =display-line-numbers-mode= only in programming buffers.
+- Rationale: global line numbers were more likely to create ongoing display overhead in Org and prose buffers than to meaningfully improve those workflows.
+
+* 2026-04-18: Remove duplicate global Smartparens enablement
+- Consolidated the live Smartparens setup in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so it only enables globally once.
+- Moved =show-smartparens-global-mode= into the main =use-package smartparens= block and removed the second global activation path that lived later in the file.
+- Rationale: the startup audit found duplicate global Smartparens enablement in the tangled runtime config, which was a clear redundant cost even if it was not the main startup bottleneck.
+
 * 2026-04-18: Stop enabling Flycheck globally
 - Changed the live Flycheck setup in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] from =global-flycheck-mode= to mode-scoped hooks.
 - New behavior: =flycheck-mode= comes on for =prog-mode= and =conf-mode= buffers, while Org keeps using =jinx= for spelling without global Flycheck noise.
