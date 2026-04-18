@@ -16,6 +16,20 @@
  (interactive)
  (consult-ripgrep default-directory))
 
+(defun jay/smart-ripgrep (&optional arg)
+ "Context-aware ripgrep search.
+In an org-roam buffer: search all of `org-roam-directory'.
+With prefix ARG in an org-roam buffer: search current directory only.
+Outside org-roam: always search current directory."
+ (interactive "P")
+ (if (and (not arg)
+          (bound-and-true-p org-roam-directory)
+          (buffer-file-name)
+          (string-prefix-p (expand-file-name org-roam-directory)
+                           (expand-file-name (buffer-file-name))))
+     (roam-rg-search)
+   (consult-ripgrep-current-directory)))
+
 
 (defun deadgrep-current-directory ()
  "Search current directory using deadgrep."

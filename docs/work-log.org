@@ -1,6 +1,14 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-17: Restore jay/smart-ripgrep (regression from ivy cleanup)
+- Commit =a23f7c58= "Modernize direct ivy-read helpers" accidentally deleted the entire =jay/smart-ripgrep= function from [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.el][search-commands.el]], but left the =C-s-g= keybinding in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] still pointing at it. Result: =C-s-g= threw =wrong-type-argument commandp jay/smart-ripgrep=.
+- Restored the function in [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][search-commands.org]] (the canonical source — tangled to =search-commands.el= by =org-babel-load-file= on startup). Originally added to =.el= directly in commit =9012cad3=, which meant the fix never persisted across re-tangles. Now it lives where it should.
+- Function uses =roam-rg-search= and =consult-ripgrep-current-directory= (both unaffected by the ivy cleanup) and has no actual ivy dependency.
+- Lessons:
+  1. When removing "ivy-era" code, check whether the function genuinely depends on ivy or just happens to live nearby.
+  2. =search-commands.org= is the canonical source; edits to =search-commands.el= will be overwritten whenever the =.org= mtime is newer (see =org-babel-load-file= docs).
+
 * 2026-04-17: Add visit-most-recent-org-or-txt with s-\ binding
 - Added =jay/recent-prose-file-p= helper and =visit-most-recent-org-or-txt= command to [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]].
 - Same logic as =visit-most-recent-file= but filters =recentf-list= to =.org= and =.txt= files only.
