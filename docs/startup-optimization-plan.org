@@ -90,11 +90,14 @@ Do not assume:
 - that large size alone means waste
 
 Current status:
+- The biggest concrete startup bug found so far was an accidental unclosed =(dotimes (n 10)= in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][/Users/jay/emacs/emacs-settings/shared-functions.org]], which wrapped a long stretch of later top-level code and made it run 10 times in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][/Users/jay/emacs/emacs-settings/shared-functions.el]].
+- That bug has now been fixed, so any new startup timing snapshots should be treated as much more trustworthy than the earliest =shared-functions.org= measurements.
 - The initial audit supports the idea that this file is expensive partly because it is huge and literate.
 - The duplicate Projectile activation inside [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][/Users/jay/emacs/emacs-settings/shared-functions.org]] has been removed; Projectile still lives in [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][/Users/jay/emacs/emacs-settings/search-commands.org]].
 - Flycheck has already been narrowed from =global-flycheck-mode= to mode-scoped hooks, so it is no longer an open "global startup noise" candidate in the same way.
 - Smartparens has already been consolidated so it no longer has duplicate global enablement.
 - Line numbers have already been narrowed from global activation to programming buffers only, so they are no longer a whole-editor display tax.
+- Auto-revert has been realigned with the Dropbox-safe polling policy from [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][/Users/jay/emacs/emacs-settings/spacemacs.d/init.el]], so the later [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][/Users/jay/emacs/emacs-settings/shared-functions.org]] block no longer flips file notifications back on.
 - This audit did not uncover evidence that the whole file is full of dead or obviously wasteful startup work.
 
 ** Audit B: search-commands.org

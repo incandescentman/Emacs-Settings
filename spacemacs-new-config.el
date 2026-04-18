@@ -497,10 +497,7 @@ With prefix arg FIX-HINTS, append actionable remediation commands."
           (lambda ()
             ;;            (toggle-menu-bar-mode-from-frame)
             ;;(scrollbar-init)
-            (menu-bar-mode -1)
-            (smartparens-mode 1)
-            (smartparens-global-mode 1)
-            ))
+            (menu-bar-mode -1)))
 
 ;; (jay/toggle-fullscreen)
 

@@ -1,6 +1,17 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-18: Fix accidental 10x wrap in shared-functions
+- Fixed the broken =unbind meta-number= source block in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so the intended loop now closes immediately after unbinding =M-0= through =M-9=.
+- Root cause: a bare =(dotimes (n 10)= in the Org source was left unclosed, and tangling silently wrapped a long stretch of later top-level code inside that loop in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]].
+- That accidental wrap caused startup-relevant forms such as =font-lock-add-keywords=, =org-export-before-parsing-functions= registration, =use-package ox-twbs=, and =org-clock-persistence-insinuate= to run 10 times during startup.
+- This is the first true smoking-gun startup bug found in the audit and likely explains a meaningful part of the earlier inflated =shared-functions.org= timing.
+
+* 2026-04-18: Remove final duplicate Smartparens startup hook and align auto-revert policy
+- Removed the extra Smartparens startup activation from [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][spacemacs-new-config.el]], leaving Smartparens ownership in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] only.
+- Updated the live auto-revert block in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so it no longer overrides the Dropbox-safe polling policy established in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]].
+- Result: no duplicate Smartparens startup hook, and a single consistent auto-revert policy that avoids file-notify problems on cloud-storage paths.
+
 * 2026-04-18: Remove duplicate Projectile activation from shared-functions
 - Removed the extra =projectile-mode= startup activation from the palimpsest after-init block in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]].
 - Projectile is still configured and enabled from [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][search-commands.org]], so this change removes duplication rather than dropping the Projectile workflow.

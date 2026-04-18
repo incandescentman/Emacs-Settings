@@ -3247,6 +3247,7 @@ I hope this is somewhat helpful to someone else, happy hacking! Source: [[https:
 
 #+BEGIN_SRC emacs-lisp
 (dotimes (n 10)
+  (global-unset-key (kbd (format "M-%d" n))))
 #+END_SRC
 
 
@@ -9322,8 +9323,9 @@ Note: DIR should be an absolute path to avoid symlink resolution issues."
 (global-auto-revert-mode 1)
 
 ;; Nice-to-haves
-(setq auto-revert-use-notify t            ; use file system events when possible
-      auto-revert-interval 1              ; fallback poll interval (seconds)
+(setq auto-revert-use-notify nil          ; use polling to avoid cloud-storage notify issues
+      auto-revert-avoid-polling nil       ; keep polling enabled
+      auto-revert-interval 2              ; match the cloud-storage-safe polling cadence
       auto-revert-verbose nil             ; no echo area messages
       global-auto-revert-non-file-buffers t) ; also refresh Dired, etc. 
 #+end_src
