@@ -28,6 +28,29 @@ Important interpretation:
 - [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][/Users/jay/emacs/emacs-settings/shared-functions.org]] is also most of the config in one file, so its large timing number may mostly reflect structural load cost rather than unnecessary functionality
 - [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][/Users/jay/emacs/emacs-settings/search-commands.org]] is a better candidate for avoidable startup work because it is smaller but still relatively expensive
 
+* First Audit Snapshot
+
+The first focused audit of [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][/Users/jay/emacs/emacs-settings/shared-functions.org]] used the live tangled runtime file:
+- [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][/Users/jay/emacs/emacs-settings/shared-functions.el]]
+
+That cross-check matters because the Org source includes example blocks and notes that do not actually execute at startup.
+
+Current findings:
+- No single smoking-gun line in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][/Users/jay/emacs/emacs-settings/shared-functions.el]] obviously explains the whole =5.27s= by itself.
+- The strongest live heavyweight candidates are:
+  - =projectile-mode= enabled inside the palimpsest after-init block
+  - Flycheck startup scope, which has now been narrowed from global activation to =prog-mode= / =conf-mode= hooks
+  - duplicate global Smartparens enablement
+- Several other live global toggles appear real but more routine:
+  - =yas-global-mode=
+  - =savehist-mode=
+  - =global-auto-revert-mode=
+  - =global-display-line-numbers-mode=
+- Working conclusion:
+  - treat [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][/Users/jay/emacs/emacs-settings/shared-functions.org]] as a structural hotspot first
+  - do not assume the file should be split or aggressively cut
+  - if it needs optimization, start with deferring or consolidating heavyweight global features rather than deleting core behavior
+
 * Working Principles
 
 1. Measure first, then optimize.
@@ -65,6 +88,12 @@ Do not assume:
 - that the file should be split
 - that functions in it are unnecessary
 - that large size alone means waste
+
+Current status:
+- The initial audit supports the idea that this file is expensive partly because it is huge and literate.
+- The first concrete things worth testing later are =projectile-mode= and duplicate Smartparens setup.
+- Flycheck has already been narrowed from =global-flycheck-mode= to mode-scoped hooks, so it is no longer an open "global startup noise" candidate in the same way.
+- This audit did not uncover evidence that the whole file is full of dead or obviously wasteful startup work.
 
 ** Audit B: search-commands.org
 

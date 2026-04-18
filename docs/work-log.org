@@ -1,6 +1,18 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-18: Stop enabling Flycheck globally
+- Changed the live Flycheck setup in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] from =global-flycheck-mode= to mode-scoped hooks.
+- New behavior: =flycheck-mode= comes on for =prog-mode= and =conf-mode= buffers, while Org keeps using =jinx= for spelling without global Flycheck noise.
+- Rationale: global Flycheck was broader than needed for Jay's workflow and was one of the more plausible startup-cost candidates in the [[file+emacs:/Users/jay/emacs/emacs-settings/docs/lab/startup-profile.org][startup profile]] audit.
+
+* 2026-04-18: Audit shared-functions startup hotspots
+- Reviewed the live tangled runtime file [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]] alongside [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so the audit only flags code that actually runs, not example blocks or prose snippets in the Org source.
+- Main conclusion: the =org-babel-load shared-functions.org= timing spike still looks more like structural cost from loading a huge literate config than a single obvious startup bug.
+- Strongest live heavyweight candidates found so far are the =projectile-mode= enablement inside the palimpsest after-init block, =global-flycheck-mode=, and duplicate global Smartparens enablement.
+- Several other live global modes in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]] (=yas-global-mode=, =savehist-mode=, =global-auto-revert-mode=, =global-display-line-numbers-mode=) look more like normal additive startup cost than clear outlier mistakes.
+- Current guidance: treat [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] as a structural hotspot first, and prefer deferring or consolidating truly heavyweight global features before considering any broader cleanup.
+
 * 2026-04-18: Capture first startup timing snapshot and write optimization plan
 - Confirmed the startup timing writer now creates [[file+emacs:/Users/jay/emacs/emacs-settings/docs/lab/startup-profile.org][docs/lab/startup-profile.org]] during a normal Emacs launch.
 - First real snapshot shows the dominant startup costs are =org-babel-load shared-functions.org= and =org-babel-load search-commands.org=, while =gnu-emacs-startup.org= is comparatively small in this profile.

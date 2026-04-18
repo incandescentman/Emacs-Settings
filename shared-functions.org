@@ -7456,11 +7456,8 @@ Only required if Emacs < 29.3.
 #+BEGIN_SRC emacs-lisp
 (use-package flycheck
   :ensure t
-  :init
-  (global-flycheck-mode)  ; Enable Flycheck globally
-  :config
-  ;; Turn off Flycheck in Org mode:
-  (add-hook 'org-mode-hook (lambda () (flycheck-mode -1))))
+  :hook ((prog-mode . flycheck-mode)
+         (conf-mode . flycheck-mode)))
 #+END_SRC
 
 ** flycheck-mode-line
