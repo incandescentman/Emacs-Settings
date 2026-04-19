@@ -50,7 +50,7 @@ The following documentation files provide detailed information about various asp
 - =reveal-in-finder.el= - Finder integration
 
 **** 3. Org-Mode & Knowledge Management
-- =jay-org-roam-suite/= - *Core Architecture*: Modular Org Roam system (Core, Profiles, Templates)
+- =jay-org-roam-suite/= - *Core Architecture*: Modular Org Roam system (Core, Profiles, Templates, plus =jay-org-roam-extras.el= sidecar)
 - =goals-agenda.org= / =goals-agenda.el= - Dynamic org-agenda config (journal + projects + leads)
 - =jay-goals-system.el= - Goals workflow (rep counter, anti-stall, revenue block)
 - =org-yt.el= - YouTube link support
@@ -78,9 +78,12 @@ The following documentation files provide detailed information about various asp
 5. =gnu-emacs-startup.el=
 6. =org-authoring.el=
 7. =spellcheck.el=
-8. =shared-functions.el=
-9. Various feature modules (deferred or immediate)
-10. Local configuration (=local-config.el=)
+8. =org-export.el=
+9. =shared-functions.el=
+10. =jay-org-roam-core.el=
+11. =jay-org-roam-extras.el=
+12. Various feature modules (deferred or immediate)
+13. Local configuration (=local-config.el=)
 
 ** Recent Major Updates
 
@@ -112,7 +115,7 @@ The following documentation files provide detailed information about various asp
 
 *** 2. Org Roam Profile System (Nov 2025, updated Mar 2026)
 - *Multi-Graph Support*: Distinct profiles for 'Work' (default), 'My Life', 'Social', and 'Parents'.
-- *Architecture*: Modularized into =jay-org-roam-suite/= (Core, Profiles, Templates).
+- *Architecture*: Modularized into =jay-org-roam-suite/= (Core, Profiles, Templates, Extras sidecar).
 - *Features*: Independent databases, capture templates, and export paths per profile.
 - *Template Cleanup (Mar 2026)*: Merged default profile's two template lists into one alphabetically sorted list (A a B b C c...). Simplified parents profile to standard templates (conversation, document, interview, note, person, story, task).
 - *Commands*: =s-u P= to switch, =s-u 1/2/3/4= shortcuts.
@@ -206,7 +209,7 @@ The following documentation files provide detailed information about various asp
 - *Ask only for relevant post-checkpoint tests*: After a checkpoint, request tests only for startup and for the exact commands or behaviors that actually changed or were directly plausibly affected by the diff.
 - *Do not broaden the test scope without cause*: If a checkpoint only removes stale config, do not ask Jay to retest unrelated commands just because they live in the same conceptual area.
 - *If you ask for a non-obvious test, explain why*: Name the exact changed file or behavior that makes the requested test relevant.
-- *Respect file ownership boundaries*: [[file+emacs:/Users/jay/emacs/emacs-settings/spacecraft-mode.org][spacecraft-mode.org]] owns prose-editing behavior (sentence movement, sentence killing, kill-word helpers, capitalization/smart punctuation). [[file+emacs:/Users/jay/emacs/emacs-settings/org-authoring.org][org-authoring.org]] owns Org-only authoring helpers (heading insertion, list/checkbox predicates, Org-specific structure editing). [[file+emacs:/Users/jay/emacs/emacs-settings/spellcheck.org][spellcheck.org]] owns Flyspell, Jinx, Hunspell, and personal-dictionary wiring. [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] owns the export/publishing subsystem: Org export defaults, HTML/LaTeX/DOCX helpers, export filters, ox-* backends, and export-only LaTeX helpers. Leave profile-owned =org-astro= behavior in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-profiles.el][jay-org-roam-suite/jay-org-roam-profiles.el]]. [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org][gnu-emacs-startup.org]] should stay focused on startup/system/editor bootstrapping rather than accumulating writing-mode logic.
+- *Respect file ownership boundaries*: [[file+emacs:/Users/jay/emacs/emacs-settings/spacecraft-mode.org][spacecraft-mode.org]] owns prose-editing behavior (sentence movement, sentence killing, kill-word helpers, capitalization/smart punctuation). [[file+emacs:/Users/jay/emacs/emacs-settings/org-authoring.org][org-authoring.org]] owns Org-only authoring helpers (heading insertion, list/checkbox predicates, Org-specific structure editing). [[file+emacs:/Users/jay/emacs/emacs-settings/spellcheck.org][spellcheck.org]] owns Flyspell, Jinx, Hunspell, and personal-dictionary wiring. [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] owns the export/publishing subsystem: Org export defaults, HTML/LaTeX/DOCX helpers, export filters, ox-* backends, and export-only LaTeX helpers. [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-suite/jay-org-roam-core.el]] owns Org-roam core plumbing, while [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-extras.el][jay-org-roam-suite/jay-org-roam-extras.el]] owns user-facing Org-roam helpers such as UI wrappers, backlink navigation, refile chooser commands, and parser-debug tools. Leave profile-owned =org-astro= behavior in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-profiles.el][jay-org-roam-suite/jay-org-roam-profiles.el]]. [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org][gnu-emacs-startup.org]] should stay focused on startup/system/editor bootstrapping rather than accumulating writing-mode logic.
 - *Future module decisions*: Prefer narrow subsystem files over vague overflow bins. With [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] now extracted, a future [[file+emacs:/Users/jay/emacs/emacs-settings/dictionary-lookup.org][dictionary-lookup.org]] is plausible if the definition-lookup cluster grows. Avoid creating a generic [[file+emacs:/Users/jay/emacs/emacs-settings/org-workflow.org][org-workflow.org]] until a single coherent subsystem boundary actually emerges.
 - *Prefer existing boundaries before creating new files*: Before creating a new module, first check whether the code belongs in an existing module that already owns the concern. Current examples: Org-roam-related residue should be audited against [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/][jay-org-roam-suite/]] first, and agenda/workflow residue should be audited against [[file+emacs:/Users/jay/emacs/emacs-settings/goals-agenda.org][goals-agenda.org]] before inventing a broader workflow file.
 

@@ -86,8 +86,10 @@ Understanding the loading sequence helps debug issues:
 9. Loads spellcheck.el
 10. Loads org-export.el
 11. Loads shared-functions.el (tangled from shared-functions.org)
-12. Loads other modules (deferred or immediate based on config)
-13. Loads local-config.el (if exists, gitignored for machine-specific settings)
+12. Loads jay-org-roam-core.el
+13. Loads jay-org-roam-extras.el
+14. Loads other modules (deferred or immediate based on config)
+15. Loads local-config.el (if exists, gitignored for machine-specific settings)
 #+END_SRC
 
 *Why this order matters*:
@@ -95,6 +97,7 @@ Understanding the loading sequence helps debug issues:
 - =org-authoring.el= must load before modules that call Org-specific authoring helpers, such as =spacecraft-mode.org=
 - =spellcheck.el= must load before =shared-functions.el= so any remaining spellcheck callers or keybindings resolve against the dedicated spellcheck module instead of reintroducing split ownership
 - =org-export.el= must load before =shared-functions.el= so export filters and helpers live in one subsystem instead of staying split across the monolith
+- =jay-org-roam-extras.el= must load after =jay-org-roam-core.el= because it is a user-facing sidecar, not part of the suite's core/profile/template plumbing
 - =shared-functions.el= provides utilities used by other modules
 - Some modules defer loading until needed (performance optimization)
 
@@ -217,7 +220,7 @@ A subsystem is ready for its own file when three things are true:
 These are the current agreed boundaries for future extraction work:
 
 - Before creating a new module, first check whether the code belongs in an existing module that already owns that concern. Consolidating into an existing boundary is often higher leverage than increasing the file count.
-- The strongest current consolidation targets are Org-roam-related code into [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/][jay-org-roam-suite/]] and agenda/workflow code into [[file+emacs:/Users/jay/emacs/emacs-settings/goals-agenda.org][goals-agenda.org]].
+- The strongest current consolidation targets are agenda/workflow code into [[file+emacs:/Users/jay/emacs/emacs-settings/goals-agenda.org][goals-agenda.org]] and any remaining definition-lookup residue into a future dedicated module if that cluster grows.
 - =org-export.org= now exists as the dedicated export/publishing module. It owns export defaults, ox-* backends, export filters, export-only LaTeX helpers, and clipboard/export helpers that were previously scattered through =shared-functions.org=.
 - =dictionary-lookup.org= is a plausible narrower future module for word-definition tools such as =define-word=, =dictionary-search=, and =sdcv=. This is a different concern from spellcheck and should stay separate from =spellcheck.org=.
 - =org-workflow.org= is *not* a good next module. "Agenda + clocking + timeblocking + attach + timesheet" is too vague and would become a dumping ground.

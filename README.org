@@ -33,8 +33,8 @@ This is a sophisticated Emacs configuration that uses Spacemacs as its foundatio
 - [[file:reveal-in-finder.el][reveal-in-finder.el]] - Finder integration
 
 *** Org-Mode & Knowledge Management
-- [[file:jay-org-roam-suite/][jay-org-roam-suite/]] - **Core Architecture**: Modular Org Roam system (Core, Profiles, Templates)
-- =org-roam-ui= - Interactive graph visualization for org-roam (keybinding: =s-u u=)
+- [[file:jay-org-roam-suite/][jay-org-roam-suite/]] - **Core Architecture**: Modular Org Roam system (Core, Profiles, Templates, plus extras sidecar)
+- [[file:jay-org-roam-suite/jay-org-roam-extras.el][jay-org-roam-extras.el]] - User-facing Org-roam helpers (UI, backlink navigation, refile chooser, parser diagnostics)
 - [[file:org-yt.el][org-yt.el]] - YouTube link support
 - [[file:org-visual-style.el][org-visual-style.el]] - Visual enhancements for org-mode
 
@@ -61,14 +61,16 @@ This is a sophisticated Emacs configuration that uses Spacemacs as its foundatio
 7. =spellcheck.el=
 8. =org-export.el=
 9. =shared-functions.el=
-10. Various feature modules (deferred or immediate)
-11. Local configuration (=local-config.el=)
+10. =jay-org-roam-core.el=
+11. =jay-org-roam-extras.el=
+12. Various feature modules (deferred or immediate)
+13. Local configuration (=local-config.el=)
 
 * Recent Major Updates (Oct-Nov 2025)
 
 ### 1. Org Roam Profile System (Nov 2025)
 - **Multi-Graph Support**: Distinct profiles for 'Work' (default), 'My Life', 'Social', and 'Parents'.
-- **Architecture**: Modularized into `jay-org-roam-suite/` (Core, Profiles, Templates).
+- **Architecture**: Modularized into `jay-org-roam-suite/` (Core, Profiles, Templates, Extras sidecar).
 - **Features**: Independent databases, capture templates, and export paths per profile.
 - **Commands**: `s-u P` to switch, `s-u 1/2/3/4` shortcuts.
 
