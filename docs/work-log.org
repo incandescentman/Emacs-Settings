@@ -1,6 +1,13 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-19: Record next module-boundary decisions after spellcheck split
+- Confirmed that the word-definition cluster in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] (=define-word=, =dictionary-search=, =dictionary-lookup-definition=, =sdcv=) correctly stayed out of [[file+emacs:/Users/jay/emacs/emacs-settings/spellcheck.org][spellcheck.org]] because definition lookup is a different subsystem from spelling correction.
+- Agreed that before creating a new module, we should first check whether the code belongs in an existing module that already owns the concern. Current highest-leverage consolidation targets are [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/][jay-org-roam-suite/]] for Org-roam residue and [[file+emacs:/Users/jay/emacs/emacs-settings/goals-agenda.org][goals-agenda.org]] for agenda/workflow residue.
+- Agreed that [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] is the strongest next extraction candidate once the export/publishing cluster is audited.
+- Agreed that a future [[file+emacs:/Users/jay/emacs/emacs-settings/dictionary-lookup.org][dictionary-lookup.org]] could make sense if that cluster grows, but [[file+emacs:/Users/jay/emacs/emacs-settings/org-workflow.org][org-workflow.org]] should *not* exist yet because it would be too vague and likely become a dumping ground.
+- Captured the guiding rule explicitly: future module creation should be subsystem-based, not overflow-bin based.
+
 * 2026-04-19: Extract spellcheck subsystem into spellcheck.org
 - Created [[file+emacs:/Users/jay/emacs/emacs-settings/spellcheck.org][spellcheck.org]] as the dedicated home for Flyspell, Hunspell/Jinx glue, personal-dictionary helpers, and the large-buffer Flyspell guard.
 - Moved the full spellcheck clusters out of [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]], including the Flyspell setup block, =add-word-to-personal-dictionary=, the Jinx correction helpers, =use-package jinx=, and =my/skip-flyspell-on-large-buffers=.

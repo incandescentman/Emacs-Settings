@@ -20,6 +20,20 @@ Status indicators:
 
 *Progress:* 2 of 9 major simplifications completed (22%)
 
+* Next Modularization Queue
+
+** [PLANNED] Consolidate Org-roam-related residue into the existing suite
+- Audit the Org-roam sections still living in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] and move genuine core/profile/template/startup-reliability behavior into the existing [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/][jay-org-roam-suite/]] modules.
+- Reason: this drains the monolith while reinforcing a boundary that already exists, which is higher leverage than inventing another Org-roam-adjacent file.
+
+** [PLANNED] Consolidate agenda/workflow residue into existing agenda modules
+- Audit agenda, clocking, timeblocking, attach, and related workflow sections in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] for moves into [[file+emacs:/Users/jay/emacs/emacs-settings/goals-agenda.org][goals-agenda.org]] and related existing agenda/goals modules.
+- Reason: this is the right way to reduce workflow residue without creating a vague dumping-ground file like [[file+emacs:/Users/jay/emacs/emacs-settings/org-workflow.org][org-workflow.org]].
+
+** [PLANNED] Create org-export.org after the consolidation pass
+- After the Org-roam and agenda consolidation audits, extract the export/publishing cluster from [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] into a new [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] module if the cluster still reads as one coherent subsystem.
+- Reason: export remains the strongest new-file candidate, but existing-module consolidation should happen first when it removes more code and strengthens boundaries already present in the repo.
+
 * Completed Simplifications
 
 ** [COMPLETED] 2025-10-26: Removed init-working.el backup

@@ -210,6 +210,17 @@ A subsystem is ready for its own file when three things are true:
 2. *Coherent boundary.* You can state the file's purpose in one sentence without saying "and also." =spellcheck.org= owns Flyspell, Jinx, Hunspell, and personal dictionaries — one subsystem. =org-workflow.org= would own "agenda and clocking and timeblocking and attach" — four subsystems, not one. That file should not exist yet.
 3. *A reason you can name.* "Too big" is not a reason. "This subsystem is edited as a unit and would be easier to reason about in isolation" is a reason.
 
+** Current Module Decisions
+
+These are the current agreed boundaries for future extraction work:
+
+- Before creating a new module, first check whether the code belongs in an existing module that already owns that concern. Consolidating into an existing boundary is often higher leverage than increasing the file count.
+- The strongest current consolidation targets are Org-roam-related code into [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/][jay-org-roam-suite/]] and agenda/workflow code into [[file+emacs:/Users/jay/emacs/emacs-settings/goals-agenda.org][goals-agenda.org]].
+- =org-export.org= is the strongest next module candidate. Export and publishing behavior is already a recognizable subsystem and is conceptually separate from general utilities.
+- =dictionary-lookup.org= is a plausible narrower future module for word-definition tools such as =define-word=, =dictionary-search=, and =sdcv=. This is a different concern from spellcheck and should stay separate from =spellcheck.org=.
+- =org-workflow.org= is *not* a good next module. "Agenda + clocking + timeblocking + attach + timesheet" is too vague and would become a dumping ground.
+- Future splits should stay subsystem-based, not overflow-bin based. A new file should exist because it owns one coherent concern, not because =shared-functions.org= feels crowded.
+
 ** The Test of Success
 
 After each split, the next time you touch that subsystem, notice how much less friction there is. That felt difference — between "where does this live again?" and "open the file, change the thing" — is the payoff made concrete. If you do not feel it, the split was premature and something is still mislocated.
