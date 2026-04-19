@@ -35,6 +35,7 @@ The following documentation files provide detailed information about various asp
 
 **** 1. Literate Programming Files (*.org → *.el)
 - =shared-functions.org= - Core utilities and functions
+- =spellcheck.org= - Flyspell, Jinx, Hunspell, and personal dictionary wiring
 - =pasteboard-copy-and-paste-functions.org= - macOS clipboard integration
 - =spacecraft-mode.org= - Custom writing mode
 - =org-authoring.org= - Org-specific heading/list/structure authoring helpers
@@ -76,9 +77,10 @@ The following documentation files provide detailed information about various asp
 4. =jay-osx.el= (provides the early =key-minor-mode-map=)
 5. =gnu-emacs-startup.el=
 6. =org-authoring.el=
-7. =shared-functions.el=
-8. Various feature modules (deferred or immediate)
-9. Local configuration (=local-config.el=)
+7. =spellcheck.el=
+8. =shared-functions.el=
+9. Various feature modules (deferred or immediate)
+10. Local configuration (=local-config.el=)
 
 ** Recent Major Updates
 
@@ -204,7 +206,7 @@ The following documentation files provide detailed information about various asp
 - *Ask only for relevant post-checkpoint tests*: After a checkpoint, request tests only for startup and for the exact commands or behaviors that actually changed or were directly plausibly affected by the diff.
 - *Do not broaden the test scope without cause*: If a checkpoint only removes stale config, do not ask Jay to retest unrelated commands just because they live in the same conceptual area.
 - *If you ask for a non-obvious test, explain why*: Name the exact changed file or behavior that makes the requested test relevant.
-- *Respect file ownership boundaries*: [[file+emacs:/Users/jay/emacs/emacs-settings/spacecraft-mode.org][spacecraft-mode.org]] owns prose-editing behavior (sentence movement, sentence killing, kill-word helpers, capitalization/smart punctuation). [[file+emacs:/Users/jay/emacs/emacs-settings/org-authoring.org][org-authoring.org]] owns Org-only authoring helpers (heading insertion, list/checkbox predicates, Org-specific structure editing). [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org][gnu-emacs-startup.org]] should stay focused on startup/system/editor bootstrapping rather than accumulating writing-mode logic.
+- *Respect file ownership boundaries*: [[file+emacs:/Users/jay/emacs/emacs-settings/spacecraft-mode.org][spacecraft-mode.org]] owns prose-editing behavior (sentence movement, sentence killing, kill-word helpers, capitalization/smart punctuation). [[file+emacs:/Users/jay/emacs/emacs-settings/org-authoring.org][org-authoring.org]] owns Org-only authoring helpers (heading insertion, list/checkbox predicates, Org-specific structure editing). [[file+emacs:/Users/jay/emacs/emacs-settings/spellcheck.org][spellcheck.org]] owns Flyspell, Jinx, Hunspell, and personal-dictionary wiring. [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org][gnu-emacs-startup.org]] should stay focused on startup/system/editor bootstrapping rather than accumulating writing-mode logic.
 
 ** Checkpoint Protocol
 - At each checkpoint, update [[file+emacs:docs/work-log.org][📄 work-log.org]] before handing off.
@@ -216,7 +218,7 @@ The following documentation files provide detailed information about various asp
 
 ** Note on File Size
 - =shared-functions.org=: ~316KB (9983 lines)
-  - *Splitting not recommended*: For a personal config, having everything in one searchable file is actually more convenient than managing multiple files with inter-dependencies. The monolithic approach is working well - Emacs handles it fine, and it's easier to maintain when you know where everything is
+  - *Do not split casually*: keep general utilities here, but extract a new =.org= module when a subsystem becomes both coherent and clearly out of place. [[file+emacs:/Users/jay/emacs/emacs-settings/org-authoring.org][org-authoring.org]] and [[file+emacs:/Users/jay/emacs/emacs-settings/spellcheck.org][spellcheck.org]] are the current examples of that narrower, intentional split pattern.
 - =spacemacs.d/init.el=: ~50K lines
 - =gnu-emacs-startup.el=: ~46K lines
 - =pasteboard-copy-and-paste-functions.el=: ~33K lines

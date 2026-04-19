@@ -19,6 +19,7 @@ This is a sophisticated Emacs configuration that uses Spacemacs as its foundatio
 *** Literate Programming Files (*.org → *.el)
 - [[file:shared-functions.org][shared-functions.org]] - Core utilities and functions
 - [[file:pasteboard-copy-and-paste-functions.org][pasteboard-copy-and-paste-functions.org]] - macOS clipboard integration
+- [[file:spellcheck.org][spellcheck.org]] - Flyspell, Jinx, Hunspell, and personal dictionary wiring
 - [[file:spacecraft-mode.org][spacecraft-mode.org]] - Custom writing mode
 - [[file:org-authoring.org][org-authoring.org]] - Org-specific heading/list/structure authoring helpers
 - [[file:gnu-emacs-startup.org][gnu-emacs-startup.org]] - Alternative startup configuration
@@ -57,9 +58,10 @@ This is a sophisticated Emacs configuration that uses Spacemacs as its foundatio
 4. =jay-osx.el= (provides the early =key-minor-mode-map=)
 5. =gnu-emacs-startup.el=
 6. =org-authoring.el=
-7. =shared-functions.el=
-8. Various feature modules (deferred or immediate)
-9. Local configuration (=local-config.el=)
+7. =spellcheck.el=
+8. =shared-functions.el=
+9. Various feature modules (deferred or immediate)
+10. Local configuration (=local-config.el=)
 
 * Recent Major Updates (Oct-Nov 2025)
 
@@ -119,7 +121,7 @@ This is a sophisticated Emacs configuration that uses Spacemacs as its foundatio
 
 * Note on File Size
 - [[file:shared-functions.org][shared-functions.org]]: ~316KB (9983 lines)
-  - *Splitting not recommended*: For a personal config, having everything in one searchable file is actually more convenient than managing multiple files with inter-dependencies. The monolithic approach is working well - Emacs handles it fine, and it's easier to maintain when you know where everything is
+  - *Do not split casually*: keep general utilities here, but extract a new =.org= module when a subsystem becomes both coherent and clearly out of place. [[file:org-authoring.org][org-authoring.org]] and [[file:spellcheck.org][spellcheck.org]] are the current examples of that narrower, intentional split pattern.
 - [[file:spacemacs.d/init.el][spacemacs.d/init.el]]: ~50K lines
 - [[file:gnu-emacs-startup.el][gnu-emacs-startup.el]]: ~46K lines
 - [[file:pasteboard-copy-and-paste-functions.el][pasteboard-copy-and-paste-functions.el]]: ~33K lines

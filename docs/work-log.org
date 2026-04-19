@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-19: Extract spellcheck subsystem into spellcheck.org
+- Created [[file+emacs:/Users/jay/emacs/emacs-settings/spellcheck.org][spellcheck.org]] as the dedicated home for Flyspell, Hunspell/Jinx glue, personal-dictionary helpers, and the large-buffer Flyspell guard.
+- Moved the full spellcheck clusters out of [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]], including the Flyspell setup block, =add-word-to-personal-dictionary=, the Jinx correction helpers, =use-package jinx=, and =my/skip-flyspell-on-large-buffers=.
+- Removed the older duplicate =flyspell= hooks from the later =text-mode-hooks= section in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] instead of carrying that obsolete path into the new module.
+- Wired [[file+emacs:/Users/jay/emacs/emacs-settings/spellcheck.org][spellcheck.org]] into [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][spacemacs-new-config.el]] so it loads before [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]], which keeps the spellcheck helpers available for any remaining callers while giving spelling its own coherent subsystem boundary.
+
 * 2026-04-19: Gate notch/tab-bar startup message on real state changes
 - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so =jay/update-tab-bar-for-display= only toggles =tab-bar-mode= and emits =🍙🚫 Notch hidden 🎩✨= when the tab-bar state actually changes.
 - Purpose: stop the repeated focus-in-hook noise during startup and ordinary display-focus churn while keeping the notch-defence behavior itself unchanged.

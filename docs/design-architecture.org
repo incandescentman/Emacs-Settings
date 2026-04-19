@@ -37,6 +37,7 @@ These are the heart of the customization. Each =.org= file contains documentatio
 | =shared-functions.org=                    | =shared-functions.el= | Core utilities (9,983 lines)      |
 | =gnu-emacs-startup.org=                   | =gnu-emacs-startup.el= | Alternative startup config        |
 | =org-authoring.org=                       | =org-authoring.el=    | Org-specific authoring helpers    |
+| =spellcheck.org=                          | =spellcheck.el=       | Flyspell/Jinx/Hunspell subsystem  |
 | =fonts-and-themes.org=                    | =fonts-and-themes.el= | Appearance functions              |
 | =spacecraft-mode.org=                     | =spacecraft-mode.el=  | Distraction-free writing mode     |
 
@@ -82,14 +83,16 @@ Understanding the loading sequence helps debug issues:
 6. Loads jay-osx.el (provides the early =key-minor-mode-map=)
 7. Loads gnu-emacs-startup.el
 8. Loads org-authoring.el
-9. Loads shared-functions.el (tangled from shared-functions.org)
-10. Loads other modules (deferred or immediate based on config)
-11. Loads local-config.el (if exists, gitignored for machine-specific settings)
+9. Loads spellcheck.el
+10. Loads shared-functions.el (tangled from shared-functions.org)
+11. Loads other modules (deferred or immediate based on config)
+12. Loads local-config.el (if exists, gitignored for machine-specific settings)
 #+END_SRC
 
 *Why this order matters*:
 - =jay-osx.el= must load before anything that uses =key-minor-mode-map=
 - =org-authoring.el= must load before modules that call Org-specific authoring helpers, such as =spacecraft-mode.org=
+- =spellcheck.el= must load before =shared-functions.el= so any remaining spellcheck callers or keybindings resolve against the dedicated spellcheck module instead of reintroducing split ownership
 - =shared-functions.el= provides utilities used by other modules
 - Some modules defer loading until needed (performance optimization)
 
@@ -132,15 +135,16 @@ when pasting from web pages.
 - Fewer keybindings to remember
 - More "just works" behavior
 
-** Centralized Utilities
+** Centralized Utilities (Legacy)
 
 *What*: =shared-functions.org= contains 300+ custom functions.
 
-*Why single file?*
+*Status*: Historically the single home for nearly all utilities. That stance has shifted — see [[*Keep Modularizing][Keep Modularizing]]. =shared-functions.org= is now treated as the *residue*, not the target: new subsystems are extracted to their own files, and existing coherent clusters (prose editing, Org authoring, spellcheck) are progressively moved out.
+
+*Original rationale (still partially true)*:
 - Easy to search (everything in one place)
 - No dependency management between multiple files
 - Emacs handles large files fine
-- Simpler than splitting into dozens of small modules
 
 *Naming conventions*:
 - =jay/...= - User-facing interactive commands
@@ -161,6 +165,54 @@ when pasting from web pages.
 - Complex logic (markdown/org detection, smart quote normalization)
 - Platform-specific (only works on macOS)
 - Isolates external dependencies
+
+* Keep Modularizing
+
+The single highest-payoff ongoing work in this config is splitting monolithic files into focused modules — one coherent subsystem per file. Recent examples: =spacecraft-mode.org= (prose editing), =org-authoring.org= (Org structure helpers), with =spellcheck.org= planned next. =shared-functions.org= is the monolith most future splits will come from.
+
+This supersedes the earlier "one big file is fine" stance. That stance was defensible when it was written. Two things have changed since: the file has grown substantially, and AI-assisted editing has put a hard premium on focused context.
+
+** The Concrete Payoffs
+
+Each of these compounds every time you touch the subsystem.
+
+*** Grep becomes navigation
+
+When spellcheck lives in =spellcheck.org=, changing how Flyspell handles large buffers means opening one file and seeing the whole subsystem at once. In the monolith, you are scanning line 4,200 of 9,983 hoping you landed in the right block. The file-per-subsystem structure makes the file itself a form of navigation.
+
+*** LLM context windows
+
+This is the biggest modern reason, and it did not exist when the config was designed. When an AI assistant helps with spellcheck, loading a focused =spellcheck.org= gives it tight, relevant context. Loading =shared-functions.org= burns context on irrelevant code and forces the model to guess which sections matter. Post-split, AI help on that subsystem becomes sharper, cheaper, and more accurate.
+
+*** Safe refactoring
+
+A physical file boundary is a stronger guarantee than a conceptual one. Rewriting =spellcheck.org= wholesale cannot accidentally break Org authoring, because the Org authoring code is not in the file.
+
+*** Git history tells a story
+
+=git log --follow spellcheck.org= shows the evolution of exactly one subsystem. In the monolith, every commit touches =shared-functions.org= for unrelated reasons, and the file's history degenerates into noise.
+
+*** The mental map stays accurate
+
+You will remember that spellcheck lives in =spellcheck.org= forever. You will not remember that spellcheck lives "around line 4,200 of =shared-functions.org=" — that map rots the moment the file grows.
+
+** Why This Beats the Alternatives
+
+- *Switching frameworks* (Spacemacs → Doom): weeks of disruption, mostly theoretical benefit. Modularizing: hours of work, compounding benefit.
+- *Deprecated function cleanup*: a maintenance tax you pay once. Modularizing: a structural gain that pays out every subsequent edit.
+- *Adding new features*: new features are faster to add in a modular codebase, so modularization accelerates future feature work rather than competing with it.
+
+** When to Split
+
+A subsystem is ready for its own file when three things are true:
+
+1. *Dense cluster.* Most of the content already lives in one place. A grep shows a tight concentration, not scattered crumbs across five files.
+2. *Coherent boundary.* You can state the file's purpose in one sentence without saying "and also." =spellcheck.org= owns Flyspell, Jinx, Hunspell, and personal dictionaries — one subsystem. =org-workflow.org= would own "agenda and clocking and timeblocking and attach" — four subsystems, not one. That file should not exist yet.
+3. *A reason you can name.* "Too big" is not a reason. "This subsystem is edited as a unit and would be easier to reason about in isolation" is a reason.
+
+** The Test of Success
+
+After each split, the next time you touch that subsystem, notice how much less friction there is. That felt difference — between "where does this live again?" and "open the file, change the thing" — is the payoff made concrete. If you do not feel it, the split was premature and something is still mislocated.
 
 * Data Flow Patterns
 
@@ -324,28 +376,33 @@ This config uses these Spacemacs layers:
 
 *Decision*: Spacemacs' layer system and defaults are worth the tradeoffs for this use case (writing and note-taking focus).
 
-** Why One Large shared-functions.org (Not Multiple Small Files)?
+** Why One Large shared-functions.org? (Historical — Decision Has Shifted)
 
-*Pros*:
+This section documents a decision that has since been reversed. Keeping it for historical context and to record what changed.
+
+*Original pros (as argued at the time)*:
 - Single place to search for functions
 - No dependency management between files
 - Easy to see everything at once
 - Simple to maintain
 
-*Cons*:
+*Original cons*:
 - Large file (~10,000 lines)
 - Could be intimidating to newcomers
 - Emacs handles it fine, but some tools might choke
 
-*Decision*: For a personal config, convenience trumps modularity. Could split if working with a team.
+*Original decision*: "For a personal config, convenience trumps modularity. Could split if working with a team."
 
-*If splitting ever becomes necessary*, start with low-coupling blocks:
-- Keybindings + key-chord setup (move to =keys.el= / [[file+emacs:/Users/jay/emacs/emacs-settings/archive/key-chord.org][archive/key-chord.org]])
-- Search/completion stack (isearch, swiper, consult, rg, deadgrep)
-- Org-roam + org-roam-ui config stubs
-- UI/appearance + font/frame logic (move to =fonts-and-themes.org=)
-- Web research/html2org helpers (move near pasteboard module)
-Note: Search/completion now lives in =search-commands.org= as the first extraction.
+*Current decision*: keep =shared-functions.org= as the home for genuinely general utilities, but extract a new =.org= file when a subsystem becomes both coherent and clearly out of place. [[file+emacs:/Users/jay/emacs/emacs-settings/org-authoring.org][org-authoring.org]] and [[file+emacs:/Users/jay/emacs/emacs-settings/spellcheck.org][spellcheck.org]] are the current examples of that targeted extraction pattern.
+
+*Current decision*: Progressive extraction into focused modules is the preferred direction. See [[*Keep Modularizing][Keep Modularizing]]. The original "convenience" argument underestimated two forces that have grown in importance: accumulated file size (now ~10k lines) and the cost of loading large irrelevant context into AI assistants. The modularity argument was also framed as a team concern, but the payoffs (focused grep, tight AI context, physical refactor boundaries, coherent git history) all apply to a personal config too.
+
+*Extraction track record*:
+- =search-commands.org= — search/completion stack
+- =fonts-and-themes.org= — UI/appearance + font/frame logic
+- =spacecraft-mode.org= — prose editing helpers
+- =org-authoring.org= — Org structure authoring
+- =spellcheck.org= (planned next)
 
 ** Why Literate Programming (Not Just .el Files)?
 

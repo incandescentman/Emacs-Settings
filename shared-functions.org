@@ -422,7 +422,6 @@ Works!
 *** Archiving / hooking
 
 * Writing Environment
-** Spellcheck / flyspell
 ** Visual line, auto-fill
 ** Typographic replacements
 ** Misc
@@ -456,55 +455,6 @@ Works!
 
 
 * The Writing Environment
-
-* Spellcheck / flyspell
-
-** flyspell setup
-#+BEGIN_SRC emacs-lisp
-(use-package flyspell
-  :ensure nil                    ; built-in
-  :hook ((text-mode . flyspell-mode)
-         (org-mode  . flyspell-mode))
-  :bind (:map flyspell-mode-map
-              ("C-." . nil))     ; unbind default
-  :init
-  ;; --- Hunspell setup ---
-;; Add to your :init block *instead* of the previous setq for this var
-(add-to-list
- 'ispell-dictionary-alist
- '("en_US-large" "[[:alpha:]]" "[^[:alpha:]]" "[']"
-   nil ("-d" "en_US-large") nil utf-8))
-  (setq ispell-hunspell-dictionary-paths-alist
-        '(("en_US"       "~/emacs/Spelling")
-          ("en_US-large" "~/emacs/Spelling"))
-        ;; teach Flyspell about contractions etc.
-        flyspell-abbrev-p t
-        flyspell-use-global-abbrev-table-p t
-        flyspell-mark-duplications-exceptions
-        '((nil "that" "had" "really" "very" "much")
-          ("\\`francais\\>" "nous" "vous")))
-  :config
-  ;; Skip #+begin_src ... #+end_src blocks in Org
-  (defun my/org-setup-flyspell ()
-    (when (derived-mode-p 'org-mode)
-      (make-local-variable 'ispell-skip-region-alist)
-      (add-to-list 'ispell-skip-region-alist
-                   '("^#\\+begin_src" . "^#\\+end_src"))))
-  (add-hook 'org-mode-hook #'my/org-setup-flyspell))
-
-(defun add-word-to-personal-dictionary ()
-  "Add the word at point to the personal dictionary."
-  (interactive)
-  (require 'ispell)
-  (let ((word (or (thing-at-point 'word t)
-                  (user-error "No word at point"))))
-    ;; Tell the ispell process to add WORD
-    (ispell-send-string (format "*%s\n" word))
-    ;; Tell ispell to save the personal dictionary now
-    (ispell-send-string "#\n")
-    (ispell-pdict-save t)
-    (message "Added \"%s\" to personal dictionary" word)))
-#+END_SRC
 
 * UI / customization of appearance and editing environment
 ** mouse
@@ -2383,53 +2333,6 @@ Make ^H delete rather than help:
 
 Redefine help shortcut:
 #+BEGIN_SRC emacs-lisp
-#+END_SRC
-
-** flyspell-correct-space
-#+begin_src emacs-lisp
-(defun jay/jinx-save-correction-as-abbrev (wrong right)
-  "Save WRONG -> RIGHT using Flyspell's abbrev behavior."
-  (when (and (require 'flyspell nil t)
-             (bound-and-true-p flyspell-abbrev-p))
-    (let ((table (flyspell-abbrev-table)))
-      (if (flyspell-already-abbrevp table wrong)
-          (flyspell-change-abbrev table wrong right)
-        (flyspell-define-abbrev wrong right)))))
-
-(defun jay/jinx-correct-word-near-point ()
-  "Auto-correct word at or before point using Jinx's first suggestion.
-If point is after a space, move back one character first so the previous word
-is corrected, matching the old Org writing workflow on the backtick key.
-Accepted corrections are also saved as abbrevs, like the old Flyspell path."
-  (interactive)
-  (when (and (> (point) (point-min))
-             (looking-back " " 1))
-    (left-char 1))
-  (pcase-let ((`(,start . ,end)
-               (or (jinx--bounds-of-word)
-                   (user-error "No word at point"))))
-    (when-let* ((ov (car (ignore-errors
-                           (jinx--force-overlays start end))))
-                (word (buffer-substring-no-properties
-                       (overlay-start ov) (overlay-end ov)))
-                (suggestions (jinx--correct-suggestions word)))
-      (when-let ((choice (car suggestions)))
-        (jay/jinx-save-correction-as-abbrev word choice)
-        (jinx--correct-replace ov choice)))))
-
-(defun flyspell-auto-correct-word-correct-space ()
-  (interactive)
-  (when (looking-back " " nil)
-    (left-char 1))
-  (flyspell-auto-correct-word)
-  )
-
-#+end_src
-
-#+BEGIN_SRC emacs-lisp
-;; (define-key org-mode-map (kbd "`") 'flyspell-auto-correct-word)
-;; (define-key org-mode-map (kbd "`") 'flyspell-auto-correct-word-correct-space) ; moved to keys.el
-;; (define-key org-mode-map (kbd "`") 'flyspell-auto-correct-previous-word)
 #+END_SRC
 
 ** cut-subtree
@@ -4477,15 +4380,11 @@ Multiple cursors:
 ** text-mode-hooks
 #+begin_src emacs-lisp
 
-(add-hook 'text-mode-hook 'flyspell-mode)
 (add-hook 'text-mode-hook #'dubcaps-mode)
 (add-hook 'org-mode-hook #'dubcaps-mode)
 
 (add-hook 'text-mode-hook #'olivetti-mode 1)
 ;; (add-hook 'org-mode-hook 'turn-off-autocomplete-mode )
-
-(add-hook 'org-mode-hook 'turn-on-flyspell)
-;; (add-hook 'org-mode-hook (lambda () (flyspell-lazy-mode 1)))
 
 ;; (add-hook 'org-mode-hook #'flycheck-mode)
 ;; (add-hook 'org-mode-hook (lambda () (org-sticky-header-mode 1)))
@@ -6303,53 +6202,6 @@ Smart jump to beginning / end of lines.
    (kill-buffer buffer))))
 (defalias 'crux-delete-buffer-and-file #'delete-visited-file)
 
-#+end_src
-
-* jinx
-#+begin_src emacs-lisp
-(defun jay/ensure-jinx-personal-dictionary ()
- "Point Enchant at `ispell-personal-dictionary' so Jinx shares one word list."
- (let* ((personal (expand-file-name
-                   (or ispell-personal-dictionary
-                       "~/emacs/Spelling/personal.dic")))
-        (enchant-dir (expand-file-name "~/.config/enchant"))
-        (enchant-dict (expand-file-name "en_US.dic" enchant-dir))
-        (ordering-file (expand-file-name "enchant.ordering" enchant-dir))
-        (ordering "en:hunspell,aspell\nen_US:hunspell,aspell\n"))
-  (when (file-exists-p personal)
-   (make-directory enchant-dir t)
-   (unless (and (file-exists-p ordering-file)
-                (string=
-                 (with-temp-buffer
-                  (insert-file-contents ordering-file)
-                  (buffer-string))
-                 ordering))
-    (with-temp-file ordering-file
-     (insert ordering)))
-   (cond
-    ((file-symlink-p enchant-dict)
-     (unless (string= (file-truename enchant-dict)
-                      (file-truename personal))
-      (message "Jinx: keeping existing Enchant dictionary link at %s"
-               enchant-dict)))
-    ((file-exists-p enchant-dict)
-     (message "Jinx: keeping existing Enchant dictionary at %s"
-              enchant-dict))
-    (t
-     (make-symbolic-link personal enchant-dict t))))))
-
-(use-package jinx
- :init
- (setq jinx-languages "en_US")
- (jay/ensure-jinx-personal-dictionary)
- :hook ((text-mode . jinx-mode)
-        (org-mode . jinx-mode)
-        (conf-mode . jinx-mode))
- :config
- ;; Check prose inside org example/quote/src blocks instead of skipping
- ;; them entirely. Begin/end marker lines are still excluded.
- (setf (alist-get 'org-mode jinx-exclude-faces)
-       (remq 'org-block (alist-get 'org-mode jinx-exclude-faces))))
 #+end_src
 
 * ox-timeline
@@ -9022,22 +8874,6 @@ Uses `customize-save-variable` so the setting survives restarts, then refreshes 
   :config
   (org-supertag-setup))
 #+end_example
-
-* hunspell exclude large buffers
-#+begin_src emacs-lisp
-(defun my/skip-flyspell-on-large-buffers ()
-  "Disable flyspell for large buffers (>5MB) or exported message conversations."
-  (when (and flyspell-mode  ; only act when the mode is already on
-             (or (> (buffer-size) (* 5 1024 1024))  ; >5 MB
-                 ;; Disable for exported message conversations (read-only, informal text)
-                 (string-match-p "exported-text-conversations" (or buffer-file-name ""))))
-    ;; Remove the hook locally before disabling to avoid re-entering it
-    (remove-hook 'flyspell-mode-hook #'my/skip-flyspell-on-large-buffers t)
-    (flyspell-mode -1)
-    ;; Re-add the hook locally for this buffer
-    (add-hook 'flyspell-mode-hook #'my/skip-flyspell-on-large-buffers nil t)))
-(add-hook 'flyspell-mode-hook #'my/skip-flyspell-on-large-buffers)
-#+end_src
 
 * cape emoji
 #+begin_src emacs-lisp
