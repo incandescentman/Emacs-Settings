@@ -917,9 +917,9 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
                 ispell-really-hunspell t
                 ispell-dictionary      "en_US-large"
                 ispell-personal-dictionary
-                (expand-file-name "~/Library/Spelling/personal.dic"))
+                (expand-file-name "~/emacs/Spelling/personal.dic"))
 
-  (setenv "DICPATH"   (expand-file-name "~/Library/Spelling"))
+  (setenv "DICPATH"   (expand-file-name "~/emacs/Spelling"))
   (setenv "DICTIONARY" "en_US-large")
 
   (require 'ispell)

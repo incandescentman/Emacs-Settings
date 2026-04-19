@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-19: Unify Hunspell startup config and stop Flyspell process churn
+- Removed the later =ispell-program-name "hunspell"= override from [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so the startup path keeps the earlier full-path Hunspell binary from [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]].
+- Standardized the canonical personal dictionary path in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]] to [[file+emacs:/Users/jay/emacs/Spelling/personal.dic][/Users/jay/emacs/Spelling/personal.dic]], which is the real path behind [[file+emacs:/Users/jay/Library/Spelling][/Users/jay/Library/Spelling]].
+- Also pointed =DICPATH= at [[file+emacs:/Users/jay/emacs/Spelling][/Users/jay/emacs/Spelling]] so the Hunspell process, personal dictionary, and recent Jinx bridge work all agree on the same directory.
+- Goal: avoid the startup pattern where Flyspell starts Hunspell with a full path, then kills and restarts it later after =shared-functions.org= changes =ispell-program-name= and related state.
+
 * 2026-04-19: Create org-authoring.org for Org-only authoring behavior
 - Created [[file+emacs:/Users/jay/emacs/emacs-settings/org-authoring.org][org-authoring.org]] as a narrow home for Org-specific authoring helpers.
 - Moved the full Org chunks intact out of [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org][gnu-emacs-startup.org]], including =reflash-indentation=, =org-checkbox-p=, =org-plain-text-list-p=, the =smart-org-meta-return-dwim= cluster, and the related heading/subheading insertion helpers.

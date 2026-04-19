@@ -474,10 +474,7 @@ Works!
  'ispell-dictionary-alist
  '("en_US-large" "[[:alpha:]]" "[^[:alpha:]]" "[']"
    nil ("-d" "en_US-large") nil utf-8))
-  (setq ispell-program-name "hunspell"
-        ispell-dictionary   "en_US-large"           ; default dict
-        ispell-personal-dictionary "~/emacs/Spelling/personal.dic"
-        ispell-hunspell-dictionary-paths-alist
+  (setq ispell-hunspell-dictionary-paths-alist
         '(("en_US"       "~/emacs/Spelling")
           ("en_US-large" "~/emacs/Spelling"))
         ;; teach Flyspell about contractions etc.

@@ -2,6 +2,33 @@
 #+DATE: 2025-09-24
 #+DESCRIPTION: Debugging post-mortems and prevention checklists.
 
+* Later Ispell Overrides Can Kill And Restart The Spellchecker Process
+  Date: 2026-04-19
+
+** Trigger
+Emacs startup messages showed Hunspell starting with a full path and then later being killed and restarted with a bare program name:
+- =Starting new Ispell process /opt/homebrew/bin/hunspell with en_US-large ...done=
+- =Ispell process killed=
+- =Starting new Ispell process hunspell with en_US-large ...done=
+
+** Mechanism
+Two parts of the config were both setting core Ispell variables:
+- [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]] set =ispell-program-name= to =/opt/homebrew/bin/hunspell= and established the default dictionary early.
+- [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] later reset =ispell-program-name= to =hunspell= and also changed the personal dictionary path.
+
+Changing =ispell-program-name= after the Ispell process is already running causes Emacs to kill the old process and spawn a new one. In this case, the second config block also obscured that the real canonical dictionary directory was [[file+emacs:/Users/jay/emacs/Spelling][/Users/jay/emacs/Spelling]], while [[file+emacs:/Users/jay/Library/Spelling][/Users/jay/Library/Spelling]] was just a symlink to it.
+
+** The Fix
+- Keep the early full-path Hunspell binary setting in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]]
+- Standardize the personal dictionary and =DICPATH= on [[file+emacs:/Users/jay/emacs/Spelling][/Users/jay/emacs/Spelling]]
+- Remove the later =ispell-program-name= / =ispell-dictionary= / =ispell-personal-dictionary= override from [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]]
+- Leave supplementary Hunspell/Flyspell settings like =ispell-dictionary-alist= and =ispell-hunspell-dictionary-paths-alist= in place
+
+** Actionable insight
+- Treat =ispell-program-name= as a singleton startup setting, not something multiple modules should each “helpfully” set.
+- If startup messages show the spellchecker process being killed and restarted, grep for later config blocks that mutate Ispell core variables after startup.
+- When two spelling paths both seem valid, check whether one is actually a symlink before assuming you have two real sources of truth.
+
 * Some Literate Org Files Only Tangle Correctly When You Pass The Explicit Output Path
   Date: 2026-04-19
 
