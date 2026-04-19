@@ -168,7 +168,7 @@ when pasting from web pages.
 
 * Keep Modularizing
 
-The single highest-payoff ongoing work in this config is splitting monolithic files into focused modules — one coherent subsystem per file. Recent examples: =spacecraft-mode.org= (prose editing), =org-authoring.org= (Org structure helpers), with =spellcheck.org= planned next. =shared-functions.org= is the monolith most future splits will come from.
+The single highest-payoff ongoing work in this config is splitting monolithic files into focused modules — one coherent subsystem per file. Recent examples: =spacecraft-mode.org= (prose editing), =org-authoring.org= (Org structure helpers), and =spellcheck.org= (Flyspell/Jinx/Hunspell + personal dictionaries). =shared-functions.org= is the monolith most future splits will come from.
 
 This supersedes the earlier "one big file is fine" stance. That stance was defensible when it was written. Two things have changed since: the file has grown substantially, and AI-assisted editing has put a hard premium on focused context.
 
@@ -402,7 +402,7 @@ This section documents a decision that has since been reversed. Keeping it for h
 - =fonts-and-themes.org= — UI/appearance + font/frame logic
 - =spacecraft-mode.org= — prose editing helpers
 - =org-authoring.org= — Org structure authoring
-- =spellcheck.org= (planned next)
+- =spellcheck.org= — spellchecking subsystem
 
 ** Why Literate Programming (Not Just .el Files)?
 
@@ -599,11 +599,12 @@ emacs --timed-requires
 
 ** Design Philosophy
 
-1. *Convenience over purity*: Monolithic files are fine if they work
-2. *Documentation is code*: Literate programming keeps them in sync
-3. *Adapt to context*: Smart functions beat mode-specific commands
-4. *Integration matters*: Deep macOS integration enhances workflow
-5. *Stable core, flexible edges*: Spacemacs base, custom extensions
+1. *Modularize by subsystem*: File-per-subsystem when the boundary is coherent. See [[*Keep Modularizing][Keep Modularizing]] for the full rationale.
+2. *Pragmatism over dogma*: Choose the structure that makes the next edit easier. Don't split where the boundary isn't real; don't keep a monolith once the boundary becomes obvious.
+3. *Documentation is code*: Literate programming keeps them in sync
+4. *Adapt to context*: Smart functions beat mode-specific commands
+5. *Integration matters*: Deep macOS integration enhances workflow
+6. *Stable core, flexible edges*: Spacemacs base, custom extensions
 
 ** Maintenance Philosophy
 
@@ -620,7 +621,7 @@ See =critical-next-steps.org= for planned improvements, but key architectural go
 1. Better error handling (graceful degradation)
 2. More consistent naming conventions
 3. Cleaner dependency management
-4. Optional: Split =shared-functions.org= if it becomes unwieldy
+4. Continue extracting coherent subsystems from =shared-functions.org= when they meet the criteria in [[*Keep Modularizing][Keep Modularizing]].
 5. Consider use-package for cleaner package configuration
 
 * Core Philosophy (Condensed)
@@ -637,8 +638,8 @@ Deep platform integration (pbcopy/pbpaste, Command key) enhances workflow. Trade
 ** Org-Mode Centrality
 Org-mode is the canonical format for everything: notes, tasks, documentation, code, journal entries.
 
-** Convenience Over Purity
-Pragmatism beats elegance. One large file instead of dozens of modules. Some copy-pasted code when abstraction is harder to read. "Good enough" beats "perfect but unfinished."
+** Pragmatism Over Dogma
+Choose the structure that makes the next edit easier — not the one that matches an abstract ideal. Focused modular files when the subsystem boundary is coherent (see [[*Keep Modularizing][Keep Modularizing]]); a single file when splitting would invent false boundaries. Some copy-pasted code when abstraction is harder to read than repetition. "Good enough" beats "perfect but unfinished."
 
 ** Adaptive Behavior
 Functions detect context and do the right thing. =pasteboard-paste-adaptive= cleans in org buffers, pastes raw in code. Fewer commands to remember.
