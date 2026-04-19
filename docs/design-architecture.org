@@ -63,7 +63,7 @@ Note: =pasteboard-copy-and-paste-functions.el= is now pure elisp and does not ta
 
 | File                  | Purpose                                   |
 |-----------------------+-------------------------------------------|
-| =org-roam-config.el=  | Org-roam setup and profiles               |
+| =org-roam-config-legacy.el= | Legacy Org-roam compatibility shim |
 | =org-visual-style.el= | Visual enhancements for org-mode          |
 | =org-yt.el=           | YouTube link support in org               |
 | =keys.el=             | Global keybinding overrides               |

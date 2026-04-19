@@ -309,7 +309,7 @@ Keybindings scattered across:
 Org settings spread across:
 - =/Users/jay/emacs/emacs-settings/spacemacs.d/init.el= (performance settings)
 - =shared-functions.org= (org-mode settings)
-- =org-roam-config.el=
+- =org-roam-config-legacy.el=
 - =org-visual-style.el=
 - =org-yt.el=
 
@@ -334,6 +334,32 @@ grep -L "lexical-binding: t" ~/emacs/emacs-settings/*.el
 # 3. Find deprecated org variables
 grep -r "org-bracket-link-regexp" ~/emacs/emacs-settings/
 #+end_src
+
+** [PLANNED] Rename misleadingly-named files
+
+Several file names are actively misleading or stale, causing confusion when reasoning about module boundaries. Renames are low-effort and high-clarity but touch many cross-references (CLAUDE.md, design-architecture.org, spacemacs-new-config.el load paths, keybinding docs).
+
+*Tier 1 — strong candidates:*
+
+- [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org][gnu-emacs-startup.org]] / [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.el][gnu-emacs-startup.el]] → =emacs-bootstrap.{org,el}= (or =editor-bootstrap=). Current name implies "standalone GNU Emacs startup, alternative to Spacemacs," but [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][spacemacs-new-config.el]] loads it unconditionally inside Spacemacs. The misnomer drove the need to invent explicit ownership rules in [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.md][CLAUDE.md]] ("should stay focused on startup/system/editor bootstrapping").
+  - *Caveat*: conflicts with *[ACTIVE] Eliminate the Dual Boot Path* above, which proposes deleting this file entirely. Resolve that question first — if dual-boot is genuinely dead, delete; if still used standalone, rename.
+
+- [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][spacemacs-new-config.el]] → =spacemacs-config.el= or =spacemacs-user-config.el=. "New" is stale — there is no "old" anymore. This is the main Spacemacs user-config loader.
+
+*Tier 2 — consider:*
+
+- [[file+emacs:/Users/jay/emacs/emacs-settings/org-roam-config-legacy.el][org-roam-config-legacy.el]] — its own header declares it a deprecation shim pointing to [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/][jay-org-roam-suite/]]. Better fate: delete after confirming no live loads reference it.
+
+*Tier 3 — leave alone:*
+
+- =poetry_JD.el=, =fiverr-koma.el= — vendored/historical; renaming is risk without payoff.
+- =jay-org-in-item-p.el= — single-function file. Better fate: *merge the function into =org-authoring.org=* and delete the file; the file's existence is the real smell, not its name.
+- =shared-functions.org= — high-cost rename (many doc references). And the name is becoming accurate as it turns into the residue after coherent subsystems are extracted.
+
+*Not a file, but worth checking:*
+- [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.md][CLAUDE.md]] vs [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.org][CLAUDE.org]] — both exist. Claude Code itself reads =CLAUDE.md= specifically, so the =.md= is load-bearing. Worth verifying whether the =.org= is a duplicate or serves a distinct purpose.
+
+*Implementation*: one rename per commit. Each commit updates cross-references (load paths, CLAUDE.md, keybinding docs, design-architecture.org) in the same commit so the repo stays internally consistent.
 
 * Optional Improvements
 
@@ -457,8 +483,9 @@ Identify top 5 slowest items, estimate potential gains, decide if worth optimizi
 | Unify keybindings                     | ~100         | ****                 | Pending     |
 | Defer package loading                 | ~0           | **                   | Pending     |
 | Consolidate org settings              | ~150         | ****                 | Pending     |
+| Rename misleading files               | Clarity      | ***                  | Pending     |
 |---------------------------------------+--------------+----------------------+-------------|
-| *TOTAL*                               | *~2,200+*    | *Much easier*        | 6/16 done   |
+| *TOTAL*                               | *~2,200+*    | *Much easier*        | 7/17 done   |
 
 * Decision Log
 

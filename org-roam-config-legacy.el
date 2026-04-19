@@ -1,4 +1,4 @@
-;;; org-roam-config.el --- Legacy compatibility shim for Org-roam setup -*- lexical-binding: t; -*-
+;;; org-roam-config-legacy.el --- Legacy compatibility shim for Org-roam setup -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 ;; This file is deprecated as an implementation file.
@@ -23,7 +23,7 @@
     (add-to-list 'load-path suite))
   (unless org-roam-config--deprecation-warning-shown
     (setq org-roam-config--deprecation-warning-shown t)
-    (message "org-roam-config.el is deprecated; loading jay-org-roam-suite instead.")))
+    (message "org-roam-config-legacy.el is a legacy shim; loading jay-org-roam-suite instead.")))
 
 ;; Keep behavior backward compatible when older entry points still load this file.
 (require 'xdg nil t)
@@ -33,8 +33,8 @@
       (require 'jay-org-roam-core)
       (require 'jay-editor-environment nil t))
   (error
-   (message "org-roam-config.el shim could not load suite fully: %s"
+   (message "org-roam-config-legacy.el shim could not load suite fully: %s"
             (error-message-string err))))
 
 (provide 'org-roam-config)
-;;; org-roam-config.el ends here
+;;; org-roam-config-legacy.el ends here

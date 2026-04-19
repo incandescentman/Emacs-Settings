@@ -51,7 +51,7 @@ The following documentation files provide detailed information about various asp
 
 **** 3. Org-Mode & Knowledge Management
 - =jay-org-roam-suite/= - *Core Architecture*: Modular Org Roam system (Core, Profiles, Templates)
-- =org-roam-config.el= - Legacy entry point (delegates to suite)
+- =org-roam-config-legacy.el= - Legacy entry point (delegates to suite)
 - =goals-agenda.org= / =goals-agenda.el= - Dynamic org-agenda config (journal + projects + leads)
 - =jay-goals-system.el= - Goals workflow (rep counter, anti-stall, revenue block)
 - =org-yt.el= - YouTube link support
@@ -98,7 +98,7 @@ The following documentation files provide detailed information about various asp
 - *Backward Compatibility*: Added version-checking wrappers that work on Org 9.6+ and will use native Org 9.8 features when available.
 - *Repeat-mode Navigation*: Enabled =repeat-mode= with custom repeat maps for Org heading/block/link navigation (press =C-c C-n=, then just =n= to continue).
 - *Which-key Descriptions*: Added descriptive labels for all custom prefix keys (=s-k=, =s-/=, =s-u=, =]=) and org-roam bindings for better discoverability.
-- *Legacy Cleanup*: Deprecated =org-roam-config.el= to a compatibility shim pointing to =jay-org-roam-suite/=.
+- *Legacy Cleanup*: Deprecated =org-roam-config-legacy.el= to a compatibility shim pointing to =jay-org-roam-suite/=.
 
 *** 1. Web Page Capture (Feb 2026)
 - *org-web-tools*: Installed for capturing web pages as org-mode content

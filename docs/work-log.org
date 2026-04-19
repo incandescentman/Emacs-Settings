@@ -12,7 +12,7 @@
 
 * 2026-04-19: Rename jay-editor-extras.el to jay-editor-environment.el
 - Renamed the old =jay-editor-extras.el= file to [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-editor-environment.el][jay-editor-environment.el]] because the file is general environment glue, not a vague "extras" bucket.
-- Updated the live requires in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][spacemacs-new-config.el]] and [[file+emacs:/Users/jay/emacs/emacs-settings/org-roam-config.el][org-roam-config.el]].
+- Updated the live requires in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][spacemacs-new-config.el]] and [[file+emacs:/Users/jay/emacs/emacs-settings/org-roam-config-legacy.el][org-roam-config-legacy.el]].
 - Left the contents unchanged for now; the actual dissolution into [[file+emacs:/Users/jay/emacs/emacs-settings/spellcheck.org][spellcheck.org]], [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]], and startup-owned environment config is a later pass.
 
 * 2026-04-19: Clean dead workflow residue after agenda audit
@@ -28,7 +28,7 @@
 - Rationale: the old block only did manual directory/database switching for two contexts and is superseded by the suite's full profile system (profiles, persistence, templates, dailies, and safe absolute-path handling).
 
 * 2026-04-19: Clean stale Org-roam residue without moving live tools
-- Updated =load-roam-config= in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so it now opens the real active Org-roam core file at [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-suite/jay-org-roam-core.el]] instead of the deprecated [[file+emacs:/Users/jay/emacs/emacs-settings/org-roam-config.el][org-roam-config.el]] shim.
+- Updated =load-roam-config= in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so it now opens the real active Org-roam core file at [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-suite/jay-org-roam-core.el]] instead of the deprecated [[file+emacs:/Users/jay/emacs/emacs-settings/org-roam-config-legacy.el][org-roam-config-legacy.el]] shim.
 - Deleted the empty =* org-roam= section and two dead =#+BEGIN_EXAMPLE= leftovers: the old =* org-refile-region-to-org-heading-or-roam-node= example block and the old =* org-roam fail gracefully= example block.
 - In the =* Org-roam debugging= section, deleted only the redundant top example snippet while keeping the real interactive =jay/= debug helper functions and their surrounding notes.
 - Goal: shrink misleading Org-roam residue first, while keeping the live diagnostic tools Jay still values.
@@ -757,13 +757,13 @@
 - Fixes silent load failure for =org-roam-id-fix.el= and =org-roam-db-fix.el=.
 
 * 2026-02-24: Deprecate org-roam-config.el into compatibility shim
-- Replaced [[file+emacs:/Users/jay/emacs/emacs-settings/org-roam-config.el][org-roam-config.el]] implementation with a minimal compatibility shim that:
+- Replaced [[file+emacs:/Users/jay/emacs/emacs-settings/org-roam-config-legacy.el][org-roam-config-legacy.el]] implementation with a minimal compatibility shim that:
   - Adds =jay-org-roam-suite/= to load-path (when needed)
   - Shows a one-time deprecation message
   - Loads =jay-org-roam-core= (and the editor-environment companion module if present)
   - Provides feature =org-roam-config= for backward compatibility
 - Archived full legacy implementation to [[file+emacs:/Users/jay/emacs/emacs-settings/archive/org-roam-config.el_legacy_2026-02-24][archive/org-roam-config.el_legacy_2026-02-24]].
-- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/README.org][README.org]] to mark =org-roam-config.el= as a shim and link to the archive copy.
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/README.org][README.org]] to mark =org-roam-config-legacy.el= as a shim and link to the archive copy.
 
 * 2026-02-24: Org obsolete API migration + 9.8-compatible preview fallback
 - Updated Org/Emacs obsolete symbols in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]]:
