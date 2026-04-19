@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-19: Clean dead workflow residue after agenda audit
+- Audited workflow-related sections in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] against the live Daily Action Menu module in [[file+emacs:/Users/jay/emacs/emacs-settings/goals-agenda.org][goals-agenda.org]].
+- Conclusion: [[file+emacs:/Users/jay/emacs/emacs-settings/goals-agenda.org][goals-agenda.org]] clearly owns agenda-building and agenda display, but the remaining live =org-clock=, =org-attach=, and archive helpers in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] are still broader Org workflow infrastructure, not obviously part of the agenda module.
+- Deleted three dead or empty workflow residues from [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]]: the empty =* org-agenda= stub, the dead =* org-timeblocking= example block, and the empty =* Goals agenda= heading.
+- Goal: shrink misleading workflow residue first, while avoiding a premature move of live Org infrastructure into the wrong home.
+
 * 2026-04-19: Move Dropbox cache refresh into org-roam core and drop legacy multi-db block
 - Moved the =Refresh Org caches after Dropbox sync= helpers out of [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] and into [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-suite/jay-org-roam-core.el]], since that focus-in-hook cache refresh is real Dropbox-plus-Org-roam reliability plumbing.
 - Added explicit =seq= and =subr-x= requires to [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-core.el]] because the moved helper uses them directly.

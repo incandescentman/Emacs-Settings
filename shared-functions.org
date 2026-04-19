@@ -5546,11 +5546,6 @@ Instead of canceling export. So that I can export org-roam nodes if I want to.
 (add-to-list 'org-export-before-parsing-functions #'org-export-id-link-removal)
 #+END_SRC
 
-* org-agenda
-#+begin_src emacs-lisp
-;; (setq org-agenda-files '("/Users/jay/dropbox/roam/notes"))
-#+end_src
-
 * org-attach
 #+begin_src emacs-lisp
 
@@ -6692,13 +6687,6 @@ With a universal argument, insert a link to the current page including page numb
 
 Fixed and working:
 https://chat.openai.com/share/84fdc7cc-f6d1-410b-85e8-efffb249ed36
-
-* org-timeblocking
-#+begin_EXAMPLE emacs-lisp
-(add-to-list 'load-path "/users/jay/emacs/external-packages/org-timeblock/")
-(use-package org-timeblock
-:defer)
-#+END_EXAMPLE
 
 * later list
 #+begin_src emacs-lisp
@@ -9028,8 +9016,6 @@ saved first and reverted after formatting."
 #+begin_src emacs-lisp
 (setf (alist-get "_" org-emphasis-alist nil nil #'equal) '(default)) 
 #+end_src
-
-* Goals agenda
 
 * demote all headings
 #+begin_src emacs-lisp
