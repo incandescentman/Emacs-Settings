@@ -1,6 +1,10 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-19: Gate notch/tab-bar startup message on real state changes
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so =jay/update-tab-bar-for-display= only toggles =tab-bar-mode= and emits =🍙🚫 Notch hidden 🎩✨= when the tab-bar state actually changes.
+- Purpose: stop the repeated focus-in-hook noise during startup and ordinary display-focus churn while keeping the notch-defence behavior itself unchanged.
+
 * 2026-04-19: Remove duplicate elpa-supplement loads and centralize PATH setup
 - Removed the explicit [[file+emacs:/Users/jay/emacs/emacs-settings/elpa-supplement/buffer-stack.el][buffer-stack.el]] and [[file+emacs:/Users/jay/emacs/emacs-settings/elpa-supplement/frame-cmds.el][frame-cmds.el]] loads from [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]] because [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][spacemacs-new-config.el]] already bulk-loads every =.el= in [[file+emacs:/Users/jay/emacs/emacs-settings/elpa-supplement/][/Users/jay/emacs/emacs-settings/elpa-supplement/]].
 - Removed two leftover PATH setup blocks from [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so the thoughtful merge/dedup/filter logic in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]] is once again the single startup source of truth for =PATH= and =exec-path=.

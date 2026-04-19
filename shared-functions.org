@@ -8874,16 +8874,18 @@ Otherwise, keep it politely out of sight."
   (interactive)
   (let* ((fullscreen-state (frame-parameter nil 'fullscreen))
          (on-notch-display (jay/on-notch-display-p))
+         (tab-bar-active (bound-and-true-p tab-bar-mode))
          ;; We regard either 'fullboth (native fullscreen) or 'maximized
          ;; as warranting notch-defence duty.
          (should-show     (and on-notch-display
                                (memq fullscreen-state '(fullboth maximized)))))
     (if should-show
-        (progn
+        (unless tab-bar-active
           (tab-bar-mode 1)
           (message "🍙🚫 Notch hidden 🎩✨"))
       (progn
-        (tab-bar-mode -1)
+        (when tab-bar-active
+          (tab-bar-mode -1))
 ;; (message "🎩 Notch hiding disabled.")
 ))))
 
