@@ -6,6 +6,10 @@
 - Wired [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] into [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][spacemacs-new-config.el]] so it loads before [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]], keeping export filters and helpers in one subsystem.
 - Left profile-owned =org-astro= behavior in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-profiles.el][jay-org-roam-suite/jay-org-roam-profiles.el]] rather than broadening the new export module beyond its clean boundary.
 
+* 2026-04-19: Record stopping point for next session
+- We stopped after the [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] extraction and the rename of [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-editor-environment.el][jay-editor-environment.el]].
+- The main follow-up plan is now recorded in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/critical-next-steps.org][critical-next-steps.org]]: prefer existing-module consolidation first, keep the Org-roam sidecar question ahead of new work, and treat [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-editor-environment.el][jay-editor-environment.el]] as a transitional file to dissolve later.
+
 * 2026-04-19: Rename jay-editor-extras.el to jay-editor-environment.el
 - Renamed the old =jay-editor-extras.el= file to [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-editor-environment.el][jay-editor-environment.el]] because the file is general environment glue, not a vague "extras" bucket.
 - Updated the live requires in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][spacemacs-new-config.el]] and [[file+emacs:/Users/jay/emacs/emacs-settings/org-roam-config.el][org-roam-config.el]].

@@ -22,6 +22,18 @@ Status indicators:
 
 * Next Modularization Queue
 
+** [PLANNED] Next-session stopping point after the org-export and jay-editor-environment checkpoints
+- Resume from the current modularization state rather than opening a new front.
+- First priority if we continue modularizing: decide whether the remaining live Org-roam-adjacent commands now justify [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-extras.el][jay-org-roam-extras.el]], or whether they should wait another pass.
+- Second priority: revisit the remaining agenda/workflow residue in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] only if a clear existing-module home emerges in [[file+emacs:/Users/jay/emacs/emacs-settings/goals-agenda.org][goals-agenda.org]] or related goals modules.
+- Third priority: dissolve the transitional [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-editor-environment.el][jay-editor-environment.el]] file rather than letting it become a new junk drawer.
+- Planned dissolve map for [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-editor-environment.el][jay-editor-environment.el]]:
+  - move ispell-specific pieces into [[file+emacs:/Users/jay/emacs/emacs-settings/spellcheck.org][spellcheck.org]]
+  - move XeLaTeX/export-specific pieces into [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]]
+  - keep shell/PATH ownership centralized in startup-owned environment config rather than duplicating it
+  - decide whether captain hooks belong in a small dedicated home or alongside the writing/capitalization subsystem
+- Guiding rule: continue preferring existing boundaries before creating new files, and treat =jay-editor-environment.el= as temporary scaffolding, not a final module.
+
 ** [PARTIAL] Consolidate Org-roam-related residue into the existing suite
 *Done (2026-04-19):*
 - Renamed three misleading Org-roam headings in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so the content matches the label.
