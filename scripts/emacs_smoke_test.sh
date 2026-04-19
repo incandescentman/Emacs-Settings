@@ -51,8 +51,6 @@ echo "[4/5] Minimal runtime health checks..."
 for fix in org-roam-id-fix.el org-roam-db-fix.el; do
   if [[ -f "$ROOT/jay-org-roam-suite/$fix" ]]; then
     echo "  fix file $fix: suite dir"
-  elif [[ -f "$ROOT/$fix" ]]; then
-    echo "  fix file $fix: parent dir"
   else
     echo "  fix file $fix: MISSING"
     exit 1

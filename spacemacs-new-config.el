@@ -113,11 +113,7 @@
       (let* ((filename (car entry))
              (feature (cdr entry))
              (suite-path (expand-file-name filename suite-dir))
-             (parent-path (expand-file-name filename root))
-             (found-at (cond
-                        ((file-exists-p suite-path) suite-path)
-                        ((file-exists-p parent-path) parent-path)
-                        (t "missing")))
+             (found-at (if (file-exists-p suite-path) suite-path "missing"))
              (loaded (if (featurep feature) "yes" "no")))
         (setq lines
               (append lines
