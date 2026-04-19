@@ -22,10 +22,11 @@ Status indicators:
 
 * Next Modularization Queue
 
-** [PLANNED] Next-session stopping point after the org-export checkpoint
+** [PLANNED] Pause point after the Org-roam sidecar and docs normalization checkpoints
 - Resume from the current modularization state rather than opening a new front.
 - First priority if we continue modularizing: revisit the remaining agenda/workflow residue in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] only if a clear existing-module home emerges in [[file+emacs:/Users/jay/emacs/emacs-settings/goals-agenda.org][goals-agenda.org]] or related goals modules.
 - Second priority: keep dissolving temporary staging files quickly whenever a real owning module already exists for their contents.
+- Third priority: if the word-definition cluster grows enough to feel awkward in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]], consider a dedicated [[file+emacs:/Users/jay/emacs/emacs-settings/dictionary-lookup.org][dictionary-lookup.org]] rather than broadening the spellcheck module.
 - Guiding rule: continue preferring existing boundaries before creating new files.
 
 ** [COMPLETED] 2026-04-19: Consolidate Org-roam-related residue into the existing suite
