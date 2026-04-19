@@ -3508,12 +3508,9 @@ Source: [[https://github.com/hrs/sensible-defaults.el/blob/master/sensible-defau
    (setq beg (line-beginning-position) end (line-end-position)))
   (comment-or-uncomment-region beg end)))
 
-         'sensible-defaults/comment-or-uncomment-region-or-line)
-
 
 (setq vc-follow-symlinks t)
 
-"When saving a file that starts with `#!', make it executable."
  (add-hook 'after-save-hook
       'executable-make-buffer-file-executable-if-script-p)
 #+END_SRC

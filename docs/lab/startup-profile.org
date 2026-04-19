@@ -99,3 +99,115 @@
 | load chatgpt2org.el | 0.0012 |
 | load buffer-stack.el | 0.0010 |
 | load xah-replace-pairs.el | 0.0009 |
+* 2026-04-18 19:56:34
+- Emacs: 29.4
+- Org: 9.8.2
+- Total init time: 2.595s
+- Measured module loads:
+| Step | Seconds |
+|------+---------|
+| org-babel-load shared-functions.org | 0.5285 |
+| org-babel-load search-commands.org | 0.2620 |
+| require jay-org-roam-core | 0.1332 |
+| org-babel-load gnu-emacs-startup.org | 0.0436 |
+| load frame-cmds.el | 0.0305 |
+| require jay-editor-extras | 0.0238 |
+| load keys.el | 0.0213 |
+| org-babel-load goals-agenda.org | 0.0195 |
+| load skeletons.el | 0.0092 |
+| load poetry_JD.el | 0.0085 |
+| org-babel-load spacecraft-mode.org | 0.0076 |
+| load jay-osx.el | 0.0073 |
+| load prelude-core.el | 0.0063 |
+| load pasteboard-copy-and-paste-functions.el | 0.0032 |
+| load auto-capitalize.el | 0.0024 |
+| load jay-goals-system.el | 0.0013 |
+| org-babel-load fonts-and-themes.org | 0.0012 |
+| load prelude-key-chord.el | 0.0009 |
+| load buffer-stack.el | 0.0009 |
+| load xah-replace-pairs.el | 0.0008 |
+| load chatgpt2org.el | 0.0008 |
+* 2026-04-18 19:58:22
+- Emacs: 29.4
+- Org: 9.8.2
+- Total init time: 2.049s
+- Measured module loads:
+| Step | Seconds |
+|------+---------|
+| org-babel-load shared-functions.org | 5.1931 |
+| org-babel-load search-commands.org | 0.2427 |
+| require jay-org-roam-core | 0.0861 |
+| org-babel-load gnu-emacs-startup.org | 0.0421 |
+| load frame-cmds.el | 0.0276 |
+| require jay-editor-extras | 0.0259 |
+| load keys.el | 0.0203 |
+| org-babel-load goals-agenda.org | 0.0179 |
+| org-babel-load spacecraft-mode.org | 0.0078 |
+| load jay-osx.el | 0.0066 |
+| load skeletons.el | 0.0061 |
+| load poetry_JD.el | 0.0058 |
+| load prelude-core.el | 0.0035 |
+| load pasteboard-copy-and-paste-functions.el | 0.0035 |
+| load auto-capitalize.el | 0.0025 |
+| load jay-goals-system.el | 0.0015 |
+| org-babel-load fonts-and-themes.org | 0.0012 |
+| load prelude-key-chord.el | 0.0009 |
+| load buffer-stack.el | 0.0009 |
+| load xah-replace-pairs.el | 0.0009 |
+| load chatgpt2org.el | 0.0008 |
+* 2026-04-18 19:58:38
+- Emacs: 29.4
+- Org: 9.8.2
+- Total init time: 1.868s
+- Measured module loads:
+| Step | Seconds |
+|------+---------|
+| org-babel-load shared-functions.org | 0.5370 |
+| require jay-org-roam-core | 0.1481 |
+| org-babel-load search-commands.org | 0.1304 |
+| org-babel-load gnu-emacs-startup.org | 0.0423 |
+| load frame-cmds.el | 0.0311 |
+| load keys.el | 0.0216 |
+| require jay-editor-extras | 0.0213 |
+| org-babel-load goals-agenda.org | 0.0185 |
+| load poetry_JD.el | 0.0088 |
+| load skeletons.el | 0.0087 |
+| org-babel-load spacecraft-mode.org | 0.0080 |
+| load jay-osx.el | 0.0076 |
+| load prelude-core.el | 0.0061 |
+| load pasteboard-copy-and-paste-functions.el | 0.0035 |
+| load auto-capitalize.el | 0.0028 |
+| load jay-goals-system.el | 0.0014 |
+| org-babel-load fonts-and-themes.org | 0.0012 |
+| load buffer-stack.el | 0.0011 |
+| load xah-replace-pairs.el | 0.0009 |
+| load chatgpt2org.el | 0.0008 |
+| load prelude-key-chord.el | 0.0008 |
+* 2026-04-18 20:00:23
+- Emacs: 29.4
+- Org: 9.8.2
+- Total init time: 2.285s
+- Measured module loads:
+| Step | Seconds |
+|------+---------|
+| org-babel-load shared-functions.org | 0.5268 |
+| org-babel-load search-commands.org | 0.2793 |
+| require jay-org-roam-core | 0.1370 |
+| org-babel-load goals-agenda.org | 0.0706 |
+| org-babel-load gnu-emacs-startup.org | 0.0679 |
+| load frame-cmds.el | 0.0305 |
+| require jay-editor-extras | 0.0228 |
+| load keys.el | 0.0208 |
+| load poetry_JD.el | 0.0099 |
+| load skeletons.el | 0.0085 |
+| org-babel-load spacecraft-mode.org | 0.0079 |
+| load jay-osx.el | 0.0076 |
+| load prelude-core.el | 0.0061 |
+| load pasteboard-copy-and-paste-functions.el | 0.0032 |
+| load auto-capitalize.el | 0.0025 |
+| load jay-goals-system.el | 0.0013 |
+| org-babel-load fonts-and-themes.org | 0.0012 |
+| load buffer-stack.el | 0.0010 |
+| load xah-replace-pairs.el | 0.0009 |
+| load prelude-key-chord.el | 0.0008 |
+| load chatgpt2org.el | 0.0007 |

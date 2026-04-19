@@ -2,6 +2,37 @@
 #+DATE: 2025-09-24
 #+DESCRIPTION: Debugging post-mortems and prevention checklists.
 
+* An Unclosed Form In A Literate Src Block Can Silently Wrap Later Blocks
+  Date: 2026-04-18
+
+** Trigger
+The first measured [[file+emacs:/Users/jay/emacs/emacs-settings/docs/lab/startup-profile.org][startup-profile.org]] snapshot showed =org-babel-load shared-functions.org= taking =5.27s=, while a later warm snapshot of the same file showed =0.51s=. Nothing in the Org source looked obviously expensive enough to explain that spike, and no error ever surfaced at startup.
+
+** Mechanism
+A stub block in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] had been left as a bare =(dotimes (n 10)= with no body and no closing paren before =#+end_src=. Because =org-babel-tangle= just concatenates emacs-lisp src blocks, the unclosed form silently absorbed the *next ~185 lines* of unrelated top-level code from subsequent blocks in the tangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]].
+
+That run included real side-effecting forms:
+- =(font-lock-add-keywords 'org-mode ...)= — same org-mode regex registered 10×
+- =(org-clock-persistence-insinuate)= — clock-history file read 10×
+- =(use-package ox-twbs)= — evaluated 10×
+- =(add-hook 'org-export-before-parsing-functions ...)= — 10× (idempotent, but invoked)
+- ~20 other =setq=, =defun=, =defvar= forms — redefined 10× each
+
+The bug had *no visible failure mode*:
+- Parens still balanced: the dotimes close-paren eventually matched a downstream paren, so =check-parens= passed cleanly.
+- Byte-compilation passed.
+- Startup produced no error.
+- The only symptom was inflated cold-start timing, and that only showed up once Jay started writing a timing profile.
+
+Fixing the dotimes unmasked a second hidden bug: an orphan =)= on a line further down in the Org source. The over-wide dotimes had been absorbing that stray close into its own match for months. Only after closing the dotimes properly did =check-parens= finally point at the real orphan.
+
+** Actionable insight
+- When a literate config has a measurably expensive src block but no obvious hotspot, scan the tangled =.el= for top-level forms that are *suspiciously wrapped* in =dotimes=, =dolist=, =while=, =let=, or =progn=. If those wrappers look structurally misplaced, the Org source probably has an unclosed form upstream.
+- =check-parens= only proves parens balance globally; it does not prove each block closes at the Org-level boundary you intended. For literate configs, the stronger check is: does =forward-sexp= from the top of the tangled file reach the end without scan-errors? If so, paren structure is healthy; if not, the first failure location is usually right after the true culprit.
+- Fixing one structural bug in a literate Org file often *reveals* a second one that was hidden by the first — budget time for iterative =edit → tangle → check-parens= loops, not a single pass.
+- Counter-signal that a literate src block has malformed structure: top-level forms *inside* an apparent loop or let that logically should be at top level. If you see =(use-package ...)= or =(org-clock-persistence-insinuate)= indented under an unrelated wrapper in the tangled =.el=, that is the smoke.
+- Related gotcha documented separately: [[*In Literate Org, Naked Lisp After \`#+end_src\` Is Just Text][naked Lisp after =#+end_src=]] — the inverse failure, where intended live code is silently *excluded* from tangling.
+
 * In Literate Org, Naked Lisp After `#+end_src` Is Just Text
   Date: 2026-04-17
 

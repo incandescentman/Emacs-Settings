@@ -1,6 +1,14 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-18: Measure impact of 10x wrap fix and clean up unmasked orphan
+- Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]] after fixing the =(dotimes (n 10))= wrap and ran a fresh profile.
+- New timing in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/lab/startup-profile.org][startup-profile.org]]: =org-babel-load shared-functions.org= now =0.53s= (down from the inflated =5.27s= cold reading and ~=0.51s= warm reading). Total init time =2.285s=, down from =2.543s= warm / =2.595s= cold.
+- Fixing the dotimes unmasked a pre-existing orphan =)= on a stray =global-set-key= fragment further down the Org source; the over-wide dotimes had been absorbing that close-paren into its own balance. Removed the orphan so =check-parens= passes on the tangled file.
+- Also removed an unrelated floating docstring ="When saving a file that starts with \`#!', make it executable."= that had no containing form. Harmless (top-level strings evaluate to themselves) but dead code.
+- Captured the bug pattern as a standalone entry in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/codebase-wisdom.org][codebase-wisdom.org]] so the next literate-config audit knows to look for unclosed wrappers in src blocks.
+- Next target per [[file+emacs:/Users/jay/emacs/emacs-settings/docs/startup-optimization-plan.org][startup-optimization-plan.org]]: [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][search-commands.org]] at =0.28s= — still relatively expensive for its size, and a better candidate than the now-de-scaled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]].
+
 * 2026-04-18: Fix accidental 10x wrap in shared-functions
 - Fixed the broken =unbind meta-number= source block in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so the intended loop now closes immediately after unbinding =M-0= through =M-9=.
 - Root cause: a bare =(dotimes (n 10)= in the Org source was left unclosed, and tangling silently wrapped a long stretch of later top-level code inside that loop in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]].

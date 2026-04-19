@@ -12,21 +12,23 @@ Prefer deferring or restructuring important code over deleting it.
 
 * Current Evidence
 
-The first real timing snapshot is in:
+Timing snapshots are in:
 - [[file+emacs:/Users/jay/emacs/emacs-settings/docs/lab/startup-profile.org][/Users/jay/emacs/emacs-settings/docs/lab/startup-profile.org]]
 
 The main startup loader is:
 - [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][/Users/jay/emacs/emacs-settings/spacemacs-new-config.el]]
 
-Current measured hotspots from the first snapshot:
-- =org-babel-load shared-functions.org= is by far the largest item
-- =org-babel-load search-commands.org= is the second-largest item
-- =require jay-org-roam-core= is much smaller
-- =org-babel-load gnu-emacs-startup.org= is small in comparison
+Current measured hotspots (post-dotimes-fix):
+- =org-babel-load shared-functions.org= =0.53s= (was a misleading =5.27s= cold / =0.51s= warm before the fix)
+- =org-babel-load search-commands.org= =0.28s= — now the next-largest item and the best remaining candidate
+- =require jay-org-roam-core= =0.14s=
+- =org-babel-load gnu-emacs-startup.org= small
+- Total init time =2.285s= (down from =2.543s= warm / =2.595s= cold)
 
 Important interpretation:
-- [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][/Users/jay/emacs/emacs-settings/shared-functions.org]] is also most of the config in one file, so its large timing number may mostly reflect structural load cost rather than unnecessary functionality
-- [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][/Users/jay/emacs/emacs-settings/search-commands.org]] is a better candidate for avoidable startup work because it is smaller but still relatively expensive
+- The earlier =5.27s= bar for [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][/Users/jay/emacs/emacs-settings/shared-functions.org]] was inflated by an accidental =(dotimes (n 10))= wrap that caused ~30 top-level forms to run 10× at startup. That bug has been fixed; see [[file+emacs:/Users/jay/emacs/emacs-settings/docs/codebase-wisdom.org][codebase-wisdom.org]] for the mechanism.
+- After the fix, =shared-functions.org= behaves in line with its size as a literate-config load, not as a runaway outlier.
+- [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][/Users/jay/emacs/emacs-settings/search-commands.org]] is now the strongest remaining candidate: still ~=0.28s= for a much smaller file, which suggests avoidable eager work rather than structural load cost.
 
 * First Audit Snapshot
 
