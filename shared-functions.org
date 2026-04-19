@@ -418,7 +418,6 @@ Pretty cool actually. Leaving it in.
 
 Works!
 
-*** Flyspell skip source blocks
 *** Archiving / hooking
 
 * Writing Environment
