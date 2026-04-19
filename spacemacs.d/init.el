@@ -923,7 +923,9 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (setenv "DICTIONARY" "en_US-large")
 
   (require 'ispell)
-  (dolist (mapping '(("en_US" "en_US-large")))
+  (dolist (mapping '(("en_US" "en_US-large")
+                     ("american" "en_US-large")
+                     ("english" "en_US-large")))
     (let ((name (car mapping)))
       (setq ispell-dicts-name2locale-equivs-alist
             (cons mapping

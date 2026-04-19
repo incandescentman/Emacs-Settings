@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-19: Silence leftover Hunspell alias warnings
+- Added explicit Ispell locale-equivalent mappings in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]] for =american= and =english= to point at =en_US-large=, alongside the existing =en_US= mapping.
+- Purpose: silence the remaining startup =Missing equivalent for "american"/"english"= warning noise in =*Messages*= after the larger Hunspell process-churn fix.
+- This is cosmetic cleanup only; the real correctness fix was the earlier unification of =ispell-program-name= and the personal dictionary path.
+
 * 2026-04-19: Unify Hunspell startup config and stop Flyspell process churn
 - Removed the later =ispell-program-name "hunspell"= override from [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so the startup path keeps the earlier full-path Hunspell binary from [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]].
 - Standardized the canonical personal dictionary path in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]] to [[file+emacs:/Users/jay/emacs/Spelling/personal.dic][/Users/jay/emacs/Spelling/personal.dic]], which is the real path behind [[file+emacs:/Users/jay/Library/Spelling][/Users/jay/Library/Spelling]].
