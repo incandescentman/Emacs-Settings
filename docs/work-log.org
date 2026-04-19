@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-19: Move prose editing helpers from gnu startup into Spacecraft
+- Moved the prose-editing helper cluster out of [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org][gnu-emacs-startup.org]] and into [[file+emacs:/Users/jay/emacs/emacs-settings/spacecraft-mode.org][spacecraft-mode.org]].
+- The moved functions are the sentence and kill-word helpers that conceptually belong with Spacecraft's existing capitalization and smart-punctuation logic, including =my/beginning-of-sentence-p=, =my/kill-sentence-dwim=, =my/kill-line-dwim=, =kill-word-correctly=, =kill-word-correctly-and-capitalize=, and =smart-forward-sentence=.
+- Left the Org-structure insertion helpers in [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org][gnu-emacs-startup.org]] for now; this pass was just about moving prose-editing ownership to the writing module.
+- Goal: make [[file+emacs:/Users/jay/emacs/emacs-settings/spacecraft-mode.org][spacecraft-mode.org]] the obvious home for prose-editing behavior and reduce the amount of writing-specific logic hiding in the startup file.
+
 * 2026-04-18: Measure impact of 10x wrap fix and clean up unmasked orphan
 - Trimmed the startup path in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-core.el]] by replacing eager =(require 'jay-org-roam-profiles)= with autoloads for the profile commands and init helper.
 - Also stopped setting the dailies capture template from profile data during core load; profile initialization still applies the real templates during the existing idle org-roam setup path.

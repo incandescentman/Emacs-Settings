@@ -233,6 +233,149 @@ Skip capitalization if the line is an Org bullet."
 
 #+END_SRC
 
+** sentence editing helpers
+#+BEGIN_SRC emacs-lisp
+(defun kill-sentence-to-period ()
+  "Leave the period in there."
+  (interactive)
+  (kill-sentence)
+  (push-mark)
+  (insert ".")
+  (backward-char))
+
+(defun my/sentence-tail-info ()
+  "Return info about the tail of the current sentence from point.
+The return value is a plist with:
+- =:end=: the exclusive end position for killing the sentence tail
+- =:terminal=: the sentence-ending punctuation character to preserve, or nil
+
+This keeps paragraph breaks intact by excluding trailing whitespace
+after the sentence-ending text. If no sentence-ending punctuation is
+found, the tail ends at end of line."
+  (save-excursion
+    (let ((limit (save-excursion (end-of-line) (point))))
+      (if (re-search-forward "[.?!][]\"'”’)}]*" limit t)
+          (list
+           :end (match-end 0)
+           :terminal (char-after (match-beginning 0)))
+        (list
+         :end limit
+         :terminal nil)))))
+
+(defun my/delete-horizontal-space-around-point ()
+  "Delete spaces and tabs around point, but preserve newlines."
+  (let (beg end)
+    (save-excursion
+      (skip-chars-backward " \t")
+      (setq beg (point)))
+    (save-excursion
+      (skip-chars-forward " \t")
+      (setq end (point)))
+    (delete-region beg end)
+    (goto-char beg)))
+
+(defun my/beginning-of-sentence-p ()
+  "Return t if point is at the beginning of a sentence."
+  (let* ((start (point))
+         (beg (save-excursion
+                (ignore-errors
+                  (forward-sentence)
+                  (forward-sentence -1)
+                  (point)))))
+    (and beg (eq start beg))))
+
+(defun my/kill-sentence-dwim ()
+  "Kill the current sentence up to and possibly including the punctuation.
+When point is at the beginning of a sentence, kill the entire
+sentence. Otherwise kill forward but preserve any punctuation at the sentence end."
+  (interactive)
+  (smart-expand)
+  (if (my/beginning-of-sentence-p)
+      (progn
+        (kill-sentence)
+        (just-one-space)
+        (when (looking-back "^[[:space:]]+" (line-beginning-position))
+          (delete-horizontal-space)))
+    (let* ((info (my/sentence-tail-info))
+           (end (plist-get info :end))
+           (terminal (plist-get info :terminal)))
+      (kill-region (point) end)
+      (my/delete-horizontal-space-around-point)
+      (when (looking-back "[,;:]" (max (point-min) (1- (point))))
+        (delete-backward-char 1))
+      (when terminal
+        (insert-char terminal)
+        (unless (or (eobp)
+                    (looking-at "[ \t\n]"))
+          (insert " ")))))
+  ;; don't leave two periods in a row
+  (when (or
+         (looking-at "\\.\\. ")
+         (and
+          (looking-at "\\.")
+          (looking-back "\\.")))
+    (delete-forward-char 1))
+  (when (and
+         (looking-at ".")
+         (looking-back ","))
+    (delete-backward-char 1)
+    (forward-char 1)))
+
+(defun my/kill-line-dwim ()
+  "Kill the current line."
+  (interactive)
+  ;; don't leave stray stars behind when killing a line
+  (when (or
+         (looking-back "\\[")
+         (looking-back "\* ")
+         (looking-back "\* TODO ")
+         (looking-back "^\*+")
+         (looking-back "- ")
+         (looking-back "# "))
+    (beginning-of-line))
+  (org-kill-line))
+
+(defun kill-sentence-maybe-else-kill-line ()
+  (interactive)
+  (if (looking-at "$")
+      (my/kill-line-dwim)
+    (my/kill-sentence-dwim)))
+
+(defun kill-word-correctly ()
+  "Kill word."
+  (interactive)
+  (smart-expand)
+  (if (or (re-search-forward "\\=[ \t]*\n" nil t)
+          (re-search-forward "\\=\\W*?[[:punct:]]+" nil t))
+      (kill-region (match-beginning 0) (match-end 0))
+    (kill-word 1))
+  (my/fix-space)
+  ;; don't leave two commas in a row
+  (when (or
+         (looking-at "\\,\\, ")
+         (and
+          (looking-at "\\,")
+          (looking-back "\\,")))
+    (delete-forward-char 1)))
+
+(defun kill-word-correctly-and-capitalize ()
+  "Kill the word correctly. If at the beginning of a sentence, also capitalize."
+  (interactive)
+  (atomic-change-group
+    (when (looking-at " ")
+      (forward-char 1))
+    (let ((fix-capitalization (my/beginning-of-sentence-p)))
+      (call-interactively 'kill-word-correctly)
+      (when fix-capitalization
+        (save-excursion
+          (capitalize-unless-org-heading))))))
+
+(defun smart-forward-sentence ()
+  (interactive)
+  (org-forward-sentence)
+  (my/fix-space))
+#+END_SRC
+
 
 ** downcase
 #+begin_src emacs-lisp

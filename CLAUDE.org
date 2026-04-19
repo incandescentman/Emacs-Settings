@@ -191,6 +191,7 @@ The following documentation files provide detailed information about various asp
 ** Guidance for AI/LLM Editing Sessions
 - *Don't ask, just do*: When Jay provides a file path, READ IT FIRST before asking questions. If he says "here's an error" or "look at this" with a path, just read the file—don't ask what it is or request more context.
 - When touching any literate Org file (e.g., =pasteboard-copy-and-paste-functions.org=), delete the stale tangled =.el=, retangle immediately, and run =emacs --batch <file.el> --eval '(check-parens)'= before restarting.
+- Special case: for [[file+emacs:/Users/jay/emacs/emacs-settings/spacecraft-mode.org][spacecraft-mode.org]] and [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org][gnu-emacs-startup.org]], batch tangling should pass the explicit output file path (to [[file+emacs:/Users/jay/emacs/emacs-settings/spacecraft-mode.el][spacecraft-mode.el]] or [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.el][gnu-emacs-startup.el]]). A bare =org-babel-tangle-file= can misleadingly report =0 code blocks= for those files.
 - Treat regex tweaks with extra caution: smoke-test them in a scratch buffer (=re-search-forward=) to avoid =invalid-regexp= surprises.
 - Keep the edit loop tight—edit → tangle → =check-parens= (or byte-compile)—to catch structural errors before they reach Spacemacs startup.
 - *Test runtime behavior instead of theorizing*: When uncertain whether a keybinding, function, package, or config setting actually works at runtime, do not speculate — ask Jay to test it, or run a direct safe test yourself if appropriate.
@@ -201,6 +202,7 @@ The following documentation files provide detailed information about various asp
 - *Ask only for relevant post-checkpoint tests*: After a checkpoint, request tests only for startup and for the exact commands or behaviors that actually changed or were directly plausibly affected by the diff.
 - *Do not broaden the test scope without cause*: If a checkpoint only removes stale config, do not ask Jay to retest unrelated commands just because they live in the same conceptual area.
 - *If you ask for a non-obvious test, explain why*: Name the exact changed file or behavior that makes the requested test relevant.
+- *Respect file ownership boundaries*: [[file+emacs:/Users/jay/emacs/emacs-settings/spacecraft-mode.org][spacecraft-mode.org]] owns prose-editing behavior (sentence movement, sentence killing, kill-word helpers, capitalization/smart punctuation). [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org][gnu-emacs-startup.org]] should stay focused on startup/system/editor bootstrapping rather than accumulating writing-mode logic.
 
 ** Checkpoint Protocol
 - At each checkpoint, update [[file+emacs:docs/work-log.org][📄 work-log.org]] before handing off.

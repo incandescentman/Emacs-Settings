@@ -2,6 +2,31 @@
 #+DATE: 2025-09-24
 #+DESCRIPTION: Debugging post-mortems and prevention checklists.
 
+* Some Literate Org Files Only Tangle Correctly When You Pass The Explicit Output Path
+  Date: 2026-04-19
+
+** Trigger
+During the move of prose-editing helpers from [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org][gnu-emacs-startup.org]] into [[file+emacs:/Users/jay/emacs/emacs-settings/spacecraft-mode.org][spacecraft-mode.org]], a plain batch call to =org-babel-tangle-file= reported =Tangled 0 code blocks= for both files, even though each file visibly contained many =#+BEGIN_SRC emacs-lisp= blocks.
+
+** Mechanism
+These files are normally loaded through a path that gives Org Babel an explicit destination file:
+- [[file+emacs:/Users/jay/emacs/emacs-settings/spacecraft-mode.org][spacecraft-mode.org]] -> [[file+emacs:/Users/jay/emacs/emacs-settings/spacecraft-mode.el][spacecraft-mode.el]]
+- [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org][gnu-emacs-startup.org]] -> [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.el][gnu-emacs-startup.el]]
+
+In a bare batch environment, the src blocks in these files carry a default =:tangle no= header, so calling =org-babel-tangle-file= without the output-file argument produces zero blocks. Tangling works when the destination =.el= path is passed explicitly, because that matches the way startup actually consumes the files.
+
+** The Fix
+For these files, use:
+- =(org-babel-tangle-file "/Users/jay/emacs/emacs-settings/spacecraft-mode.org" "/Users/jay/emacs/emacs-settings/spacecraft-mode.el" "emacs-lisp")=
+- =(org-babel-tangle-file "/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org" "/Users/jay/emacs/emacs-settings/gnu-emacs-startup.el" "emacs-lisp")=
+
+Then run =emacs --batch ... --eval '(check-parens)'= on the regenerated =.el= files.
+
+** Actionable insight
+- If a literate Org file visibly contains src blocks but batch tangling says =0 code blocks=, inspect the block header args before assuming Org Babel is broken.
+- For this repo, when working on [[file+emacs:/Users/jay/emacs/emacs-settings/spacecraft-mode.org][spacecraft-mode.org]] or [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org][gnu-emacs-startup.org]], mirror the startup path and pass the explicit output =.el= path during tangling.
+- A quick sanity check is =org-babel-map-src-blocks=: if it sees the blocks but tangling outputs zero files, the issue is usually block header args, not missing Org parsing.
+
 * An Unclosed Form In A Literate Src Block Can Silently Wrap Later Blocks
   Date: 2026-04-18
 
