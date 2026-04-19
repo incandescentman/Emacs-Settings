@@ -5,7 +5,7 @@
 ;; The active Org-roam implementation now lives in:
 ;;   - jay-org-roam-suite/jay-org-roam-core.el
 ;;   - jay-org-roam-suite/jay-org-roam-profiles.el
-;;   - jay-org-roam-suite/jay-editor-extras.el
+;;   - jay-org-roam-suite/jay-editor-environment.el
 ;;
 ;; The legacy full implementation has been archived at:
 ;;   archive/org-roam-config.el_legacy_2026-02-24
@@ -31,7 +31,7 @@
 (condition-case err
     (progn
       (require 'jay-org-roam-core)
-      (require 'jay-editor-extras nil t))
+      (require 'jay-editor-environment nil t))
   (error
    (message "org-roam-config.el shim could not load suite fully: %s"
             (error-message-string err))))

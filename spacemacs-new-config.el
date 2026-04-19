@@ -448,7 +448,7 @@ With prefix arg FIX-HINTS, append actionable remediation commands."
 ;; Load modular org-roam suite
 (add-to-list 'load-path "/Users/jay/emacs/emacs-settings/jay-org-roam-suite")
 (jay/require-with-timing 'jay-org-roam-core)       ;; lazy Org-roam core (idle timers, keybindings, profiles, templates)
-(jay/require-with-timing 'jay-editor-extras)       ;; environment: PATH, ispell, XeLaTeX, captain-predicate
+(jay/require-with-timing 'jay-editor-environment)  ;; environment: PATH, ispell, XeLaTeX, captain-predicate
 (jay/load-with-timing "/Users/jay/emacs/emacs-settings/jay-goals-system.el")  ;; rep counter, morning ritual, anti-stall
 (run-with-idle-timer 3 nil #'jay-goals-setup)  ;; initialize goals system after startup
 

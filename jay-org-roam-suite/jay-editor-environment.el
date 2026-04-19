@@ -1,4 +1,4 @@
-;;; jay-editor-extras.el --- Editor environment tweaks and utilities -*- lexical-binding: t; -*-
+;;; jay-editor-environment.el --- Editor environment tweaks and utilities -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 ;; This module collects non–org-roam-specific configuration that supports your
@@ -60,5 +60,5 @@
 (add-hook 'text-mode-hook (lambda () (setq captain-predicate (lambda () t))))
 (add-hook 'org-mode-hook  (lambda () (setq captain-predicate (lambda () t))))
 
-(provide 'jay-editor-extras)
-;;; jay-editor-extras.el ends here
+(provide 'jay-editor-environment)
+;;; jay-editor-environment.el ends here
