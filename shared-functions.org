@@ -1406,23 +1406,8 @@ vc-make-backup-files t ; Make backups of files, even when they're in version con
 * ~eshell~
 #+BEGIN_SRC emacs-lisp
 
-;; (setenv "PATH" (shell-command-to-string "source ~/.profile; echo -n $PATH"))
-
-(setenv "PATH"
-        (mapconcat
-         #'identity
-         '("/opt/homebrew/bin" "/opt/homebrew/sbin"
-;; "/Users/jay/work/bin"
-;; "/Users/jay/Dropbox/GitHub/terminal_velocity/bin"
-;; "/Users/jay/.pyenv/shims" "/Users/jay/.pyenv/bin"
-           "/usr/local/bin"                ; Homebrew Intel fallback
-           "/usr/bin" "/bin" "/usr/sbin" "/sbin"
-           "/Library/TeX/texbin"
-           "/Applications/iTerm.app/Contents/Resources/utilities"
-           "/Users/jay/Dropbox/apps/bash-scripts"
-;; "/Users/jay/.rvm/bin"
-)
-         ":"))
+;; PATH setup is centralized in /Users/jay/emacs/emacs-settings/spacemacs.d/init.el
+;; so startup only computes it once.
 
 ;; (use-package eshell-autojump)
 #+END_SRC
@@ -7670,24 +7655,8 @@ I duplicated the below to /Users/jay/emacs/emacs-settings/spacemacs.d/init.el
 and now it works. Don't understand why it was getting overwritten before, but whatever, it's working now.
 
 #+begin_src emacs-lisp
-;; Define a list of additional paths
-(defvar my-additional-paths
-  '("/usr/local/bin"
-    "/opt/homebrew/bin"
-    "/Applications/Firefox.app/Contents/MacOS"))
-
-;; Update PATH environment variable
-(setenv "PATH"
-        (concat (getenv "PATH") ":"
-                (mapconcat 'identity my-additional-paths ":")))
-
-;; Update exec-path
-(dolist (path my-additional-paths)
-  (add-to-list 'exec-path path))
-
-
-;; Rest of your configuration
-(message "Final PATH: %s" (getenv "PATH"))
+;; PATH and exec-path setup now live in /Users/jay/emacs/emacs-settings/spacemacs.d/init.el
+;; so shared-functions does not append and re-log them later in startup.
 #+end_src
 
 * timestamp export format
