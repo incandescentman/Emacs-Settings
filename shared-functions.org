@@ -8102,37 +8102,6 @@ It returns a list, so you can later jump to the first culprit:
 
 #+end_src
 
-* Refresh Org caches after Dropbox sync
-#+begin_src emacs-lisp
-(require 'seq)
-(require 'subr-x)
-
-(defvar jay/org-cache-reset-roots
-  (mapcar #'file-truename
-          '("~/Dropbox/roam/"
-            "~/Dropbox/github/roam-life/"))
-  "Roots whose Org buffers should force-refresh the element cache on focus.")
-
-(defun jay/org--buffer-needs-cache-reset-p ()
-  "Return non-nil when the current buffer is an Org file under a tracked root."
-  (when (and (eq major-mode 'org-mode)
-             (buffer-file-name))
-    (let ((truename (file-truename (buffer-file-name))))
-      (seq-some (lambda (root)
-                  (string-prefix-p root truename))
-                jay/org-cache-reset-roots))))
-
-(defun jay/org-reset-cache-on-focus ()
-  "Force-refresh Org element caches for Dropbox-backed roam buffers."
-  (when (fboundp 'org-element-cache-reset)
-    (dolist (buf (buffer-list))
-      (with-current-buffer buf
-        (when (jay/org--buffer-needs-cache-reset-p)
-          (org-element-cache-reset 'force))))))
-
-(add-hook 'focus-in-hook #'jay/org-reset-cache-on-focus)
-#+end_src
-
 * Fix indent error
 #+begin_src emacs-lisp
 ;; ────────────────────────────────────────────────────────────
@@ -8937,35 +8906,6 @@ After evaluating your init-file you can use links analog to the example:
 #+end_src
 
 
-
-* org-roam multiple databases
-
-#+begin_src emacs-lisp
-;; --- Org-roam contexts --- --- -- --- -- --- -- --- -- --- -- --- -- --- --
-
-(defun jay/org-roam--use (dir)
-  "Switch org-roam to DIR and resync DB.
-Note: DIR should be an absolute path to avoid symlink resolution issues."
-  ;; Use directory as-is if absolute, otherwise expand relative paths
-  (setq org-roam-directory (if (file-name-absolute-p dir)
-                               (file-name-as-directory dir)
-                             (file-name-as-directory (expand-file-name dir))))
-  (setq org-roam-db-location (expand-file-name "org-roam.db" org-roam-directory))
-  ;; Optional per-context dailies folder:
-  ;; (setq org-roam-dailies-directory "daily/")
-  (org-roam-db-sync)
-  (message "org-roam → %s" org-roam-directory))
-
-(defun jay/org-roam-use-main ()
-  "Main notes."
-  (interactive)
-  (jay/org-roam--use "/Users/jay/Dropbox/roam/"))
-
-(defun jay/org-roam-use-life ()
-  "Life archive."
-  (interactive)
-  (jay/org-roam--use "/Users/jay/Dropbox/github/roam-life/")) 
-#+end_src
 
 * ox-json
 #+begin_src emacs-lisp

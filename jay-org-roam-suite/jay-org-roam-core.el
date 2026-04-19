@@ -9,6 +9,9 @@
 
 ;;; Code:
 
+(require 'seq)
+(require 'subr-x)
+
 ;; Optional debug switch for org-roam startup diagnostics.
 ;; Keep this nil for normal use to avoid noisy startup logs.
 (defvar jay/org-roam-debug nil
@@ -211,6 +214,31 @@ Only effective when `jay/org-roam--skip-next-sync' is non-nil and FORCE is nil."
 
 (with-eval-after-load 'org-roam-db
   (advice-add 'org-roam-db-sync :around #'jay/org-roam--skip-initial-sync))
+
+(defvar jay/org-cache-reset-roots
+  (mapcar #'file-truename
+          '("~/Dropbox/roam/"
+            "~/Dropbox/github/roam-life/"))
+  "Roots whose Org buffers should force-refresh the element cache on focus.")
+
+(defun jay/org--buffer-needs-cache-reset-p ()
+  "Return non-nil when the current buffer is an Org file under a tracked root."
+  (when (and (eq major-mode 'org-mode)
+             (buffer-file-name))
+    (let ((truename (file-truename (buffer-file-name))))
+      (seq-some (lambda (root)
+                  (string-prefix-p root truename))
+                jay/org-cache-reset-roots))))
+
+(defun jay/org-reset-cache-on-focus ()
+  "Force-refresh Org element caches for Dropbox-backed roam buffers."
+  (when (fboundp 'org-element-cache-reset)
+    (dolist (buf (buffer-list))
+      (with-current-buffer buf
+        (when (jay/org--buffer-needs-cache-reset-p)
+          (org-element-cache-reset 'force))))))
+
+(add-hook 'focus-in-hook #'jay/org-reset-cache-on-focus)
 
 (defun jay/patch-emacsql-close (connection &rest _)
   "Prevent `emacsql-close' if CONNECTION handle is nil."

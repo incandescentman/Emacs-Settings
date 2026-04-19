@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-19: Move Dropbox cache refresh into org-roam core and drop legacy multi-db block
+- Moved the =Refresh Org caches after Dropbox sync= helpers out of [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] and into [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-suite/jay-org-roam-core.el]], since that focus-in-hook cache refresh is real Dropbox-plus-Org-roam reliability plumbing.
+- Added explicit =seq= and =subr-x= requires to [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-core.el]] because the moved helper uses them directly.
+- Deleted the legacy =* org-roam multiple databases= block from [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] after diffing it against the real profile system in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-profiles.el][jay-org-roam-profiles.el]].
+- Rationale: the old block only did manual directory/database switching for two contexts and is superseded by the suite's full profile system (profiles, persistence, templates, dailies, and safe absolute-path handling).
+
 * 2026-04-19: Clean stale Org-roam residue without moving live tools
 - Updated =load-roam-config= in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so it now opens the real active Org-roam core file at [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-suite/jay-org-roam-core.el]] instead of the deprecated [[file+emacs:/Users/jay/emacs/emacs-settings/org-roam-config.el][org-roam-config.el]] shim.
 - Deleted the empty =* org-roam= section and two dead =#+BEGIN_EXAMPLE= leftovers: the old =* org-refile-region-to-org-heading-or-roam-node= example block and the old =* org-roam fail gracefully= example block.
