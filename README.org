@@ -20,6 +20,7 @@ This is a sophisticated Emacs configuration that uses Spacemacs as its foundatio
 - [[file:shared-functions.org][shared-functions.org]] - Core utilities and functions
 - [[file:pasteboard-copy-and-paste-functions.org][pasteboard-copy-and-paste-functions.org]] - macOS clipboard integration
 - [[file:spacecraft-mode.org][spacecraft-mode.org]] - Custom writing mode
+- [[file:org-authoring.org][org-authoring.org]] - Org-specific heading/list/structure authoring helpers
 - [[file:gnu-emacs-startup.org][gnu-emacs-startup.org]] - Alternative startup configuration
 - [[file:fonts-and-themes.org][fonts-and-themes.org]] - Appearance configuration
 - Auto-tangling enabled via =#+auto_tangle: t= header
@@ -55,9 +56,10 @@ This is a sophisticated Emacs configuration that uses Spacemacs as its foundatio
 3. =spacemacs-new-config.el=
 4. =jay-osx.el= (provides the early =key-minor-mode-map=)
 5. =gnu-emacs-startup.el=
-6. =shared-functions.el=
-7. Various feature modules (deferred or immediate)
-8. Local configuration (=local-config.el=)
+6. =org-authoring.el=
+7. =shared-functions.el=
+8. Various feature modules (deferred or immediate)
+9. Local configuration (=local-config.el=)
 
 * Recent Major Updates (Oct-Nov 2025)
 

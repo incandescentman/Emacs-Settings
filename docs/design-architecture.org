@@ -36,6 +36,7 @@ These are the heart of the customization. Each =.org= file contains documentatio
 |-------------------------------------------+-----------------------+-----------------------------------|
 | =shared-functions.org=                    | =shared-functions.el= | Core utilities (9,983 lines)      |
 | =gnu-emacs-startup.org=                   | =gnu-emacs-startup.el= | Alternative startup config        |
+| =org-authoring.org=                       | =org-authoring.el=    | Org-specific authoring helpers    |
 | =fonts-and-themes.org=                    | =fonts-and-themes.el= | Appearance functions              |
 | =spacecraft-mode.org=                     | =spacecraft-mode.el=  | Distraction-free writing mode     |
 
@@ -80,13 +81,15 @@ Understanding the loading sequence helps debug issues:
 5. Loads spacemacs-new-config.el
 6. Loads jay-osx.el (provides the early =key-minor-mode-map=)
 7. Loads gnu-emacs-startup.el
-8. Loads shared-functions.el (tangled from shared-functions.org)
-9. Loads other modules (deferred or immediate based on config)
-10. Loads local-config.el (if exists, gitignored for machine-specific settings)
+8. Loads org-authoring.el
+9. Loads shared-functions.el (tangled from shared-functions.org)
+10. Loads other modules (deferred or immediate based on config)
+11. Loads local-config.el (if exists, gitignored for machine-specific settings)
 #+END_SRC
 
 *Why this order matters*:
 - =jay-osx.el= must load before anything that uses =key-minor-mode-map=
+- =org-authoring.el= must load before modules that call Org-specific authoring helpers, such as =spacecraft-mode.org=
 - =shared-functions.el= provides utilities used by other modules
 - Some modules defer loading until needed (performance optimization)
 

@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-19: Create org-authoring.org for Org-only authoring behavior
+- Created [[file+emacs:/Users/jay/emacs/emacs-settings/org-authoring.org][org-authoring.org]] as a narrow home for Org-specific authoring helpers.
+- Moved the full Org chunks intact out of [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org][gnu-emacs-startup.org]], including =reflash-indentation=, =org-checkbox-p=, =org-plain-text-list-p=, the =smart-org-meta-return-dwim= cluster, and the related heading/subheading insertion helpers.
+- Wired [[file+emacs:/Users/jay/emacs/emacs-settings/org-authoring.org][org-authoring.org]] into [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][spacemacs-new-config.el]] so Org authoring helpers load before [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] and [[file+emacs:/Users/jay/emacs/emacs-settings/spacecraft-mode.org][spacecraft-mode.org]], both of which call into that Org-specific helper layer.
+- Goal: keep [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org][gnu-emacs-startup.org]] focused on startup/system/editor bootstrapping and give Org-only authoring behavior a crisp, non-dumping-ground home.
+
 * 2026-04-19: Move prose editing helpers from gnu startup into Spacecraft
 - Moved the prose-editing helper cluster out of [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org][gnu-emacs-startup.org]] and into [[file+emacs:/Users/jay/emacs/emacs-settings/spacecraft-mode.org][spacecraft-mode.org]].
 - The moved functions are the sentence and kill-word helpers that conceptually belong with Spacecraft's existing capitalization and smart-punctuation logic, including =my/beginning-of-sentence-p=, =my/kill-sentence-dwim=, =my/kill-line-dwim=, =kill-word-correctly=, =kill-word-correctly-and-capitalize=, and =smart-forward-sentence=.

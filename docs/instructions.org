@@ -53,6 +53,9 @@ Key features:
 Key files you'll interact with:
 - [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]] - Main Spacemacs configuration
 - [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] - Most custom functions (9,983 lines, auto-tangles to =.el=)
+- [[file+emacs:/Users/jay/emacs/emacs-settings/org-authoring.org][org-authoring.org]] - Org-specific authoring helpers (headings, lists, structure editing)
+- [[file+emacs:/Users/jay/emacs/emacs-settings/spacecraft-mode.org][spacecraft-mode.org]] - Prose-editing behavior (sentence movement, capitalization, smart punctuation)
+- [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org][gnu-emacs-startup.org]] - Startup/system/editor bootstrap
 - [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][pasteboard-copy-and-paste-functions.el]] - Clipboard magic (pure elisp, edit directly)
 - [[file+emacs:/Users/jay/emacs/emacs-settings/fonts-and-themes.org][fonts-and-themes.org]] - Visual appearance
 - [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/][spacemacs.d/]] - Spacemacs config directory (symlinked from =~/.spacemacs.d=)

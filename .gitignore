@@ -38,4 +38,5 @@ spacecraft-mode.el
 shared-functions.el
 gnu-emacs-startup.el
 fonts-and-themes.el
+org-authoring.el
 org-srs/goals-over-urges-srs.org
