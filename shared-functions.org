@@ -2766,7 +2766,7 @@ object satisfying `yas--field-p' to restrict the expansion to."
 
 (defun load-roam-config ()
  (interactive)
-(find-file "/Users/jay/emacs/emacs-settings/org-roam-config.el"))
+(find-file "/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el"))
 
 (defun load-search-config ()
  (interactive)
@@ -4997,15 +4997,6 @@ To use this function, highlight the region you want to add numbering to and then
 :defer t)
 #+END_EXAMPLE
 
-* org-roam
-#+begin_src emacs-lisp
-;; org-roam-config.el is already loaded in spacemacs-new-config.el
-;; (load "/Users/jay/emacs/emacs-settings/org-roam-config.el")
-
- #+end_SRC
-
-
-
 * org-roam-ui
 Pretty knowledge graphs are to knowledge management what speaker lights are to music.
 
@@ -5512,101 +5503,6 @@ With prefix ARG, insert using 'safari' custom link type."
     (insert org-link)))
 
 #+end_src
-
-* org-refile-region-to-org-heading-or-roam-node
-wonder if this could help...
-https://www.reddit.com/r/emacs/comments/l99xc8/consult_got_support_for_multiple_candidate_sources/
-
-#+begin_EXAMPLE emacs-lisp
-(defun org-refile-region-to-org-heading-or-roam-node (beg end &optional copy)
- "Refile the region between BEG and END to an Org mode heading or Org-roam node.
-If COPY is non-nil, copy the region instead of cutting it."
- (interactive "r\nP")
- (let* ((target (org-refile-get-location))
-     (file (nth 1 target))
-     (pos (nth 3 target))
-     (text (buffer-substring-no-properties beg end)))
-  (if pos
-    (progn
-     (unless copy
-      (kill-region beg end))
-     (deactivate-mark)
-     (with-current-buffer (find-file-noselect file)
-      (save-excursion
-       (goto-char pos)
-       (if (eql refile-region-position 'bottom)
-         (org-end-of-subtree)
-        (org-end-of-meta-data))
-       (insert (format refile-region-format text)))))
-   (progn
-    (message "Target: %s" target)
-    (user-error "Invalid target location")))))
-
-(defun org-refile-get-location (&optional prompt default-buffer new-nodes)
- "Prompt the user for a refile location, including Org-roam nodes.
-PROMPT should not be suffixed with a colon and a space, because
-this function appends the default value from
-`org-refile-history' automatically, if that is not empty."
- (let ((org-refile-targets org-refile-targets)
-    (org-refile-use-outline-path org-refile-use-outline-path))
-  (setq org-refile-target-table (org-refile-get-targets default-buffer)))
- (unless org-refile-target-table
-  (user-error "No refile targets"))
-
- (let* ((cbuf (current-buffer))
-     (cfn (buffer-file-name (buffer-base-buffer cbuf)))
-     (cfunc (if (and org-refile-use-outline-path
-             org-outline-path-complete-in-steps)
-          #'org-olpath-completing-read
-         #'completing-read))
-     (extra (if org-refile-use-outline-path "/" ""))
-     (cbnex (concat (buffer-name) extra))
-     (filename (and cfn (expand-file-name cfn)))
-     (org-cands (mapcar
-           (lambda (x)
-            (if (and (not (member org-refile-use-outline-path
-                       '(file full-file-path title)))
-                (not (equal filename (nth 1 x))))
-              (cons (concat (car x) extra " ("
-                     (file-name-nondirectory (nth 1 x)) ")")
-                 (cdr x))
-             (cons (concat (car x) extra) (cdr x))))
-           org-refile-target-table))
-     (roam-cands (mapcar (lambda (node)
-                (cons (org-roam-node-title node)
-                   (list (org-roam-node-file node)
-                      (org-roam-node-point node))))
-               (org-roam-node-list)))
-     (tbl (append org-cands roam-cands))
-     (completion-ignore-case t)
-     cdef
-     (prompt (let ((default (or (car org-refile-history)
-                  (and (assoc cbnex tbl) (setq cdef cbnex)
-                     cbnex))))
-          (org-format-prompt prompt default)))
-     answ)
-  (setq answ (funcall cfunc prompt tbl nil (not new-nodes)
-            nil 'org-refile-history
-            (or cdef (car org-refile-history))))
-  (if (assoc answ tbl)
-    (let ((location-data (cdr (assoc answ tbl))))
-     (if (org-roam-node-p (car location-data))
-       (list answ (org-roam-node-file (car location-data)) (org-roam-node-point (car location-data)))
-      location-data))
-   (if (string-match "\\`\\(.*\\)/\\([^/]+\\)\\'" answ)
-     (progn
-      (setq parent (match-string 1 answ)
-         child (match-string 2 answ))
-      (setq parent-target (org-refile--get-location parent tbl))
-      (when (and parent-target
-            (or (eq new-nodes t)
-              (and (eq new-nodes 'confirm)
-                (y-or-n-p (format "Create new node \"%s\"? "
-                         child)))))
-       (org-refile-new-child parent-target child)))
-    (user-error "Invalid target location")))))
-
-#+END_EXAMPLE
 
 * aliases
 #+begin_src emacs-lisp
@@ -7993,18 +7889,6 @@ c-u s-L
                                    (format "<a href=\"%s\">%s</a>" url (or description url))))
 #+end_src
 
-* org-roam fail gracefully
-#+BEGIN_EXAMPLE emacs-lisp
-(condition-case err
-    (progn
-      (org-roam-setup)
-      (org-roam-db-autosync-enable))
-  (error
-   (warn "Org-roam setup failed: %s" (error-message-string err))))
-
-#+END_EXAMPLE
-
-
 * Trust local variables
 
 #+begin_src emacs-lisp
@@ -8074,35 +7958,6 @@ current Org buffer."
 #+end_src
 
 * Org-roam debugging
-#+BEGIN_EXAMPLE emacs-lisp
-(let* ((dir "/Users/jay/Dropbox/roam-hold/book/")      ; folder to scan
-       (log "/Users/jay/Downloads/org-roam-parse.log") ; progress file
-       (timeout 8))                                    ; seconds per file
-  ;; --- wipe or create the log file ---
-  (when (file-exists-p log)
-    (delete-file log))
-  (write-region "" nil log nil 'silent)                ; touch empty file
-
-  ;; --- scan each .org file ---
-  (dolist (f (directory-files-recursively dir "\\.org$"))
-    (write-region (format "START %s\n" f) nil log 'append 'silent)
-    (with-temp-buffer
-      (insert-file-contents f)
-      (let ((status
-             (condition-case err
-                 (with-timeout (timeout 'timeout)
-                   (org-element-parse-buffer)
-                   'done)       ; parsed in time
-               (error err))))   ; Lisp error
-        (write-region
-         (format "%s %s\n"
-                 (if (eq status 'done) "DONE" "ERR")
-                 (if (eq status 'done) f status))
-         nil log 'append 'silent))))
-  (write-region "SCAN-COMPLETE\n" nil log 'append 'silent)
-  (message "Finished --- inspect %s" log))
-#+END_EXAMPLE
-
 #+begin_src emacs-lisp
 (defun jay/debug-find-corrupted-file (&optional file)
   "Prompt for an Org file (default ~/Downloads) and try to parse it.

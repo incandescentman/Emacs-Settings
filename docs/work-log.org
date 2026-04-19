@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-19: Clean stale Org-roam residue without moving live tools
+- Updated =load-roam-config= in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so it now opens the real active Org-roam core file at [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-suite/jay-org-roam-core.el]] instead of the deprecated [[file+emacs:/Users/jay/emacs/emacs-settings/org-roam-config.el][org-roam-config.el]] shim.
+- Deleted the empty =* org-roam= section and two dead =#+BEGIN_EXAMPLE= leftovers: the old =* org-refile-region-to-org-heading-or-roam-node= example block and the old =* org-roam fail gracefully= example block.
+- In the =* Org-roam debugging= section, deleted only the redundant top example snippet while keeping the real interactive =jay/= debug helper functions and their surrounding notes.
+- Goal: shrink misleading Org-roam residue first, while keeping the live diagnostic tools Jay still values.
+
 * 2026-04-19: Rename misleading Org-roam-adjacent headings
 - Renamed three misleading headings in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] before any Org-roam cleanup or extraction work.
 - =* org-roam browsing history= became =* winner-mode= because the live code there is just =(winner-mode +1)=.
