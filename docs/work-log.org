@@ -12,6 +12,11 @@
 - Removed the temporary require path from [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][spacemacs-new-config.el]] and from the legacy shim at [[file+emacs:/Users/jay/emacs/emacs-settings/org-roam-config-legacy.el][org-roam-config-legacy.el]].
 - Result: the transitional staging file is gone, and the subsystem boundaries are cleaner again.
 
+* 2026-04-19: Archive superseded keybinding-analysis.org
+- Moved [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-analysis.org][docs/keybinding-analysis.org]] to [[file+emacs:/Users/jay/emacs/emacs-settings/archive/keybinding-analysis.org][archive/keybinding-analysis.org]].
+- Rationale: the file was a one-off interpretive layer on top of [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-frequency-report.org][keybinding-frequency-report.org]], and its durable takeaways are already better represented by the generated frequency report plus the live migration work in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-consolidation-plan.org][keybinding-consolidation-plan.org]].
+- Result: the keybinding docs set is simpler: canonical reference, annotations source, raw dump, frequency report, and migration plan.
+
 * 2026-04-19: Rename jay-editor-extras.el to jay-editor-environment.el
 - Renamed the old =jay-editor-extras.el= file to =jay-editor-environment.el= because the file is general environment glue, not a vague "extras" bucket.
 - Updated the live requires in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][spacemacs-new-config.el]] and [[file+emacs:/Users/jay/emacs/emacs-settings/org-roam-config-legacy.el][org-roam-config-legacy.el]].
@@ -861,7 +866,7 @@
   - Changed to =:map snippet-mode-map= so it only applies in snippet-mode
   - Edit in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] line 2532
 - Generated first [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-frequency-report.org][keybinding-frequency-report.org]] from accumulated keyfreq data
-- Created [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-analysis.org][keybinding-analysis.org]] with:
+- Created [[file+emacs:/Users/jay/emacs/emacs-settings/archive/keybinding-analysis.org][archive/keybinding-analysis.org]] with:
   - Top 35 most-used commands with usage counts
   - Underused prime keys (8 with zero usage, 10 with 1-10 uses)
   - Recommendations for reassigning wasted s-KEY bindings
@@ -875,7 +880,7 @@
   - Rebound ~M-o~ to =org-mode= in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] (replaces =embolden-or-bold=)
   - Updated keybinding docs/report and added the binding to the memorize list:
     - [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-frequency-report.org][keybinding-frequency-report.org]]
-    - [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-analysis.org][keybinding-analysis.org]]
+    - [[file+emacs:/Users/jay/emacs/emacs-settings/archive/keybinding-analysis.org][archive/keybinding-analysis.org]]
     - [[file+emacs:/Users/jay/emacs/emacs-settings/docs/macOS-command-key-bindings.org][macOS-command-key-bindings.org]]
     - [[file+emacs:/Users/jay/Dropbox/roam/notes/20230408212913-emacs_keybindings_to_remember_to_use.org][20230408212913-emacs_keybindings_to_remember_to_use.org]]
     - Regenerated [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-dump.org][keybinding-dump.org]] and [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-reference.org][keybinding-reference.org]]
