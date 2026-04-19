@@ -91,8 +91,14 @@ If FILENAME starts with /Users/jay/Dropbox, return it as-is without resolution."
   (jay/org-roam--load-optional-fix "org-roam-id-fix.el")
   (jay/org-roam--load-optional-fix "org-roam-db-fix.el"))
 
-;; Load the profile system
-(require 'jay-org-roam-profiles)
+;; Autoload profile helpers instead of requiring the whole profiles module.
+(autoload 'jay/org-roam-profiles-init "jay-org-roam-profiles" nil nil)
+(autoload 'jay/org-roam-switch-profile "jay-org-roam-profiles" nil t)
+(autoload 'jay/org-roam-show-current-profile "jay-org-roam-profiles" nil t)
+(autoload 'jay/org-roam-switch-to-default "jay-org-roam-profiles" nil t)
+(autoload 'jay/org-roam-switch-to-mylife "jay-org-roam-profiles" nil t)
+(autoload 'jay/org-roam-switch-to-social "jay-org-roam-profiles" nil t)
+(autoload 'jay/org-roam-switch-to-parents "jay-org-roam-profiles" nil t)
 
 ;; Lazy-safe wrappers -----------------------------------------------------------
 (defmacro jay/with-org-roam (&rest body)
@@ -123,9 +129,9 @@ If FILENAME starts with /Users/jay/Dropbox, return it as-is without resolution."
         org-roam-dailies-directory "journal/"
         org-roam-file-exclude-regexp "\\.git/\\|attachments/\\|\\.org~$\\|#.*#$"
         org-roam-db-location (expand-file-name "org-roam.db" (xdg-cache-home))
-        org-roam-db-update-method 'idle
-        org-roam-dailies-capture-templates (copy-tree jay/org-roam-dailies-template-default))
-  (message "DEBUG core: org-roam-directory set to %s" org-roam-directory)
+        org-roam-db-update-method 'idle)
+  (when jay/org-roam-debug
+    (message "DEBUG core: org-roam-directory set to %s" org-roam-directory))
 
   ;; staged setup for speed
   (run-with-idle-timer

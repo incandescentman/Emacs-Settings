@@ -21,7 +21,7 @@ The main startup loader is:
 Current measured hotspots (post-dotimes-fix):
 - =org-babel-load shared-functions.org= =0.49s= to =0.53s= in clean steady-state runs (was a misleading =5.27s= cold before the dotimes fix)
 - =org-babel-load search-commands.org= =0.0875s= in the latest clean run, down from ~=0.28s= before lazy-loading =consult-org-roam= and =affe=
-- =require jay-org-roam-core= =0.14s=
+- =require jay-org-roam-core= =0.0807s= to =0.0854s= in the latest clean runs, down from ~=0.1070s= before autoloading the profiles module
 - =org-babel-load gnu-emacs-startup.org= small
 - Total init time =1.614s= in the latest clean run (down from =2.285s= after the dotimes fix and =2.543s= warm / =2.595s= cold before later startup trims)
 
@@ -138,6 +138,22 @@ Current answer:
 - Probably not first, because it is not a major timing hotspot in the initial profile
 
 This may still be worth simplifying for maintenance reasons, but not as the first startup optimization pass.
+
+** Audit D: jay-org-roam-core.el
+
+Audit:
+- [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el]]
+- [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-profiles.el][/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-profiles.el]]
+
+Question:
+- Is the measured =require jay-org-roam-core= cost actually core logic, or mostly eager loading of the profiles module?
+
+Current status:
+- The core file itself is already fairly disciplined: no eager =(require 'org-roam)=, and its real org-roam setup still happens on idle timers.
+- A likely chunk of the measured cost was the eager =(require 'jay-org-roam-profiles)= inside core, which pulled in the separate profiles/templates module during startup.
+- Core now uses autoloads for the profile commands and init helper instead of requiring the whole profiles file during startup.
+- The unconditional =DEBUG core= / =DEBUG profiles= messages are now gated behind =jay/org-roam-debug=.
+- Fresh relaunches now show =require jay-org-roam-core= at =0.0807s= and =0.0854s=, down from the earlier clean ~=0.1070s=. That makes this a successful low-risk trim rather than just a theoretical cleanup.
 
 * Phase 3: Choose the Least Disruptive Optimization
 

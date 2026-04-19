@@ -2,6 +2,11 @@
 #+STARTUP: showall
 
 * 2026-04-18: Measure impact of 10x wrap fix and clean up unmasked orphan
+- Trimmed the startup path in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-core.el]] by replacing eager =(require 'jay-org-roam-profiles)= with autoloads for the profile commands and init helper.
+- Also stopped setting the dailies capture template from profile data during core load; profile initialization still applies the real templates during the existing idle org-roam setup path.
+- Gated the stray =DEBUG core= / =DEBUG profiles= messages behind =jay/org-roam-debug= so normal startup no longer emits those lines.
+- Fresh relaunches on 2026-04-19 show =require jay-org-roam-core= at =0.0807s= and =0.0854s= in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/lab/startup-profile.org][startup-profile.org]], down from the earlier clean ~=0.1070s=. That suggests the autoload change cut this step by roughly 20–25%.
+
 - Cleaned up duplicate =key-minor-mode= ownership by removing the stale minor-mode definition and old minibuffer disable hook from [[file+emacs:/Users/jay/emacs/emacs-settings/jay-osx.el][jay-osx.el]].
 - Kept the shared =key-minor-mode-map= in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-osx.el][jay-osx.el]] so early macOS-specific =define-key= calls still land in the same map that [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] later turns into the live global minor mode.
 - Also removed the redundant =(delete-selection-mode 1)= from [[file+emacs:/Users/jay/emacs/emacs-settings/jay-osx.el][jay-osx.el]]; the editor-wide setting remains in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]].

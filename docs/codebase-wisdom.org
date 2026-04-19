@@ -56,6 +56,30 @@ Remove eager =(projectile-mode +1)= from [[file+emacs:/Users/jay/emacs/emacs-set
 - For startup audits, inspect the command's implementation before assuming its associated minor mode is required.
 - The safest proof is a live workflow test after relaunch, not static config theory alone.
 
+* Autoload Local Modules When Startup Only Needs Their Commands Later
+  Date: 2026-04-19
+
+** Trigger
+=require jay-org-roam-core= was still one of the larger remaining startup entries even after trimming [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][search-commands.org]]. Looking at [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-core.el]] showed that core eagerly required the whole [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-profiles.el][jay-org-roam-profiles.el]] module during startup.
+
+** Mechanism
+Core only needed a few things from the profiles module on the startup path:
+- one init helper called later from an idle timer
+- a handful of interactive profile-switching commands used by keybindings
+
+That means =(require 'jay-org-roam-profiles)= was paying to load a large templates/profiles file up front even though the actual org-roam setup already happens later on idle timers. Replacing the eager require with autoloads keeps commands callable while moving the module load closer to first real use.
+
+** The Fix
+In [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-core.el]]:
+- remove eager =(require 'jay-org-roam-profiles)=
+- add autoloads for =jay/org-roam-profiles-init= and the profile switching commands
+- avoid touching profile-owned template variables during core startup
+
+** Lessons Learned / Prevention Checklist
+- A local module can be a startup dependency without being a true startup necessity.
+- If top-level code only binds commands or schedules work for later, autoloads are often enough.
+- When measuring a "core" module, check whether its cost is really coming from an eagerly required sibling file.
+
 * In Literate Org, Naked Lisp After `#+end_src` Is Just Text
   Date: 2026-04-17
 

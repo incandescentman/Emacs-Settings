@@ -397,7 +397,8 @@ If FORCE-SYNC is non-nil, ensure the database is synced even when not switching 
           org-roam-capture-templates (if (symbolp templates)
                                          (symbol-value templates)
                                          templates))
-    (message "DEBUG profiles: org-roam-directory set to %s" org-roam-directory)
+    (when jay/org-roam-debug
+      (message "DEBUG profiles: org-roam-directory set to %s" org-roam-directory))
 
     (let ((resolved-dailies (cond
                              ((symbolp dailies-templates)
