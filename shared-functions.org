@@ -87,16 +87,6 @@ I should probably eventually break these out of custom-set-variables and organiz
       org-footnote-tag-for-non-org-mode-files "Footnotes:"
       org-hide-block-startup nil
       org-hide-emphasis-markers t
-      org-html-container-element "div"
-      org-html-head-include-scripts nil
-      org-html-html5-fancy t
-      org-html-postamble nil
-      org-html-text-markup-alist '((bold . "<strong>%s</strong>")
-                                   (code . "<code>%s</code>")
-                                   (italic . "<em>%s</em>")
-                                   (strike-through . "<del>%s</del>")
-                                   (underline . "<span class=\"underline\">%s</span>")
-                                   (verbatim . "<code>%s</code>"))
       org-indent-mode-turns-off-org-adapt-indentation nil
       org-indent-mode-turns-on-hiding-stars nil
       org-insert-mode-line-in-empty-file t
@@ -125,12 +115,7 @@ I should probably eventually break these out of custom-set-variables and organiz
       osx-browse-prefer-new-window t)
 
 ;; Org Export Settings
-(setq org-latex-image-default-option "width=20.5cm"
-      org-export-time-stamp-file nil
-      org-export-with-clocks t
-      org-html-head-include-default-style nil
-      org-html-toplevel-hlevel 2
-      org-indent-indentation-per-level 2
+(setq org-indent-indentation-per-level 2
       org-list-allow-alphabetical t
       org-priority-faces nil)
 
@@ -211,21 +196,6 @@ I should probably eventually break these out of custom-set-variables and organiz
 #+END_SRC
 * Org-mode Configuration
 ** Org General Settings
-** Org Export Settings
-
-*** ignore
-
-#+begin_src emacs-lisp
-
-(defun my/org-remove-links-and-source-lines (backend)
-  "Remove lines starting with 'Links ::' or 'Source ::' before export."
-  (save-excursion
-    (goto-char (point-min))
-    (while (re-search-forward "^\\s-*\\(- Links ::\\|- Source ::\\).*$" nil t)
-      (replace-match ""))))
-
-(add-hook 'org-export-before-processing-functions #'my/org-remove-links-and-source-lines)
-#+end_src
 
 * Custom Functions
 
@@ -266,157 +236,6 @@ I should probably eventually break these out of custom-set-variables and organiz
 
 *** org capture
 *** org agenda
-
-*** org-export
-#+BEGIN_SRC emacs-lisp
-(setq org-export-with-smart-quotes t)
-(setq org-export-exclude-tags (quote ("noexport" "extra")))
-
-;; (setq org-html-head "<link rel='stylesheet' type='text/css' href='/Users/jay/Dropbox/github/incandescentman.github.io/css/neo.css'>")
-(setq org-export-time-stamp-file nil)
-(setq org-export-with-clocks t)
-(setq org-export-with-drawers t)
-(setq org-export-with-section-numbers nil)
-(setq org-export-with-timestamps (quote active))
-(setq org-export-with-toc nil)
-
- (setq org-export-date-timestamp-format "%Y-%m-%d %I:%M%p")
- (setq org-export-date-timestamp-format "%B %d, %Y")
-
-;; (setq org-latex-inline-image-rules (quote (("file" . "\\.\\(pdf\\|jpeg\\|gif\\|jpg\\|png\\|ps\\|eps\\|tikz\\|pgf\\|svg\\)\\'"))))
-
-(setq org-latex-default-class "elegant-garamond")
-
-(setq org-latex-inline-image-rules '(("file" . "\\.\\(pdf\\|jpeg\\|jpg\\|png\\|ps\\|eps\\|tikz\\|pgf\\|svg\\|gif\\)\\'")))
-
-;; (setq org-export-html-style-include-default t)
- (setq org-latex-date-format "%d %B %Y.")
- (setq org-latex-emphasis-alist (quote (("*" "\\textit{%s}" nil) ("/" "\\textit{%s}" nil) ("_" "\\underline{%s}" nil) ("+" "\\st{%s}" nil) ("=" "\\verb" t) ("~" "\\verb" t))))
-;; (setq org-latex-emphasis-alist (quote (("*" "\\emph{%s}" nil) ("/" "\\textit{%s}" nil) ("_" "\\underline{%s}" nil) ("+" "\\st{%s}" nil) ("=" "\\verb" t) ("~" "\\verb" t))))
-;; (setq org-latex-verbatim-wrap (quote ("\\begin{quote}" . "\\end{quote}")))
- (setq org-export-with-clocks t)
- (setq org-export-with-section-numbers nil)
-(setq org-export-with-planning nil)
-(setq org-export-allow-bind-keywords t)
-;; (setq org-export-blocks-witheld (quote (hidden)) t)
-(setq org-export-date-timestamp-format "%Y%m%d %I:%M%p")
-(setq org-latex-emphasis-alist (quote    (("*" "\\emph{%s}" nil)
-     ("/" "\\textit{%s}" nil)
-     ("_" "\\underline{%s}" nil)
-     ("+" "\\st{%s}" nil)
-     ("=" "\\verb" t)
-     ("~" "\\verb" t))))
-
-(setq org-html-footnotes-section
-   "<div id=\"footnotes\">
-<h2 class=\"footnotes\">%s </h2>
-<div id=\"footnote\">
-%s
-</div>
-</div>")
-
-(setq org-latex-text-markup-alist (quote    ((bold . "\\textbf{%s}")
-     (code . verb)
-     (italic . "\\textit{%s}")
-     (strike-through . "\\sout{%s}")
-     (underline . "\\uline{%s}")
-     ;; (verbatim . protectedtext)
-     )))
-
-(setq org-latex-toc-command "\\tableofcontents
-\\newpage
-")
-
-(setq safe-local-variable-values (quote    ((eval when
-    (fboundp
-     (quote rainbow-mode))
-    (rainbow-mode 1)))))
-
-(setq org-html-footnotes-section "<div id=\"footnotes\">
-<h2 class=\"footnotes\">%s </h2>
-<div id=\"footnote\">
-%s
-</div>
-</div>")
-
-(setq org-html-head-include-default-style nil)
-(setq org-html-head-include-scripts nil)
-(setq org-html-html5-fancy t)
-(setq org-html-doctype "html5")
-(setq org-html-metadata-timestamp-format "%m-%d %a %H:%M")
-(setq org-html-postamble nil)
-(setq org-html-text-markup-alist
-   (quote
-    ((bold . "<strong>%s</strong>")
-     (code . "<code>%s</code>")
-     (italic . "<em>%s</em>")
-     (strike-through . "<del>%s</del>")
-     (underline . "<span class=\"underline\">%s</span>")
-     (verbatim . "<code>%s</code>"))))
-(setq org-html-toplevel-hlevel 2)
-
-#+END_SRC
-
-
-**** org-html-export-to-html-and-open
-I don't think there's a direct function for this, but you could achieve what you want using `org-export-to-file`, the last argument of which is a "post-processing" step:
-
- (org-export-to-file BACKEND FILE &optional ASYNC SUBTREEP VISIBLE-ONLY BODY-ONLY EXT-PLIST POST-PROCESS)
-
-The post-processing step is handed the path to your new file; you could use something as straight-forward as `find-file`:
-
-#+BEGIN_SRC emacs-lisp
-  (defun org-html-export-to-html-and-open
-   (&optional async subtreep visible-only body-only ext-plist)
-   (interactive)
-(let* ((outfile (org-export-output-file-name ".html" subtreep)))
-    (org-export-to-file 'html outfile async subtreep visible-only body-only ext-plist #'find-file)))
-#+END_SRC
-
-**** Change section numbering depending on what export format I use
-Turn this on if I'm creating documents that I want to export to both HTML and LaTeX. For now I'm turning it off.
-
-Note: disable this when trying to export to org-html-themes!
-
-
-
-#+begin_src emacs-lisp
-(defun my-org-export-change-options (plist backend)
- (cond
-  ((equal backend 'html)
-  (plist-put plist :with-toc nil)
-  (plist-put plist :section-numbers nil))
-  ((equal backend 'latex)
-  (plist-put plist :with-toc nil)
-  (plist-put plist :section-numbers t)))
- plist)
-
-;; (add-to-list 'org-export-filter-options-functions 'my-org-export-change-options)
-
-#+end_src
-
-**** export with drawers
-#+BEGIN_SRC emacs-lisp
-(defun jbd-org-export-format-drawer (name content)
-  "Export drawers to drawer HTML class."
-  (setq content (org-remove-indentation content))
-  (format "@<div class=\"drawer\">%s@</div>\n" content))
-(setq org-export-format-drawer-function 'jbd-org-export-format-drawer)
-
-#+END_SRC
-
-**** Omit headlines tagged with :ignore: --- but do still export the text in that section
-This is so I can do structure headlines, for myself, that aren't part of the actual article text.
-
-Pretty cool actually. Leaving it in.
-
-#+BEGIN_SRC emacs-lisp
-(with-eval-after-load 'ox
-  (require 'ox-extra)
-  (ox-extras-activate '(ignore-headlines)))
-#+END_SRC
-
-Works!
 
 *** Archiving / hooking
 
@@ -762,7 +581,6 @@ Keeps identical behaviour to the old `defadvice', but uses `advice-add'."
 
   (setq org-latex-image-default-width "370pt");; new value just for book export
 ;; (setq org-latex-image-default-width "180pt") good value, works for QIAGEN for exampl
-(setq   org-export-allow-bind-keywords t)
 #+END_SRC
 
 ** Highlight latex text in org mode
@@ -3167,28 +2985,6 @@ I hope this is somewhat helpful to someone else, happy hacking! Source: [[https:
 
 #+END_SRC
 
-** and on export
-#+BEGIN_SRC emacs-lisp
-
-;; old code (works for HTML export, breaks http links)
-;; (add-hook 'org-export-before-parsing-functions (lambda (backend) (replace-regexp "^[A-Za-z]+:" "*\\&*")))
-
-(defun jay/org-export-emphasize-leading-labels (_backend)
-  "Emphasize leading \"Label:\" prefixes without touching URL schemes.
-This avoids `replace-regexp', which can trip overlay cleanup in some setups."
-  (save-excursion
-    (goto-char (point-min))
-    (while (re-search-forward "^\\([A-Za-z]+:\\)\\([^/]\\|/[^/]\\|$\\)" nil t)
-      (replace-match "*\\1*\\2" nil nil))))
-
-(add-hook 'org-export-before-parsing-functions
-          #'jay/org-export-emphasize-leading-labels)
-
-;; (add-hook 'org-export-before-parsing-functions (lambda (backend) (replace-regexp "^\\(.*:\\)[ ]*$" "*\\1*")))
- ;; any line that ends with a colon
-
-#+END_SRC
-
 * sort lines case insensitive
 #+BEGIN_SRC emacs-lisp
 (defun sort-lines-case-insensitive ()
@@ -3242,95 +3038,6 @@ This avoids `replace-regexp', which can trip overlay cleanup in some setups."
      (when new
      (dired-add-file new)
      (dired-move-to-filename))))
-#+END_SRC
-
-* exporting
-** org-twbs
-#+BEGIN_SRC emacs-lisp
-(use-package ox-twbs)
-; '(org-twbs-head-include-default-style nil)
-;; '(org-twbs-htmlize-output-type (quote inline-css))
-; '(org-twbs-indent t)
-
-#+END_SRC
-
-** LaTeX
-*** Find LaTeX on my system
-#+BEGIN_SRC emacs-lisp
-(if (eq window-system 'mac)
-    (add-to-list 'exec-path "/usr/local/texlive/2025/bin/universal-darwin")
-  )
-#+END_SRC
-
-*** XeLaTeX customisations
- ~org~ to LaTeX customisations, ~-shell-escape~ needed for ~minted~:
-#+BEGIN_SRC emacs-lisp
-(setq  ; org-export-dispatch-use-expert-ui t non-intrusive export dispatch
- org-latex-pdf-process               ; for regular export
-
- '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
-
-;; don't add extra lines to numbered lists and bulleted lists (set to nil)
-
-;; add padding to numbered lists and bulleted lists (set to t)
-#+END_SRC
-
-*** load my custom latex templates
-#+BEGIN_SRC emacs-lisp
-
-(defun jay-load-latex ()
-  (interactive)
-  (let ((base "/Users/jay/emacs/emacs-settings/latex-templates/")
-        (files '("elegant-helvetica.el"
-                 "beautiful-racket.el"
-                 "elegant-garamond.el"
-                 "blue-invoice.el"
-                 "blue-invoice-with-letterhead.el"
-                 "jay-latex-yosemite-setup.el")))
-    (dolist (file files)
-      (let ((full-path (expand-file-name file base)))
-        (when (file-exists-p full-path)
-          (load full-path))))
-    ;; Also load the subtitle processing configuration
-    (load "/Users/jay/emacs/emacs-settings/latex-subtitles/latex-subtitles.el")))
-
-;; (load "/Users/jay/emacs/emacs-settings/latex-templates/blue-ruin.el")
-;; (load "/Users/jay/emacs/emacs-settings/latex-templates/modest-ruin.el")
-
-;; (load "/Users/jay/emacs/emacs-settings/latex-templates/inelegant.el")
-;; (load "/Users/jay/emacs/emacs-settings/latex-templates/elegant-wider.el")
-
-;; (load "/Users/jay/emacs/emacs-settings/latex-templates/resonate.el")
-
-;; (load "/Users/jay/emacs/emacs-settings/latex-templates/blue-ruin_no_cover.el")
-
-;; (use-package blue-ruin)
-;; (use-package blue-invoice)
-;; (use-package blue-ruin-no-cover)
-
-#+END_SRC
-
-*** fix latex verbatim
-  You can use a filter function that will replace default "verbatim" with
-  whatever you want.
-
-  Here's my fancyvrb filter for when such a place is created.
-
-  Source: [[https://lists.gnu.org/archive/html/emacs-orgmode/2013-04/msg01035.html][Re: {O} {patch} ox-latex.el to allow customization of verbatim environment]]
-#+BEGIN_SRC emacs-lisp
-
- (defun org-latex-filter-fancyvrb (text backend info)
-  "Convert begin/end{verbatim} to begin/end{Verbatim}.
- Allows use of the fancyvrb latex package."
-  (when
-    (org-export-derived-backend-p backend 'latex)
-  (replace-regexp-in-string
-   "\\\\\\(begin\\|end\\){verbatim}"
-   "\\\\\\1{quote}"
-   text)))
-
- (add-to-list 'org-export-filter-final-output-functions
-     'org-latex-filter-fancyvrb)
 #+END_SRC
 
 * no inline images
@@ -3942,12 +3649,6 @@ Here's a simple bit of code from the Emacs wiki to insert the current date. I've
 
 #+END_SRC
 
-* ox-clip
-#+BEGIN_SRC emacs-lisp
-(use-package ox-clip
-  :defer t)
-#+END_SRC
-
 * org-def
 #+BEGIN_SRC emacs-lisp
 (defun org-def ()
@@ -3978,22 +3679,6 @@ Here's a simple bit of code from the Emacs wiki to insert the current date. I've
 (setq beacon-color "#FFF876")
  )
 #+END_EXAMPLE
-
-* Tufte
-** tufte export to HTML
-#+BEGIN_SRC emacs-lisp
-(use-package ox-tufte
-  :defer t)
-#+END_SRC
-
-** tufte export to LaTeX
-#+begin_src emacs-lisp
-(use-package ox-tufte-LaTeX
-:defer t
-  :ensure nil
-  :init (load "/Users/jay/emacs/emacs-settings/tufte-org-mode-master/ox-tufte-latex.el")
-  )
-#+end_SRC
 
 * add YouTube link type yt:
 #+BEGIN_SRC emacs-lisp
@@ -4217,70 +3902,6 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
 ;; (turn-off-auto-capitalize-mode)
 
 )
-#+END_SRC
-
-* default org-css
-#+begin_SRC emacs-lisp
-(defvar my-org-selected-css "/Users/jaydixit/Dropbox/web-design/custom-css/sans-serif.css"
-  "Path of the selected CSS file or 'none' for no stylesheet. Defaults to sans-serif.css if not manually selected.")
-
-(defvar my-org-css-options
-  '("/Users/jay/Dropbox/web-design/custom-css/email.css"
-    "/Users/jay/Dropbox/github/incandescentman/css/gmail.css"
-    "/Users/jay/Dropbox/github/incandescentman/css/neocortex.css"
-"/Users/jay/Dropbox/github/incandescentman.github.io/css/bold.css"
-"/Users/jay/Dropbox/web-design/custom-css/chatgpt-images.css"
-    "/Users/jaydixit/Dropbox/web-design/custom-css/sakura-1.50css"
-    "/Users/jaydixit/Dropbox/web-design/custom-css/sans-serif.css"
-    "/Users/jay/Dropbox/github/incandescentman.github.io/css/iphone.css"
-    "none")
-  "List of CSS file options for Org HTML export.")
-
-(defun select-org-export-css ()
-  "Prompt the user to select a CSS file or choose none."
-  (interactive)
-  (setq my-org-selected-css
-        (completing-read "Choose a CSS file or none: " my-org-css-options))
-  (when (string-equal my-org-selected-css "none")
-    (setq my-org-selected-css nil)))
-
-(defun my-org-inline-css-hook (exporter)
-  "Insert custom inline CSS for Org HTML export."
-  (when (eq exporter 'html)
-    (when (eq my-org-selected-css 'unset)
-      (select-org-export-css))
-    ;; Force export to use only the manually selected stylesheet.
-    ;; Without this, Org can still inject additional style blocks from other
-    ;; export variables, which then override the chosen Gmail CSS.
-    (setq org-html-head-extra nil
-          org-html-style nil
-          org-html-style-default ""
-          org-export-preserve-breaks
-          (if (and (stringp my-org-selected-css)
-                   (string-match-p "gmail\\.css\\'" my-org-selected-css))
-              nil
-            org-export-preserve-breaks)
-          org-html-head-include-scripts nil
-          org-html-validation-link nil)
-    (if (and my-org-selected-css (not (eq my-org-selected-css 'unset)))
-        (let ((final my-org-selected-css))
-          (when (file-exists-p final)
-            (setq org-html-head-include-default-style nil)
-            (setq org-html-head (concat
-                                 "<style type=\"text/css\">\n"
-                                 "<!--/*--><![CDATA[/*><!--*/\n"
-                                 (with-temp-buffer
-                                   (insert-file-contents final)
-                                   (buffer-string))
-                                 "/*]]>*/-->\n"
-                                 "</style>\n"))))
-      (setq org-html-head-include-default-style nil)
-      (setq org-html-head nil))))
-
-(add-hook 'org-export-before-processing-functions 'my-org-inline-css-hook)
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
 #+END_SRC
 
 * hashtags
@@ -4696,41 +4317,6 @@ Source: [[https://emacs.stackexchange.com/questions/30280/how-to-conveniently-in
 
 
 
-* clean up tex files
-[[https://emacs.stackexchange.com/questions/23982/cleanup-org-mode-export-intermediary-file][Cleanup org-mode export intermediary file - Emacs Stack Exchange]]
-
-#+begin_src emacs-lisp
-(setq org-latex-logfiles-extensions (quote ("lof" "lot" "tex" "odt" "aux" "idx" "log" "out" "toc" "nav" "snm" "vrb" "dvi" "fdb_latexmk" "blg" "brf" "fls" "entoc" "ps" "spl" "bbl" "ent")))
-#+end_src
-
-
-* koma letter
-#+begin_src emacs-lisp
-(add-to-list 'org-latex-classes
-    '("my-letter"
-     "\\documentclass\[%
- DIV=14,
- fontsize=12pt,
- parskip=half,
- subject=titled,
- backaddress=false,
- fromalign=left,
- fromemail=true,
- fromphone=true\]\{scrlttr2\}
- \[DEFAULT-PACKAGES]
- \[PACKAGES]
- \[EXTRA]"))
-
-#+end_src
-
-#+BEGIN_SRC emacs-lisp
-(defun load-koma-letter ()
- (interactive)
- (load "/Users/jay/emacs/emacs-settings/ox-koma-letter.el")
- (load "/Users/jay/emacs/emacs-settings/fiverr-koma.el")
- )
-#+END_SRC
-
 * allow file local custom code
 #+begin_src emacs-lisp
 (setq enable-local-eval t)
@@ -4749,11 +4335,6 @@ Source: [[https://emacs.stackexchange.com/questions/30280/how-to-conveniently-in
         (list (rx (or "/roam/" "/org-roam/"))))
   :config
   (save-place-mode -1))
-#+end_src
-
-* org export preserve line breaks
-#+begin_src emacs-lisp
-(setq org-export-preserve-breaks t)
 #+end_src
 
 * calc
@@ -4829,11 +4410,6 @@ This function will look for a file named ~/.openai/api-key, read the contents of
 #+BEGIN_EXAMPLE emacs-lisp
 (setq warning-suppress-types (append warning-suppress-types '((org-element-cache))))
 #+END_EXAMPLE
-
-* Export to .docx
-#+begin_src emacs-lisp
-(setq org-odt-preferred-output-format "docx")
-#+end_src
 
 * Capitalization
 ** Capitalize level 1 headings use correct rules of capitalizing titles
@@ -5075,32 +4651,6 @@ Pretty knowledge graphs are to knowledge management what speaker lights are to m
 (with-eval-after-load 'org
   (advice-add 'org-export-to-file :around #'jay/with-openwith-disabled)
   (advice-add 'org-export-as :around #'jay/with-openwith-disabled))
-#+end_src
-
-* load my LaTeX config only when I actually need to export something
-Jay: How do I direct Emacs to load a file (containing my org-mode LaTeX
-export configuration) the first time I run org Export to LaTeX?
-
-ChatGPT: You can achieve this by using the ~org-export-before-processing-functions~.
-This hook allows you to run a custom function before the export process
-starts. You can define a custom function to load your Org-mode LaTeX
-export configuration file and add this function to the hook.
-
-Jay: Can I make it load this file only the first time I export something to
-LaTeX, rather than every time?
-
-ChatGPT: Yes, you can achieve this by modifying your custom function to remove
-itself from the ~org-export-before-processing-functions~ after it loads your
-configuration file. This way, the function will be executed only once
-during the first export:
-
-#+begin_src emacs-lisp
-(add-hook 'org-export-before-processing-functions 'my-load-org-latex-export-config)
-
-(defun my-load-org-latex-export-config (&rest args)
-  "Load the Org-mode LaTeX export configuration file and remove itself from the hook."
-  (jay-load-latex)
-  (remove-hook 'org-export-before-processing-functions 'my-load-org-latex-export-config))
 #+end_src
 
 * org-autolist
@@ -5515,36 +5065,6 @@ With prefix ARG, insert using 'safari' custom link type."
 (defalias 'counsel-google 'counsel-search)
 (defalias 'google-counsel-Google-with-autosuggest 'counsel-search)
 #+end_src
-
-* ignore unresolvable links
-Instead of canceling export. So that I can export org-roam nodes if I want to.
-
-** my own attempts to fix this. Second one worked
-#+begin_SRC emacs-lisp
-(use-package org-roam-export
-  :defer)
-
-(defun org-export-id-link-removal (backend)
- "Inspired by 'org-attach-expand-links' ，which is in 'org-export-before-parsing-functions' "
- (save-excursion
-  (while (re-search-forward "id:" nil t)
-   (let ((link (org-element-context)))
-    (if (and (eq 'link (org-element-type link))
-         (string-equal "id"
-                (org-element-property :type link)))
-      (let ((description (and (org-element-property :contents-begin link)
-                  (buffer-substring-no-properties
-                   (org-element-property :contents-begin link)
-                   (org-element-property :contents-end link))))
-         )
-       (goto-char (org-element-property :end link))
-       (skip-chars-backward " \t")
-       (delete-region (org-element-property :begin link) (point))
-       (insert description))
-     )))))
-
-(add-to-list 'org-export-before-parsing-functions #'org-export-id-link-removal)
-#+END_SRC
 
 * org-attach
 #+begin_src emacs-lisp
@@ -6094,29 +5614,6 @@ Smart jump to beginning / end of lines.
 
 #+end_src
 
-* ox-timeline
-#+begin_src emacs-lisp
-(use-package ox-timeline
-
-:config
- (setq org-timeline-source-url "/Users/jay/Dropbox/github/incandescentman.github.io/timeline/dist"))
-
-(defun org-timeline-export-to-html-and-open ()
- "Export the current Org file to HTML using `org-timeline-export-to-html', then open the HTML file."
- (interactive)
- (let ((html-file (org-timeline-export-to-html)))
-  (when html-file
-   (browse-url (concat "file://" (expand-file-name html-file))))))
-
-#+end_src
-
-* ox-clip
-#+begin_src emacs-lisp
-'(ox-clip-osx-cmd
-  "pandoc -f html -t markdown - | grep -v \"^:::\" | sed 's/{#.*}//g' | pbcopy")
-(defalias 'copy-as-markdown 'ox-clip-formatted-copy)
-#+end_src
-
 * debug recentf
 #+begin_src emacs-lisp
 (defun jay/recentf-save-list-debug (orig-fun &rest args)
@@ -6432,57 +5929,6 @@ c: cook-ideas-over-time\n"))
     (insert (format " #%s" selected-tag))
    (error "Invalid tag selection"))))
 
-;; for org-html-export
-(defun my-org-add-class-to-hash-tags (text backend info)
-  "Add class to words starting with a '#' in HTML export."
-  (when (org-export-derived-backend-p backend 'html)
-    (replace-regexp-in-string "\\<#\\w+\\>"
-                              "<span class=\"hash-tag\">\\&</span>"
-                              text)))
-
-(add-to-list 'org-export-filter-plain-text-functions
-    'my-org-add-class-to-hash-tags)
-
-;; Strip emoji from LaTeX exports
-(defun my-org-latex-strip-emoji (text backend info)
-  "Remove emoji from LaTeX export."
-  (when (org-export-derived-backend-p backend 'latex)
-    (replace-regexp-in-string "[🀀-🫿]" "" text)))
-
-(add-to-list 'org-export-filter-plain-text-functions
-    'my-org-latex-strip-emoji)
-
-;; Also apply to headlines where emoji often appear
-(add-to-list 'org-export-filter-headline-functions
-    'my-org-latex-strip-emoji)
-
-;; Add line breaks in email signature blocks in HTML export
-;; Applies only when "Best," or "Warm regards," is followed by an actual line break.
-(defun jay/org-html-filter-signature-line-breaks (text backend info)
-  "Add line breaks in email signature blocks in HTML export."
-  (when (org-export-derived-backend-p backend 'html)
-    ;; Match signature block shape: "Best,\nName\nurl.tld\nurl.tld".
-    (let ((result text))
-      ;; First: "Best," or "Warm regards," followed by a line break, then a name.
-      (setq result (replace-regexp-in-string
-                    "\\(Best,\\|Warm regards,\\)[ \t]*\n[ \t]*\\([A-Z][a-z]+\\)"
-                    "\\1<br>\\2"
-                    result))
-      ;; Then: name followed by a URL (word.tld pattern)
-      (setq result (replace-regexp-in-string
-                    "\\([A-Z][a-z]+\\)[ \t]*\n[ \t]*\\([a-z]+\\.[a-z]+\\)"
-                    "\\1<br>\\2"
-                    result))
-      ;; Then: URL followed by another URL
-      (setq result (replace-regexp-in-string
-                    "\\([a-z]+\\.[a-z]+\\)[ \t]*\n[ \t]*\\([a-z]+\\.[a-z]+\\)"
-                    "\\1<br>\\2"
-                    result))
-      result)))
-
-(add-to-list 'org-export-filter-final-output-functions
-             #'jay/org-html-filter-signature-line-breaks)
-
 ;; (define-key org-mode-map (kbd "<return>") 'org-inline-tags-return)
 
 ;; (define-key key-minor-mode-map (kbd "<return>") 'org-inline-tags-return)
@@ -6549,16 +5995,6 @@ https://chat.openai.com/share/255cbba9-238a-4b8c-ae8e-76a2aadf70fe
     (org-roam-node-visit node)
    (kb/find-node-backlink nil next-node (cons next-node (-map #'org-roam-backlink-source-node (org-roam-backlinks-get next-node))))
    )))
-#+end_src
-
-* fontify checkboxes on org export to HTML
-[[https://emacs.stackexchange.com/questions/33382/replace-checkbox-with-glyph-via-font-lock][org mode - replace checkbox with glyph via font-lock - Emacs Stack Exchange]]
-#+begin_src emacs-lisp
-(setq org-html-checkbox-type 'unicode)
-(setq org-html-checkbox-types
- '((unicode (on . "<span class=\"task-done\">&#x2611;</span>")
-   (off . "<span class=\"task-todo\">&#x2610;</span>")
-   (trans . "<span class=\"task-in-progress\">&#x25eb;</span>"))))
 #+end_src
 
 
@@ -6705,22 +6141,6 @@ https://chat.openai.com/share/84fdc7cc-f6d1-410b-85e8-efffb249ed36
 
 (add-hook 'org-mode-hook (lambda ()
        (redbold)))
-
-#+end_src
-
-* Claire share
-#+begin_src emacs-lisp
-(defun claire-share-export-subtree-to-html ()
- (interactive)
- (let* ((title (file-name-sans-extension (buffer-name)))
-     (path "/users/jay/dropbox/roam/claire/")
-     (export-line (concat "#+EXPORT_FILE_NAME: " path title ".html")))
-  (save-excursion
-   (goto-char (point-min))
-   (forward-line 3)
-   (unless (looking-at "#\\+EXPORT_FILE_NAME:")
-    (insert (concat export-line "\n"))))
-  (org-export-dispatch)))
 
 #+end_src
 
@@ -7069,31 +6489,6 @@ Note: The duplicate word removal is invoked only once to avoid redundancy."
   (org-mode))
 #+end_src
 
-* export to PDF and prepend cover page
-#+begin_src emacs-lisp
-(defun export-to-pdf-and-prepend-cover-page ()
- "Export the current Org document to PDF and prepend a cover page located in the same directory. Then open the resulting PDF."
- (interactive)
- (let* ((output-pdf (concat (file-name-sans-extension (buffer-file-name)) ".pdf"))
-     (cover-page (concat (file-name-directory (buffer-file-name)) "cover-page.pdf"))
-     (final-pdf (concat (file-name-sans-extension (buffer-file-name)) "_with-cover.pdf")))
-  (org-latex-export-to-pdf)
-  (shell-command (format "pdftk %s %s cat output %s"
-              (shell-quote-argument cover-page)
-              (shell-quote-argument output-pdf)
-              (shell-quote-argument final-pdf)))
-  (message "PDF exported and combined with cover page: %s" final-pdf)
-  ;; Open the resulting PDF
-  (cond
-   ((string-equal system-type "darwin") ; macOS
-   (shell-command (format "open %s" (shell-quote-argument final-pdf))))
-   ((string-equal system-type "gnu/linux") ; Linux
-   (shell-command (format "xdg-open %s" (shell-quote-argument final-pdf))))
-   ((string-equal system-type "windows-nt") ; Windows
-   (shell-command (format "start %s" (shell-quote-argument final-pdf)))))))
-
-#+end_src
-
 * org-mode security vulnerability
 [[https://list.orgmode.org/87o7b3eczr.fsf@bzg.fr/T/#t][[ANN] Emergency bugfix release: Org mode 9.6.23]]
 
@@ -7394,35 +6789,6 @@ and now it works. Don't understand why it was getting overwritten before, but wh
 ;; so shared-functions does not append and re-log them later in startup.
 #+end_src
 
-* timestamp export format
-Remove the remove <> surrounding timestamps
-
-#+BEGIN_SRC emacs-lisp
-(add-to-list 'org-export-filter-timestamp-functions
-       #'endless/filter-timestamp)
-(defun endless/filter-timestamp (trans back _comm)
- "Remove <> around time-stamps."
- (pcase back
-  ((or `jekyll `html)
-   (replace-regexp-in-string "&[lg]t;" "" trans))
-  (`latex
-   (replace-regexp-in-string "[<>]" "" trans))))
-#+END_SRC
-
-we can still make it better. The YYYY-MM-DD weekday format isn't commonly used in prose, so let's switch that as well.
-
-#+BEGIN_SRC emacs-lisp
-(setq-default org-display-custom-times t)
-;; Before you ask: No, removing the <> here doesn't work.
-(setq org-time-stamp-custom-formats '("%B %d, %Y" . "%d/%m/%Y %a %H:%M"))
-#+END_SRC
-
-Source: [[http://endlessparentheses.com/better-time-stamps-in-org-export.html][Better time-stamps in org-export with Emacs - Endless Parentheses]]
-
-Hmm maybe look at this too: [[http://stackoverflow.com/questions/23297422/org-mode-timestamp-format-when-exported][datetime - Org mode timestamp format when exported - Stack Overflow]]
-
-
-
 * org element parser error
 #+begin_src emacs-lisp
 (setq debug-on-message "org-element--cache: Added org-data parent to non-headline element")
@@ -7442,15 +6808,6 @@ Hmm maybe look at this too: [[http://stackoverflow.com/questions/23297422/org-mo
 
 ; or more drastically:
 ; (remove-hook 'post-command-hook 'sp-show--pair-function)
-#+end_src
-
-* top level heading
-What This Does:
-This makes level 1 Org headings (**) export as <h1> instead of <h2>.
-The document title (from #+TITLE: or the filename) remains in the <title> tag but is not included as an additional <h1>.
-
-#+begin_src emacs-lisp
-(setq org-html-toplevel-hlevel 1)
 #+end_src
 
 * org config files mode
@@ -7737,51 +7094,6 @@ Including indent-buffer, which should not be called automatically on save."
 
 #+END_EXAMPLE
 
-** Org-mode Timestamp Format Helper
- - Defines global custom timestamp formats for Org-mode files.
- - Provides an interactive command to insert timestamp format customizations locally.
- - Offers two timestamp styles: a concise format and a detailed format.
- - Inserts file-local variables at buffer end, enabling custom date display per file.
-
-#+begin_src emacs-lisp
-(defun jay/org-export-date-format-chooser ()
-  "Interactively choose an Org-mode date format, set it globally, copy file-local definition to clipboard, and optionally insert as file-local variable."
-  (interactive)
-  (let* ((formats '("U.S. short: 12/25"
-                    "U.S. numeric: 12/25/2025"
-                    "ISO standard: 2025-12-25"
-                    "Short: Dec 25, 2025"
-                    "Medium: Mon Dec 25, 2025"
-                    "Full: Monday Dec 25, 2025"
-                    "Long: Monday December 25, 2025"))
-         (choice (completing-read "Choose date format: " formats nil t))
-         (format-string (pcase choice
-                          ("U.S. short: 12/25" "%m/%d")
-                          ("U.S. numeric: 12/25/2025" "%m/%d/%Y")
-                          ("ISO standard: 2025-12-25" "%Y-%m-%d")
-                          ("Short: Dec 25, 2025" "%b %d, %Y")
-                          ("Medium: Mon Dec 25, 2025" "%a %b %d, %Y")
-                          ("Full: Monday Dec 25, 2025" "%A %b %d, %Y")
-                          ("Long: Monday December 25, 2025" "%A %B %d, %Y")))
-         (file-local (format "# %s Variables:\n# org-export-date-timestamp-format: \"%s\"\n# %s:\n"
-                             "Local" format-string "End")))
-
-    ;; Set global variable
-    (setq org-export-date-timestamp-format format-string)
-    (message "Global Org export date format set to '%s'" format-string)
-
-    ;; Copy file-local definition to clipboard
-    (call-process-shell-command (format "echo -n '%s' | pbcopy" file-local))
-    (message "File-local variable copied to clipboard.")
-
-    ;; Prompt to insert into buffer
-    (when (string= (completing-read "Insert file-local variable into buffer? " '("no" "yes") nil t nil nil "no") "yes")
-      (save-excursion
-        (goto-char (point-max))
-        (insert (concat "\n" file-local)))
-      (message "Inserted file-local variable for date format '%s'" format-string))))
-#+end_src
-
 ** date/time format chooser
 |--------------+--------------------------+--------------|
 | Name         | Example                  | Format       |
@@ -7914,20 +7226,6 @@ c-u s-L
       '("\\`https://fniessen\\.github\\.io/org-html-themes/org/theme-bigblow\\.setup\\'"))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-#+end_src
-
-* fix footnotes
-#+begin_src emacs-lisp
-(defun jay/fix-org-footnotes ()
-  "Convert ‘([[fn:: URL][LABEL]])’ → ‘[fn:: [[URL][LABEL]]]’ in the
-current Org buffer."
-  (interactive)
-  (save-excursion
-    (goto-char (point-min))
-    ;; 1 = URL, 2 = label
-    (let ((re "(\\[\\[fn::\\s-*\\([^]]+\\)\\]\\[\\([^]]+\\)\\]\\]\\))"))
-      (while (re-search-forward re nil t)
-        (replace-match "[fn:: [[\\1][\\2]]]" t nil)))))
 #+end_src
 
 * Suppress spurious debug errors
@@ -8181,72 +7479,6 @@ package-native-compile    t)
 ;;             (lambda (&rest _) (package-quickstart-refresh)))
 #+end_src
 
-* convert footnotes to org format
-#+begin_src emacs-lisp
-;;; footnotes--convert-markdown-footnotes-to-org.el --- convert reference footnotes → Org  -*- lexical-binding: t; -*-
-;; Author: you
-;; Usage: mark region or use whole buffer, then  M-x footnotes--convert-markdown-footnotes-to-org
-(require 'subr-x)                            ; for `string-trim'
-(defun footnotes--convert-markdown-footnotes-to-org (&optional beg end)
-  "Convert reference-style Markdown footnotes to Org-mode footnotes.
-Inline examples:
-   ([anthropic.com][8], [anthropic.com][7])  →  [fn:8], [fn:7]
-   ( [foo][1] )                              →  [fn:1]
-Definition examples:
-   [8]: https://example.com \"Title\"        →  [fn:8] [[https://example.com][Title]]
-With an active region, operate only on that region; otherwise
-process the whole buffer."
-  (interactive (when (use-region-p)
-                 (list (region-beginning) (region-end))))
-  (save-excursion
-    (save-restriction
-      (when beg (narrow-to-region beg end))
-      ;; ------------------------------------------------------------
-      ;; 1. INLINE MARKERS   [text][N]  →  [fn:N]
-      ;; ------------------------------------------------------------
-      (goto-char (point-min))
-      (while (re-search-forward
-              (rx "[" (+? (not "]")) "]"
-                  "[" (group (+ digit)) "]")
-              nil t)
-        (replace-match (format "[fn:%s]" (match-string 1)) t t))
-      ;; ------------------------------------------------------------
-      ;; 2. STRIP PARENTHESES AROUND FOOTNOTE REFERENCES
-      ;;    ([fn:8])  →  [fn:8]
-      ;;    ([fn:8], [fn:7])  →  [fn:8], [fn:7]
-      ;; ------------------------------------------------------------
-      (goto-char (point-min))
-      (while (re-search-forward
-              ;; Match parentheses containing one or more [fn:N] references
-              (rx "("
-                  (group (0+ space)
-                         "[fn:" (+ digit) "]"
-                         (0+ (seq (0+ space) "," (0+ space) "[fn:" (+ digit) "]"))
-                         (0+ space))
-                  ")")
-              nil t)
-        (replace-match (match-string 1) t t))
-      ;; ------------------------------------------------------------
-      ;; 3. FOOTNOTE DEFINITIONS   [N]: URL \"Title\"  →  Org form
-      ;; ------------------------------------------------------------
-      (goto-char (point-min))
-      (while (re-search-forward
-              (rx line-start
-                  "[" (group (+ digit)) "]:"
-                  (+ blank)
-                  (group (+ (not (any blank))))          ; URL
-                  (? (+ blank) "\"" (group (+? (not "\""))) "\""))
-              nil t)
-        (let* ((num   (match-string 1))
-               (url   (match-string 2))
-               (title (string-trim (or (match-string 3) url))))
-          (replace-match
-           (format "[fn:%s] [[%s][%s]]" num url title) t t))))
-    (message "Markdown reference footnotes → Org footnotes complete.")))
-(provide 'footnotes--convert-markdown-footnotes-to-org)
-;;; footnotes--convert-markdown-footnotes-to-org.el ends here
-#+end_src
-
 * line breaks
 #+begin_src emacs-lisp
 (defun asterisk-to-dash ()
@@ -8317,105 +7549,6 @@ current buffer.  Safe (save-excursion) and repeatable."
             (goto-char (match-end 0)))))
 
       (message "Replaced %d space-hyphen-space patterns" count))))
-#+end_src
-
-* ChatGPT export
-
-** export bare link images
-#+begin_src emacs-lisp
-(defun my/org-wrap-bare-image-paths (_backend)
-  "Turn any line that consists only of a pathname ending in
-   .png/.jpg/.jpeg/.gif into  [[file:...]].
-   Handles absolute paths (/...),  ./relative/...,  ../relative/...,  or
-   plain relative like  mob-wife/foo.png."
-  (save-excursion
-    (goto-char (point-min))
-    (while (re-search-forward
-            ;; line with optional spaces, *any* path that contains a slash and ends
-            ;; in the right extension, then only spaces + EOL
-            "^\\s-*\\([^[:space:]]*/[^[:space:]]*\\.\\(?:png\\|jpe?g\\|gif\\)\\)\\s-*$"
-            nil t)
-      (let* ((raw (match-string 1))
-             ;; encode spaces only
-             (encoded (replace-regexp-in-string " " "%20" raw t t)))
-        (replace-match (format "[[file:%s]]" encoded) t t))))
-  (buffer-string))
-
-(add-hook 'org-export-before-processing-functions #'my/org-wrap-bare-image-paths)
-
-#+end_src
-
-#+begin_src emacs-lisp
-(defun my/org-insert-image-links-from-dir (dir &optional as-bare-paths)
-  "Insert Org links for every image in DIR.
-If AS-BARE-PATHS is non-nil (or called with a prefix key),
-insert the *bare relative pathname* instead of [[file:...]].
-Supported extensions: png, jpg, jpeg, gif, svg, webp."
-  (interactive "DDirectory with images: \nP")
-  (let* ((img-ext '("png" "jpg" "jpeg" "gif" "svg" "webp"))
-         (here    (file-name-directory (or (buffer-file-name) default-directory)))
-         (files   (seq-filter
-                   (lambda (f)
-                     (and (file-regular-p f)
-                          (member (downcase (file-name-extension f)) img-ext)))
-                   (directory-files dir t "^[^.].*"))))   ; skip . and ..
-    (unless files
-      (user-error "No image files found in %s" dir))
-    (dolist (f (sort files #'string<))
-      (let ((rel (file-relative-name f here)))
-        (insert (if as-bare-paths
-                    rel
-                  (format "[[file:%s]]" rel)))
-        (insert "\n")))))
-
-#+end_src
-
-** slugs
-#+begin_src emacs-lisp
-;;; --- batch exporter: one HTML file per heading -----------------------------
-
-(defun my/slugify (s)
-  "Turn a heading title S into a filesystem-safe slug."
-  (let* ((down  (downcase
-                 (replace-regexp-in-string "[^[:alnum:]]+" "-" s)))
-         (clean (replace-regexp-in-string "^-\\|-\\'" "" down)))
-    (replace-regexp-in-string "-+" "-" clean)))
-
-(defun my/org-export-headings-to-html ()
-  "Export each level-2 subtree to its own HTML file, plus index.html.
-   Adds ../css/chatgpt-images.css to every page."
-  (interactive)
-  (unless (buffer-file-name)
-    (user-error "Save this buffer first - exporter needs a filename"))
-  (let* ((base-dir (file-name-directory (buffer-file-name)))
-         ;; The CSS lives one directory above base-dir
-         (css-path (file-relative-name
-                    (expand-file-name "../css/chatgpt-images.css" base-dir)
-                    base-dir))
-         (css-tag  (format "<link rel=\"stylesheet\" href=\"%s\"/>" css-path))
-         (index-links '()))
-    ;; ---------- export each level-2 heading ----------
-    (org-map-entries
-     (lambda ()
-       (when (= (org-outline-level) 2)
-         (let* ((title (nth 4 (org-heading-components)))
-                (slug  (concat (my/slugify title) ".html"))
-                (outfile (expand-file-name slug base-dir)))
-           (save-restriction
-             (org-narrow-to-subtree)
-             (let ((org-html-head-extra css-tag))
-               (org-export-to-file 'html outfile nil nil nil nil)))
-           (push (format "- [[file:%s][%s]]" slug title) index-links))))
-     nil 'file)
-    ;; ---------- build the index ----------
-    (with-temp-buffer
-      (insert "* ChatGPT Use Cases for Mamie - Index\n\n")
-      (dolist (l (nreverse index-links)) (insert l "\n"))
-      (write-file (expand-file-name "index.org" base-dir))
-      (let ((org-html-head-extra css-tag))
-        (org-export-to-file 'html (expand-file-name "index.html" base-dir))))
-    (message "✅ Exported %d pages + index" (length index-links))))
-
 #+end_src
 
 * Emacs server
@@ -8894,11 +8027,6 @@ After evaluating your init-file you can use links analog to the example:
 #+end_src
 
 
-
-* ox-json
-#+begin_src emacs-lisp
-(require 'ox-json)
-#+end_src
 
 * auto-revert mode
 #+begin_src emacs-lisp

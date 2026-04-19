@@ -20,6 +20,7 @@ This is a sophisticated Emacs configuration that uses Spacemacs as its foundatio
 - [[file:shared-functions.org][shared-functions.org]] - Core utilities and functions
 - [[file:pasteboard-copy-and-paste-functions.org][pasteboard-copy-and-paste-functions.org]] - macOS clipboard integration
 - [[file:spellcheck.org][spellcheck.org]] - Flyspell, Jinx, Hunspell, and personal dictionary wiring
+- [[file:org-export.org][org-export.org]] - Org export, publishing, LaTeX, and clipboard/export helpers
 - [[file:spacecraft-mode.org][spacecraft-mode.org]] - Custom writing mode
 - [[file:org-authoring.org][org-authoring.org]] - Org-specific heading/list/structure authoring helpers
 - [[file:gnu-emacs-startup.org][gnu-emacs-startup.org]] - Alternative startup configuration
@@ -59,9 +60,10 @@ This is a sophisticated Emacs configuration that uses Spacemacs as its foundatio
 5. =gnu-emacs-startup.el=
 6. =org-authoring.el=
 7. =spellcheck.el=
-8. =shared-functions.el=
-9. Various feature modules (deferred or immediate)
-10. Local configuration (=local-config.el=)
+8. =org-export.el=
+9. =shared-functions.el=
+10. Various feature modules (deferred or immediate)
+11. Local configuration (=local-config.el=)
 
 * Recent Major Updates (Oct-Nov 2025)
 
@@ -121,7 +123,7 @@ This is a sophisticated Emacs configuration that uses Spacemacs as its foundatio
 
 * Note on File Size
 - [[file:shared-functions.org][shared-functions.org]]: ~316KB (9983 lines)
-  - *Do not split casually*: keep general utilities here, but extract a new =.org= module when a subsystem becomes both coherent and clearly out of place. [[file:org-authoring.org][org-authoring.org]] and [[file:spellcheck.org][spellcheck.org]] are the current examples of that narrower, intentional split pattern.
+  - *Do not split casually*: keep general utilities here, but extract a new =.org= module when a subsystem becomes both coherent and clearly out of place. [[file:org-authoring.org][org-authoring.org]], [[file:spellcheck.org][spellcheck.org]], and [[file:org-export.org][org-export.org]] are the current examples of that narrower, intentional split pattern.
 - [[file:spacemacs.d/init.el][spacemacs.d/init.el]]: ~50K lines
 - [[file:gnu-emacs-startup.el][gnu-emacs-startup.el]]: ~46K lines
 - [[file:pasteboard-copy-and-paste-functions.el][pasteboard-copy-and-paste-functions.el]]: ~33K lines

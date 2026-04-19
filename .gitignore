@@ -40,4 +40,5 @@ gnu-emacs-startup.el
 fonts-and-themes.el
 org-authoring.el
 spellcheck.el
+org-export.el
 org-srs/goals-over-urges-srs.org

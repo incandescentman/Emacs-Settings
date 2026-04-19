@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-19: Extract export and publishing subsystem into org-export.org
+- Created [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] as a dedicated export/publishing module and moved the live export cluster out of [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]].
+- Wired [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] into [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][spacemacs-new-config.el]] so it loads before [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]], keeping export filters and helpers in one subsystem.
+- Left profile-owned =org-astro= behavior in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-profiles.el][jay-org-roam-suite/jay-org-roam-profiles.el]] rather than broadening the new export module beyond its clean boundary.
+
 * 2026-04-19: Clean dead workflow residue after agenda audit
 - Audited workflow-related sections in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] against the live Daily Action Menu module in [[file+emacs:/Users/jay/emacs/emacs-settings/goals-agenda.org][goals-agenda.org]].
 - Conclusion: [[file+emacs:/Users/jay/emacs/emacs-settings/goals-agenda.org][goals-agenda.org]] clearly owns agenda-building and agenda display, but the remaining live =org-clock=, =org-attach=, and archive helpers in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] are still broader Org workflow infrastructure, not obviously part of the agenda module.

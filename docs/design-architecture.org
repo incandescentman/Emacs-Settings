@@ -38,6 +38,7 @@ These are the heart of the customization. Each =.org= file contains documentatio
 | =gnu-emacs-startup.org=                   | =gnu-emacs-startup.el= | Alternative startup config        |
 | =org-authoring.org=                       | =org-authoring.el=    | Org-specific authoring helpers    |
 | =spellcheck.org=                          | =spellcheck.el=       | Flyspell/Jinx/Hunspell subsystem  |
+| =org-export.org=                          | =org-export.el=       | Export and publishing subsystem   |
 | =fonts-and-themes.org=                    | =fonts-and-themes.el= | Appearance functions              |
 | =spacecraft-mode.org=                     | =spacecraft-mode.el=  | Distraction-free writing mode     |
 
@@ -84,15 +85,17 @@ Understanding the loading sequence helps debug issues:
 7. Loads gnu-emacs-startup.el
 8. Loads org-authoring.el
 9. Loads spellcheck.el
-10. Loads shared-functions.el (tangled from shared-functions.org)
-11. Loads other modules (deferred or immediate based on config)
-12. Loads local-config.el (if exists, gitignored for machine-specific settings)
+10. Loads org-export.el
+11. Loads shared-functions.el (tangled from shared-functions.org)
+12. Loads other modules (deferred or immediate based on config)
+13. Loads local-config.el (if exists, gitignored for machine-specific settings)
 #+END_SRC
 
 *Why this order matters*:
 - =jay-osx.el= must load before anything that uses =key-minor-mode-map=
 - =org-authoring.el= must load before modules that call Org-specific authoring helpers, such as =spacecraft-mode.org=
 - =spellcheck.el= must load before =shared-functions.el= so any remaining spellcheck callers or keybindings resolve against the dedicated spellcheck module instead of reintroducing split ownership
+- =org-export.el= must load before =shared-functions.el= so export filters and helpers live in one subsystem instead of staying split across the monolith
 - =shared-functions.el= provides utilities used by other modules
 - Some modules defer loading until needed (performance optimization)
 
@@ -168,7 +171,7 @@ when pasting from web pages.
 
 * Keep Modularizing
 
-The single highest-payoff ongoing work in this config is splitting monolithic files into focused modules — one coherent subsystem per file. Recent examples: =spacecraft-mode.org= (prose editing), =org-authoring.org= (Org structure helpers), and =spellcheck.org= (Flyspell/Jinx/Hunspell + personal dictionaries). =shared-functions.org= is the monolith most future splits will come from.
+The single highest-payoff ongoing work in this config is splitting monolithic files into focused modules — one coherent subsystem per file. Recent examples: =spacecraft-mode.org= (prose editing), =org-authoring.org= (Org structure helpers), =spellcheck.org= (Flyspell/Jinx/Hunspell + personal dictionaries), and =org-export.org= (export/publishing). =shared-functions.org= is the monolith most future splits will come from.
 
 This supersedes the earlier "one big file is fine" stance. That stance was defensible when it was written. Two things have changed since: the file has grown substantially, and AI-assisted editing has put a hard premium on focused context.
 
@@ -178,23 +181,23 @@ Each of these compounds every time you touch the subsystem.
 
 *** Grep becomes navigation
 
-When spellcheck lives in =spellcheck.org=, changing how Flyspell handles large buffers means opening one file and seeing the whole subsystem at once. In the monolith, you are scanning line 4,200 of 9,983 hoping you landed in the right block. The file-per-subsystem structure makes the file itself a form of navigation.
+When spellcheck lives in =spellcheck.org=, changing how Flyspell handles large buffers means opening one file and seeing the whole subsystem at once. The same is now true for export behavior in =org-export.org=. In the monolith, you were scanning thousands of lines hoping you landed in the right block. The file-per-subsystem structure makes the file itself a form of navigation.
 
 *** LLM context windows
 
-This is the biggest modern reason, and it did not exist when the config was designed. When an AI assistant helps with spellcheck, loading a focused =spellcheck.org= gives it tight, relevant context. Loading =shared-functions.org= burns context on irrelevant code and forces the model to guess which sections matter. Post-split, AI help on that subsystem becomes sharper, cheaper, and more accurate.
+This is the biggest modern reason, and it did not exist when the config was designed. When an AI assistant helps with spellcheck or export behavior, loading a focused =spellcheck.org= or =org-export.org= gives it tight, relevant context. Loading =shared-functions.org= burns context on irrelevant code and forces the model to guess which sections matter. Post-split, AI help on that subsystem becomes sharper, cheaper, and more accurate.
 
 *** Safe refactoring
 
-A physical file boundary is a stronger guarantee than a conceptual one. Rewriting =spellcheck.org= wholesale cannot accidentally break Org authoring, because the Org authoring code is not in the file.
+A physical file boundary is a stronger guarantee than a conceptual one. Rewriting =spellcheck.org= wholesale cannot accidentally break Org authoring, because the Org authoring code is not in the file. The same now applies to export filters and publishing helpers in =org-export.org=.
 
 *** Git history tells a story
 
-=git log --follow spellcheck.org= shows the evolution of exactly one subsystem. In the monolith, every commit touches =shared-functions.org= for unrelated reasons, and the file's history degenerates into noise.
+=git log --follow spellcheck.org= or =git log --follow org-export.org= shows the evolution of exactly one subsystem. In the monolith, every commit touches =shared-functions.org= for unrelated reasons, and the file's history degenerates into noise.
 
 *** The mental map stays accurate
 
-You will remember that spellcheck lives in =spellcheck.org= forever. You will not remember that spellcheck lives "around line 4,200 of =shared-functions.org=" — that map rots the moment the file grows.
+You will remember that spellcheck lives in =spellcheck.org= and export behavior lives in =org-export.org=. You will not remember that they lived "somewhere in =shared-functions.org=" — that map rots the moment the file grows.
 
 ** Why This Beats the Alternatives
 
@@ -216,7 +219,7 @@ These are the current agreed boundaries for future extraction work:
 
 - Before creating a new module, first check whether the code belongs in an existing module that already owns that concern. Consolidating into an existing boundary is often higher leverage than increasing the file count.
 - The strongest current consolidation targets are Org-roam-related code into [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/][jay-org-roam-suite/]] and agenda/workflow code into [[file+emacs:/Users/jay/emacs/emacs-settings/goals-agenda.org][goals-agenda.org]].
-- =org-export.org= is the strongest next module candidate. Export and publishing behavior is already a recognizable subsystem and is conceptually separate from general utilities.
+- =org-export.org= now exists as the dedicated export/publishing module. It owns export defaults, ox-* backends, export filters, export-only LaTeX helpers, and clipboard/export helpers that were previously scattered through =shared-functions.org=.
 - =dictionary-lookup.org= is a plausible narrower future module for word-definition tools such as =define-word=, =dictionary-search=, and =sdcv=. This is a different concern from spellcheck and should stay separate from =spellcheck.org=.
 - =org-workflow.org= is *not* a good next module. "Agenda + clocking + timeblocking + attach + timesheet" is too vague and would become a dumping ground.
 - Future splits should stay subsystem-based, not overflow-bin based. A new file should exist because it owns one coherent concern, not because =shared-functions.org= feels crowded.
@@ -404,7 +407,7 @@ This section documents a decision that has since been reversed. Keeping it for h
 
 *Original decision*: "For a personal config, convenience trumps modularity. Could split if working with a team."
 
-*Current decision*: keep =shared-functions.org= as the home for genuinely general utilities, but extract a new =.org= file when a subsystem becomes both coherent and clearly out of place. [[file+emacs:/Users/jay/emacs/emacs-settings/org-authoring.org][org-authoring.org]] and [[file+emacs:/Users/jay/emacs/emacs-settings/spellcheck.org][spellcheck.org]] are the current examples of that targeted extraction pattern.
+*Current decision*: keep =shared-functions.org= as the home for genuinely general utilities, but extract a new =.org= file when a subsystem becomes both coherent and clearly out of place. [[file+emacs:/Users/jay/emacs/emacs-settings/org-authoring.org][org-authoring.org]], [[file+emacs:/Users/jay/emacs/emacs-settings/spellcheck.org][spellcheck.org]], and [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] are the current examples of that targeted extraction pattern.
 
 *Current decision*: Progressive extraction into focused modules is the preferred direction. See [[*Keep Modularizing][Keep Modularizing]]. The original "convenience" argument underestimated two forces that have grown in importance: accumulated file size (now ~10k lines) and the cost of loading large irrelevant context into AI assistants. The modularity argument was also framed as a team concern, but the payoffs (focused grep, tight AI context, physical refactor boundaries, coherent git history) all apply to a personal config too.
 
@@ -414,6 +417,7 @@ This section documents a decision that has since been reversed. Keeping it for h
 - =spacecraft-mode.org= — prose editing helpers
 - =org-authoring.org= — Org structure authoring
 - =spellcheck.org= — spellchecking subsystem
+- =org-export.org= — export and publishing subsystem
 
 ** Why Literate Programming (Not Just .el Files)?
 

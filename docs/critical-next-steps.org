@@ -41,10 +41,11 @@ Status indicators:
 - Candidate sections in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]]: =* org-clock=, =* org-timesheet=, =* Eisenhower Matrix=, =* org-agenda=, =* org-attach=, =* archive tasks based on date=, =* org-timeblocking=.
 - Reason: this is the right way to reduce workflow residue without creating a vague dumping-ground file like =org-workflow.org=.
 
-** [PLANNED] Create org-export.org after the consolidation pass
-- After the Org-roam sidecar and agenda consolidation land, extract the export/publishing cluster from [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] into a new [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] module if the cluster still reads as one coherent subsystem.
-- Candidate sections: =* org-export=, HTML/LaTeX/DOCX export helpers, =* ox-clip=, =* ox-timeline=, =* ox-json=, cover-page PDF export, ChatGPT export, Astro export glue, =* koma letter=.
-- Reason: export remains the strongest new-file candidate, but existing-module consolidation should happen first when it removes more code and strengthens boundaries already present in the repo.
+** [COMPLETED] 2026-04-19: Create org-export.org after the consolidation pass
+- Created [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] as the dedicated export/publishing module.
+- Moved the live export/publishing cluster out of [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]]: Org export defaults, HTML/LaTeX/DOCX helpers, export filters, =ox-clip=, =ox-timeline=, =ox-json=, cover-page PDF export, ChatGPT export helpers, and export-only LaTeX glue.
+- Wired [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] into [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][spacemacs-new-config.el]] before [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] for load-order safety.
+- Intentionally left profile-owned =org-astro= behavior in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-profiles.el][jay-org-roam-suite/jay-org-roam-profiles.el]] rather than broadening the new module's scope.
 
 * Completed Simplifications
 
@@ -436,7 +437,7 @@ Identify top 5 slowest items, estimate potential gains, decide if worth optimizi
 | Consolidate Org-roam (core plumbing)  | ~210         | ***                  | PARTIAL     |
 | Create jay-org-roam-extras.el sidecar | Modular      | **                   | Pending     |
 | Consolidate agenda into goals-agenda  | Modular      | ***                  | Pending     |
-| Create org-export.org                 | Modular      | ****                 | Pending     |
+| Create org-export.org                 | Modular      | ****                 | DONE        |
 | Remove GNU Emacs dual boot            | ~1,400       | *****                | Pending     |
 | Consolidate config loads              | ~200         | ***                  | Pending     |
 | Remove commented code                 | ~300-500     | ****                 | Pending     |
