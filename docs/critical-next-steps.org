@@ -18,23 +18,55 @@ Status indicators:
 - *[OPTIONAL]* - Would be nice, but not critical
 - *[TABLED]* - Decided not to pursue (for now)
 
-*Progress:* 2 of 9 major simplifications completed (22%)
+*Progress:* See progress table at bottom. Modularization work is now a major ongoing track alongside the original simplification roadmap.
 
 * Next Modularization Queue
 
-** [PLANNED] Consolidate Org-roam-related residue into the existing suite
-- Audit the Org-roam sections still living in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] and move genuine core/profile/template/startup-reliability behavior into the existing [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/][jay-org-roam-suite/]] modules.
-- Reason: this drains the monolith while reinforcing a boundary that already exists, which is higher leverage than inventing another Org-roam-adjacent file.
+** [PARTIAL] Consolidate Org-roam-related residue into the existing suite
+*Done (2026-04-19):*
+- Renamed three misleading Org-roam headings in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so the content matches the label.
+- Cleaned stale Org-roam residue: deleted dead =#+begin_EXAMPLE= blocks (=org-refile-region-to-org-heading-or-roam-node=, =org-roam fail gracefully=), empty =* org-roam= section, redundant debug scan snippet, and the obsolete =jay/org-roam--use= / =jay/org-roam-use-main= / =jay/org-roam-use-life= multi-database helpers (superseded by [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-profiles.el][jay-org-roam-profiles.el]]; zero callers, path was outdated).
+- Rewired =load-roam-config= to open the real suite core instead of the deprecation shim.
+- Moved the Dropbox sync cache-reset code (=jay/org-cache-reset-roots= + helpers + =focus-in-hook=) into [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-core.el]]. This is the one true core-plumbing move.
+- Net: ~210 lines removed from the monolith, one reliability helper correctly relocated, startup time halved (2.038s → 1.003s) though most of that gain came from earlier work.
+
+*Remaining:*
+- Create [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-extras.el][jay-org-roam-extras.el]] as a sidecar for user-facing Org-roam commands that don't belong inside the suite's Core/Profiles/Templates architecture.
+- Move into the sidecar: =org-roam-ui= use-package block ([[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] ~line 5000), =choose-refile-method-and-refile= + =select-refile-mode= (bound to =s-'= in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] — preserve binding), =kb/find-node-backlink= (backlink navigation UX), and the four =jay/debug-*= Org file parse-debug helpers.
+- Wire the sidecar into [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][spacemacs-new-config.el]] to load *after* the suite.
+- Verify =s-'= still triggers =choose-refile-method-and-refile= after the move.
 
 ** [PLANNED] Consolidate agenda/workflow residue into existing agenda modules
 - Audit agenda, clocking, timeblocking, attach, and related workflow sections in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] for moves into [[file+emacs:/Users/jay/emacs/emacs-settings/goals-agenda.org][goals-agenda.org]] and related existing agenda/goals modules.
-- Reason: this is the right way to reduce workflow residue without creating a vague dumping-ground file like [[file+emacs:/Users/jay/emacs/emacs-settings/org-workflow.org][org-workflow.org]].
+- Candidate sections in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]]: =* org-clock=, =* org-timesheet=, =* Eisenhower Matrix=, =* org-agenda=, =* org-attach=, =* archive tasks based on date=, =* org-timeblocking=.
+- Reason: this is the right way to reduce workflow residue without creating a vague dumping-ground file like =org-workflow.org=.
 
 ** [PLANNED] Create org-export.org after the consolidation pass
-- After the Org-roam and agenda consolidation audits, extract the export/publishing cluster from [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] into a new [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] module if the cluster still reads as one coherent subsystem.
+- After the Org-roam sidecar and agenda consolidation land, extract the export/publishing cluster from [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] into a new [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] module if the cluster still reads as one coherent subsystem.
+- Candidate sections: =* org-export=, HTML/LaTeX/DOCX export helpers, =* ox-clip=, =* ox-timeline=, =* ox-json=, cover-page PDF export, ChatGPT export, Astro export glue, =* koma letter=.
 - Reason: export remains the strongest new-file candidate, but existing-module consolidation should happen first when it removes more code and strengthens boundaries already present in the repo.
 
 * Completed Simplifications
+
+** [COMPLETED] 2026-04-19: Consolidated Org-roam core plumbing (partial)
+- See partial item above. First of multiple passes; sidecar creation still pending.
+
+** [COMPLETED] 2026-04-19: Extracted spellcheck subsystem into spellcheck.org
+- Created [[file+emacs:/Users/jay/emacs/emacs-settings/spellcheck.org][spellcheck.org]] as the dedicated home for Flyspell, Jinx, Hunspell, personal-dictionary wiring, and the large-buffer Flyspell guard.
+- Moved all spellcheck clusters out of [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]]; verified zero remaining spellcheck references (only the separate =define-word= / =sdcv= word-definition subsystem still references "dictionary," and that's intentional).
+- Wired into [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][spacemacs-new-config.el]] before =shared-functions.org= for load-order safety.
+- *Savings:* one coherent subsystem extracted; spellcheck now editable as a focused unit.
+
+** [COMPLETED] 2026-04-?: Extracted Org authoring helpers into org-authoring.org
+- Created [[file+emacs:/Users/jay/emacs/emacs-settings/org-authoring.org][org-authoring.org]] for Org-only authoring helpers: heading insertion, list/checkbox predicates, Org-specific structure editing.
+- Moved from [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org][gnu-emacs-startup.org]] where they were miscategorized as "startup" code.
+
+** [COMPLETED] 2026-04-?: Extracted prose editing into spacecraft-mode.org
+- [[file+emacs:/Users/jay/emacs/emacs-settings/spacecraft-mode.org][spacecraft-mode.org]] now owns all prose-editing behavior (sentence movement, sentence killing, kill-word helpers, capitalization, smart punctuation).
+- Cleanly separates "writing" concerns from "system bootstrap" concerns.
+
+** [COMPLETED] 2026-04-?: Extracted search/completion into search-commands.org
+- First extraction from the monolith; established the pattern that later extractions followed.
 
 ** [COMPLETED] 2025-10-26: Removed init-working.el backup
 - Deleted =spacemacs.d/init-working.el= (old backup from Oct 14)
@@ -395,17 +427,25 @@ Identify top 5 slowest items, estimate potential gains, decide if worth optimizi
 
 | Change                         | Lines Saved  | Complexity Reduction | Status      |
 |--------------------------------+--------------+----------------------+-------------|
-| Remove init-working.el backup  | 1 file       | *                    | DONE        |
-| Convert pasteboard to pure .el | Workflow     | ***                  | DONE        |
-| Remove GNU Emacs dual boot     | ~1,400       | *****                | Pending     |
-| Consolidate config loads       | ~200         | ***                  | Pending     |
-| Remove commented code          | ~300-500     | ****                 | Pending     |
-| Fix deprecated functions       | ~50          | ** (stability++)     | Pending     |
-| Unify keybindings              | ~100         | ****                 | Pending     |
-| Defer package loading          | ~0           | **                   | Pending     |
-| Consolidate org settings       | ~150         | ****                 | Pending     |
-|--------------------------------+--------------+----------------------+-------------|
-| *TOTAL*                        | *~2,200*     | *Much easier*        | 2/9 done    |
+| Remove init-working.el backup         | 1 file       | *                    | DONE        |
+| Convert pasteboard to pure .el        | Workflow     | ***                  | DONE        |
+| Extract search-commands.org           | Modular      | ***                  | DONE        |
+| Extract spacecraft-mode.org           | Modular      | ****                 | DONE        |
+| Extract org-authoring.org             | Modular      | ***                  | DONE        |
+| Extract spellcheck.org                | Modular      | ***                  | DONE        |
+| Consolidate Org-roam (core plumbing)  | ~210         | ***                  | PARTIAL     |
+| Create jay-org-roam-extras.el sidecar | Modular      | **                   | Pending     |
+| Consolidate agenda into goals-agenda  | Modular      | ***                  | Pending     |
+| Create org-export.org                 | Modular      | ****                 | Pending     |
+| Remove GNU Emacs dual boot            | ~1,400       | *****                | Pending     |
+| Consolidate config loads              | ~200         | ***                  | Pending     |
+| Remove commented code                 | ~300-500     | ****                 | Pending     |
+| Fix deprecated functions              | ~50          | ** (stability++)     | Pending     |
+| Unify keybindings                     | ~100         | ****                 | Pending     |
+| Defer package loading                 | ~0           | **                   | Pending     |
+| Consolidate org settings              | ~150         | ****                 | Pending     |
+|---------------------------------------+--------------+----------------------+-------------|
+| *TOTAL*                               | *~2,200+*    | *Much easier*        | 6/16 done   |
 
 * Decision Log
 
