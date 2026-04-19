@@ -33,6 +33,29 @@ Fixing the dotimes unmasked a second hidden bug: an orphan =)= on a line further
 - Counter-signal that a literate src block has malformed structure: top-level forms *inside* an apparent loop or let that logically should be at top level. If you see =(use-package ...)= or =(org-clock-persistence-insinuate)= indented under an unrelated wrapper in the tangled =.el=, that is the smoke.
 - Related gotcha documented separately: [[*In Literate Org, Naked Lisp After \`#+end_src\` Is Just Text][naked Lisp after =#+end_src=]] — the inverse failure, where intended live code is silently *excluded* from tangling.
 
+* Projectile Commands Can Work Without Eager `projectile-mode` Startup
+  Date: 2026-04-18
+
+** Trigger
+[[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][search-commands.org]] still paid startup cost for =(projectile-mode +1)= even after the bigger search startup trims. The question was whether Jay's real =s-G= / =counsel-projectile-ag= workflow actually needed =projectile-mode= to be active at startup, or just needed Projectile functions to exist when the command ran.
+
+** Mechanism
+=counsel-projectile-ag= does not depend on the global minor mode being on. In the installed [[file+emacs:/Users/jay/.emacs.d/elpa/counsel-projectile-20211004.2003/counsel-projectile.el][/Users/jay/.emacs.d/elpa/counsel-projectile-20211004.2003/counsel-projectile.el]], the command calls Projectile's functional API directly:
+- =projectile-project-p=
+- =projectile-project-root=
+- =projectile-ignored-files-rel=
+- =projectile-ignored-directories-rel=
+
+That means a deferred =use-package projectile= block can still support the command path without turning on =projectile-mode= during startup. The mode mainly installs hooks, a keymap, and global editor behavior; the command itself just needs the library code.
+
+** The Fix
+Remove eager =(projectile-mode +1)= from [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][search-commands.org]], keep Projectile deferred, and test the real user-facing command after relaunch.
+
+** Lessons Learned / Prevention Checklist
+- Distinguish "package library must be loadable" from "global minor mode must be active at startup".
+- For startup audits, inspect the command's implementation before assuming its associated minor mode is required.
+- The safest proof is a live workflow test after relaunch, not static config theory alone.
+
 * In Literate Org, Naked Lisp After `#+end_src` Is Just Text
   Date: 2026-04-17
 

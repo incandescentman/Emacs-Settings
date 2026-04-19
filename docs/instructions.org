@@ -603,7 +603,7 @@ Edit [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roa
 
 All keybindings are being consolidated into a single canonical location:
 - [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] - All global overrides and mode-specific bindings
-- [[file+emacs:/Users/jay/emacs/emacs-settings/jay-osx.el][jay-osx.el]] - macOS-specific (defines =key-minor-mode-map=, preserved separately)
+- [[file+emacs:/Users/jay/emacs/emacs-settings/jay-osx.el][jay-osx.el]] - macOS-specific (initializes the shared =key-minor-mode-map= early; [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] owns =key-minor-mode=)
 
 See [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-consolidation-plan.org][keybinding-consolidation-plan.org]] for the migration plan.
 

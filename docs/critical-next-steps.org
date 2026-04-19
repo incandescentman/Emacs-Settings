@@ -224,7 +224,7 @@ Add dependency comments at top of each major file:
 *Why it matters*:
 Keybindings scattered across:
 - =keys.el= (376 lines)
-- =jay-osx.el= (defines =key-minor-mode-map=)
+- =jay-osx.el= (initializes the shared =key-minor-mode-map=)
 - =gnu-emacs-startup.el= (global-set-key calls)
 - =shared-functions.org= (* Keybindings section)
 

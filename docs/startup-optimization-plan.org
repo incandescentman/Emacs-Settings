@@ -19,16 +19,17 @@ The main startup loader is:
 - [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][/Users/jay/emacs/emacs-settings/spacemacs-new-config.el]]
 
 Current measured hotspots (post-dotimes-fix):
-- =org-babel-load shared-functions.org= =0.53s= (was a misleading =5.27s= cold / =0.51s= warm before the fix)
-- =org-babel-load search-commands.org= =0.28s= — now the next-largest item and the best remaining candidate
+- =org-babel-load shared-functions.org= =0.49s= to =0.53s= in clean steady-state runs (was a misleading =5.27s= cold before the dotimes fix)
+- =org-babel-load search-commands.org= =0.0875s= in the latest clean run, down from ~=0.28s= before lazy-loading =consult-org-roam= and =affe=
 - =require jay-org-roam-core= =0.14s=
 - =org-babel-load gnu-emacs-startup.org= small
-- Total init time =2.285s= (down from =2.543s= warm / =2.595s= cold)
+- Total init time =1.614s= in the latest clean run (down from =2.285s= after the dotimes fix and =2.543s= warm / =2.595s= cold before later startup trims)
 
 Important interpretation:
 - The earlier =5.27s= bar for [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][/Users/jay/emacs/emacs-settings/shared-functions.org]] was inflated by an accidental =(dotimes (n 10))= wrap that caused ~30 top-level forms to run 10× at startup. That bug has been fixed; see [[file+emacs:/Users/jay/emacs/emacs-settings/docs/codebase-wisdom.org][codebase-wisdom.org]] for the mechanism.
 - After the fix, =shared-functions.org= behaves in line with its size as a literate-config load, not as a runaway outlier.
-- [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][/Users/jay/emacs/emacs-settings/search-commands.org]] is now the strongest remaining candidate: still ~=0.28s= for a much smaller file, which suggests avoidable eager work rather than structural load cost.
+- [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][/Users/jay/emacs/emacs-settings/search-commands.org]] did have avoidable eager work, and moving =consult-org-roam= plus =affe= off the startup path reduced it sharply.
+- One profile entry may still show a multi-second =search-commands.org= load immediately after edits; treat that as a re-tangle spike if it coincides with a freshly rewritten [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.el][/Users/jay/emacs/emacs-settings/search-commands.el]].
 
 * First Audit Snapshot
 
@@ -116,7 +117,13 @@ Look for:
 - package initialization that could move behind autoloads or command wrappers
 - consult/counsel/org-roam glue that does not need to execute at startup
 
-This file is a stronger candidate for reducing unnecessary startup work than [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][/Users/jay/emacs/emacs-settings/shared-functions.org]].
+This file was a strong candidate for reducing unnecessary startup work, and the first low-risk trims have already paid off.
+
+Current status:
+- =consult-org-roam= in [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][/Users/jay/emacs/emacs-settings/search-commands.org]] has been moved off the normal startup path. It now loads only when one of the consult-org-roam commands is invoked, instead of requiring the package and enabling =consult-org-roam-mode= during startup.
+- =affe= in [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][/Users/jay/emacs/emacs-settings/search-commands.org]] is now also command-driven rather than eagerly loaded.
+- Clean relaunch after those changes shows =org-babel-load search-commands.org= at =0.0875s=, which means the biggest obvious avoidable startup work in this file is now gone.
+- Jay's live =counsel-projectile-ag= workflow still works with eager =projectile-mode= startup removed, so the config can keep Projectile available without paying that startup-mode cost.
 
 ** Audit C: gnu-emacs-startup.org
 

@@ -78,7 +78,7 @@ Understanding the loading sequence helps debug issues:
 3. Reads ~/.spacemacs.d/init.el (symlinked to /Users/jay/emacs/emacs-settings/spacemacs.d/init.el)
 4. Spacemacs loads layers (org, auto-completion, etc.)
 5. Loads spacemacs-new-config.el
-6. Loads jay-osx.el (provides key-minor-mode-map)
+6. Loads jay-osx.el (provides the early =key-minor-mode-map=)
 7. Loads gnu-emacs-startup.el
 8. Loads shared-functions.el (tangled from shared-functions.org)
 9. Loads other modules (deferred or immediate based on config)

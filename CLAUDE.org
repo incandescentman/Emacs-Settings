@@ -42,7 +42,7 @@ The following documentation files provide detailed information about various asp
 - Auto-tangling enabled via =#+auto_tangle: t= header
 
 **** 2. Platform Integration
-- =jay-osx.el= - macOS specific settings and =key-minor-mode-map= definition
+- =jay-osx.el= - macOS-specific settings and early =key-minor-mode-map= setup
 - =pasteboard-copy-and-paste-functions.el= - Enhanced clipboard operations
 - =reveal-in-finder.el= - Finder integration
 
@@ -72,7 +72,7 @@ The following documentation files provide detailed information about various asp
 1. Spacemacs core initialization
 2. Layer configuration (org, auto-completion, compleseus, etc.)
 3. =spacemacs-new-config.el=
-4. =jay-osx.el= (provides key-minor-mode-map)
+4. =jay-osx.el= (provides the early =key-minor-mode-map=)
 5. =gnu-emacs-startup.el=
 6. =shared-functions.el=
 7. Various feature modules (deferred or immediate)
@@ -171,7 +171,7 @@ The following documentation files provide detailed information about various asp
 
 ** Key Dependencies
 - *External*: Spacemacs, org-roam, Hunspell, various ELPA packages
-- *Internal*: =key-minor-mode-map= (defined in jay-osx.el)
+- *Internal*: =key-minor-mode-map= (initialized in =jay-osx.el=; =keys.el= owns =key-minor-mode=)
 - *Paths*: =~/emacs/Spelling/=, =~/Dropbox/writing/=, various project directories
 
 ** Open Bugs
