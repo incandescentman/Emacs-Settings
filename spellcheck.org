@@ -5,6 +5,11 @@
 
 ** flyspell setup
 #+BEGIN_SRC emacs-lisp
+(defun jay/fix-ispell-contraction ()
+  "Fix ispell handling of contractions like shouldn't."
+  (add-to-list 'ispell-local-dictionary-alist
+               '("en_GB" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_GB") nil utf-8)))
+
 (use-package flyspell
   :ensure nil                    ; built-in
   :hook ((text-mode . flyspell-mode)
@@ -27,11 +32,15 @@
         flyspell-mark-duplications-exceptions
         '((nil "that" "had" "really" "very" "much")
           ("\\`francais\\>" "nous" "vous")))
-  :config
-  ;; Skip #+begin_src ... #+end_src blocks in Org
-  (defun my/org-setup-flyspell ()
-    (when (derived-mode-p 'org-mode)
-      (make-local-variable 'ispell-skip-region-alist)
+	  :config
+	  (with-eval-after-load 'ispell
+	    (jay/fix-ispell-contraction)
+	    (add-to-list 'ispell-local-dictionary-alist
+	                 '("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US-large") nil utf-8)))
+	  ;; Skip #+begin_src ... #+end_src blocks in Org
+	  (defun my/org-setup-flyspell ()
+	    (when (derived-mode-p 'org-mode)
+	      (make-local-variable 'ispell-skip-region-alist)
       (add-to-list 'ispell-skip-region-alist
                    '("^#\\+begin_src" . "^#\\+end_src"))))
   (add-hook 'org-mode-hook #'my/org-setup-flyspell))

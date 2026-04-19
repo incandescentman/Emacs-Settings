@@ -6,7 +6,7 @@ A clean system for managing multiple independent org-roam databases with differe
 
 1. **jay-org-roam-suite/jay-org-roam-profiles.el** - Profile switching system with all capture templates
 2. **jay-org-roam-suite/jay-org-roam-core.el** - Lazy org-roam bootstrap with idle timers, bindings, and profile init
-3. **jay-org-roam-suite/jay-editor-environment.el** - Supporting editor environment utilities (PATH, ispell, XeLaTeX, captain hooks)
+3. **Supporting environment ownership** - Spellcheck now lives in `spellcheck.org`, export-specific XeLaTeX settings live in `org-export.org`, and startup-owned environment setup stays outside the suite.
 
 ## Quick Setup
 
@@ -23,9 +23,6 @@ If the `jay-org-roam-suite/` directory lives outside your standard load path, po
 ```elisp
 ;; Core module (loads profile system + templates automatically)
 (require 'jay-org-roam-core)
-
-;; Optional editor helpers (ispell dictionaries, PATH fixes, XeLaTeX pipeline)
-(require 'jay-editor-environment)
 ```
 
 ### 3. Create the directories
