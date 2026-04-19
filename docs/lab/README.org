@@ -7,7 +7,7 @@ The experimental org-roam code that was here has been archived.
 The production implementation is now in:
 
 - [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/][jay-org-roam-suite/]] - Core, Profiles, and Templates modules
-- [[file+emacs:/Users/jay/emacs/emacs-settings/docs/ORG-ROAM-PROFILES-README.md][docs/ORG-ROAM-PROFILES-README.md]] - User guide for the profile system
+- [[file+emacs:/Users/jay/emacs/emacs-settings/docs/org-roam-profiles.org][docs/org-roam-profiles.org]] - User guide for the profile system
 
 * Archived Files
 

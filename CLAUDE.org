@@ -18,7 +18,7 @@ The following documentation files provide detailed information about various asp
 - [[file+emacs:docs/backup-system.org][📄 backup-system.org]] - Backup and recovery system documentation
 - [[file+emacs:docs/critical-next-steps.org][📄 critical-next-steps.org]] - Priority items for future development
 - [[file+emacs:docs/experimental-mode-playbook.org][📄 experimental-mode-playbook.org]] - Guide for experimental mode features
-- [[file+emacs:docs/ORG-ROAM-PROFILES-README.md][📄 ORG-ROAM-PROFILES-README.md]] - Guide to the multi-profile Org Roam system
+- [[file+emacs:docs/org-roam-profiles.org][📄 org-roam-profiles.org]] - Guide to the multi-profile Org Roam system
 - [[file+emacs:docs/pasteboard-markdown-detection.org][📄 pasteboard-markdown-detection.org]] - Documentation for the smart pasteboard system
 - [[file+emacs:docs/goals-system.org][📄 goals-system.org]] - Goals workflow integration (rep counter, morning ritual, anti-stall)
 
@@ -122,7 +122,7 @@ The following documentation files provide detailed information about various asp
 
 *** 3. Documentation Overhaul (Oct 2025)
 - *Complete Rewrite*: Transformed technical notes into user-friendly guides (=instructions.org=, =design-architecture.org=).
-- *New Guides*: Added =ORG-ROAM-PROFILES-README.md=, =pasteboard-markdown-detection.org=.
+- *New Guides*: Added =org-roam-profiles.org=, =pasteboard-markdown-detection.org=.
 - *Philosophy*: Shifted to "comprehensive guides teaching concepts".
 
 *** 4. Pasteboard & Editor Hardening

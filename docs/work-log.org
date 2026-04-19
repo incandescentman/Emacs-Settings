@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-19: Normalize Org-roam profiles docs and root readme pointers
+- Added [[file+emacs:/Users/jay/emacs/emacs-settings/docs/org-roam-profiles.org][docs/org-roam-profiles.org]] as the canonical Org-mode guide for the multi-profile Org-roam system.
+- Reduced [[file+emacs:/Users/jay/emacs/emacs-settings/docs/ORG-ROAM-PROFILES-README.md][docs/ORG-ROAM-PROFILES-README.md]] to a compatibility pointer so old links still land somewhere useful.
+- Reduced [[file+emacs:/Users/jay/emacs/emacs-settings/README.md][README.md]] to a tiny pointer and kept [[file+emacs:/Users/jay/emacs/emacs-settings/README.org][README.org]] as the real root overview.
+
 * 2026-04-19: Create jay-org-roam-extras.el sidecar
 - Created [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-extras.el][jay-org-roam-suite/jay-org-roam-extras.el]] for user-facing Org-roam commands that did not belong inside the suite's core/profile/template plumbing.
 - Moved the =org-roam-ui= setup, the =choose-refile-method-and-refile= / =select-refile-mode= wrapper, =org-roam-auto-link-buffer=, =kb/find-node-backlink=, and the four =jay/debug-*= parser-diagnostic commands out of [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]].

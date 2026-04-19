@@ -1,0 +1,164 @@
+#+TITLE: Org-Roam Profiles
+
+* Overview
+
+This guide explains the multi-profile Org-roam system built around:
+
+- [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-suite/jay-org-roam-core.el]] for lazy bootstrap and reliability plumbing
+- [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-profiles.el][jay-org-roam-suite/jay-org-roam-profiles.el]] for profile switching and capture templates
+- [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-extras.el][jay-org-roam-suite/jay-org-roam-extras.el]] for user-facing Org-roam helpers
+
+The profiles stay independent: each one has its own directory, database, dailies location, and capture templates.
+
+* Quick Setup
+
+** Add the suite to your load path
+
+If [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/][jay-org-roam-suite/]] lives outside your default load path:
+
+#+begin_src emacs-lisp
+(add-to-list 'load-path "~/emacs/emacs-settings/jay-org-roam-suite")
+#+end_src
+
+** Require the core module
+
+#+begin_src emacs-lisp
+(require 'jay-org-roam-core)
+#+end_src
+
+** Create the profile directories
+
+They can be created automatically, but the explicit paths are:
+
+- =~/Dropbox/roam/journal=
+- =~/Dropbox/roam-life/journal=
+- =~/Dropbox/roam-social/journal=
+- =~/Dropbox/roam-parents/journal=
+
+* Usage
+
+** Switching profiles
+
+Interactive switcher:
+
+#+begin_example
+M-x jay/org-roam-switch-profile RET
+#+end_example
+
+Quick bindings:
+
+- =s-u P= switch profile interactively
+- =s-u C-p= show current profile info
+- =s-u 1= switch to default
+- =s-u 2= switch to my-life
+- =s-u 3= switch to roam-social
+- =s-u 4= switch to roam-parents
+
+** What happens when you switch
+
+1. The current database connection is closed safely.
+2. The profile directory, database location, and templates are updated.
+3. The new database connection is opened.
+4. The chosen profile is saved for the next session.
+5. Emacs reports which profile is active.
+
+* Profiles
+
+** Default
+
+- Directory: =~/Dropbox/roam/=
+- Database: XDG cache managed
+- Focus: full work setup
+
+** My-Life
+
+- Directory: =~/Dropbox/roam-life/=
+- Database: =~/Dropbox/roam-life/.org-roam.db=
+- Focus: personal journaling, gratitude, reflection, health, family, travel, learning
+
+** Roam-Social
+
+- Directory: =~/Dropbox/roam-social/=
+- Database: =~/Dropbox/roam-social/.org-roam.db=
+- Focus: relationship notes, event debriefs, introductions, follow-ups, people snapshots
+
+** Roam-Parents
+
+- Directory: =~/Dropbox/roam-parents/=
+- Database: =~/Dropbox/roam-parents/.org-roam.db=
+- Focus: caretaking, appointments, medical notes, support reflections, family logistics
+
+* Customization
+
+** Add another profile
+
+Edit [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-profiles.el][jay-org-roam-suite/jay-org-roam-profiles.el]] and add a new entry to =jay/org-roam-profiles=.
+
+Example skeleton:
+
+#+begin_src emacs-lisp
+(research
+  :name "Research Notes"
+  :directory "~/Documents/research-roam"
+  :db-location "~/Documents/research-roam/.org-roam.db"
+  :dailies-directory "daily/"
+  :capture-templates jay/org-roam-capture-templates-research)
+#+end_src
+
+Then define a matching template list in the same file.
+
+** Customize templates
+
+The live template ownership is in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-profiles.el][jay-org-roam-suite/jay-org-roam-profiles.el]]. Update the relevant =jay/org-roam-capture-templates-*= variable there.
+
+* How It Works
+
+** Profile storage
+
+Each profile entry in =jay/org-roam-profiles= stores:
+
+- a human-readable name
+- a root directory
+- a database location
+- a dailies directory
+- a template list
+
+** Persistence
+
+The active profile is saved to =~/.cache/org-roam-current-profile= and restored on startup.
+
+** Database safety
+
+The system closes the old database before opening the next one.
+
+** Independence
+
+Profiles do not share databases or note directories. Cross-profile references should use full file paths rather than assuming Org-roam links will span graphs.
+
+* Troubleshooting
+
+** Profile not found
+
+Make sure the profile symbol matches the name defined in =jay/org-roam-profiles=.
+
+** Database locked
+
+1. Close Org-roam buffers.
+2. Run =M-x jay/org-roam-switch-profile= again.
+3. If needed, restart Emacs.
+
+** Templates not showing up
+
+Run =M-x jay/org-roam-show-current-profile= and verify the active profile, then inspect the template variable in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-profiles.el][jay-org-roam-suite/jay-org-roam-profiles.el]].
+
+* Tips
+
+- Start the day in =my-life= for journaling.
+- Switch to =default= for work.
+- Use =roam-social= around events and relationship follow-up.
+- Use =roam-parents= when handling family coordination.
+- Check the active profile with =s-u C-p= before capturing.
+
+* Integration Notes
+
+The profile system keeps normal Org-roam commands intact. =org-roam-node-find=, dailies commands, and search all work as usual inside the currently active graph.

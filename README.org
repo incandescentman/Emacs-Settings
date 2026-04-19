@@ -76,7 +76,7 @@ This is a sophisticated Emacs configuration that uses Spacemacs as its foundatio
 
 ### 2. Documentation Overhaul (Oct 2025)
 - **Complete Rewrite**: Transformed technical notes into user-friendly guides (`instructions.org`, `design-architecture.org`).
-- **New Guides**: Added `ORG-ROAM-PROFILES-README.md`, `pasteboard-markdown-detection.org`.
+- **New Guides**: Added `org-roam-profiles.org`, `pasteboard-markdown-detection.org`.
 - **Philosophy**: Shifted to "comprehensive guides teaching concepts".
 
 ### 3. Pasteboard & Editor Hardening
