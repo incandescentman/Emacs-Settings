@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-19: Rename misleading Org-roam-adjacent headings
+- Renamed three misleading headings in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] before any Org-roam cleanup or extraction work.
+- =* org-roam browsing history= became =* winner-mode= because the live code there is just =(winner-mode +1)=.
+- =* Trying to fix Roam startup errors= became =* Suppress spurious debug errors= because the live code is general debug suppression, not Org-roam-specific startup logic.
+- =* Prevent org-roam parsing crashes= became =* Org element cache self-verification= because the live code is a global Org cache setting that happens to help Org-roam reliability.
+
 * 2026-04-19: Record next module-boundary decisions after spellcheck split
 - Confirmed that the word-definition cluster in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] (=define-word=, =dictionary-search=, =dictionary-lookup-definition=, =sdcv=) correctly stayed out of [[file+emacs:/Users/jay/emacs/emacs-settings/spellcheck.org][spellcheck.org]] because definition lookup is a different subsystem from spelling correction.
 - Agreed that before creating a new module, we should first check whether the code belongs in an existing module that already owns the concern. Current highest-leverage consolidation targets are [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/][jay-org-roam-suite/]] for Org-roam residue and [[file+emacs:/Users/jay/emacs/emacs-settings/goals-agenda.org][goals-agenda.org]] for agenda/workflow residue.

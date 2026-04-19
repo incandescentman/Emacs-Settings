@@ -5682,7 +5682,7 @@ Source: [[https://taonaw-blog.netlify.app/2022-03-13/][Org ID, Org Attach & Bett
   org-attach-id-uuid-folder-format))
 #+end_src
 
-* org-roam browsing history
+* winner-mode
 #+begin_src emacs-lisp
 (winner-mode +1)
 ;; winner-mode bindings moved to keys.el
@@ -8058,7 +8058,7 @@ current Org buffer."
         (replace-match "[fn:: [[\\1][\\2]]]" t nil)))))
 #+end_src
 
-* Trying to fix Roam startup errors
+* Suppress spurious debug errors
 #+begin_src emacs-lisp
 (setq debug-on-quit nil)
 (add-to-list 'debug-ignored-errors 'minibuffer-quit)
@@ -8241,7 +8241,7 @@ It returns a list, so you can later jump to the first culprit:
 ;; Keybindings moved to keys.el
 #+end_src
 
-* Prevent org-roam parsing crashes
+* Org element cache self-verification
 #+begin_src emacs-lisp
 (setq org-element--cache-self-verify 'backtrace) ; default is nil
 
