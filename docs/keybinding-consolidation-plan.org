@@ -24,7 +24,6 @@ Keybindings are scattered across these files (excluding jay-osx.el and third-par
 | [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]]             | ~149                                   | Bindings co-located with function definitions    |
 | [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][search-commands.org]]              | ~43                                    | Search/grep/find keybindings                     |
 | [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][spacemacs-new-config.el]]         | ~32                                    | Mostly inside ~with-eval-after-load 'org~        |
-| [[file+emacs:/Users/jay/emacs/emacs-settings/org-roam-config-legacy.el][org-roam-config-legacy.el]]        | ~27                                    | ~s-u~ prefix map for org-roam                    |
 | [[file+emacs:/Users/jay/emacs/emacs-settings/spacecraft-mode.org][spacecraft-mode.org]]              | ~26                                    | Smart punctuation + case-change bindings         |
 | [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-core.el]]  | ~17                                    | Profile switching, backlinks                     |
 
@@ -137,7 +136,6 @@ Process in this order (largest impact first):
 2. [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] — ~149 bindings
 3. [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][search-commands.org]] — ~43 bindings
 4. [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][spacemacs-new-config.el]] — ~32 bindings
-5. [[file+emacs:/Users/jay/emacs/emacs-settings/org-roam-config-legacy.el][org-roam-config-legacy.el]] — ~27 bindings
 6. [[file+emacs:/Users/jay/emacs/emacs-settings/spacecraft-mode.org][spacecraft-mode.org]] — ~26 bindings
 7. [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-core.el]] — ~17 bindings
 

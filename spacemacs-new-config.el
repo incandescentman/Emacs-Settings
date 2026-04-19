@@ -604,8 +604,6 @@ With prefix arg FIX-HINTS, append actionable remediation commands."
 (setq org-twbs-postamble-format nil)
 (setq org-twbs-preamble nil)
 
-(load "/Users/jay/emacs/emacs-settings/jay-org-in-item-p.el")
-
 ;; (load "/Users/jay/emacs/emacs-settings/pdf-continuous-scroll.el")
 
 ;; (server-reflash)

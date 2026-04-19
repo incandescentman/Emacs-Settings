@@ -26,7 +26,6 @@ FILES=(
   "gnu-emacs-startup.el"
   "pasteboard-copy-and-paste-functions.el"
   "jay-org-roam-suite/jay-org-roam-core.el"
-  "org-roam-config-legacy.el"
 )
 
 for rel in "${FILES[@]}"; do
