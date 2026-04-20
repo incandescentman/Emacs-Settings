@@ -107,10 +107,6 @@ So the failure is not simply that Org omitted =\title{...}= from the generated L
 
 4. If needed, move the header assignment later than =\AtBeginDocument=, for example by patching after title metadata is emitted or by avoiding token registers entirely for this header path.
 
-* Current Risk
-
-The documentation currently says Garamond left headers fall back to the document title when =\leftheader{...}= is omitted. That behavior should be treated as unverified until this bug is resolved.
-
 * Resolution (2026-04-20)
 
 The fix landed in three iterations. Each iteration fixed the previous symptom but exposed a new one — worth preserving the full history so this pattern is easier to diagnose next time.
