@@ -502,6 +502,7 @@ Full Socratic AI example:
 Notes:
 - If you omit =\leftheader{...}= in =elegant-garamond= or =elegant-garamond-tabularray=, the left header falls back to the document title. Add =\leftheaderurl{...}= only when you want that left header text linked.
 - If you do set =\leftheader{...}=, it overrides the title fallback completely.
+- When the title fallback is in effect, only =#+TITLE:= appears in the left header. A =#+SUBTITLE:= on the document is preserved on the title page but is stripped out of the running header.
 - If =\footerbrand= is empty, the footer stays image-only.
 - In =elegant-garamond=, footer brand text now uses a Helvetica Neue LT Pro Condensed Bold treatment under XeLaTeX, with a slightly darker grey than =moonrockgrey= and a simpler bold sans fallback otherwise.
 - In =elegant-garamond= and =elegant-garamond-tabularray=, the right-side running header now follows the current exported section or subsection title even when Org emits starred headings (=\\section*=, =\\subsection*=). Subsubsections do not replace the running header.

@@ -2,37 +2,49 @@
 #+DATE: 2025-09-24
 #+DESCRIPTION: Debugging post-mortems and prevention checklists.
 
-* etoolbox =\ifstrempty= Does Not Expand =\the\tokenregister=
+* Three Ways To Get LaTeX Token-Register Emptiness Tests Wrong
   Date: 2026-04-20
 
 ** Trigger
-The Elegant Garamond LaTeX templates were supposed to fall back to =\@title= when =\leftheader{...}= was omitted, but the left header stayed blank on interior pages. Relevant pattern:
+The Elegant Garamond LaTeX templates were supposed to fall back to =\@title= when =\leftheader{...}= was omitted. The left header stayed blank. Fixing it took three iterations because each naive fix stumbled into a different LaTeX expansion trap.
+
+** Mechanism — the three traps
+
+*** Trap 1: =\ifstrempty{\the\reg}= ignores the register
+=etoolbox='s =\ifstrempty{<arg>}{<true>}{<false>}= applies =\detokenize= to =<arg>= *without expanding it first*. So =\ifstrempty{\the\leftheader}{...}{...}= detokenizes to the literal string =\the\leftheader=, which is never empty. The true branch cannot fire.
+
+*** Trap 2: =\edef\tmp{\@title}= crashes on fragile titles
+Switching to =\edef\tmp{\the\reg}= / =\ifx\tmp\@empty= fixes the test, but if the fallback branch is =\edef\jayresolvedleftheader{\@title}=, =\edef= force-expands =\@title=. Org =\title{...}= often contains fragile content (raw =#=, =\\=, =\medskip=, =\large=, unexpanded macros, subtitle concatenation), which crashes with =Illegal parameter number= or =Undefined control sequence= at =\begin{document}=.
+
+*** Trap 3: =\def\tmp{\the\reg}= makes =\ifx ...\@empty= always false
+Swapping =\edef= for =\def= to avoid the crash creates a new bug: =\def\tmp{\the\reg}= sets =\tmp='s replacement text to the literal two tokens =\the\reg=, which is not =\ifx=-equal to =\@empty=. The emptiness test always takes the false branch, the fallback never fires, and the header silently renders blank again.
+
+** Safe pattern
+
+Use =\expandafter= to force =\the= to expand before =\ifstrempty= sees the argument, and use =\let= (or delimited-argument splitting) instead of =\edef= on the content:
 
 #+begin_src latex
-\edef\jayresolvedleftheader{\ifstrempty{\the\leftheader}{\@title}{\the\leftheader}}
+\expandafter\ifstrempty\expandafter{\the\leftheader}
+  {\let\jayresolvedleftheader\@title}
+  {\def\jayresolvedleftheader{\the\leftheader}}%
 #+end_src
 
-** Mechanism
-etoolbox's =\ifstrempty{<arg>}{<true>}{<false>}= applies =\detokenize= to =<arg>= *without expanding it first*. So passing =\the\leftheader= as the argument detokenizes to the literal 16-character string =\the\leftheader=, which is never empty — the true branch could never fire, regardless of the register's actual contents.
-
-Wrapping the token register in =\edef\resolved{\the\leftheader}= and then calling =\ifstrempty{\resolved}= has the same failure mode: the detokenized string =\resolved= is itself non-empty. The only reliable test for an empty token register is to =\edef= into a macro and compare against =\@empty= with =\ifx=.
-
-** The Fix
-Expand the token register, then use =\ifx ...\@empty= instead of =\ifstrempty=:
+For Org documents specifically, =\@title= concatenates =#+SUBTITLE:= as =<title>\\\medskip\large <subtitle>=, so taking =\@title= whole drags the subtitle into the header. Split at the first =\\= with a delimited macro:
 
 #+begin_src latex
-\edef\jayresolvedleftheader{\the\leftheader}%
-\ifx\jayresolvedleftheader\@empty
-  \edef\jayresolvedleftheader{\@title}%
-\fi
+\def\jay@leftheader@split#1\\#2\jay@leftheader@end{\def\jayresolvedleftheader{#1}}
+...
+{\expandafter\jay@leftheader@split\@title\\\jay@leftheader@end}
 #+end_src
 
-Applied to both [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][elegant-garamond.el]] and [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond-tabularray.el][elegant-garamond-tabularray.el]].
+Appending =\\\jay@leftheader@end= makes the pattern match even when the title contains no =\\=.
 
-** Actionable insight
-- When testing whether a =\newtoks= register or token list variable is empty, =\ifstrempty= is the wrong tool — it sees the control sequence tokens, not the expansion.
-- The reliable pattern is: =\edef\tmp{\the\somereg}\ifx\tmp\@empty ... \fi= (inside =\makeatletter= if =\@empty= is needed).
-- If a LaTeX emptiness check appears to always fall through, write a minimal pdflatex test with both an empty and a non-empty case before assuming the branch logic is correct — etoolbox/xstring string-testing macros have surprising expansion semantics.
+** Actionable insights
+- =\ifstrempty= tests *tokens*, not *expansions*. Force a single level of expansion with =\expandafter\ifstrempty\expandafter{\the\reg}=.
+- Never =\edef= =\@title= or any Org-emitted macro — treat them as fragile. Use =\let= or delimited-argument copying to preserve tokens.
+- =\def\x{\the\reg}= does not test emptiness — it stores a recipe. =\ifx\x\@empty= against such a macro is always false.
+- For Org LaTeX exports, =\title{...}= includes the subtitle inline. If you want the title only, split at =\\=.
+- Before declaring a LaTeX fix resolved, test against a real project file, not just a synthetic minimal repro — titles with fragile content and subtitles are what actually break these paths.
 
 * Later Ispell Overrides Can Kill And Restart The Spellchecker Process
   Date: 2026-04-19

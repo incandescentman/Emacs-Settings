@@ -157,17 +157,15 @@
 \\newcommand{\\footerbrand}[1]{\\def\\jayfooterbrand{#1}\\jayapplyfooter}
 \\renewcommand{\\sectionmark}[1]{\\markboth{#1}{}}
 \\makeatletter
+\\def\\jay@leftheader@split#1\\\\#2\\jay@leftheader@end{\\def\\jayresolvedleftheader{#1}}
 \\newcommand{\\jayapplyleftheader}{%
-  \\edef\\jayresolvedleftheader{\\the\\leftheader}%
-  \\ifx\\jayresolvedleftheader\\@empty
-    \\edef\\jayresolvedleftheader{\\@title}%
-  \\fi
-  \\edef\\jayresolvedleftheaderurl{\\the\\leftheaderurl}%
-  \\ifx\\jayresolvedleftheaderurl\\@empty
-    \\lhead{\\scshape\\jayresolvedleftheader}%
-  \\else
-    \\lhead{\\scshape\\href{\\the\\leftheaderurl}{\\jayresolvedleftheader}}%
-  \\fi}
+  \\expandafter\\ifstrempty\\expandafter{\\the\\leftheader}
+    {\\expandafter\\jay@leftheader@split\\@title\\\\\\jay@leftheader@end}
+    {\\def\\jayresolvedleftheader{\\the\\leftheader}}%
+  \\expandafter\\ifstrempty\\expandafter{\\the\\leftheaderurl}
+    {\\lhead{\\scshape\\jayresolvedleftheader}}
+    {\\lhead{\\scshape\\href{\\the\\leftheaderurl}{\\jayresolvedleftheader}}}%
+}
 \\makeatother
 \\rhead{\\scshape{\\nouppercase{\\rightmark}}}
 \\AtBeginDocument{\\jayapplyleftheader}

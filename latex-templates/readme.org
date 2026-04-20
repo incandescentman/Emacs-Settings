@@ -11,6 +11,8 @@ Templates that use =fancyhdr= (e.g., =elegant-garamond=, =blue-ruin=) define =\l
 
 If you do set =\leftheader{...}=, it overrides the title fallback completely.
 
+When the title fallback is in effect, only =#+TITLE:= appears in the left header. A =#+SUBTITLE:= on the document is preserved on the title page itself but stripped out of the running header.
+
 The right header (=\rhead=) auto-populates from the current section or subsection title. Subsubsections do not replace it.
 
 For =elegant-garamond= and =elegant-garamond-tabularray=, the footer logo is also configurable per document. The template keeps the old Storytelling NYC image as the default, but you can override it and pair it with a different company name in the header:

@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-20: Harden Garamond left-header fallback against fragile titles and subtitles
+- First pass (=\edef ...\@title=) crashed real proposals with fragile =\title{...}= content (=Illegal parameter number= / =Undefined control sequence=) — notably [[file+emacs:/Users/jay/Dropbox/roam/prosperous/sony-pictures/sony-socratic-ai-proposal-v2.org][sony-socratic-ai-proposal-v2.org]].
+- A =\def\tmp{\the\reg}= / =\let ...\@title= attempt stopped the crash but silently regressed the title fallback, because =\ifx\tmp\@empty= is always false when =\tmp='s replacement text is the literal two tokens =\the\reg=.
+- Final fix in both [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][elegant-garamond.el]] and [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond-tabularray.el][elegant-garamond-tabularray.el]]: test emptiness with =\expandafter\ifstrempty\expandafter{\the\leftheader}=, and on fallback split =\@title= at the first =\\= via a delimited macro so the =#+SUBTITLE:= portion stays out of the running header.
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/docs/elegant-garamond-left-header-bug.org][docs/elegant-garamond-left-header-bug.org]] with the three-iteration history, rewrote the [[file+emacs:/Users/jay/emacs/emacs-settings/docs/codebase-wisdom.org][docs/codebase-wisdom.org]] entry with all three traps, and added subtitle notes to [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][docs/instructions.org]] and [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/readme.org][latex-templates/readme.org]].
+
 * 2026-04-20: Fix missing left header on Elegant Garamond exports
 - Root cause: =\ifstrempty{\the\leftheader}{...}{...}= in both [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][elegant-garamond.el]] and [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond-tabularray.el][elegant-garamond-tabularray.el]] never took the empty branch, because etoolbox detokenizes its argument without expanding =\the= first — so the literal string =\the\leftheader= was always non-empty and the =\@title= fallback could never fire.
 - Fix: expand =\the\leftheader= / =\the\leftheaderurl= into macros via =\edef= and test against =\@empty= with =\ifx= instead of =\ifstrempty=. Applied to both templates.

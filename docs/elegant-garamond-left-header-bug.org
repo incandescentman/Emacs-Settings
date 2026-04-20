@@ -113,26 +113,48 @@ The documentation currently says Garamond left headers fall back to the document
 
 * Resolution (2026-04-20)
 
-*Root cause*: =\ifstrempty= from etoolbox detokenizes its first argument *without expanding it first*. So =\ifstrempty{\the\leftheader}{...}{...}= tested whether the literal 16-character string =\the\leftheader= was empty — which it never is — so the fallback branch could never fire.
+The fix landed in three iterations. Each iteration fixed the previous symptom but exposed a new one — worth preserving the full history so this pattern is easier to diagnose next time.
 
-Verified with a minimal =pdflatex= test: =\ifstrempty{\the\myheader}{EMPTY}{NONEMPTY}= prints =NONEMPTY= even when =\myheader= is an empty token register. Wrapping the token register in =\edef\resolved{\the\myheader}= and then calling =\ifstrempty{\resolved}= has the same problem — the detokenized string =\resolved= is still non-empty. Only =\ifx\resolved\@empty= correctly sees the empty register.
+** Root cause
 
-*Fix*: expand the token register into a macro with =\edef=, then compare against =\@empty= with =\ifx=. Applied to both [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][📄 elegant-garamond.el]] and [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond-tabularray.el][📄 elegant-garamond-tabularray.el]]:
+=\ifstrempty= from etoolbox applies =\detokenize= to its first argument *without expanding =\the= first*. So =\ifstrempty{\the\leftheader}{...}{...}= tested whether the literal 16-character string =\the\leftheader= was empty — which it never is — and the fallback branch could never fire.
+
+Verified with a minimal =pdflatex= test: =\ifstrempty{\the\myheader}{EMPTY}{NONEMPTY}= prints =NONEMPTY= even when =\myheader= is an empty token register. Wrapping in =\edef\resolved{\the\myheader}= and then =\ifstrempty{\resolved}= has the same problem — the detokenized string =\resolved= is still non-empty.
+
+** Iteration 1: =\edef= with =\@title= — crashed on fragile titles
+
+First fix expanded the register via =\edef\jayresolvedleftheader{\the\leftheader}=, tested =\ifx ... \@empty=, and fell back to =\edef\jayresolvedleftheader{\@title}=. This compiled fine on simple titles but crashed real files like [[file+emacs:/Users/jay/Dropbox/roam/prosperous/sony-pictures/sony-socratic-ai-proposal-v2.tex][📄 sony-socratic-ai-proposal-v2.tex]] with =Illegal parameter number= and =Undefined control sequence= at =\begin{document}=.
+
+Reason: =\edef= forces full expansion of =\@title=. Org's =\title{...}= often contains fragile content (macros, =#=, =\\=, subtitle concatenation), which =\edef= cannot survive.
+
+** Iteration 2: =\def= + =\let= — silently regressed the fallback
+
+Swapping to =\def\jayresolvedleftheader{\the\leftheader}= + =\let\jayresolvedleftheader\@title= stopped the crash but broke the title fallback. =\def= sets the macro's replacement text to the literal 2 tokens =\the\leftheader= — which is never =\ifx=-equal to =\@empty=, so the =\let= branch could not fire. The left header went blank again on files with no explicit =\leftheader{...}=.
+
+** Iteration 3: =\expandafter\ifstrempty\expandafter= + title/subtitle split — final
+
+Two separate issues combined:
+
+1. Emptiness test of a token register. =\expandafter\ifstrempty\expandafter{\the\leftheader}{...}{...}= forces =\the\leftheader= to expand before =\ifstrempty= runs =\detokenize=, so the test is real and tolerates any content in the register.
+2. Title-only fallback. Org concatenates =#+SUBTITLE:= into =\title{<title>\\\medskip\large <subtitle>}=. A simple =\let\jayresolvedleftheader\@title= would pull the subtitle into the page header too. Fix: split =\@title= at the first =\\= with a delimited macro, keep only the part before.
+
+Applied to both [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][📄 elegant-garamond.el]] and [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond-tabularray.el][📄 elegant-garamond-tabularray.el]]:
 
 #+begin_src latex
 \makeatletter
+\def\jay@leftheader@split#1\\#2\jay@leftheader@end{\def\jayresolvedleftheader{#1}}
 \newcommand{\jayapplyleftheader}{%
-  \edef\jayresolvedleftheader{\the\leftheader}%
-  \ifx\jayresolvedleftheader\@empty
-    \edef\jayresolvedleftheader{\@title}%
-  \fi
-  \edef\jayresolvedleftheaderurl{\the\leftheaderurl}%
-  \ifx\jayresolvedleftheaderurl\@empty
-    \lhead{\scshape\jayresolvedleftheader}%
-  \else
-    \lhead{\scshape\href{\the\leftheaderurl}{\jayresolvedleftheader}}%
-  \fi}
+  \expandafter\ifstrempty\expandafter{\the\leftheader}
+    {\expandafter\jay@leftheader@split\@title\\\jay@leftheader@end}
+    {\def\jayresolvedleftheader{\the\leftheader}}%
+  \expandafter\ifstrempty\expandafter{\the\leftheaderurl}
+    {\lhead{\scshape\jayresolvedleftheader}}
+    {\lhead{\scshape\href{\the\leftheaderurl}{\jayresolvedleftheader}}}%
+}
 \makeatother
 #+end_src
 
-Confirmed working against the reproduction file — left header on page 2+ now falls back to =#+TITLE:= when =\leftheader{...}= is omitted.
+Notes:
+- The delimited pattern =#1\\#2\jay@leftheader@end= works whether or not the title contains =\\=. If the title has no =\\=, the sentinel =\\\jay@leftheader@end= we append ourselves satisfies the pattern and #1 captures the entire title.
+- No =\edef= anywhere on the content path, so titles with =#=, unexpanded macros, or =\\= do not crash.
+- Confirmed against [[file+emacs:/Users/jay/Dropbox/roam/prosperous/sony-pictures/sony-socratic-ai-proposal-v2.org][📄 sony-socratic-ai-proposal-v2.org]] (title + subtitle) and [[file+emacs:/Users/jay/Dropbox/roam/prosperous/sony-pictures/20260401-paul-follow-up-answers-email-draft.org][📄 20260401-paul-follow-up-answers-email-draft.org]] (title only).
