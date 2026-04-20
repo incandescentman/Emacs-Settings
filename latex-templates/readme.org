@@ -2,26 +2,26 @@
 
 * Header Configuration
 
-Templates that use =fancyhdr= (e.g., =elegant-garamond=, =blue-ruin=) define =\leftheader= and =\leftheaderurl= as empty token registers. You *must* set these in each org file's export settings for the author name to appear in the top-left page header:
+Templates that use =fancyhdr= (e.g., =elegant-garamond=, =blue-ruin=) define =\leftheader= and =\leftheaderurl=. For =elegant-garamond= and =elegant-garamond-tabularray=, if you omit =\leftheader{...}= the top-left page header falls back to the document title. Add =\leftheaderurl{...}= only when you want that left header text linked:
 
 #+begin_example
 #+LATEX_HEADER: \leftheader{Jay Dixit}
 #+LATEX_HEADER: \leftheaderurl{https://storytelling.nyc}
 #+end_example
 
-The right header (=\rhead=) auto-populates from the current section name via =\leftmark=.
+If you do set =\leftheader{...}=, it overrides the title fallback completely.
+
+The right header (=\rhead=) auto-populates from the current section or subsection title. Subsubsections do not replace it.
 
 For =elegant-garamond= and =elegant-garamond-tabularray=, the footer logo is also configurable per document. The template keeps the old Storytelling NYC image as the default, but you can override it and pair it with a different company name in the header:
 
 #+begin_example
 #+LATEX_CLASS: elegant-garamond
-#+LATEX_HEADER: \leftheader{Socratic AI}
-#+LATEX_HEADER: \leftheaderurl{https://socratic.ai}
 #+LATEX_HEADER: \footerlogo{/Users/jay/Dropbox/github/astro-monorepo/apps/socratic/src/assets/images/socratic-ai-complex-logo-transparent_color.png}
 #+LATEX_HEADER: \EnableLogoFooter
 #+end_example
 
-If you omit =\EnableLogoFooter=, the template falls back to a centered page number. If you use =\DisableFooter=, it suppresses the footer entirely.
+If you omit =\EnableLogoFooter=, the template falls back to a centered page number. If you use =\DisableFooter=, it suppresses the footer entirely. In the Garamond templates, the footer is also suppressed automatically on the first and last page.
 
 You can also add footer text beside the logo:
 
@@ -33,10 +33,13 @@ You can also add footer text beside the logo:
 #+LATEX_HEADER: \EnableLogoFooter
 #+end_example
 
-If =\footerbrand= is empty, the footer stays image-only. If it is set, the template renders the logo with small-caps brand text beside it.
+If =\footerbrand= is empty, the footer stays image-only. If it is set, the template renders the logo with a darker-grey condensed bold brand wordmark beside it.
+
+** Templates with optional =\leftheader=
+- =elegant-garamond= ([[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][📄 elegant-garamond.el]]) defaults to the document title when =\leftheader= is omitted
+- =elegant-garamond-tabularray= ([[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond-tabularray.el][📄 elegant-garamond-tabularray.el]]) defaults to the document title when =\leftheader= is omitted
 
 ** Templates requiring =\leftheader=
-- =elegant-garamond= ([[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][📄 elegant-garamond.el]])
 - =blue-ruin= (also uses =\coverimage=)
 - =blue-ruin-no-cover= (also uses =\coverimage=)
 - Any template that loads =fancyhdr= and references =\the\leftheader=

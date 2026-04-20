@@ -494,18 +494,18 @@ Add a wordmark beside the logo:
 Full Socratic AI example:
 #+BEGIN_EXAMPLE
 #+LATEX_CLASS: elegant-garamond
-#+LATEX_HEADER: \leftheader{Socratic AI}
-#+LATEX_HEADER: \leftheaderurl{https://socratic.ai}
 #+LATEX_HEADER: \footerlogo{/Users/jay/Dropbox/github/astro-monorepo/apps/socratic/src/assets/images/socratic-ai-complex-logo-transparent_color.png}
 #+LATEX_HEADER: \footerbrand{Socratic AI}
 #+LATEX_HEADER: \EnableLogoFooter
 #+END_EXAMPLE
 
 Notes:
+- If you omit =\leftheader{...}= in =elegant-garamond= or =elegant-garamond-tabularray=, the left header falls back to the document title. Add =\leftheaderurl{...}= only when you want that left header text linked.
+- If you do set =\leftheader{...}=, it overrides the title fallback completely.
 - If =\footerbrand= is empty, the footer stays image-only.
-- In =elegant-garamond=, footer brand text now uses a Helvetica Neue LT Pro Condensed Bold treatment under XeLaTeX, with a simpler bold sans fallback otherwise.
+- In =elegant-garamond=, footer brand text now uses a Helvetica Neue LT Pro Condensed Bold treatment under XeLaTeX, with a slightly darker grey than =moonrockgrey= and a simpler bold sans fallback otherwise.
 - In =elegant-garamond= and =elegant-garamond-tabularray=, the right-side running header now follows the current exported section or subsection title even when Org emits starred headings (=\\section*=, =\\subsection*=). Subsubsections do not replace the running header.
-- The first page still suppresses headers and footers in these templates, so the logo footer starts on page 2.
+- The first page still suppresses headers and footers in these templates, and the footer is also suppressed on the final page. On multi-page exports, the logo footer appears only on interior pages.
 - If you edit a LaTeX template file and export in the same Emacs session, reload the template definitions first with =M-x jay-load-latex= or restart Emacs; otherwise export can keep using stale class definitions already loaded in memory.
 
 *** Table Wrap Opt-Out (per table)
