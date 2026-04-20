@@ -7,6 +7,7 @@
 \\DocumentMetadata{lang=en-US}
 \\documentclass[12pt]{article}
 \\usepackage[includeheadfoot, margin=1in]{geometry} % Standard proposal/document margins
+\\setlength{\\footskip}{0.95in}
 
 % Package Inclusions
 \\usepackage{wrapfig}
@@ -80,6 +81,12 @@
   \\usepackage{fontspec}
   \\defaultfontfeatures{Mapping=tex-text, Scale=MatchLowercase}
   \\setsansfont{TeX Gyre Pagella}
+  \\newfontfamily\\jayfooterbrandfont[
+    Path = /Users/jay/Library/Fonts/,
+    UprightFont = HelveticaNeueLTPro-BdCn,
+    Extension = .otf
+  ]{Helvetica Neue LT Pro}
+  \\newcommand{\\jayfooterbrandstyle}[1]{{\\jayfooterbrandfont\\color{moonrockgrey}\\addfontfeatures{LetterSpace=-5}\\fontsize{50}{50}\\selectfont \\MakeUppercase{#1}}}
 
   % Set main font to Garamond Premier Pro
   \\setromanfont[
@@ -104,6 +111,7 @@
 \\else
   \\usepackage[mathletters]{ucs}
   \\usepackage[utf8x]{inputenc}
+  \\newcommand{\\jayfooterbrandstyle}[1]{{\\sffamily\\bfseries\\color{moonrockgrey}\\fontsize{50}{50}\\selectfont \\MakeUppercase{#1}}}
 \\fi
 
 % Color Definitions
@@ -140,30 +148,45 @@
 \\newtoks\\leftheader
 \\newtoks\\leftheaderurl
 \\newtoks\\coverimage
+\\def\\jayfooterlogo{/Users/jay/Dropbox/writing/prosperous/design/storytelling-nyc-logo/current-2018/_better-storytelling-nyc-period-canonical-helvetica-condensed.png}
+\\newcommand{\\footerlogo}[1]{\\def\\jayfooterlogo{#1}\\jayapplyfooter}
+\\def\\jayfooterbrand{}
+\\newcommand{\\footerbrand}[1]{\\def\\jayfooterbrand{#1}\\jayapplyfooter}
 \\renewcommand{\\sectionmark}[1]{\\markboth{#1}{}}
 \\lhead{\\scshape\\href{\\the\\leftheaderurl}{\\the\\leftheader}}
-\\rhead{\\scshape{\\leftmark}}
+\\rhead{\\scshape{\\nouppercase{\\rightmark}}}
 
 % Footer configuration (controlled from org file)
 \\newif\\ifjaylogofooter
 \\jaylogofooterfalse
-\\newcommand{\\EnableLogoFooter}{\\jaylogofootertrue}
 \\newif\\ifjaynofooter
 \\jaynofooterfalse
-\\newcommand{\\DisableFooter}{\\jaynofootertrue}
-\\AtBeginDocument{%
+\\newcommand{\\jayfooterlogoonly}{%
+  \\raisebox{-0.045in}{%
+    \\includegraphics[height=0.504in,keepaspectratio]{\\jayfooterlogo}%
+  }%
+}
+\\newcommand{\\jayfooterlogowithbrand}{%
+  \\raisebox{-0.045in}{%
+    \\includegraphics[height=0.504in,keepaspectratio]{\\jayfooterlogo}%
+  }%
+  \\hspace{0.38em}%
+  {\\jayfooterbrandstyle{\\jayfooterbrand}}%
+}
+\\newcommand{\\jayapplyfooter}{%
   \\ifjaynofooter
     \\fancyfoot{}%
   \\else\\ifjaylogofooter
-    \\fancyfoot[C]{%
-      \\raisebox{0.025in}{%
-        \\includegraphics[height=0.8in,keepaspectratio]{/Users/jay/Dropbox/writing/prosperous/design/storytelling-nyc-logo/current-2018/_better-storytelling-nyc-period-canonical-helvetica-condensed.png}
-      }%
-    }%
+    \\ifdefempty{\\jayfooterbrand}
+      {\\fancyfoot[C]{\\jayfooterlogoonly}}%
+      {\\fancyfoot[C]{\\jayfooterlogowithbrand}}%
   \\else
     \\cfoot{\\thepage}%
   \\fi\\fi
 }
+\\newcommand{\\EnableLogoFooter}{\\jaynofooterfalse\\jaylogofootertrue\\jayapplyfooter}
+\\newcommand{\\DisableFooter}{\\jaylogofooterfalse\\jaynofootertrue\\jayapplyfooter}
+\\jayapplyfooter
 
 % Paragraph and Indentation Settings
 \\setlength{\\parindent}{0pt}
@@ -273,7 +296,18 @@
 \\titlespacing{\\paragraph}{0pt}{0pt}{.5em}[]
 
 \\newcommand{\\mysectiontitle}[1]{%
+  \\markboth{#1}{#1}%
+  \\markright{#1}%
   \\raggedright\\fontsize{40}{26}\\selectfont #1
+}
+
+\\newcommand{\\mysubsectiontitle}[1]{%
+  \\markright{#1}%
+  \\sffamily\\setstretch{0.1}\\fontsize{24}{36}\\raggedright\\sffamily #1
+}
+
+\\newcommand{\\mysubsubsectiontitle}[1]{%
+  \\ttfamily\\bfseries\\scshape\\fontsize{18}{16}\\raggedright\\ttfamily\\color{spacegrey} #1
 }
 
 \\titleformat{\\section}
@@ -282,8 +316,16 @@
   {0em}
   {\\mysectiontitle}
 
-\\titleformat*{\\subsection}{\\sffamily\\setstretch{0.1}\\fontsize{24}{36}\\raggedright\\sffamily}
-\\titleformat*{\\subsubsection}{\\ttfamily\\bfseries\\scshape\\fontsize{18}{16}\\raggedright\\ttfamily\\color{spacegrey}}
+\\titleformat{\\subsection}
+  {}
+  {}
+  {0em}
+  {\\mysubsectiontitle}
+\\titleformat{\\subsubsection}
+  {}
+  {}
+  {0em}
+  {\\mysubsubsectiontitle}
 \\titleformat*{\\paragraph}{\\ttfamily\\bfseries\\fontsize{19}{12}\\raggedright}
 \\titleformat*{\\subparagraph}{\\sffamily\\fontsize{16}{12}\\raggedright\\ttfamily\\bfseries}
 

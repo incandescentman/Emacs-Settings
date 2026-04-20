@@ -11,6 +11,30 @@ Templates that use =fancyhdr= (e.g., =elegant-garamond=, =blue-ruin=) define =\l
 
 The right header (=\rhead=) auto-populates from the current section name via =\leftmark=.
 
+For =elegant-garamond= and =elegant-garamond-tabularray=, the footer logo is also configurable per document. The template keeps the old Storytelling NYC image as the default, but you can override it and pair it with a different company name in the header:
+
+#+begin_example
+#+LATEX_CLASS: elegant-garamond
+#+LATEX_HEADER: \leftheader{Socratic AI}
+#+LATEX_HEADER: \leftheaderurl{https://socratic.ai}
+#+LATEX_HEADER: \footerlogo{/Users/jay/Dropbox/github/astro-monorepo/apps/socratic/src/assets/images/socratic-ai-complex-logo-transparent_color.png}
+#+LATEX_HEADER: \EnableLogoFooter
+#+end_example
+
+If you omit =\EnableLogoFooter=, the template falls back to a centered page number. If you use =\DisableFooter=, it suppresses the footer entirely.
+
+You can also add footer text beside the logo:
+
+#+begin_example
+#+LATEX_CLASS: elegant-garamond
+#+LATEX_HEADER: \leftheader{Storytelling NYC}
+#+LATEX_HEADER: \leftheaderurl{https://storytelling.nyc}
+#+LATEX_HEADER: \footerbrand{Storytelling NYC}
+#+LATEX_HEADER: \EnableLogoFooter
+#+end_example
+
+If =\footerbrand= is empty, the footer stays image-only. If it is set, the template renders the logo with small-caps brand text beside it.
+
 ** Templates requiring =\leftheader=
 - =elegant-garamond= ([[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][📄 elegant-garamond.el]])
 - =blue-ruin= (also uses =\coverimage=)

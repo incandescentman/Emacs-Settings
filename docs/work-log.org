@@ -1221,5 +1221,18 @@
 - Deleted the stale tangled file [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]], retangled from source, and rechecked batch parsing/load behavior
 - Result: removed the ~Invalid read syntax: "#"~ and ~End of file during parsing~ failures coming from the tangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]]
 
+* 2026-04-20: Preserve email-signature line breaks in LaTeX/PDF export
+- Extended the signature export filter in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] so the existing ~Best,~ / ~Warm regards,~ line-break preservation now runs for both HTML and LaTeX backends.
+- Replaced the previous HTML-only regex-replacement helper with a shared helper that emits ~<br>~ for HTML and ~\\\\~ line breaks for LaTeX, so exported PDFs preserve simple signature blocks like ~Best,~ followed by ~Jay~ on the next line.
+- Deleted the stale tangled file [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.el][org-export.el]], retangled from source, and rechecked batch parsing with ~check-parens~.
+- Included the current edits to [[file+emacs:/Users/jay/emacs/emacs-settings/docs/lab/startup-profile.org][docs/lab/startup-profile.org]] in the same checkpoint commit so the worktree is captured as-is.
+
+* 2026-04-20: Make elegant-garamond footer branding configurable
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][latex-templates/elegant-garamond.el]] and [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond-tabularray.el][latex-templates/elegant-garamond-tabularray.el]] so logo footers can be configured per document with ~\footerlogo{...}~ and optional adjacent brand text via ~\footerbrand{...}~.
+- Switched footer brand text styling from Garamond small caps to a Helvetica Neue LT Pro Condensed Bold treatment for stronger logo-wordmark alignment, with a simpler sans bold fallback outside XeLaTeX.
+- Reworked footer application to avoid the fragile ~\AtBeginDocument~ hook path: enabling/disabling the logo footer and changing logo/brand values now reapplies the footer immediately, which avoids the runaway ~\AddToHook~ failure seen during PDF export.
+- Updated the right-side running header logic so =elegant-garamond= and =elegant-garamond-tabularray= now write marks directly from the section and subsection title formatters; this keeps header text visible even when Org exports unnumbered starred headings, without letting subsubsections replace the running header.
+- Documented the new footer-brand usage in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/readme.org][latex-templates/readme.org]].
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.

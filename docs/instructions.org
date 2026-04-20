@@ -393,6 +393,8 @@ The default template (=org-latex-default-class=). Features:
 - Garamond Premier Pro font
 - Styled quote blocks (powder blue background, centered)
 - Clean section headings
+- Configurable logo footer via =\EnableLogoFooter=
+- Optional footer wordmark text via =\footerbrand{...}=
 
 ** beautiful-racket-classic
 
@@ -465,6 +467,46 @@ Print endnotes where you want them:
 #+BEGIN_EXAMPLE
 #+LATEX: \printendnotes
 #+END_EXAMPLE
+
+*** Logo Footer (document-level)
+
+Supported classes:
+- =elegant-garamond=
+- =elegant-garamond-tabularray=
+
+Enable the image-only footer:
+#+BEGIN_EXAMPLE
+#+LATEX_HEADER: \EnableLogoFooter
+#+END_EXAMPLE
+
+Override the default footer logo image for one document:
+#+BEGIN_EXAMPLE
+#+LATEX_HEADER: \footerlogo{/Users/jay/Dropbox/github/astro-monorepo/apps/socratic/src/assets/images/socratic-ai-complex-logo-transparent_color.png}
+#+LATEX_HEADER: \EnableLogoFooter
+#+END_EXAMPLE
+
+Add a wordmark beside the logo:
+#+BEGIN_EXAMPLE
+#+LATEX_HEADER: \footerbrand{Socratic AI}
+#+LATEX_HEADER: \EnableLogoFooter
+#+END_EXAMPLE
+
+Full Socratic AI example:
+#+BEGIN_EXAMPLE
+#+LATEX_CLASS: elegant-garamond
+#+LATEX_HEADER: \leftheader{Socratic AI}
+#+LATEX_HEADER: \leftheaderurl{https://socratic.ai}
+#+LATEX_HEADER: \footerlogo{/Users/jay/Dropbox/github/astro-monorepo/apps/socratic/src/assets/images/socratic-ai-complex-logo-transparent_color.png}
+#+LATEX_HEADER: \footerbrand{Socratic AI}
+#+LATEX_HEADER: \EnableLogoFooter
+#+END_EXAMPLE
+
+Notes:
+- If =\footerbrand= is empty, the footer stays image-only.
+- In =elegant-garamond=, footer brand text now uses a Helvetica Neue LT Pro Condensed Bold treatment under XeLaTeX, with a simpler bold sans fallback otherwise.
+- In =elegant-garamond= and =elegant-garamond-tabularray=, the right-side running header now follows the current exported section or subsection title even when Org emits starred headings (=\\section*=, =\\subsection*=). Subsubsections do not replace the running header.
+- The first page still suppresses headers and footers in these templates, so the logo footer starts on page 2.
+- If you edit a LaTeX template file and export in the same Emacs session, reload the template definitions first with =M-x jay-load-latex= or restart Emacs; otherwise export can keep using stale class definitions already loaded in memory.
 
 *** Table Wrap Opt-Out (per table)
 

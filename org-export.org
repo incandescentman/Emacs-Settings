@@ -338,32 +338,56 @@ Instead of canceling export. So that I can export org-roam nodes if I want to.
 (add-to-list 'org-export-filter-headline-functions
     'my-org-latex-strip-emoji)
 
-;; Add line breaks in email signature blocks in HTML export
+;; Preserve line breaks in email signature blocks during export
 ;; Applies only when "Best," or "Warm regards," is followed by an actual line break.
-(defun jay/org-html-filter-signature-line-breaks (text backend info)
-  "Add line breaks in email signature blocks in HTML export."
-  (when (org-export-derived-backend-p backend 'html)
-    ;; Match signature block shape: "Best,\nName\nurl.tld\nurl.tld".
-    (let ((result text))
-      ;; First: "Best," or "Warm regards," followed by a line break, then a name.
-      (setq result (replace-regexp-in-string
-                    "\\(Best,\\|Warm regards,\\)[ \t]*\n[ \t]*\\([A-Z][a-z]+\\)"
-                    "\\1<br>\\2"
-                    result))
-      ;; Then: name followed by a URL (word.tld pattern)
-      (setq result (replace-regexp-in-string
-                    "\\([A-Z][a-z]+\\)[ \t]*\n[ \t]*\\([a-z]+\\.[a-z]+\\)"
-                    "\\1<br>\\2"
-                    result))
-      ;; Then: URL followed by another URL
-      (setq result (replace-regexp-in-string
-                    "\\([a-z]+\\.[a-z]+\\)[ \t]*\n[ \t]*\\([a-z]+\\.[a-z]+\\)"
-                    "\\1<br>\\2"
-                    result))
-      result)))
+(defun jay/org-export--replace-signature-breaks (text separator)
+  "Replace signature newlines in TEXT with SEPARATOR."
+  (with-temp-buffer
+    (insert text)
+    (goto-char (point-min))
+    ;; First: "Best," or "Warm regards," followed by a line break, then a name.
+    (while (re-search-forward
+            "\\(Best,\\|Warm regards,\\)[ \t]*\n[ \t]*\\([A-Z][a-z]+\\)"
+            nil t)
+      (replace-match (format "%s%s%s"
+                             (match-string 1)
+                             separator
+                             (match-string 2))
+                     t t))
+    (goto-char (point-min))
+    ;; Then: name followed by a URL (word.tld pattern)
+    (while (re-search-forward
+            "\\([A-Z][a-z]+\\)[ \t]*\n[ \t]*\\([a-z]+\\.[a-z]+\\)"
+            nil t)
+      (replace-match (format "%s%s%s"
+                             (match-string 1)
+                             separator
+                             (match-string 2))
+                     t t))
+    (goto-char (point-min))
+    ;; Then: URL followed by another URL
+    (while (re-search-forward
+            "\\([a-z]+\\.[a-z]+\\)[ \t]*\n[ \t]*\\([a-z]+\\.[a-z]+\\)"
+            nil t)
+      (replace-match (format "%s%s%s"
+                             (match-string 1)
+                             separator
+                             (match-string 2))
+                     t t))
+    (buffer-string)))
+
+(defun jay/org-export-filter-signature-line-breaks (text backend info)
+  "Preserve simple email signature line breaks in HTML and LaTeX export."
+  (let ((separator (cond
+                    ((org-export-derived-backend-p backend 'html) "<br>")
+                    ((org-export-derived-backend-p backend 'latex) "\\\\\n")
+                    (t nil))))
+    (when separator
+      ;; Match signature block shape: "Best,\nName\nurl.tld\nurl.tld".
+      (jay/org-export--replace-signature-breaks text separator))))
 
 (add-to-list 'org-export-filter-final-output-functions
-             #'jay/org-html-filter-signature-line-breaks)
+             #'jay/org-export-filter-signature-line-breaks)
 #+end_src
 
 ** fontify checkboxes on org export to HTML
