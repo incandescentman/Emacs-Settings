@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-20: PDF export now renames output file to =#+TITLE:=
+- Added =jay/org-export-title-for-filename=, =jay/sanitize-for-filename=, and =jay/org-latex-rename-pdf-to-title= to [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] under "LaTeX Export Helpers".
+- Wired via =:filter-return= advice on =org-latex-export-to-pdf=: after export produces =<orgbase>.pdf=, the advice renames it to =<sanitized-title>.pdf= in the same directory. Spaces are preserved (so PDFs attached to email read naturally); =/ \ : * ? " < > |= and control characters are stripped; trailing periods are trimmed; existing targets are overwritten. Falls back to the original basename when =#+TITLE:= is absent or when the export is async (return value is a process, not a path).
+- Documented user-visible behavior in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][docs/instructions.org]] under a new =PDF Filename From #+TITLE:= subsection.
+- Smoke-tested the three helpers in batch: sanitizer produces the expected strings for normal titles, titles with slashes/colons/asterisks, trailing dots, and control chars; TITLE extraction pulls the keyword from a temp Org buffer; end-to-end =jay/org-latex-rename-pdf-to-title= renames a stub =.pdf= in a temp directory.
+
 * 2026-04-20: Harden Garamond left-header fallback against fragile titles and subtitles
 - First pass (=\edef ...\@title=) crashed real proposals with fragile =\title{...}= content (=Illegal parameter number= / =Undefined control sequence=) — notably [[file+emacs:/Users/jay/Dropbox/roam/prosperous/sony-pictures/sony-socratic-ai-proposal-v2.org][sony-socratic-ai-proposal-v2.org]].
 - A =\def\tmp{\the\reg}= / =\let ...\@title= attempt stopped the crash but silently regressed the title fallback, because =\ifx\tmp\@empty= is always false when =\tmp='s replacement text is the literal two tokens =\the\reg=.

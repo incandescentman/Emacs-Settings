@@ -563,6 +563,20 @@ you must be able
 
 On export, those blocks become true LaTeX =verse= environments. Normal code languages still export as code/verbatim.
 
+** PDF Filename From =#+TITLE:=
+
+When you export an Org file to PDF, the output PDF is renamed in place to use =#+TITLE:= as its basename. For example, =20260401-paul-follow-up-answers-email-draft.org= with =#+TITLE: Answers to follow-up questions= exports to =Answers to follow-up questions.pdf= in the same directory, not =20260401-paul-follow-up-answers-email-draft.pdf=.
+
+Behavior:
+- Spaces are preserved (readable as an email attachment).
+- Filesystem-hostile characters (=/=, =\=, =:=, =*=, =?=, =\"=, =<=, =>=, =|=, control chars) are stripped.
+- Runs of whitespace collapse to a single space; trailing periods are trimmed.
+- Existing files with the target name are overwritten silently.
+- If the Org buffer has no =#+TITLE:=, the original basename is kept as a fallback.
+- PDF export only — HTML/ODT/DOCX output is not renamed.
+
+Implemented as =:filter-return= advice on =org-latex-export-to-pdf= in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]].
+
 ** Table Regression / Rollback
 
 If table export regresses, use the detailed trace and commit-by-commit rollback guide:

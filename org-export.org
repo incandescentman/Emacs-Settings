@@ -775,6 +775,60 @@ during the first export:
    (shell-command (format "start %s" (shell-quote-argument final-pdf)))))))
 #+end_src
 
+** rename exported PDF to use #+TITLE: as filename
+#+begin_src emacs-lisp
+(defun jay/org-export-title-for-filename ()
+  "Return the current Org buffer's #+TITLE: as a trimmed string, or nil.
+Returns nil when no TITLE keyword is present or the title is all
+whitespace."
+  (save-excursion
+    (let ((keywords (org-collect-keywords '("TITLE"))))
+      (when-let* ((raw (cadr (assoc "TITLE" keywords)))
+                  (trimmed (string-trim raw)))
+        (unless (string-empty-p trimmed) trimmed)))))
+
+(defun jay/sanitize-for-filename (s)
+  "Strip filesystem-hostile characters from S while preserving spaces.
+Spaces are intentionally kept so exported PDF filenames read naturally
+when attached to email. Removes /, \\, :, *, ?, \", <, >, |, and
+control characters; collapses runs of whitespace; trims trailing
+periods (Windows refuses them)."
+  (let ((cleaned (string-trim s)))
+    (dolist (ch '(?/ ?\\ ?: ?* ?? ?\" ?< ?> ?|))
+      (setq cleaned (replace-regexp-in-string
+                     (regexp-quote (char-to-string ch)) "" cleaned)))
+    (setq cleaned (replace-regexp-in-string "[\0-\x1f]" "" cleaned))
+    (setq cleaned (replace-regexp-in-string "[ \t]+" " " cleaned))
+    (setq cleaned (replace-regexp-in-string "\\.+\\'" "" cleaned))
+    (string-trim cleaned)))
+
+(defun jay/org-latex-rename-pdf-to-title (pdf-file)
+  "Rename PDF-FILE to <#+TITLE:>.pdf in the same directory.
+Intended as :filter-return advice on `org-latex-export-to-pdf'. When
+the current buffer has a non-empty #+TITLE:, rename the exported PDF
+in place (overwriting any existing target) and return the new path.
+Falls back to PDF-FILE unchanged when no title is available or when
+the return value is not a PDF path (async export returns a process,
+not a filename)."
+  (if (and (stringp pdf-file)
+           (string-suffix-p ".pdf" pdf-file)
+           (file-exists-p pdf-file))
+      (let* ((title (jay/org-export-title-for-filename))
+             (sanitized (and title (jay/sanitize-for-filename title))))
+        (if (and sanitized (not (string-empty-p sanitized)))
+            (let ((new-pdf (expand-file-name
+                            (concat sanitized ".pdf")
+                            (file-name-directory pdf-file))))
+              (unless (string= pdf-file new-pdf)
+                (rename-file pdf-file new-pdf t))
+              new-pdf)
+          pdf-file))
+    pdf-file))
+
+(advice-add 'org-latex-export-to-pdf :filter-return
+            #'jay/org-latex-rename-pdf-to-title)
+#+end_src
+
 * HTML Export Helpers
 
 ** Claire share
