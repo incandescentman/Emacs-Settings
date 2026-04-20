@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-20: Fix missing left header on Elegant Garamond exports
+- Root cause: =\ifstrempty{\the\leftheader}{...}{...}= in both [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][elegant-garamond.el]] and [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond-tabularray.el][elegant-garamond-tabularray.el]] never took the empty branch, because etoolbox detokenizes its argument without expanding =\the= first — so the literal string =\the\leftheader= was always non-empty and the =\@title= fallback could never fire.
+- Fix: expand =\the\leftheader= / =\the\leftheaderurl= into macros via =\edef= and test against =\@empty= with =\ifx= instead of =\ifstrempty=. Applied to both templates.
+- Confirmed working on [[file+emacs:/Users/jay/Dropbox/roam/prosperous/sony-pictures/20260401-paul-follow-up-answers-email-draft.org][the Sony reproduction file]] — interior pages now show the document title in the left header when no explicit =\leftheader{...}= is set.
+- Recorded resolution in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/elegant-garamond-left-header-bug.org][docs/elegant-garamond-left-header-bug.org]] and logged the etoolbox gotcha in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/codebase-wisdom.org][docs/codebase-wisdom.org]].
+
 * 2026-04-19: Pause point after suite-sidecar and docs cleanup work
 - Stopped after the [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-extras.el][jay-org-roam-extras.el]] sidecar checkpoint and the readme/profile-doc normalization pass.
 - Current next move, if modularization resumes, is to inspect the remaining agenda/workflow residue in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] against [[file+emacs:/Users/jay/emacs/emacs-settings/goals-agenda.org][goals-agenda.org]] and related goals modules instead of inventing a broad new workflow file.
@@ -1230,7 +1236,11 @@
 * 2026-04-20: Make elegant-garamond footer branding configurable
 - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][latex-templates/elegant-garamond.el]] and [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond-tabularray.el][latex-templates/elegant-garamond-tabularray.el]] so logo footers can be configured per document with ~\footerlogo{...}~ and optional adjacent brand text via ~\footerbrand{...}~.
 - Switched footer brand text styling from Garamond small caps to a Helvetica Neue LT Pro Condensed Bold treatment for stronger logo-wordmark alignment, with a simpler sans bold fallback outside XeLaTeX.
+- Added a left-header fallback for both Garamond templates so omitted ~\leftheader{...}~ now defaults to the exported document title, and omitted ~\leftheaderurl{...}~ leaves that header as plain text instead of an empty link wrapper.
+- Fixed the fallback implementation to use ~\ifstrempty~ for token-register contents, so an explicitly omitted left header really does fall back to the document title instead of rendering blank.
+- Darkened the footer wordmark color slightly with a dedicated grey so the Socratic AI brand text reads a bit stronger than the surrounding ~moonrockgrey~ accents.
 - Reworked footer application to avoid the fragile ~\AtBeginDocument~ hook path: enabling/disabling the logo footer and changing logo/brand values now reapplies the footer immediately, which avoids the runaway ~\AddToHook~ failure seen during PDF export.
+- Added automatic last-page footer suppression for the Garamond templates so page numbers and logo footers appear only on interior pages.
 - Updated the right-side running header logic so =elegant-garamond= and =elegant-garamond-tabularray= now write marks directly from the section and subsection title formatters; this keeps header text visible even when Org exports unnumbered starred headings, without letting subsubsections replace the running header.
 - Documented the new footer-brand usage in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/readme.org][latex-templates/readme.org]].
 

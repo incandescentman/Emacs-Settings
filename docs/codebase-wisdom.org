@@ -2,6 +2,38 @@
 #+DATE: 2025-09-24
 #+DESCRIPTION: Debugging post-mortems and prevention checklists.
 
+* etoolbox =\ifstrempty= Does Not Expand =\the\tokenregister=
+  Date: 2026-04-20
+
+** Trigger
+The Elegant Garamond LaTeX templates were supposed to fall back to =\@title= when =\leftheader{...}= was omitted, but the left header stayed blank on interior pages. Relevant pattern:
+
+#+begin_src latex
+\edef\jayresolvedleftheader{\ifstrempty{\the\leftheader}{\@title}{\the\leftheader}}
+#+end_src
+
+** Mechanism
+etoolbox's =\ifstrempty{<arg>}{<true>}{<false>}= applies =\detokenize= to =<arg>= *without expanding it first*. So passing =\the\leftheader= as the argument detokenizes to the literal 16-character string =\the\leftheader=, which is never empty — the true branch could never fire, regardless of the register's actual contents.
+
+Wrapping the token register in =\edef\resolved{\the\leftheader}= and then calling =\ifstrempty{\resolved}= has the same failure mode: the detokenized string =\resolved= is itself non-empty. The only reliable test for an empty token register is to =\edef= into a macro and compare against =\@empty= with =\ifx=.
+
+** The Fix
+Expand the token register, then use =\ifx ...\@empty= instead of =\ifstrempty=:
+
+#+begin_src latex
+\edef\jayresolvedleftheader{\the\leftheader}%
+\ifx\jayresolvedleftheader\@empty
+  \edef\jayresolvedleftheader{\@title}%
+\fi
+#+end_src
+
+Applied to both [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][elegant-garamond.el]] and [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond-tabularray.el][elegant-garamond-tabularray.el]].
+
+** Actionable insight
+- When testing whether a =\newtoks= register or token list variable is empty, =\ifstrempty= is the wrong tool — it sees the control sequence tokens, not the expansion.
+- The reliable pattern is: =\edef\tmp{\the\somereg}\ifx\tmp\@empty ... \fi= (inside =\makeatletter= if =\@empty= is needed).
+- If a LaTeX emptiness check appears to always fall through, write a minimal pdflatex test with both an empty and a non-empty case before assuming the branch logic is correct — etoolbox/xstring string-testing macros have surprising expansion semantics.
+
 * Later Ispell Overrides Can Kill And Restart The Spellchecker Process
   Date: 2026-04-19
 

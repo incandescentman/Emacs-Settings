@@ -1,0 +1,138 @@
+:PROPERTIES:
+:ID:       9d7c1c4a-0df2-4a4f-b9de-9f8f9b79f9ab
+:END:
+#+TITLE: Elegant Garamond Left Header Missing on Export
+
+* Summary
+
+The left header is not appearing in PDF export for the Garamond templates, even after adding a fallback that should use the document title when =\leftheader{...}= is omitted.
+
+Affected templates:
+- [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][📄 /Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el]]
+- [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond-tabularray.el][📄 /Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond-tabularray.el]]
+
+Known reproduction file:
+- [[file+emacs:/Users/jay/Dropbox/roam/prosperous/sony-pictures/20260401-paul-follow-up-answers-email-draft.org][📄 /Users/jay/Dropbox/roam/prosperous/sony-pictures/20260401-paul-follow-up-answers-email-draft.org]]
+
+* Expected Behavior
+
+For the reproduction file:
+- The first page should suppress the header and footer.
+- Interior pages should show the left header.
+- If =#+LATEX_HEADER: \leftheader{...}= is omitted, the left header should fall back to =#+TITLE:=.
+- If =#+LATEX_HEADER: \leftheaderurl{...}= is omitted, the left header should render as plain text.
+
+* Actual Behavior
+
+Interior pages show no left header at all.
+
+This remains true after:
+- Removing explicit =\leftheader{Socratic AI}= and =\leftheaderurl{https://socratic.ai}= from the reproduction file.
+- Reloading LaTeX classes with =M-x jay-load-latex= or restarting Emacs.
+
+* Reproduction
+
+1. Open [[file+emacs:/Users/jay/Dropbox/roam/prosperous/sony-pictures/20260401-paul-follow-up-answers-email-draft.org][📄 /Users/jay/Dropbox/roam/prosperous/sony-pictures/20260401-paul-follow-up-answers-email-draft.org]].
+2. Confirm it uses:
+   - =#+TITLE: Answers to follow-up questions=
+   - =#+LATEX_CLASS: elegant-garamond=
+   - no explicit =\leftheader{...}=
+3. Reload template definitions with =M-x jay-load-latex=.
+4. Export to PDF.
+5. Inspect page 2 or later.
+
+Observed result:
+- right header may appear
+- footer behavior may appear
+- left header is blank
+
+* What Was Tried
+
+** 1. Token-register fallback in header definition
+
+Attempted:
+- check whether =\the\leftheader= is empty
+- fall back to =\@title=
+- optionally wrap in =\href{...}= if =\the\leftheaderurl= is non-empty
+
+Initial implementation used =\ifdefempty= and was likely wrong for token-register contents.
+
+** 2. Switched emptiness check to =\ifstrempty=
+
+Updated both templates to use =\ifstrempty{\\the\\leftheader}{\\@title}{\\the\\leftheader}=.
+
+This fixed one probable macro misuse, but the left header still did not render.
+
+** 3. Delayed left-header resolution to =\AtBeginDocument=
+
+Moved the left-header assignment so it happens after Org-generated LaTeX like =\title{...}= should already exist.
+
+Current pattern in both templates:
+- define =\jayapplyleftheader=
+- resolve =\@title= or =\the\leftheader=
+- call =\lhead{...}= inside =\AtBeginDocument=
+
+The templates still load cleanly in batch Emacs with =ox-latex= required, but runtime export output still lacks the left header.
+
+* Evidence Collected
+
+The generated LaTeX for the sibling Sony file does contain a title:
+- [[file+emacs:/Users/jay/Dropbox/roam/prosperous/sony-pictures/20260401-paul-follow-up-answers-feedback.tex][📄 /Users/jay/Dropbox/roam/prosperous/sony-pictures/20260401-paul-follow-up-answers-feedback.tex]]
+
+Relevant lines observed:
+- =\author{Jay Dixit}=
+- =\date{20260401 12:00AM}=
+- =\title{Paul Follow-Up Answers Feedback}=
+
+So the failure is not simply that Org omitted =\title{...}= from the generated LaTeX.
+
+* Most Likely Next Checks
+
+1. Inspect the freshly generated =.tex= for the exact reproduction file and confirm:
+   - where =\title{...}= appears
+   - whether =\jayapplyleftheader= survives into the output
+   - whether any later code resets =\lhead{}= or clears =fancyhdr=
+
+2. Search the generated =.tex= for:
+   - =\lhead=
+   - =\fancyhf{}=
+   - =\pagestyle{fancy}=
+   - =\thispagestyle{empty}=
+   - additional =\AtBeginDocument= blocks
+
+3. Test a minimal hardcoded control:
+   - temporarily replace the left-header logic with =\lhead{TEST HEADER}=
+   - if that still does not render, the issue is not the title fallback at all
+   - if that does render, the issue is in the fallback-resolution path
+
+4. If needed, move the header assignment later than =\AtBeginDocument=, for example by patching after title metadata is emitted or by avoiding token registers entirely for this header path.
+
+* Current Risk
+
+The documentation currently says Garamond left headers fall back to the document title when =\leftheader{...}= is omitted. That behavior should be treated as unverified until this bug is resolved.
+
+* Resolution (2026-04-20)
+
+*Root cause*: =\ifstrempty= from etoolbox detokenizes its first argument *without expanding it first*. So =\ifstrempty{\the\leftheader}{...}{...}= tested whether the literal 16-character string =\the\leftheader= was empty — which it never is — so the fallback branch could never fire.
+
+Verified with a minimal =pdflatex= test: =\ifstrempty{\the\myheader}{EMPTY}{NONEMPTY}= prints =NONEMPTY= even when =\myheader= is an empty token register. Wrapping the token register in =\edef\resolved{\the\myheader}= and then calling =\ifstrempty{\resolved}= has the same problem — the detokenized string =\resolved= is still non-empty. Only =\ifx\resolved\@empty= correctly sees the empty register.
+
+*Fix*: expand the token register into a macro with =\edef=, then compare against =\@empty= with =\ifx=. Applied to both [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][📄 elegant-garamond.el]] and [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond-tabularray.el][📄 elegant-garamond-tabularray.el]]:
+
+#+begin_src latex
+\makeatletter
+\newcommand{\jayapplyleftheader}{%
+  \edef\jayresolvedleftheader{\the\leftheader}%
+  \ifx\jayresolvedleftheader\@empty
+    \edef\jayresolvedleftheader{\@title}%
+  \fi
+  \edef\jayresolvedleftheaderurl{\the\leftheaderurl}%
+  \ifx\jayresolvedleftheaderurl\@empty
+    \lhead{\scshape\jayresolvedleftheader}%
+  \else
+    \lhead{\scshape\href{\the\leftheaderurl}{\jayresolvedleftheader}}%
+  \fi}
+\makeatother
+#+end_src
+
+Confirmed working against the reproduction file — left header on page 2+ now falls back to =#+TITLE:= when =\leftheader{...}= is omitted.

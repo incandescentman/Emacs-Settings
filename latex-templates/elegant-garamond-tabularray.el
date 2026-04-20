@@ -43,6 +43,8 @@
 \\SetTblrTemplate{contfoot}{empty}
 
 \\usepackage{fancyhdr} % Custom headers and footers
+\\usepackage{lastpage}
+\\usepackage{refcount}
 \\usepackage{xspace} % Consistent spacing after commands
 \\usepackage{listings}
 \\usepackage{fancyvrb}
@@ -86,7 +88,7 @@
     UprightFont = HelveticaNeueLTPro-BdCn,
     Extension = .otf
   ]{Helvetica Neue LT Pro}
-  \\newcommand{\\jayfooterbrandstyle}[1]{{\\jayfooterbrandfont\\color{moonrockgrey}\\addfontfeatures{LetterSpace=-5}\\fontsize{50}{50}\\selectfont \\MakeUppercase{#1}}}
+  \\newcommand{\\jayfooterbrandstyle}[1]{{\\jayfooterbrandfont\\color{jayfooterbrandgrey}\\addfontfeatures{LetterSpace=-5}\\fontsize{50}{50}\\selectfont \\MakeUppercase{#1}}}
 
   % Set main font to Garamond Premier Pro
   \\setromanfont[
@@ -111,7 +113,7 @@
 \\else
   \\usepackage[mathletters]{ucs}
   \\usepackage[utf8x]{inputenc}
-  \\newcommand{\\jayfooterbrandstyle}[1]{{\\sffamily\\bfseries\\color{moonrockgrey}\\fontsize{50}{50}\\selectfont \\MakeUppercase{#1}}}
+  \\newcommand{\\jayfooterbrandstyle}[1]{{\\sffamily\\bfseries\\color{jayfooterbrandgrey}\\fontsize{50}{50}\\selectfont \\MakeUppercase{#1}}}
 \\fi
 
 % Color Definitions
@@ -133,6 +135,7 @@
 \\definecolor{elegantblue}{HTML}{4380b9}
 \\definecolor{spacegrey}{HTML}{434346}
 \\definecolor{azure}{HTML}{f2feff}
+\\definecolor{jayfooterbrandgrey}{HTML}{4F4F4F}
 
 \\newcommand{\\labelitemv}{\\textbullet}
 \\newcommand{\\labelitemvi}{\\textbullet}
@@ -153,8 +156,21 @@
 \\def\\jayfooterbrand{}
 \\newcommand{\\footerbrand}[1]{\\def\\jayfooterbrand{#1}\\jayapplyfooter}
 \\renewcommand{\\sectionmark}[1]{\\markboth{#1}{}}
-\\lhead{\\scshape\\href{\\the\\leftheaderurl}{\\the\\leftheader}}
+\\makeatletter
+\\newcommand{\\jayapplyleftheader}{%
+  \\edef\\jayresolvedleftheader{\\the\\leftheader}%
+  \\ifx\\jayresolvedleftheader\\@empty
+    \\edef\\jayresolvedleftheader{\\@title}%
+  \\fi
+  \\edef\\jayresolvedleftheaderurl{\\the\\leftheaderurl}%
+  \\ifx\\jayresolvedleftheaderurl\\@empty
+    \\lhead{\\scshape\\jayresolvedleftheader}%
+  \\else
+    \\lhead{\\scshape\\href{\\the\\leftheaderurl}{\\jayresolvedleftheader}}%
+  \\fi}
+\\makeatother
 \\rhead{\\scshape{\\nouppercase{\\rightmark}}}
+\\AtBeginDocument{\\jayapplyleftheader}
 
 % Footer configuration (controlled from org file)
 \\newif\\ifjaylogofooter
@@ -173,15 +189,21 @@
   \\hspace{0.38em}%
   {\\jayfooterbrandstyle{\\jayfooterbrand}}%
 }
+\\newcommand{\\jayfooterunlesslast}[1]{%
+  \\ifnum\\value{page}=\\getpagerefnumber{LastPage}\\relax
+  \\else
+    #1%
+  \\fi
+}
 \\newcommand{\\jayapplyfooter}{%
   \\ifjaynofooter
     \\fancyfoot{}%
   \\else\\ifjaylogofooter
     \\ifdefempty{\\jayfooterbrand}
-      {\\fancyfoot[C]{\\jayfooterlogoonly}}%
-      {\\fancyfoot[C]{\\jayfooterlogowithbrand}}%
+      {\\fancyfoot[C]{\\jayfooterunlesslast{\\jayfooterlogoonly}}}%
+      {\\fancyfoot[C]{\\jayfooterunlesslast{\\jayfooterlogowithbrand}}}%
   \\else
-    \\cfoot{\\thepage}%
+    \\cfoot{\\jayfooterunlesslast{\\thepage}}%
   \\fi\\fi
 }
 \\newcommand{\\EnableLogoFooter}{\\jaynofooterfalse\\jaylogofootertrue\\jayapplyfooter}
