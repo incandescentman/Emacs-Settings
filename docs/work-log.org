@@ -1,6 +1,15 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-21: Best-practice audit — no broad refactor needed
+- Reviewed the "general best practices" checklist and confirmed the major items are already implemented in this config (module ownership boundaries, Org-roam note metadata conventions, stable capture templates, dynamic agenda sources, writing-mode/pasteboard workflow, export filename hygiene, startup profiling, and codebase-wisdom incident logging).
+- Decision: do not run a broad "quality pass" for those areas; keep maintenance incident-driven.
+- Only concrete follow-ups remain in scope:
+  - fast staged-file pre-commit guard
+  - reusable =jay/advice-add-once= helper
+  - LaTeX export preflight checks
+  - deferred captain/smart-period fix once Jay can run live runtime tests
+
 * 2026-04-21: Add LaTeX export preflight checks before PDF export
 - Added a new preflight in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] that runs before =org-latex-export-to-pdf= and fails fast when critical prerequisites are missing.
 - New checks:
