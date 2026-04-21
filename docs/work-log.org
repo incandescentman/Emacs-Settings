@@ -1256,5 +1256,10 @@
 - Updated the right-side running header logic so =elegant-garamond= and =elegant-garamond-tabularray= now write marks directly from the section and subsection title formatters; this keeps header text visible even when Org exports unnumbered starred headings, without letting subsubsections replace the running header.
 - Documented the new footer-brand usage in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/readme.org][latex-templates/readme.org]].
 
+* 2026-04-20: Make invoice letterhead wordmarks configurable
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/blue-invoice-with-letterhead.el][latex-templates/blue-invoice-with-letterhead.el]] and [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/blue-invoice-sed-letterhead.el][latex-templates/blue-invoice-sed-letterhead.el]] so the oversized letterhead wordmark is configurable with ~\letterheadbrand{...}~.
+- Preserved the current defaults (=STORYTELLING.NYC= and =SUNJAY E. DIXIT=), so existing invoices continue exporting unchanged unless a document explicitly overrides the wordmark.
+- Documented the new per-document =\letterheadbrand{SOCRATIC AI}= override in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/readme.org][latex-templates/readme.org]].
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.

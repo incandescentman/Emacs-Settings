@@ -46,6 +46,19 @@ If =\footerbrand= is empty, the footer stays image-only. If it is set, the templ
 - =blue-ruin-no-cover= (also uses =\coverimage=)
 - Any template that loads =fancyhdr= and references =\the\leftheader=
 
+* Invoice Letterhead Branding
+
+The invoice-with-letterhead templates let you override the oversized header wordmark per document without editing the template file:
+
+#+begin_example
+#+LATEX_CLASS: blue-invoice-letterhead
+#+LATEX_HEADER: \letterheadbrand{SOCRATIC AI}
+#+end_example
+
+The defaults stay the same if you omit that header line:
+- [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/blue-invoice-with-letterhead.el][📄 blue-invoice-with-letterhead.el]] defaults to =STORYTELLING.NYC=
+- [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/blue-invoice-sed-letterhead.el][📄 blue-invoice-sed-letterhead.el]] defaults to =SUNJAY E. DIXIT=
+
 ** Yasnippet templates
 The corresponding yasnippet snippets in [[file+emacs:/Users/jay/emacs/interesting-snippets/org-mode/][📄 org-mode snippets]] include these headers automatically:
 - =elegant= → =elegant.yasnippet=

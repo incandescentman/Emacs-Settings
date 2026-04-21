@@ -509,6 +509,22 @@ Notes:
 - The first page still suppresses headers and footers in these templates, and the footer is also suppressed on the final page. On multi-page exports, the logo footer appears only on interior pages.
 - If you edit a LaTeX template file and export in the same Emacs session, reload the template definitions first with =M-x jay-load-latex= or restart Emacs; otherwise export can keep using stale class definitions already loaded in memory.
 
+*** Invoice Letterhead Wordmark
+
+Supported classes:
+- =blue-invoice-letterhead=
+
+Override the oversized header wordmark for one document:
+#+BEGIN_EXAMPLE
+#+LATEX_CLASS: blue-invoice-letterhead
+#+LATEX_HEADER: \letterheadbrand{SOCRATIC AI}
+#+END_EXAMPLE
+
+Notes:
+- In [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/blue-invoice-with-letterhead.el][📄 blue-invoice-with-letterhead.el]], the default wordmark is =STORYTELLING.NYC=.
+- In [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/blue-invoice-sed-letterhead.el][📄 blue-invoice-sed-letterhead.el]], the default wordmark is =SUNJAY E. DIXIT=.
+- Existing invoice documents export unchanged unless they explicitly set =\letterheadbrand{...}=.
+
 *** Table Wrap Opt-Out (per table)
 
 For classic classes (=elegant-helvetica=, =elegant-garamond=, =beautiful-racket=), table wrapping is ON by default.

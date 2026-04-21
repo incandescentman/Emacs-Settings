@@ -84,6 +84,8 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 \\newtoks\\leftheaderurl
 \\newtoks\\coverimage
 \\newtoks\\rightheader
+\\newtoks\\letterheadbrand
+\\letterheadbrand={STORYTELLING.NYC}
 
 \\raggedright
 \\hyphenpenalty=5000
@@ -128,7 +130,7 @@ UprightFont = HelveticaNeueLTPro-MdCn,
   \\begin{minipage}[c][1in][c]{0.3\\linewidth}
     \\raggedright % Left-align the text in the minipage
     \\raisebox{0.59in}[0pt][0pt]{ % Raise the text by 0.7 inches
-      {\\fontsize{73}{82}\\sffamily\\color{darklibertyblue} STORYTELLING.NYC}
+      {\\fontsize{73}{82}\\sffamily\\color{darklibertyblue} \\the\\letterheadbrand}
     }
   \\end{minipage}%
   \\hspace{2.7in} % Move the text 1 inch to the left
