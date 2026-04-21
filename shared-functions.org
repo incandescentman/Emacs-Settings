@@ -536,6 +536,13 @@ read-file-name-completion-ignore-case t)
 ;; Around-advice: tweak `org-archive-location`, then run the real command
 ;; ---------------------------------------------------------------------
 
+(defun jay/advice-add-once (symbol where function &optional props)
+  "Add advice FUNCTION to SYMBOL at WHERE only if not already present.
+Pass PROPS through to `advice-add'. Return non-nil when newly added."
+  (unless (advice-member-p function symbol)
+    (advice-add symbol where function props)
+    t))
+
 (defun sed--org-archive-subtree (orig-fn &rest args)
   "Archive subtree under a heading named after its parent.
 Keeps identical behaviour to the old `defadvice', but uses `advice-add'."
@@ -4915,12 +4922,10 @@ PREFIX >1 ⇒ dirs only,  PREFIX <0 ⇒ files only,  none ⇒ both."
          (buffer-file-name base)))))
 
 (with-eval-after-load 'org-roam
-  (unless (advice-member-p #'my/org-roam-node-visit--track-fasd 'org-roam-node-visit)
-    (advice-add 'org-roam-node-visit :around #'my/org-roam-node-visit--track-fasd)))
+  (jay/advice-add-once 'org-roam-node-visit :around #'my/org-roam-node-visit--track-fasd))
 
 (with-eval-after-load 'org-roam-capture
-  (unless (advice-member-p #'my/org-roam-capture-finalize--track-fasd 'org-roam-capture--finalize)
-    (advice-add 'org-roam-capture--finalize :after #'my/org-roam-capture-finalize--track-fasd)))
+  (jay/advice-add-once 'org-roam-capture--finalize :after #'my/org-roam-capture-finalize--track-fasd))
 #+end_src
 
 * Google things from within emacs

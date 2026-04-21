@@ -8,6 +8,13 @@
   - runs =check-parens= for each staged Elisp file in batch Emacs
 - Added [[file+emacs:/Users/jay/emacs/emacs-settings/scripts/install-pre-commit-hook.sh][scripts/install-pre-commit-hook.sh]] to install a local =.git/hooks/pre-commit= wrapper that calls the repo script.
 
+* 2026-04-21: Add reusable advice guard helper and migrate org-roam fasd hooks
+- Added =jay/advice-add-once= to [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so advice installation can be idempotent without repeating =advice-member-p= boilerplate.
+- Switched org-roam fasd tracking advice installs to the helper:
+  - =org-roam-node-visit= (around advice)
+  - =org-roam-capture--finalize= (after advice)
+- Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] and re-ran =check-parens= on [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]].
+
 * 2026-04-21: Fix dead =my/vertico-override-bindings= install target
 - Symptom: after the Embark file-action pass, pressing =s-e= inside an =s-r= / =s-R= completion said "s-e is undefined".
 - Root cause: [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] intentionally disables =key-minor-mode= inside the minibuffer (=minibuffer-setup-hook= at the top of the file), but =my/vertico-override-bindings= was installed into =key-minor-mode-map= rather than =vertico-map=. The entire override mechanism was dead in the one context it was meant to cover — the previous =C-M-S-s-o= → =embark-act= binding had never been live either.
