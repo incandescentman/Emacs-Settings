@@ -4851,11 +4851,14 @@ PREFIX >1 ⇒ dirs only,  PREFIX <0 ⇒ files only,  none ⇒ both."
     ;; functions so Vertico (or any other completion UI that honours
     ;; the metadata) preserves fasd's most-recent-first ordering
     ;; instead of re-sorting by history/length/alpha. Declaring the
-    ;; `file' category unlocks Marginalia file annotations and
-    ;; Embark's `embark-file-map' actions (`C-.' on a candidate).
+    ;; custom `jay/recent-file' category unlocks Embark's
+    ;; `embark-file-map' actions (routed via `embark-keymap-alist' in
+    ;; search-commands.org) while suppressing Marginalia's file
+    ;; annotator (permissions / size / mtime), which Jay doesn't want
+    ;; cluttering the fasd list.
     (let* ((table (lambda (string pred action)
                     (if (eq action 'metadata)
-                        '(metadata (category . file)
+                        '(metadata (category . jay/recent-file)
                                    (display-sort-function . identity)
                                    (cycle-sort-function   . identity))
                       (complete-with-action action cands string pred))))

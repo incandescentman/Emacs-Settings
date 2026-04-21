@@ -923,8 +923,15 @@ Vertico from re-sorting."
     (let* ((table
             (lambda (string pred action)
               (if (eq action 'metadata)
+                  ;; Use a custom `jay/recent-file' category (not `file')
+                  ;; so Marginalia does not add its file annotator
+                  ;; (permissions / size / mtime). Embark is routed to
+                  ;; `embark-file-map' for this category via
+                  ;; `embark-keymap-alist' below, so the five custom
+                  ;; file actions (L/B/A/V/P) and the built-ins still
+                  ;; work.
                   `(metadata
-                    (category . file)
+                    (category . jay/recent-file)
                     (display-sort-function . identity)
                     (cycle-sort-function   . identity)
                     (affixation-function . ,#'jay/recent-file--affix))
@@ -935,7 +942,7 @@ Vertico from re-sorting."
              :prompt "Recent file: "
              :sort nil
              :require-match t
-             :category 'file
+             :category 'jay/recent-file
              :history 'file-name-history
              :state (when (fboundp 'consult--file-preview)
                       (consult--file-preview)))))
@@ -1006,7 +1013,14 @@ HOME-expansion variants on this machine."
   (define-key embark-file-map (kbd "B") #'jay/embark-file-copy-basename)
   (define-key embark-file-map (kbd "A") #'jay/embark-file-copy-abbrev-path)
   (define-key embark-file-map (kbd "V") #'jay/embark-file-reveal-in-finder)
-  (define-key embark-file-map (kbd "P") #'jay/embark-file-open-parent-in-dired))
+  (define-key embark-file-map (kbd "P") #'jay/embark-file-open-parent-in-dired)
+  ;; Route the custom `jay/recent-file' category (used by
+  ;; `jay/consult-recent-file-folder-first' and `fasd-find-file') to
+  ;; the same keymap as plain files, so all five actions above and
+  ;; Embark's built-ins work on `s-r' / `s-R' candidates. The custom
+  ;; category exists solely to suppress Marginalia's file annotator
+  ;; (permissions / size / mtime) — Embark behavior is unchanged.
+  (add-to-list 'embark-keymap-alist '(jay/recent-file . embark-file-map)))
 #+end_src
 
 * org headings
