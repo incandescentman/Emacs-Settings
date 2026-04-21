@@ -1,12 +1,20 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-21: Folder-first recent-file picker + FASD_DATA cleanup
+- Swapped =jay/consult-recent-file-basename-first= to a folder-first layout and renamed accordingly: [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][search-commands.org]] now defines =jay/consult-recent-file-folder-first= / =jay/recent-file-candidates-folder-first= with =jay/recent-file-parent-column-min/max= controlling the shared parent-column width.
+- Display: parent path (in =shadow= face) is padded to =min(52, max(24, widest_parent))= chars so filenames line up on the right; paths longer than =jay/recent-file-parent-column-max= are *left*-truncated with a leading =…= so the deepest, most distinctive part of the path stays visible. =~/Library/CloudStorage/Dropbox/...= continues to collapse to =~/Dropbox/...=.
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] so =s-r= points at the renamed command.
+- Dropped the dead =(setenv "FASD_DATA" ...)= line and the stale commented =exec-path-from-shell-copy-env= dolist from [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]]; fasd reads =_FASD_DATA= (underscore prefix), so the plain =FASD_DATA= setenv was silently ignored. Replaced with a short NOTE comment.
+- Retangled both [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][search-commands.org]] (via =org-babel-load-file=) and [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] (explicit-target =org-babel-tangle=), and ran =check-parens= on the resulting =.el= files.
+
 * 2026-04-21: Restore most-recent-first ordering in =fasd-find-file=
 - Symptom: after visiting an Org-roam file and killing its buffer, =s-R= (=fasd-find-file=) appeared to omit the file entirely, and the overall list was no longer sorted most-recently-first.
 - Root cause was *not* a missing fasd registration — the file was present in =/Users/jay/.cache/fasd= (fasd reads =_FASD_DATA=, not =FASD_DATA=, so the =setenv= in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] is a no-op) with a fresh timestamp, and =fasd -ltR= on the shell returned it near the top.
 - Real cause: =completing-read= in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] was handed a plain list of paths, which Vertico (via =vertico-sort-history-length-alpha=) re-sorted by history/length/alpha — burying recently-added entries and wiping fasd's recency ordering.
 - Fix: wrapped the candidates in a completion table whose =metadata= declares =display-sort-function= and =cycle-sort-function= as =identity=. Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] (explicit target path — =#+auto_tangle: t= doesn't fire in batch) and ran =check-parens= on the tangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]].
 - Logged the pattern in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/codebase-wisdom.org][docs/codebase-wisdom.org]] so any future pre-sorted =completing-read= list in this config gets the metadata wrapper by default.
+- Added an end-user troubleshooting note to [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][docs/instructions.org]] with quick checks for fasd DB path, shell ordering, and Vertico metadata expectations.
 
 * 2026-04-20: PDF export now renames output file to =#+TITLE:=
 - Added =jay/org-export-title-for-filename=, =jay/sanitize-for-filename=, and =jay/org-latex-rename-pdf-to-title= to [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] under "LaTeX Export Helpers".

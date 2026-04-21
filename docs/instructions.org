@@ -657,6 +657,24 @@ rm ~/Dropbox/roam/org-roam.db
 
 Then in Emacs: =M-x org-roam-db-sync=
 
+** =s-R= (=fasd-find-file=) doesn't look recent-first
+
+Quick checks:
+1. Confirm the file is in fasd:
+   #+BEGIN_SRC sh
+   fasd -ltR | head -n 25
+   #+END_SRC
+2. Confirm fasd's active DB file (fasd reads =_FASD_DATA=; if unset, it typically uses =/Users/jay/.cache/fasd=):
+   #+BEGIN_SRC sh
+   echo "${_FASD_DATA:-/Users/jay/.cache/fasd}"
+   ls -la "${_FASD_DATA:-/Users/jay/.cache/fasd}"
+   #+END_SRC
+3. If shell output is correct but Emacs ordering looks wrong, verify [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] uses completion metadata in =fasd-find-file=:
+   - =(display-sort-function . identity)=
+   - =(cycle-sort-function . identity)=
+
+That metadata prevents Vertico from re-sorting fasd's already-sorted candidate list.
+
 * Advanced Configuration
 
 ** Adding Your Own Functions

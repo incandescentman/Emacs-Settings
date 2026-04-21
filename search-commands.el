@@ -16,59 +16,6 @@
  (interactive)
  (consult-ripgrep default-directory))
 
-(defun jay/recent-file-candidates-basename-first ()
- "Return recent file candidates as (DISPLAY . FILE) with basename-first display.
-The basename is shown first and the parent directory is shown in a muted style."
- (let ((seen (make-hash-table :test 'equal))
-       (candidates nil))
-  (dolist (file recentf-list)
-   (let ((path (ignore-errors (expand-file-name file))))
-    (when (and path
-               (not (file-remote-p path))
-               (file-exists-p path)
-               (not (gethash path seen)))
-     (puthash path t seen)
-     (let* ((base (file-name-nondirectory path))
-            (parent (directory-file-name (or (file-name-directory path) "")))
-            (parent-label (abbreviate-file-name parent))
-            (display (concat base
-                             (propertize (concat "  " parent-label) 'face 'shadow))))
-      (push (cons display path) candidates)))))
-  (nreverse candidates)))
-
-(defun jay/consult-recent-file-basename-first ()
- "Find a recent file with basename-first candidates and parent-path context.
-Candidate order follows `recentf-list' (most recent first)."
- (interactive)
- (require 'recentf)
- (unless recentf-mode
-  (recentf-mode 1))
- (require 'consult)
- (let* ((candidates (jay/recent-file-candidates-basename-first))
-        (choice
-         (consult--read
-          candidates
-          :prompt "Find recent file: "
-          :sort nil
-          :require-match t
-          :category 'file
-          :history 'file-name-history
-          :state (when (fboundp 'consult--file-preview)
-                   (consult--file-preview))
-          :lookup (lambda (selected items _input _narrow)
-                   (let ((needle (if (stringp selected)
-                                     (substring-no-properties selected)
-                                   selected))
-                         (found nil))
-                    (dolist (item items)
-                     (when (and (stringp (car item))
-                                (string= needle (substring-no-properties (car item))))
-                      (setq found (cdr item))))
-                    found)))))
-  (unless choice
-   (user-error "No recent files found"))
-  (find-file choice)))
-
 (defun jay/smart-ripgrep (&optional arg)
  "Context-aware ripgrep search.
 In an org-roam buffer: search all of `org-roam-directory'.
@@ -507,6 +454,104 @@ Signal a helpful error if none of the directories exist."
   "Grep for a string in the `~/projects' using `rg'."
   (interactive)
 (consult-ripgrep "~/projects" ""))
+
+(defvar jay/recent-file-parent-column-min 24
+  "Minimum width, in characters, reserved for the parent-path column
+in `jay/consult-recent-file-folder-first'.")
+
+(defvar jay/recent-file-parent-column-max 52
+  "Maximum width, in characters, reserved for the parent-path column.
+Longer parent paths are left-truncated with a leading ellipsis so the
+filename column still lines up and the most distinctive (deepest) part
+of the path stays visible.")
+
+(defun jay/recent-file--short-parent (path)
+  "Return a short, readable parent-directory label for PATH.
+Abbreviates HOME to \"~\" and collapses
+\"~/Library/CloudStorage/Dropbox/\" to \"~/Dropbox/\" so the two
+interchangeable macOS paths render identically."
+  (let* ((parent (directory-file-name (or (file-name-directory path) "")))
+         (abbrev (abbreviate-file-name parent)))
+    (replace-regexp-in-string "\\`~/Library/CloudStorage/Dropbox/"
+                              "~/Dropbox/" abbrev)))
+
+(defun jay/recent-file-candidates-folder-first ()
+  "Return recent file candidates as (DISPLAY . FILE).
+DISPLAY shows the parent directory first in a shadow face, padded to a
+fixed-width column, followed by the filename — so the filenames line up
+vertically across the list. Order follows `recentf-list' (most recent
+first)."
+  (let ((seen (make-hash-table :test 'equal))
+        (entries nil))
+    (dolist (file recentf-list)
+      (let ((path (ignore-errors (expand-file-name file))))
+        (when (and path
+                   (not (file-remote-p path))
+                   (file-exists-p path)
+                   (not (gethash path seen)))
+          (puthash path t seen)
+          (push (list (file-name-nondirectory path)
+                      (jay/recent-file--short-parent path)
+                      path)
+                entries))))
+    (setq entries (nreverse entries))
+    (when entries
+      (let* ((widest (apply #'max 0
+                            (mapcar (lambda (e) (length (nth 1 e))) entries)))
+             (col (min jay/recent-file-parent-column-max
+                       (max jay/recent-file-parent-column-min widest))))
+        (mapcar
+         (lambda (e)
+           (let* ((base (nth 0 e))
+                  (parent (nth 1 e))
+                  (path (nth 2 e))
+                  (shown-parent
+                   (if (> (length parent) col)
+                       (concat "…"
+                               (substring parent
+                                          (1+ (- (length parent) col))))
+                     parent))
+                  (pad (make-string
+                        (max 0 (- col (length shown-parent))) ?\s))
+                  (display (concat (propertize shown-parent 'face 'shadow)
+                                   pad "  " base)))
+             (cons display path)))
+         entries)))))
+
+(defun jay/consult-recent-file-folder-first ()
+  "Find a recent file using a folder-first picker.
+Shows the parent directory on the left in a muted face, padded to a
+fixed-width column, and the filename on the right, ordered by
+`recentf-list' (most recent first)."
+  (interactive)
+  (require 'recentf)
+  (unless recentf-mode (recentf-mode 1))
+  (require 'consult)
+  (let* ((candidates (jay/recent-file-candidates-folder-first))
+         (choice
+          (consult--read
+           candidates
+           :prompt "Recent file: "
+           :sort nil
+           :require-match t
+           :category 'file
+           :history 'file-name-history
+           :state (when (fboundp 'consult--file-preview)
+                    (consult--file-preview))
+           :lookup (lambda (selected items _input _narrow)
+                     (let ((needle (if (stringp selected)
+                                       (substring-no-properties selected)
+                                     selected))
+                           (found nil))
+                       (dolist (item items)
+                         (when (and (stringp (car item))
+                                    (string= needle
+                                             (substring-no-properties (car item))))
+                           (setq found (cdr item))))
+                       found)))))
+    (unless choice
+      (user-error "No recent files found"))
+    (find-file choice)))
 
 (defun timu/org-go-to-heading (&optional arg)
 

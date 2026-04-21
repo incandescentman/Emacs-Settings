@@ -4790,11 +4790,9 @@ This is my goto way for navigating. It feels like it is reading your mind.
 ;;   (exec-path-from-shell-initialize)
 ;; )
 
-(setenv "FASD_DATA" (expand-file-name "~/.fasd"))
-
-  ;; import PATH and other vars
-  ;; (dolist (var '("PATH" "FASD_OPTS"))
-  ;;   (exec-path-from-shell-copy-env var)))
+;; NOTE: fasd reads `_FASD_DATA' (underscore prefix), not `FASD_DATA'.
+;; Setting `FASD_DATA' is a no-op, so we rely on fasd's default
+;; `~/.cache/fasd'. See docs/codebase-wisdom.org.
 
 ;;;; 1.  fasd ----------------------------------------------------
 
