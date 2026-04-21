@@ -606,11 +606,12 @@ HOME-expansion variants on this machine."
     (dired-goto-file abs)))
 
 (with-eval-after-load 'embark
-  (define-key embark-file-map (kbd "L") #'jay/embark-file-copy-as-org-link)
-  (define-key embark-file-map (kbd "B") #'jay/embark-file-copy-basename)
-  (define-key embark-file-map (kbd "A") #'jay/embark-file-copy-abbrev-path)
-  (define-key embark-file-map (kbd "V") #'jay/embark-file-reveal-in-finder)
-  (define-key embark-file-map (kbd "P") #'jay/embark-file-open-parent-in-dired)
+  (define-key embark-file-map (kbd "L")   #'jay/embark-file-copy-as-org-link)
+  (define-key embark-file-map (kbd "B")   #'jay/embark-file-copy-basename)
+  (define-key embark-file-map (kbd "A")   #'jay/embark-file-copy-abbrev-path)
+  (define-key embark-file-map (kbd "s-|") #'jay/embark-file-copy-abbrev-path)
+  (define-key embark-file-map (kbd "V")   #'jay/embark-file-reveal-in-finder)
+  (define-key embark-file-map (kbd "P")   #'jay/embark-file-open-parent-in-dired)
   ;; Route the custom `jay/recent-file' category (used by
   ;; `jay/consult-recent-file-folder-first' and `fasd-find-file') to
   ;; the same keymap as plain files, so all five actions above and
