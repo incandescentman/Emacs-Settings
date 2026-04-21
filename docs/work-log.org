@@ -1,6 +1,13 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-21: Add fast staged-file pre-commit guard for Elisp edits
+- Added [[file+emacs:/Users/jay/emacs/emacs-settings/scripts/pre-commit-check.sh][scripts/pre-commit-check.sh]] to keep commit-time checks fast and scoped:
+  - only staged =*.el= files are checked
+  - enforces =lexical-binding: t= on first line
+  - runs =check-parens= for each staged Elisp file in batch Emacs
+- Added [[file+emacs:/Users/jay/emacs/emacs-settings/scripts/install-pre-commit-hook.sh][scripts/install-pre-commit-hook.sh]] to install a local =.git/hooks/pre-commit= wrapper that calls the repo script.
+
 * 2026-04-21: Fix dead =my/vertico-override-bindings= install target
 - Symptom: after the Embark file-action pass, pressing =s-e= inside an =s-r= / =s-R= completion said "s-e is undefined".
 - Root cause: [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] intentionally disables =key-minor-mode= inside the minibuffer (=minibuffer-setup-hook= at the top of the file), but =my/vertico-override-bindings= was installed into =key-minor-mode-map= rather than =vertico-map=. The entire override mechanism was dead in the one context it was meant to cover — the previous =C-M-S-s-o= → =embark-act= binding had never been live either.
