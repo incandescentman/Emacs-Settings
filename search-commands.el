@@ -465,93 +465,145 @@ Longer parent paths are left-truncated with a leading ellipsis so the
 filename column still lines up and the most distinctive (deepest) part
 of the path stays visible.")
 
-(defun jay/recent-file--short-parent (path)
-  "Return a short, readable parent-directory label for PATH.
-Abbreviates HOME to \"~\" and collapses
-\"~/Library/CloudStorage/Dropbox/\" to \"~/Dropbox/\" so the two
-interchangeable macOS paths render identically."
-  (let* ((parent (directory-file-name (or (file-name-directory path) "")))
-         (abbrev (abbreviate-file-name parent)))
-    (replace-regexp-in-string "\\`~/Library/CloudStorage/Dropbox/"
-                              "~/Dropbox/" abbrev)))
+(defun jay/recent-file--canonical (path)
+  "Return PATH canonicalized: symlinks resolved, HOME abbreviated to \"~\".
+Resolving via `file-truename' collapses the macOS CloudStorage
+Dropbox symlink to its real location (e.g. `/Users/jay/Dropbox/...'),
+so recentf entries that arrived under either spelling deduplicate
+cleanly. Returns nil for inputs that do not exist or are remote."
+  (let ((expanded (ignore-errors (expand-file-name (or path "")))))
+    (when (and expanded
+               (not (file-remote-p expanded))
+               (file-exists-p expanded))
+      (abbreviate-file-name (file-truename expanded)))))
 
 (defun jay/recent-file-candidates-folder-first ()
-  "Return recent file candidates as (DISPLAY . FILE).
-DISPLAY shows the parent directory first in a shadow face, padded to a
-fixed-width column, followed by the filename — so the filenames line up
-vertically across the list. Order follows `recentf-list' (most recent
-first)."
+  "Return a deduplicated list of canonical recent-file paths.
+Order follows `recentf-list' (most recent first). Each entry is an
+abbreviated, symlink-resolved path like =~/Dropbox/roam/foo.org=; the
+folder-first column layout is applied later by
+`jay/recent-file--affix' via `affixation-function' metadata, so these
+strings stay clean and remain safe to hand to Embark, Marginalia,
+`find-file', etc."
   (let ((seen (make-hash-table :test 'equal))
-        (entries nil))
-    (dolist (file recentf-list)
-      (let ((path (ignore-errors (expand-file-name file))))
-        (when (and path
-                   (not (file-remote-p path))
-                   (file-exists-p path)
-                   (not (gethash path seen)))
-          (puthash path t seen)
-          (push (list (file-name-nondirectory path)
-                      (jay/recent-file--short-parent path)
-                      path)
-                entries))))
-    (setq entries (nreverse entries))
-    (when entries
-      (let* ((widest (apply #'max 0
-                            (mapcar (lambda (e) (length (nth 1 e))) entries)))
-             (col (min jay/recent-file-parent-column-max
-                       (max jay/recent-file-parent-column-min widest))))
-        (mapcar
-         (lambda (e)
-           (let* ((base (nth 0 e))
-                  (parent (nth 1 e))
-                  (path (nth 2 e))
-                  (shown-parent
-                   (if (> (length parent) col)
-                       (concat "…"
-                               (substring parent
-                                          (1+ (- (length parent) col))))
-                     parent))
-                  (pad (make-string
-                        (max 0 (- col (length shown-parent))) ?\s))
-                  (display (concat (propertize shown-parent 'face 'shadow)
-                                   pad "  " base)))
-             (cons display path)))
-         entries)))))
+        (paths nil))
+    (dolist (entry recentf-list)
+      (let ((canonical (jay/recent-file--canonical entry)))
+        (when (and canonical (not (gethash canonical seen)))
+          (puthash canonical t seen)
+          (push canonical paths))))
+    (nreverse paths)))
+
+(defun jay/recent-file--affix (paths)
+  "Return affixation triples (CAND PREFIX SUFFIX) for PATHS.
+CAND is the basename (what Vertico displays as the completion);
+PREFIX is the parent-directory column in `shadow' face, padded to a
+shared width so basenames line up vertically; SUFFIX is empty. PATHS
+must be the candidate list as passed to the completion UI, so widths
+reflect the currently visible set."
+  (let* ((parents
+          (mapcar (lambda (p)
+                    (directory-file-name (or (file-name-directory p) "")))
+                  paths))
+         (widest (apply #'max 0 (mapcar #'length parents)))
+         (col (min jay/recent-file-parent-column-max
+                   (max jay/recent-file-parent-column-min widest))))
+    (cl-mapcar
+     (lambda (path parent)
+       (let* ((shown
+               (if (> (length parent) col)
+                   (concat "…"
+                           (substring parent
+                                      (1+ (- (length parent) col))))
+                 parent))
+              (pad (make-string (max 0 (- col (length shown))) ?\s))
+              (prefix (concat (propertize shown 'face 'shadow) pad "  "))
+              (base (file-name-nondirectory path)))
+         (list base prefix "")))
+     paths parents)))
 
 (defun jay/consult-recent-file-folder-first ()
   "Find a recent file using a folder-first picker.
-Shows the parent directory on the left in a muted face, padded to a
-fixed-width column, and the filename on the right, ordered by
-`recentf-list' (most recent first)."
+Candidates are canonical abbreviated paths (so Embark and Marginalia
+work on real file paths, not on display strings); the folder-first,
+column-aligned visual layout is applied by `jay/recent-file--affix'
+via `affixation-function' metadata. Order follows `recentf-list'
+(most recent first) — `:sort nil' and identity sort functions prevent
+Vertico from re-sorting."
   (interactive)
   (require 'recentf)
   (unless recentf-mode (recentf-mode 1))
   (require 'consult)
-  (let* ((candidates (jay/recent-file-candidates-folder-first))
-         (choice
-          (consult--read
-           candidates
-           :prompt "Recent file: "
-           :sort nil
-           :require-match t
-           :category 'file
-           :history 'file-name-history
-           :state (when (fboundp 'consult--file-preview)
-                    (consult--file-preview))
-           :lookup (lambda (selected items _input _narrow)
-                     (let ((needle (if (stringp selected)
-                                       (substring-no-properties selected)
-                                     selected))
-                           (found nil))
-                       (dolist (item items)
-                         (when (and (stringp (car item))
-                                    (string= needle
-                                             (substring-no-properties (car item))))
-                           (setq found (cdr item))))
-                       found)))))
-    (unless choice
+  (let ((paths (jay/recent-file-candidates-folder-first)))
+    (unless paths
       (user-error "No recent files found"))
-    (find-file choice)))
+    (let* ((table
+            (lambda (string pred action)
+              (if (eq action 'metadata)
+                  `(metadata
+                    (category . file)
+                    (display-sort-function . identity)
+                    (cycle-sort-function   . identity)
+                    (affixation-function . ,#'jay/recent-file--affix))
+                (complete-with-action action paths string pred))))
+           (choice
+            (consult--read
+             table
+             :prompt "Recent file: "
+             :sort nil
+             :require-match t
+             :category 'file
+             :history 'file-name-history
+             :state (when (fboundp 'consult--file-preview)
+                      (consult--file-preview)))))
+      (find-file choice))))
+
+(defun jay/embark-file-copy-as-org-link (file)
+  "Copy FILE to the kill ring as an Org `[[file:...][basename]]' link.
+Uses `abbreviate-file-name' so the link is portable across the
+HOME-expansion variants on this machine."
+  (interactive "fFile: ")
+  (let* ((short (abbreviate-file-name file))
+         (link (format "[[file:%s][%s]]" short (file-name-base file))))
+    (kill-new link)
+    (message "Copied: %s" link)))
+
+(defun jay/embark-file-copy-basename (file)
+  "Copy just the basename of FILE to the kill ring."
+  (interactive "fFile: ")
+  (let ((base (file-name-nondirectory file)))
+    (kill-new base)
+    (message "Copied: %s" base)))
+
+(defun jay/embark-file-copy-abbrev-path (file)
+  "Copy FILE to the kill ring with HOME abbreviated to \"~\"."
+  (interactive "fFile: ")
+  (let ((short (abbreviate-file-name file)))
+    (kill-new short)
+    (message "Copied: %s" short)))
+
+(defun jay/embark-file-reveal-in-finder (file)
+  "Reveal FILE in the macOS Finder, with the file selected."
+  (interactive "fFile: ")
+  (require 'reveal-in-finder)
+  (let* ((abs (expand-file-name file))
+         (dir (file-name-directory abs))
+         (base (file-name-nondirectory abs)))
+    (reveal-in-finder-as dir base)))
+
+(defun jay/embark-file-open-parent-in-dired (file)
+  "Open the parent directory of FILE in Dired, with point on FILE."
+  (interactive "fFile: ")
+  (let ((abs (expand-file-name file)))
+    (dired (file-name-directory abs))
+    (dired-goto-file abs)))
+
+(with-eval-after-load 'embark
+  (define-key embark-file-map (kbd "L") #'jay/embark-file-copy-as-org-link)
+  (define-key embark-file-map (kbd "B") #'jay/embark-file-copy-basename)
+  (define-key embark-file-map (kbd "A") #'jay/embark-file-copy-abbrev-path)
+  (define-key embark-file-map (kbd "V") #'jay/embark-file-reveal-in-finder)
+  (define-key embark-file-map (kbd "P") #'jay/embark-file-open-parent-in-dired))
 
 (defun timu/org-go-to-heading (&optional arg)
 

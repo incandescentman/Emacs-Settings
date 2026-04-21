@@ -4840,7 +4840,9 @@ PREFIX >1 ⇒ dirs only,  PREFIX <0 ⇒ files only,  none ⇒ both."
                   (lambda (entry)
                     (let* ((normalized (my/fasd--normalize-path entry))
                            (abs (and normalized (expand-file-name normalized))))
-                      (when (and abs (file-exists-p abs))
+                      (when (and abs
+                                 (not (file-remote-p abs))
+                                 (file-exists-p abs))
                         abs)))
                   raw)))))
     (unless cands
@@ -4848,10 +4850,13 @@ PREFIX >1 ⇒ dirs only,  PREFIX <0 ⇒ files only,  none ⇒ both."
     ;; Wrap CANDS in a completion table that declares identity sort
     ;; functions so Vertico (or any other completion UI that honours
     ;; the metadata) preserves fasd's most-recent-first ordering
-    ;; instead of re-sorting by history/length/alpha.
+    ;; instead of re-sorting by history/length/alpha. Declaring the
+    ;; `file' category unlocks Marginalia file annotations and
+    ;; Embark's `embark-file-map' actions (`C-.' on a candidate).
     (let* ((table (lambda (string pred action)
                     (if (eq action 'metadata)
-                        '(metadata (display-sort-function . identity)
+                        '(metadata (category . file)
+                                   (display-sort-function . identity)
                                    (cycle-sort-function   . identity))
                       (complete-with-action action cands string pred))))
            (choice (completing-read "fasd: " table nil t)))
