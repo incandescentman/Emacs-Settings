@@ -657,8 +657,14 @@
   "Keys unbound in `evil-normal-state-map'.")
 
 (defconst my/vertico-override-bindings
-  '(("C-M-S-s-o" . embark-act))
-  "Bindings installed into `key-minor-mode-map' after vertico loads.")
+  '(("s-e"       . embark-act)
+    ("C-M-S-s-o" . embark-act))
+  "Bindings installed into `vertico-map' after vertico loads.
+These must go in `vertico-map' (not `key-minor-mode-map') because
+`key-minor-mode' is intentionally disabled inside the minibuffer by
+the `minibuffer-setup-hook' at the top of this file — so any binding
+installed into `key-minor-mode-map' is dead exactly when the
+minibuffer completion UI is active.")
 
 (defconst my/emacs-lisp-mode-bindings
   '(("s-v"   . pasteboard-paste-verbatim)
@@ -680,9 +686,9 @@
     ("markdown-mode-map"      . my/markdown-mode-bindings)
     ("evil-normal-state-map"  . my/evil-bindings)
     ("emacs-lisp-mode-map"    . my/emacs-lisp-mode-bindings)
-    ;; Override maps (installed into key-minor-mode-map)
-    ("key-minor-mode-map (org)"    . my/org-override-bindings)
-    ("key-minor-mode-map (vertico)" . my/vertico-override-bindings))
+    ;; Override maps (installed into their proper minibuffer/mode maps)
+    ("key-minor-mode-map (org)" . my/org-override-bindings)
+    ("vertico-map"              . my/vertico-override-bindings))
   "Registry mapping map names to their binding alists.
 Used by `my/keybinding-dump' to generate documentation.")
 
@@ -764,7 +770,7 @@ Each element of ADLIST should look like (FUNCTION WHERE AD-FN)."
   (my/install-mode-bindings evil-normal-state-map my/evil-bindings))
 
 (with-eval-after-load 'vertico
-  (my/install-mode-bindings key-minor-mode-map my/vertico-override-bindings))
+  (my/install-mode-bindings vertico-map my/vertico-override-bindings))
 
 (with-eval-after-load 'lisp-mode
   (my/install-mode-bindings emacs-lisp-mode-map my/emacs-lisp-mode-bindings))

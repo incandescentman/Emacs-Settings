@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-21: Fix dead =my/vertico-override-bindings= install target
+- Symptom: after the Embark file-action pass, pressing =s-e= inside an =s-r= / =s-R= completion said "s-e is undefined".
+- Root cause: [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] intentionally disables =key-minor-mode= inside the minibuffer (=minibuffer-setup-hook= at the top of the file), but =my/vertico-override-bindings= was installed into =key-minor-mode-map= rather than =vertico-map=. The entire override mechanism was dead in the one context it was meant to cover — the previous =C-M-S-s-o= → =embark-act= binding had never been live either.
+- Fix: added =("s-e" . embark-act)= to =my/vertico-override-bindings=, switched the install target from =key-minor-mode-map= to =vertico-map=, updated the registry label in =my/mode-binding-registry=, and expanded the defconst docstring to flag the minibuffer-hook interaction so the next person adding a vertico binding doesn't step on the same rake.
+
 * 2026-04-21: Harden fasd picker, path-native recent-file candidates, extra Embark file actions
 - *[[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] — =fasd-find-file=:* added =(not (file-remote-p abs))= to the candidate filter (so a TRAMP path in the fasd db can't hang a future preview-state function) and declared =(category . file)= in the completion-table metadata so Marginalia annotates and Embark's =embark-file-map= (including the new Jay-specific file actions below) work on =s-R= candidates.
 - *[[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][search-commands.org]] — folder-first picker refactor:* rewrote =jay/consult-recent-file-folder-first= to hand the completion UI canonical abbreviated paths (e.g. =~/Dropbox/roam/foo.org=) rather than pre-baked display strings. The folder-first, column-aligned visual is now applied by a new =jay/recent-file--affix= function wired in as =affixation-function= metadata. Consequences: Embark and Marginalia act on real paths (not display strings), matching still works against the underlying path, and =:lookup= is no longer needed.
