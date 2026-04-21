@@ -2,6 +2,31 @@
 #+DATE: 2025-09-24
 #+DESCRIPTION: Debugging post-mortems and prevention checklists.
 
+* Vertico Resorts =completing-read= Candidates Unless The Table Declares Otherwise
+  Date: 2026-04-21
+
+** Trigger
+=fasd-find-file= handed Vertico a list of paths already sorted by fasd's =-ltR= recency order, but the completion popup showed them in a different order and recently-visited files appeared to be "missing" entirely. Diagnosing this took a detour through fasd's on-disk db (=/Users/jay/.cache/fasd=, not =~/.fasd= — fasd reads =_FASD_DATA=, not =FASD_DATA=) and an org-roam advice regression in Codex's patch, neither of which was the real cause.
+
+** Mechanism
+Under compleseus (Vertico + Consult + Orderless), =completing-read= does *not* display candidates in the order you pass them. Vertico applies =vertico-sort-function= (default =vertico-sort-history-length-alpha=), which re-sorts by minibuffer history, then length, then alpha. A plain list like =(completing-read "fasd: " cands nil t)= always gets clobbered. The fasd ordering is correct at the shell, the list is correct in Emacs, but the user-visible popup is reshuffled — and a freshly-added entry with no minibuffer history can land far from the top, giving the illusion that it was never registered.
+
+** Safe pattern
+Wrap the candidate list in a completion table that declares =identity= sort functions so Vertico (and any other metadata-aware UI) preserves the order:
+
+#+begin_src emacs-lisp
+(let* ((table (lambda (string pred action)
+                (if (eq action 'metadata)
+                    '(metadata (display-sort-function . identity)
+                               (cycle-sort-function   . identity))
+                  (complete-with-action action cands string pred))))
+       (choice (completing-read "prompt: " table nil t)))
+  ...)
+#+end_src
+
+** Actionable insight
+Any custom command in this config that presents a pre-sorted list to =completing-read= (recency, ranking, frecency, manual ordering, etc.) needs the metadata wrapper. If a "most recent first" UX feels wrong and the underlying data is right, suspect the completion layer before blaming the data source.
+
 * Three Ways To Get LaTeX Token-Register Emptiness Tests Wrong
   Date: 2026-04-20
 
@@ -792,3 +817,21 @@ Useful debugging pattern:
   - delete [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]]
   - retangle
   - run a batch parse/load check
+
+* Org-roam Visit Tracking: Do Not Depend on Return Values
+  Date: 2026-04-21
+
+** Trigger
+`s-R` (~fasd-find-file~) stopped showing freshly visited org-roam notes, even though direct file visits were tracked.
+
+** Mechanism
+The fasd tracking advice wrapped ~org-roam-node-visit~ and assumed that function returned the visited buffer. In newer org-roam builds, ~org-roam-node-visit~ calls ~org-roam-node-open~, which now returns ~org-fold-show-context~ output instead of a visited buffer object. The advice quietly stopped adding node visits to fasd.
+
+Captured notes were also at risk because their files can be finalized after node navigation logic runs.
+
+** Actionable insight
+- Track org-roam visits by file path, not by return value:
+  - prefer ~(org-roam-node-file node)~
+  - fallback to ~buffer-file-name~ when needed
+- Keep explicit capture-finalize tracking (advice on ~org-roam-capture--finalize~) for newly created notes
+- When behavior regresses after package upgrades, verify function contracts (return values and side effects) before assuming hook order is wrong

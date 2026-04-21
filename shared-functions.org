@@ -4810,6 +4810,14 @@ This is my goto way for navigating. It feels like it is reading your mind.
   ;; ------------------------------------------------------------
   ;;  one single dispatcher
   ;; ------------------------------------------------------------
+(defun my/fasd--normalize-path (path)
+  "Normalize a PATH string emitted by fasd."
+  (let ((p (string-trim (or path ""))))
+    (cond
+     ((string= p "") nil)
+     ((string-prefix-p "Users/" p) (concat "/" p))
+     (t p))))
+
 (defun fasd-find-file (&optional prefix query)
   "Jump to a file/dir with fasd.
 PREFIX >1 ⇒ dirs only,  PREFIX <0 ⇒ files only,  none ⇒ both."
@@ -4821,15 +4829,34 @@ PREFIX >1 ⇒ dirs only,  PREFIX <0 ⇒ files only,  none ⇒ both."
                      ((pred (< 0)) " -f")     ; negative = files only
                      ((pred (> 1)) " -d")     ; >1 = dirs only
                      (_ "")))                 ; default = both
-         ;; Here we use  -s (score) + -l (list)
+         ;; Use recent-access ordering so most recently visited appears first.
          (cmd (string-trim
-               (format "fasd -sl%s %s"
+               (format "fasd -ltR%s %s"
                        type-opt
                        (shell-quote-argument (or query "")))))
-         (cands (split-string (shell-command-to-string cmd) "\n" t)))
+         (raw (split-string (shell-command-to-string cmd) "\n" t))
+         (cands
+          (delete-dups
+           (delq nil
+                 (mapcar
+                  (lambda (entry)
+                    (let* ((normalized (my/fasd--normalize-path entry))
+                           (abs (and normalized (expand-file-name normalized))))
+                      (when (and abs (file-exists-p abs))
+                        abs)))
+                  raw)))))
     (unless cands
       (user-error "fasd returned nothing (cmd was: %s)" cmd))
-    (let ((choice (completing-read "fasd: " cands nil t)))
+    ;; Wrap CANDS in a completion table that declares identity sort
+    ;; functions so Vertico (or any other completion UI that honours
+    ;; the metadata) preserves fasd's most-recent-first ordering
+    ;; instead of re-sorting by history/length/alpha.
+    (let* ((table (lambda (string pred action)
+                    (if (eq action 'metadata)
+                        '(metadata (display-sort-function . identity)
+                                   (cycle-sort-function   . identity))
+                      (complete-with-action action cands string pred))))
+           (choice (completing-read "fasd: " table nil t)))
       (if (file-directory-p choice)
           (dired choice)
         (find-file choice)))))
@@ -4840,11 +4867,17 @@ PREFIX >1 ⇒ dirs only,  PREFIX <0 ⇒ files only,  none ⇒ both."
 ;; ------------------------------------------------------------
 (defun my/fasd--add (path)
   "Register PATH in the fasd database, if fasd is available."
-  (when (and path                       ; a real file/dir
-             (executable-find "fasd")   ; the binary is in PATH
-             (file-exists-p path))
-    ;; run asynchronously - never blocks Emacs
-    (start-process "fasd-add" nil "fasd" "--add" (expand-file-name path))))
+  (let ((abs (and path (expand-file-name path))))
+    (when (and abs
+               (executable-find "fasd")
+               (file-exists-p abs))
+    ;; Use a synchronous add so immediately-triggered `fasd-find-file'
+    ;; sees freshly visited files without race conditions.
+    (ignore-errors
+      (call-process "fasd" nil nil nil "--add" abs))
+    (when (fboundp 'recentf-add-file)
+      (ignore-errors
+        (recentf-add-file abs))))))
 
 ;; ------------------------------------------------------------
 ;;  Hook it up to file visits
@@ -4857,6 +4890,31 @@ PREFIX >1 ⇒ dirs only,  PREFIX <0 ⇒ files only,  none ⇒ both."
                       (if (stringp dired-directory)
                           dired-directory
                         (car dired-directory)))))
+
+;; Org-roam often switches to an already-open file buffer, which bypasses
+;; `find-file-hook'. Track node visits explicitly in fasd/recentf.
+(defun my/org-roam-node-visit--track-fasd (orig-fn node &rest args)
+  "Run ORIG-FN for NODE with ARGS, then register the visited file in fasd."
+  (let ((result (apply orig-fn node args)))
+    (my/fasd--add
+     (or (ignore-errors (org-roam-node-file node))
+         (buffer-file-name)))
+    result))
+
+(defun my/org-roam-capture-finalize--track-fasd (&rest _)
+  "Register a newly captured org-roam file in fasd/recentf."
+  (my/fasd--add
+   (or buffer-file-name
+       (when-let ((base (buffer-base-buffer)))
+         (buffer-file-name base)))))
+
+(with-eval-after-load 'org-roam
+  (unless (advice-member-p #'my/org-roam-node-visit--track-fasd 'org-roam-node-visit)
+    (advice-add 'org-roam-node-visit :around #'my/org-roam-node-visit--track-fasd)))
+
+(with-eval-after-load 'org-roam-capture
+  (unless (advice-member-p #'my/org-roam-capture-finalize--track-fasd 'org-roam-capture--finalize)
+    (advice-add 'org-roam-capture--finalize :after #'my/org-roam-capture-finalize--track-fasd)))
 #+end_src
 
 * Google things from within emacs

@@ -1,6 +1,13 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-21: Restore most-recent-first ordering in =fasd-find-file=
+- Symptom: after visiting an Org-roam file and killing its buffer, =s-R= (=fasd-find-file=) appeared to omit the file entirely, and the overall list was no longer sorted most-recently-first.
+- Root cause was *not* a missing fasd registration — the file was present in =/Users/jay/.cache/fasd= (fasd reads =_FASD_DATA=, not =FASD_DATA=, so the =setenv= in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] is a no-op) with a fresh timestamp, and =fasd -ltR= on the shell returned it near the top.
+- Real cause: =completing-read= in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] was handed a plain list of paths, which Vertico (via =vertico-sort-history-length-alpha=) re-sorted by history/length/alpha — burying recently-added entries and wiping fasd's recency ordering.
+- Fix: wrapped the candidates in a completion table whose =metadata= declares =display-sort-function= and =cycle-sort-function= as =identity=. Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] (explicit target path — =#+auto_tangle: t= doesn't fire in batch) and ran =check-parens= on the tangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]].
+- Logged the pattern in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/codebase-wisdom.org][docs/codebase-wisdom.org]] so any future pre-sorted =completing-read= list in this config gets the metadata wrapper by default.
+
 * 2026-04-20: PDF export now renames output file to =#+TITLE:=
 - Added =jay/org-export-title-for-filename=, =jay/sanitize-for-filename=, and =jay/org-latex-rename-pdf-to-title= to [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] under "LaTeX Export Helpers".
 - Wired via =:filter-return= advice on =org-latex-export-to-pdf=: after export produces =<orgbase>.pdf=, the advice renames it to =<sanitized-title>.pdf= in the same directory. Spaces are preserved (so PDFs attached to email read naturally); =/ \ : * ? " < > |= and control characters are stripped; trailing periods are trimmed; existing targets are overwritten. Falls back to the original basename when =#+TITLE:= is absent or when the export is async (return value is a process, not a path).

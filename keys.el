@@ -91,7 +91,7 @@
     ;; File Finding & Navigation
     ;; ==================================================================
     ("s-R"           . fasd-find-file)
-    ("s-r"           . counsel-recentf)
+    ("s-r"           . jay/consult-recent-file-basename-first)
     ("C-s-r"         . consult-find)
     ("M-s-d"         . counsel-find-file)
     ("s-k e e"       . fasd-find-file)

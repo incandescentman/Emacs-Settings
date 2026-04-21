@@ -16,6 +16,59 @@
  (interactive)
  (consult-ripgrep default-directory))
 
+(defun jay/recent-file-candidates-basename-first ()
+ "Return recent file candidates as (DISPLAY . FILE) with basename-first display.
+The basename is shown first and the parent directory is shown in a muted style."
+ (let ((seen (make-hash-table :test 'equal))
+       (candidates nil))
+  (dolist (file recentf-list)
+   (let ((path (ignore-errors (expand-file-name file))))
+    (when (and path
+               (not (file-remote-p path))
+               (file-exists-p path)
+               (not (gethash path seen)))
+     (puthash path t seen)
+     (let* ((base (file-name-nondirectory path))
+            (parent (directory-file-name (or (file-name-directory path) "")))
+            (parent-label (abbreviate-file-name parent))
+            (display (concat base
+                             (propertize (concat "  " parent-label) 'face 'shadow))))
+      (push (cons display path) candidates)))))
+  (nreverse candidates)))
+
+(defun jay/consult-recent-file-basename-first ()
+ "Find a recent file with basename-first candidates and parent-path context.
+Candidate order follows `recentf-list' (most recent first)."
+ (interactive)
+ (require 'recentf)
+ (unless recentf-mode
+  (recentf-mode 1))
+ (require 'consult)
+ (let* ((candidates (jay/recent-file-candidates-basename-first))
+        (choice
+         (consult--read
+          candidates
+          :prompt "Find recent file: "
+          :sort nil
+          :require-match t
+          :category 'file
+          :history 'file-name-history
+          :state (when (fboundp 'consult--file-preview)
+                   (consult--file-preview))
+          :lookup (lambda (selected items _input _narrow)
+                   (let ((needle (if (stringp selected)
+                                     (substring-no-properties selected)
+                                   selected))
+                         (found nil))
+                    (dolist (item items)
+                     (when (and (stringp (car item))
+                                (string= needle (substring-no-properties (car item))))
+                      (setq found (cdr item))))
+                    found)))))
+  (unless choice
+   (user-error "No recent files found"))
+  (find-file choice)))
+
 (defun jay/smart-ripgrep (&optional arg)
  "Context-aware ripgrep search.
 In an org-roam buffer: search all of `org-roam-directory'.

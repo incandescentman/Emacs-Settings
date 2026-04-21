@@ -546,8 +546,15 @@ Default is `jay/revenue-block-default-sprints' (3 sprints ~= 90 minutes)."
    (format "- [%s] Stopped prolific block early."
            (format-time-string "%H:%M"))))
 
+(defun jay/org-roam-node-find-recent (&optional other-window)
+  "Find an Org-roam node with recently-visited-first sorting.
+Passing OTHER-WINDOW mirrors `org-roam-node-find' prefix behavior."
+  (interactive "P")
+  (jay/with-org-roam
+    (org-roam-node-find other-window nil nil #'org-roam-node-read-sort-by-file-atime)))
+
 ;; Keybindings -----------------------------------------------------------------
-(jay/bind-roam "f" org-roam-node-find)
+(jay/bind-roam "f" jay/org-roam-node-find-recent)
 (jay/bind-roam "l" org-roam-buffer-toggle)
 (jay/bind-roam "i" org-roam-node-insert)
 (jay/bind-roam "c" org-roam-capture)
@@ -582,7 +589,7 @@ Default is `jay/revenue-block-default-sprints' (3 sprints ~= 90 minutes)."
 
 (global-set-key (kbd "S-s-<up>")    #'jay/org-roam-backlinks-buffer)
 (global-set-key (kbd "S-s-<left>")  (lambda () (interactive) (jay/with-org-roam (call-interactively #'org-roam-node-insert))))
-(global-set-key (kbd "S-s-<right>") (lambda () (interactive) (jay/with-org-roam (call-interactively #'org-roam-node-find))))
+(global-set-key (kbd "S-s-<right>") #'jay/org-roam-node-find-recent)
 (global-set-key (kbd "s-/ sn")      #'jay/org-roam-search-nodes)
 (global-set-key (kbd "s-:")         (lambda () (interactive) (jay/with-org-roam (org-roam-dailies-goto-today))))
 (global-set-key (kbd "C-S-d")       (lambda () (interactive) (jay/with-org-roam (org-roam-dailies-goto-today))))
