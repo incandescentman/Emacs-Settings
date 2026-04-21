@@ -702,6 +702,76 @@ process the whole buffer."
 ;; (use-package blue-ruin-no-cover)
 #+END_SRC
 
+*** preflight checks before PDF export
+#+begin_src emacs-lisp
+(defcustom jay/org-latex-preflight-require-title t
+  "When non-nil, block PDF export if #+TITLE: is missing or blank."
+  :type 'boolean
+  :group 'org-export)
+
+(defvar jay/org-latex-class-template-files
+  '(("elegant-helvetica" . "/Users/jay/emacs/emacs-settings/latex-templates/elegant-helvetica.el")
+    ("beautiful-racket" . "/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el")
+    ("elegant-garamond" . "/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el")
+    ("blue-invoice" . "/Users/jay/emacs/emacs-settings/latex-templates/blue-invoice.el")
+    ("blue-invoice-letterhead" . "/Users/jay/emacs/emacs-settings/latex-templates/blue-invoice-with-letterhead.el"))
+  "Mapping of Org LaTeX class names to the template files that define them.")
+
+(defun jay/org-export--keyword-value (key)
+  "Return the trimmed Org KEY keyword value in current buffer, or nil."
+  (save-excursion
+    (let ((raw (cadr (assoc key (org-collect-keywords (list key))))))
+      (when raw
+        (let ((trimmed (string-trim raw)))
+          (unless (string-empty-p trimmed) trimmed))))))
+
+(defun jay/org-latex--class-exists-p (class-name)
+  "Return non-nil when CLASS-NAME exists in `org-latex-classes'."
+  (assoc class-name org-latex-classes))
+
+(defun jay/org-latex-preflight-check (&rest _)
+  "Validate critical LaTeX export prerequisites before PDF export."
+  (when (derived-mode-p 'org-mode)
+    (let* ((title (jay/org-export--keyword-value "TITLE"))
+           (class-name (or (jay/org-export--keyword-value "LATEX_CLASS")
+                           org-latex-default-class))
+           (template-file (cdr (assoc class-name jay/org-latex-class-template-files)))
+           (missing nil))
+      (when (and jay/org-latex-preflight-require-title
+                 (not title))
+        (push "Missing #+TITLE: (set a document title before exporting to PDF)." missing))
+      (unless (and (boundp 'org-latex-pdf-process) org-latex-pdf-process)
+        (push "`org-latex-pdf-process' is not set." missing))
+      (unless (and (boundp 'org-latex-classes) org-latex-classes)
+        (push "`org-latex-classes' is empty." missing))
+      (unless (and (stringp class-name) (not (string-empty-p class-name)))
+        (push "No LaTeX class resolved from #+LATEX_CLASS: or `org-latex-default-class'." missing))
+      (when template-file
+        (unless (file-exists-p template-file)
+          (push (format "Template file not found for class '%s': %s" class-name template-file)
+                missing))
+        (when (and (file-exists-p template-file)
+                   (not (jay/org-latex--class-exists-p class-name)))
+          (ignore-errors (load template-file nil t)))
+        (unless (jay/org-latex--class-exists-p class-name)
+          (push (format "LaTeX class '%s' is not registered in `org-latex-classes'." class-name)
+                missing)))
+      (when (and (null template-file)
+                 (stringp class-name)
+                 (not (jay/org-latex--class-exists-p class-name)))
+        (push (format "Class '%s' has no known template mapping and is not registered." class-name)
+              missing))
+      (when missing
+        (user-error "LaTeX export preflight failed:\n- %s"
+                    (mapconcat #'identity (nreverse missing) "\n- ")))
+      t)))
+
+(if (fboundp 'jay/advice-add-once)
+    (jay/advice-add-once 'org-latex-export-to-pdf :before #'jay/org-latex-preflight-check)
+  (unless (advice-member-p #'jay/org-latex-preflight-check 'org-latex-export-to-pdf)
+    (advice-add 'org-latex-export-to-pdf :before #'jay/org-latex-preflight-check)))
+#+end_src
+
 *** fix latex verbatim
   You can use a filter function that will replace default "verbatim" with
   whatever you want.

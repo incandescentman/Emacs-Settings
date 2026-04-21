@@ -1,6 +1,16 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-21: Add LaTeX export preflight checks before PDF export
+- Added a new preflight in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] that runs before =org-latex-export-to-pdf= and fails fast when critical prerequisites are missing.
+- New checks:
+  - optional strict title requirement via =jay/org-latex-preflight-require-title= (defaults to =t=)
+  - resolved class from =#+LATEX_CLASS:= or =org-latex-default-class=
+  - required variables present (notably =org-latex-pdf-process= and =org-latex-classes=)
+  - class-template mapping validation for core house templates, file existence checks, and class registration checks
+- Added a load-order-safe advice install: uses =jay/advice-add-once= when available, otherwise falls back to local =advice-member-p= guard.
+- Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] and re-ran =check-parens= on [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.el][org-export.el]].
+
 * 2026-04-21: Add fast staged-file pre-commit guard for Elisp edits
 - Added [[file+emacs:/Users/jay/emacs/emacs-settings/scripts/pre-commit-check.sh][scripts/pre-commit-check.sh]] to keep commit-time checks fast and scoped:
   - only staged =*.el= files are checked
