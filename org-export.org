@@ -686,20 +686,6 @@ process the whole buffer."
           (load full-path))))
     ;; Also load the subtitle processing configuration
     (load "/Users/jay/emacs/emacs-settings/latex-subtitles/latex-subtitles.el")))
-
-;; (load "/Users/jay/emacs/emacs-settings/latex-templates/blue-ruin.el")
-;; (load "/Users/jay/emacs/emacs-settings/latex-templates/modest-ruin.el")
-
-;; (load "/Users/jay/emacs/emacs-settings/latex-templates/inelegant.el")
-;; (load "/Users/jay/emacs/emacs-settings/latex-templates/elegant-wider.el")
-
-;; (load "/Users/jay/emacs/emacs-settings/latex-templates/resonate.el")
-
-;; (load "/Users/jay/emacs/emacs-settings/latex-templates/blue-ruin_no_cover.el")
-
-;; (use-package blue-ruin)
-;; (use-package blue-invoice)
-;; (use-package blue-ruin-no-cover)
 #+END_SRC
 
 *** preflight checks before PDF export

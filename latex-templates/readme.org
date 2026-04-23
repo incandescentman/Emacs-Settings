@@ -2,7 +2,7 @@
 
 * Header Configuration
 
-Templates that use =fancyhdr= (e.g., =elegant-garamond=, =blue-ruin=) define =\leftheader= and =\leftheaderurl=. For =elegant-garamond= and =elegant-garamond-tabularray=, if you omit =\leftheader{...}= the top-left page header falls back to the document title. Add =\leftheaderurl{...}= only when you want that left header text linked:
+Templates that use =fancyhdr= (e.g., =elegant-garamond=, =elegant-helvetica=) define =\leftheader= and =\leftheaderurl=. For =elegant-garamond= and =elegant-garamond-tabularray=, if you omit =\leftheader{...}= the top-left page header falls back to the document title. Add =\leftheaderurl{...}= only when you want that left header text linked:
 
 #+begin_example
 #+LATEX_HEADER: \leftheader{Jay Dixit}
@@ -42,9 +42,7 @@ If =\footerbrand= is empty, the footer stays image-only. If it is set, the templ
 - =elegant-garamond-tabularray= ([[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond-tabularray.el][📄 elegant-garamond-tabularray.el]]) defaults to the document title when =\leftheader= is omitted
 
 ** Templates requiring =\leftheader=
-- =blue-ruin= (also uses =\coverimage=)
-- =blue-ruin-no-cover= (also uses =\coverimage=)
-- Any template that loads =fancyhdr= and references =\the\leftheader=
+- Any template that loads =fancyhdr= and references =\the\leftheader= without an empty-fallback branch
 
 * Invoice Letterhead Branding
 
@@ -63,8 +61,6 @@ The defaults stay the same if you omit that header line:
 The corresponding yasnippet snippets in [[file+emacs:/Users/jay/emacs/interesting-snippets/org-mode/][📄 org-mode snippets]] include these headers automatically:
 - =elegant= → =elegant.yasnippet=
 - =elegantgaramond= → =elegantgaramond.yasnippet=
-- =blueruin= → =blue-ruin.yasnippet=
-- =brnc= → =blue-ruin-no-cover.yasnippet=
 
 * TODOs
 - [ ] Increase spacing between paragraphs

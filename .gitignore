@@ -34,6 +34,9 @@ secret-codes.el
 # Tramp and URL caches
 tramp/
 url/cache/
+
+# AUCTeX style caches
+latex-templates/auto/
 spacecraft-mode.el
 shared-functions.el
 gnu-emacs-startup.el

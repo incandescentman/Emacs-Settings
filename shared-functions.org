@@ -267,11 +267,6 @@ I should probably eventually break these out of custom-set-variables and organiz
 (add-to-list 'load-path "/Users/jay/emacs/emacs-settings/timeline/")
 #+END_SRC
 
-** Control use-package verbosity
-
-** some org packages
-
-
 * The Writing Environment
 
 * UI / customization of appearance and editing environment

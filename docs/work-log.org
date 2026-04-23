@@ -1353,5 +1353,17 @@
 - Rationale: these files were either never wired into =jay-load-latex=, had no live document usage in the current trees, or were effectively superseded by newer active templates.
 - Deliberately left [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/book-proposal-latex.el][latex-templates/book-proposal-latex.el]] and [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/dixit-self-letterhead.el][latex-templates/dixit-self-letterhead.el]] in place for a later pass, because they need a naming/compatibility decision rather than a pure archival move.
 
+* 2026-04-23: Full blue-ruin retirement and latex-templates subdir cleanup
+- Retired the =blue-ruin= class entirely after discovering [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/book-proposal-latex.el][latex-templates/book-proposal-latex.el]] was the renamed home of that class (it both =(provide 'blue-ruin)= and registered the literal class name =blue-ruin= in =org-latex-classes=, but was never loaded by =jay-load-latex= so the =blueruin= / =blue-ruin-no-cover= yasnippets were already broken-on-export).
+- Moved into [[file+emacs:/Users/jay/emacs/emacs-settings/archive/latex-templates/][archive/latex-templates/]]:
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/archive/latex-templates/book-proposal-latex.el][archive/latex-templates/book-proposal-latex.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/archive/latex-templates/auto/][archive/latex-templates/auto/]] — stale AUCTeX style caches for =.tex= source files deleted in the Jan 2024 cleanup
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/archive/latex-templates/exemplars/][archive/latex-templates/exemplars/]] — only held =inelegant-streamlined.el=, an experimental class never wired up
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/archive/latex-templates/images/][archive/latex-templates/images/]] — cover-image assets only referenced by the now-retired =blue-ruin= snippet
+- Deleted the corresponding yasnippets in the separate [[file+emacs:/Users/jay/emacs/interesting-snippets/org-mode/][interesting-snippets/org-mode/]] repo: =blue-ruin.yasnippet=, =blue-ruin-no-cover.yasnippet=.
+- Added =latex-templates/auto/= to [[file+emacs:/Users/jay/emacs/emacs-settings/.gitignore][.gitignore]] so AUCTeX style caches don't get re-tracked when regenerated.
+- Cleaned up =.DS_Store= entries in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/][latex-templates/]] and the moved =exemplars/= dir.
+- Source for any future revival: =git show e43f0a64^:latex-templates/blue-ruin.el= recovers the original pre-rename file.
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.

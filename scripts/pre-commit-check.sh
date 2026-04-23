@@ -4,7 +4,7 @@ set -euo pipefail
 ROOT="$(git rev-parse --show-toplevel)"
 cd "$ROOT"
 
-mapfile -t STAGED_EL < <(git diff --cached --name-only --diff-filter=ACMR -- '*.el')
+mapfile -t STAGED_EL < <(git diff --cached --name-only --diff-filter=ACMR -- '*.el' ':(exclude)archive/**')
 
 if [ "${#STAGED_EL[@]}" -eq 0 ]; then
   exit 0
