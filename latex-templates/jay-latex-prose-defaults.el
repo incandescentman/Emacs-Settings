@@ -1,5 +1,6 @@
 ;;; jay-latex-prose-defaults.el --- Shared Org->LaTeX prose defaults -*- lexical-binding: t; -*-
 
+(require 'cl-lib)
 (require 'subr-x)
 
 (defconst jay/latex-prose-defaults
@@ -19,30 +20,71 @@
              "\n")
   "Shared LaTeX defaults for prose-oriented document classes.")
 
+(defconst jay/latex-prose-default-legacy-blocks
+  (list
+   (string-join
+    '("% Shared prose typography defaults"
+      "\\IfFileExists{nowidow.sty}{%"
+      "  \\usepackage[all]{nowidow}"
+      "}{%"
+      "  \\widowpenalty=10000"
+      "  \\clubpenalty=10000"
+      "}"
+      "\\emergencystretch=3em")
+    "\n")
+   (string-join
+    '("% Shared prose typography defaults"
+      "\\IfFileExists{nowidow.sty}{%"
+      "  \\usepackage[all]{nowidow}"
+      "}{%"
+      "  \\widowpenalty=10000"
+      "  \\clubpenalty=10000"
+      "}"
+      "\\emergencystretch=3em"
+      "% Strongly penalize hyphenation on the penultimate line so a hyphenated word never strands its tail alone on the last line of a paragraph."
+      "\\finalhyphendemerits=1000000")
+    "\n")
+   (string-join
+    '("% Shared prose typography defaults"
+      "\\IfFileExists{nowidow.sty}{%"
+      "  \\usepackage[all]{nowidow}"
+      "}{%"
+      "  \\widowpenalty=10000"
+      "  \\clubpenalty=10000"
+      "}"
+      "\\emergencystretch=3em"
+      "% Strongly penalize hyphenation on the penultimate line so a hyphenated word never strands its tail alone on the last line of a paragraph."
+      "\\finalhyphendemerits=1000000"
+      "% Ragged-right inside lists so bullets never hyphenate."
+      "\\setlist{before=\\RaggedRight}")
+    "\n")
+   (string-join
+    '("% Shared prose typography defaults"
+      "\\IfFileExists{nowidow.sty}{%"
+      "  \\usepackage[all]{nowidow}"
+      "}{%"
+      "  \\widowpenalty=10000"
+      "  \\clubpenalty=10000"
+      "}"
+      "\\emergencystretch=3em"
+      "% Discourage hyphenation; runts prevented by enforcing a 4-char right minimum."
+      "\\hyphenpenalty=10000"
+      "\\righthyphenmin=4"
+      "\\setlist{before=\\RaggedRight}")
+    "\n"))
+  "Exact legacy shared prose-default blocks to strip before reinserting.")
+
 (defun jay/latex--strip-prose-defaults (body)
   "Remove legacy widow/orphan controls and shared-block remnants from BODY."
-  (let ((clean body))
-    (dolist (pattern '("% Shared prose typography defaults\n?"
-                       "\\\\IfFileExists{nowidow\\.sty}{%\n?"
-                       "  \\\\usepackage\\[all\\]{nowidow}\n?"
-                       "}{%\n?"
-                       "  \\\\widowpenalty=10000\n?"
-                       "  \\\\clubpenalty=10000\n?"
-                       "}\n?"
-                       "\\\\usepackage\\[all\\]{nowidow}\n?"
-                       "\\\\widowpenalty=10000\n?"
-                       "\\\\clubpenalty=10000\n?"
-                       "\\\\emergencystretch=10pt\n?"
-                       "\\\\emergencystretch=3em\n?"
-                       "% Discourage hyphenation; runts prevented by enforcing a 4-char right minimum\\.\n?"
-                       "\\\\hyphenpenalty=10000\n?"
-                       "\\\\righthyphenmin=4\n?"
-                       "% Strongly penalize hyphenation on the penultimate line so a hyphenated word never strands its tail alone on the last line of a paragraph\\.\n?"
-                       "\\\\finalhyphendemerits=1000000\n?"
-                       "% Ragged-right inside lists so bullets never hyphenate\\.\n?"
-                       "\\\\setlist{before=\\\\RaggedRight}\n?"))
-      (setq clean (replace-regexp-in-string pattern "" clean t t)))
-    clean))
+  (let ((result body))
+    (dolist (block jay/latex-prose-default-legacy-blocks result)
+      (setq result
+            (replace-regexp-in-string
+             (concat "\n?" (regexp-quote block) "\n?")
+             "\n"
+             result
+             t
+             t)))))
 
 (defun jay/latex-apply-prose-defaults (class-name)
   "Normalize shared prose defaults for CLASS-NAME inside `org-latex-classes'."

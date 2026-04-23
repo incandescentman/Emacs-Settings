@@ -1375,5 +1375,11 @@
 - Documented the preference in [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.org][CLAUDE.org]] under /Guidance for AI/LLM Editing Sessions/ (including the =\exhyphenpenalty= trap — never raise it; it blocks breaks at explicit hyphens like "well-known").
 - No document-wide hyphenation kill-switch added; if mid-paragraph hyphens later annoy Jay in body text, escalate to a moderate =\hyphenpenalty=5000= then.
 
+* 2026-04-23: Fix prose-defaults class corruption and broaden export signoff handling
+- Follow-up debugging on [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/jay-latex-prose-defaults.el][latex-templates/jay-latex-prose-defaults.el]] showed the first idempotence fix was still too broad: it removed any line that was exactly =}=, which silently chopped the closing brace off structural forms inside LaTeX classes, including =\AtBeginDocument{...}= in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][latex-templates/elegant-garamond.el]].
+- Symptom in the real export: [[file+emacs:/Users/jay/Dropbox/roam/storytelling-nyc-roam/20260422-xia-luu-baszucki-proposal.org][20260422-xia-luu-baszucki-proposal.org]] generated a malformed =.tex= file and XeLaTeX died with =Runaway argument?= / =File ended while scanning use of \AddToHook= before producing [[file+emacs:/Users/jay/Dropbox/roam/storytelling-nyc-roam/20260422-xia-luu-baszucki-proposal.pdf][20260422-xia-luu-baszucki-proposal.pdf]].
+- Reworked =jay/latex--strip-prose-defaults= to strip only exact known legacy shared-default blocks, never generic brace lines. After =M-x jay-load-latex=, the proposal exported cleanly again.
+- Also broadened the final-output signature filter in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] / [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.el][org-export.el]] so HTML/LaTeX preserves line breaks for =Best,=, =Cheers,=, =Thanks,=, =Regards,=, and =Warm regards,=.
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.

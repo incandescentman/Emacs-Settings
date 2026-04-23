@@ -835,3 +835,21 @@ Captured notes were also at risk because their files can be finalized after node
   - fallback to ~buffer-file-name~ when needed
 - Keep explicit capture-finalize tracking (advice on ~org-roam-capture--finalize~) for newly created notes
 - When behavior regresses after package upgrades, verify function contracts (return values and side effects) before assuming hook order is wrong
+
+* Org LaTeX Class Rewriters: Never Strip Generic Brace Lines
+  Date: 2026-04-23
+
+** Trigger
+After adding shared prose defaults to [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/jay-latex-prose-defaults.el][latex-templates/jay-latex-prose-defaults.el]], a real export of [[file+emacs:/Users/jay/Dropbox/roam/storytelling-nyc-roam/20260422-xia-luu-baszucki-proposal.org][20260422-xia-luu-baszucki-proposal.org]] failed with =Runaway argument?= and =File ended while scanning use of \AddToHook=, even though the top of the generated preamble no longer looked obviously shredded.
+
+** Mechanism
+The helper that tried to make shared prose defaults idempotent was still too broad: it removed any line equal to =}= while rewriting LaTeX class bodies in =org-latex-classes=. That silently deleted structural closing braces from the class itself, including the closing brace of =\AtBeginDocument{...}= in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][latex-templates/elegant-garamond.el]].
+
+Two good debugging moves surfaced the real cause quickly:
+- Inspect the generated =.tex= around the failing construct, not just the log headline. The tell here was an unterminated =\AtBeginDocument{%= block in the exported file.
+- Load the class definition in batch Emacs and print the rewritten =org-latex-classes= body. That separated "raw class is fine" from "rewriter corrupts the class."
+
+** Actionable insight
+- If a helper rewrites LaTeX class strings, strip only exact known injected blocks, never generic structural lines such as =}= or =}{%=.
+- When a proposal export dies with =\AddToHook= runaway-argument errors, inspect the generated =.tex= for an earlier missing closing brace before blaming XeLaTeX or the document body.
+- Prefer block-level replacement (exact legacy snippet removal) over line-by-line heuristics when making LaTeX helper code idempotent.
