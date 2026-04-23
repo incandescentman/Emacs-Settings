@@ -11,7 +11,11 @@
                "  \\widowpenalty=10000"
                "  \\clubpenalty=10000"
                "}"
-               "\\emergencystretch=3em")
+               "\\emergencystretch=3em"
+               "% Strongly penalize hyphenation on the penultimate line so a hyphenated word never strands its tail alone on the last line of a paragraph."
+               "\\finalhyphendemerits=1000000"
+               "% Ragged-right inside lists so bullets never hyphenate."
+               "\\setlist{before=\\RaggedRight}")
              "\n")
   "Shared LaTeX defaults for prose-oriented document classes.")
 
@@ -29,7 +33,14 @@
                        "\\\\widowpenalty=10000\n?"
                        "\\\\clubpenalty=10000\n?"
                        "\\\\emergencystretch=10pt\n?"
-                       "\\\\emergencystretch=3em\n?"))
+                       "\\\\emergencystretch=3em\n?"
+                       "% Discourage hyphenation; runts prevented by enforcing a 4-char right minimum\\.\n?"
+                       "\\\\hyphenpenalty=10000\n?"
+                       "\\\\righthyphenmin=4\n?"
+                       "% Strongly penalize hyphenation on the penultimate line so a hyphenated word never strands its tail alone on the last line of a paragraph\\.\n?"
+                       "\\\\finalhyphendemerits=1000000\n?"
+                       "% Ragged-right inside lists so bullets never hyphenate\\.\n?"
+                       "\\\\setlist{before=\\\\RaggedRight}\n?"))
       (setq clean (replace-regexp-in-string pattern "" clean t t)))
     clean))
 

@@ -1365,5 +1365,15 @@
 - Cleaned up =.DS_Store= entries in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/][latex-templates/]] and the moved =exemplars/= dir.
 - Source for any future revival: =git show e43f0a64^:latex-templates/blue-ruin.el= recovers the original pre-rename file.
 
+* 2026-04-23: Hyphenation-averse prose defaults (anti-runt + ragged-right bullets)
+- Trigger: a bullet in a PDF export hyphenated =ses-sion.= and stranded =sion.= alone on its own line — a classic TeX "runt."
+- Added two surgical hyphenation controls to the shared prose block in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/jay-latex-prose-defaults.el][latex-templates/jay-latex-prose-defaults.el]]:
+  - =\finalhyphendemerits=1000000= — strongly penalizes hyphenation on the penultimate line of a paragraph, which is the exact mechanism that produces runts.
+  - =\setlist{before=\RaggedRight}= — every =enumitem= list (=itemize=, =enumerate=, =description=) becomes ragged-right, so bullet items never face hyphenation pressure (=ragged2e= and =enumitem= were already loaded by the prose classes).
+- First pass used the blunter =\hyphenpenalty=10000= + =\righthyphenmin=4=; swapped after Codex review flagged the side effect (loose justified body lines) and Jay's general preference still matched the narrower knob.
+- Strip patterns in =jay/latex--strip-prose-defaults= updated to cover both the old blunt knobs and the new surgical ones so the helper stays idempotent across reloads.
+- Documented the preference in [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.org][CLAUDE.org]] under /Guidance for AI/LLM Editing Sessions/ (including the =\exhyphenpenalty= trap — never raise it; it blocks breaks at explicit hyphens like "well-known").
+- No document-wide hyphenation kill-switch added; if mid-paragraph hyphens later annoy Jay in body text, escalate to a moderate =\hyphenpenalty=5000= then.
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.
