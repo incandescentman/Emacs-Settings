@@ -1,3 +1,5 @@
+;;; jay-poem.el --- Archived Org LaTeX class -*- lexical-binding: t; -*-
+
 (provide 'jay-poem)
 
 (add-to-list 'org-latex-classes

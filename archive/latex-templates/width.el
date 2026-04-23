@@ -1,3 +1,4 @@
+;;; width.el --- Archived Org LaTeX class -*- lexical-binding: t; -*-
 
 
 (provide 'width)

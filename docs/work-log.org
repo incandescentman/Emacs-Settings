@@ -1340,5 +1340,18 @@
   - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/resonate.el][latex-templates/resonate.el]]
 - Standardized the prose package baseline in older narrative templates by adding missing =microtype=, =xurl=, =csquotes=, and =bookmark= support where those packages were still absent.
 
+* 2026-04-23: Archive clearly dormant LaTeX templates
+- Moved the clearest non-live / superseded LaTeX templates into [[file+emacs:/Users/jay/emacs/emacs-settings/archive/latex-templates/][archive/latex-templates/]] so the active template directory is less noisy while preserving full history and easy restoration:
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/archive/latex-templates/tufte-jay.def_archive][archive/latex-templates/tufte-jay.def_archive]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/archive/latex-templates/width.el][archive/latex-templates/width.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/archive/latex-templates/pandoc.tex.el][archive/latex-templates/pandoc.tex.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/archive/latex-templates/modest-ruin.el][archive/latex-templates/modest-ruin.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/archive/latex-templates/resonate.el][archive/latex-templates/resonate.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/archive/latex-templates/jay-poem.el][archive/latex-templates/jay-poem.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/archive/latex-templates/elegant-cv.el][archive/latex-templates/elegant-cv.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/archive/latex-templates/new-yorker.el][archive/latex-templates/new-yorker.el]]
+- Rationale: these files were either never wired into =jay-load-latex=, had no live document usage in the current trees, or were effectively superseded by newer active templates.
+- Deliberately left [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/book-proposal-latex.el][latex-templates/book-proposal-latex.el]] and [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/dixit-self-letterhead.el][latex-templates/dixit-self-letterhead.el]] in place for a later pass, because they need a naming/compatibility decision rather than a pure archival move.
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.

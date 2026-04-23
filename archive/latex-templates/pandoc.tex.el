@@ -1,3 +1,5 @@
+;;; pandoc.tex.el --- Archived Org LaTeX class -*- lexical-binding: t; -*-
+
 (provide 'jay-pandoc)
 
 (add-to-list 'org-latex-classes

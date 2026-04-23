@@ -1,3 +1,5 @@
+;;; elegant-cv.el --- Archived Org LaTeX class -*- lexical-binding: t; -*-
+
 (provide 'elegant-cv)
 
 (add-to-list 'org-latex-classes
