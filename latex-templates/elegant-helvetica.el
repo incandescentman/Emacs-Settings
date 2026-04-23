@@ -1,3 +1,5 @@
+;;; elegant-helvetica.el --- Org LaTeX class -*- lexical-binding: t; -*-
+
 (provide 'elegant-helvetica)
 
 (with-eval-after-load 'ox-latex
@@ -19,8 +21,6 @@
 \\usepackage{fontspec}
 \\linespread{1.2}
 \\usepackage{microtype}
-
-\\usepackage[all]{nowidow}
 
 %\\usepackage{changepage}
 
@@ -463,11 +463,20 @@ UprightFont = HelveticaNeueLTPro-MdCn,
                                             (file-name-directory this-file))))
        (poetry-helper (and this-file
                            (expand-file-name "jay-latex-poetry-blocks.el"
-                                             (file-name-directory this-file)))))
+                                             (file-name-directory this-file))))
+       (prose-helper (and this-file
+                          (expand-file-name "jay-latex-prose-defaults.el"
+                                            (file-name-directory this-file)))))
   (when (and table-helper (file-readable-p table-helper))
     (load table-helper nil 'nomessage))
   (when (and poetry-helper (file-readable-p poetry-helper))
-    (load poetry-helper nil 'nomessage)))
+    (load poetry-helper nil 'nomessage))
+  (when (and prose-helper (file-readable-p prose-helper))
+    (load prose-helper nil 'nomessage)))
+
+(with-eval-after-load 'ox-latex
+  (when (fboundp 'jay/latex-apply-prose-defaults)
+    (jay/latex-apply-prose-defaults "elegant-helvetica")))
 
 (when (fboundp 'jay/latex-register-wrap-class)
   (jay/latex-register-wrap-class "elegant-helvetica"))

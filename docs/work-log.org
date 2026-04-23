@@ -1322,5 +1322,23 @@
 - Preserved the current defaults (=STORYTELLING.NYC= and =SUNJAY E. DIXIT=), so existing invoices continue exporting unchanged unless a document explicitly overrides the wordmark.
 - Documented the new per-document =\letterheadbrand{SOCRATIC AI}= override in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/readme.org][latex-templates/readme.org]].
 
+* 2026-04-23: Centralize prose LaTeX defaults and standardize package baseline
+- Added shared helper [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/jay-latex-prose-defaults.el][latex-templates/jay-latex-prose-defaults.el]] so prose-oriented classes now share one typography block instead of carrying ad hoc copies.
+- Standardized widow/orphan control across the main prose templates: prefer =nowidow= when available, otherwise fall back to =\widowpenalty= and =\clubpenalty=, plus a shared =\emergencystretch= line-breaking safety margin.
+- Wired the shared prose defaults into the core prose families:
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][latex-templates/elegant-garamond.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond-tabularray.el][latex-templates/elegant-garamond-tabularray.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-helvetica.el][latex-templates/elegant-helvetica.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-helvetica-tabularray.el][latex-templates/elegant-helvetica-tabularray.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el][latex-templates/beautiful-racket.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket-tabularray.el][latex-templates/beautiful-racket-tabularray.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket-classic.el][latex-templates/beautiful-racket-classic.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-less-whitespace.el][latex-templates/elegant-less-whitespace.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/new-yorker.el][latex-templates/new-yorker.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/modest-ruin.el][latex-templates/modest-ruin.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/book-proposal-latex.el][latex-templates/book-proposal-latex.el]]
+  - [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/resonate.el][latex-templates/resonate.el]]
+- Standardized the prose package baseline in older narrative templates by adding missing =microtype=, =xurl=, =csquotes=, and =bookmark= support where those packages were still absent.
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.

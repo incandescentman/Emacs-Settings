@@ -1,3 +1,5 @@
+;;; elegant-less-whitespace.el --- Org LaTeX class -*- lexical-binding: t; -*-
+
 (provide 'elegant-less-whitespace)
 
 (add-to-list 'org-latex-classes
@@ -15,7 +17,7 @@
 \\usepackage{amsmath}
 \\usepackage{ifxetex}
 \\usepackage{setspace}
-\\usepackage{url}
+\\usepackage{xurl} % Better URL line breaking
 \\usepackage{paralist}
 \\usepackage{tikz}
 \\usepackage{calc}
@@ -35,7 +37,10 @@
 \\usepackage{enumitem}
 \\usepackage{titlesec}
 \\usepackage{lipsum}
+\\usepackage{csquotes}
 \\usepackage[breaklinks=true, linktocpage, xetex]{hyperref}
+\\usepackage{bookmark}
+\\bookmarksetup{numbered=false,open=true}
 \\usepackage[most]{tcolorbox} % For enhanced environments
 
 \\newcounter{level} % Define the custom counter
@@ -250,3 +255,13 @@
 (setq org-latex-to-pdf-process
       '("xelatex -interaction nonstopmode %f"
         "xelatex -interaction nonstopmode %f")) ;; for multiple passes
+
+(let* ((this-file (or load-file-name buffer-file-name))
+       (prose-helper (and this-file
+                          (expand-file-name "jay-latex-prose-defaults.el"
+                                            (file-name-directory this-file)))))
+  (when (and prose-helper (file-readable-p prose-helper))
+    (load prose-helper nil 'nomessage)))
+
+(when (fboundp 'jay/latex-apply-prose-defaults)
+  (jay/latex-apply-prose-defaults "elegant-less-whitespace"))

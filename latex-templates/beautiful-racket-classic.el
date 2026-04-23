@@ -1,3 +1,5 @@
+;;; beautiful-racket-classic.el --- Org LaTeX class -*- lexical-binding: t; -*-
+
 (provide 'beautiful-racket-classic)
 
 (add-to-list 'org-latex-classes
@@ -59,7 +61,7 @@
   \\usepackage[mathletters]{ucs}
   \\usepackage[utf8x]{inputenc}
 \\fi
-\\usepackage{url}
+\\usepackage{xurl} % Better URL line breaking
 \\usepackage{paralist}
 \\usepackage{tikz}
 \\usepackage{calc}
@@ -104,7 +106,6 @@
 \\tolerance=1000
 \\exhyphenpenalty=100
 \\pretolerance=150
-\\emergencystretch=10pt
 
 
 
@@ -521,6 +522,8 @@
 
 
                \\usepackage[breaklinks=true,linktocpage,xetex]{hyperref}
+               \\usepackage{bookmark}
+               \\bookmarksetup{numbered=false,open=true}
                \\hypersetup{colorlinks, citecolor=elegantblue,filecolor=elegantblue,linkcolor=elegantblue,urlcolor=elegantblue}
 
                \\renewcommand\\maketitle{}
@@ -543,6 +546,14 @@
 (let* ((this-file (or load-file-name buffer-file-name))
        (poetry-helper (and this-file
                            (expand-file-name "jay-latex-poetry-blocks.el"
-                                             (file-name-directory this-file)))))
+                                             (file-name-directory this-file))))
+       (prose-helper (and this-file
+                          (expand-file-name "jay-latex-prose-defaults.el"
+                                            (file-name-directory this-file)))))
   (when (and poetry-helper (file-readable-p poetry-helper))
-    (load poetry-helper nil 'nomessage)))
+    (load poetry-helper nil 'nomessage))
+  (when (and prose-helper (file-readable-p prose-helper))
+    (load prose-helper nil 'nomessage)))
+
+(when (fboundp 'jay/latex-apply-prose-defaults)
+  (jay/latex-apply-prose-defaults "beautiful-racket-classic"))

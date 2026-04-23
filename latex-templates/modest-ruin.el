@@ -1,3 +1,5 @@
+;;; modest-ruin.el --- Org LaTeX class -*- lexical-binding: t; -*-
+
 (provide 'modest-ruin)
 
 (add-to-list 'org-latex-classes
@@ -24,7 +26,7 @@
   \\usepackage[mathletters]{ucs}
   \\usepackage[utf8x]{inputenc}
 \\fi
-\\usepackage{url}
+\\usepackage{xurl} % Better URL line breaking
 \\usepackage{paralist}
 \\usepackage{graphicx}
 \\usepackage{tikz}
@@ -32,6 +34,8 @@
 \\usepackage{eso-pic}
 \\usepackage{etoolbox}
 \\usepackage{xcolor}
+\\usepackage{microtype} % Improve typography
+\\usepackage{csquotes}
 \\PassOptionsToPackage{hyperref,x11names}{xcolor}
 \\definecolor{blackedyblack}{HTML}{000000}
 \\definecolor{pinterestred}{HTML}{C92228}
@@ -277,6 +281,8 @@
 \\titleformat*{\\paragraph}{\\sffamily\\sanssize\\raggedright\\bfseries\\rmfamily\\color{blackedyblack}}
 \\titleformat*{\\subparagraph}{\\sffamily\\fontsize{10}{10}\\raggedright\\bfseries\\ttfamily\\color{blackedyblack}}
 \\usepackage[breaklinks=true,linktocpage,xetex]{hyperref} 
+\\usepackage{bookmark}
+\\bookmarksetup{numbered=false,open=true}
 \\hypersetup{colorlinks, citecolor=electricblue,filecolor=electricblue,linkcolor=electricblue,urlcolor=electricblue}
 
 
@@ -294,3 +300,13 @@
 (setq org-latex-to-pdf-process 
   '("xelatex -interaction nonstopmode %f"
      "xelatex -interaction nonstopmode %f")) ;; for multiple passes
+
+(let* ((this-file (or load-file-name buffer-file-name))
+       (prose-helper (and this-file
+                          (expand-file-name "jay-latex-prose-defaults.el"
+                                            (file-name-directory this-file)))))
+  (when (and prose-helper (file-readable-p prose-helper))
+    (load prose-helper nil 'nomessage)))
+
+(when (fboundp 'jay/latex-apply-prose-defaults)
+  (jay/latex-apply-prose-defaults "modest-ruin"))

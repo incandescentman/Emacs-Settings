@@ -1,3 +1,5 @@
+;;; resonate.el --- Org LaTeX class -*- lexical-binding: t; -*-
+
 (provide 'resonate)
 
 (add-to-list 'org-latex-classes
@@ -24,7 +26,7 @@
   \\usepackage[mathletters]{ucs}
   \\usepackage[utf8x]{inputenc}
 \\fi
-\\usepackage{url}
+\\usepackage{xurl} % Better URL line breaking
 \\usepackage{paralist}
 \\usepackage{graphicx}
 \\usepackage{tikz}
@@ -32,6 +34,8 @@
 \\usepackage{eso-pic}
 \\usepackage{etoolbox}
 \\usepackage{xcolor}
+\\usepackage{microtype} % Improve typography
+\\usepackage{csquotes}
 \\PassOptionsToPackage{hyperref,x11names}{xcolor}
 \\definecolor{pinterestred}{HTML}{C92228}
 \\definecolor{ulyssesbutterflyblue}{HTML}{1464F4}
@@ -225,6 +229,8 @@
 \\titleformat*{\\paragraph}{\\sffamily\\fontsize{13}{12}\\raggedright\\bfseries\\color{resonateblue}}
 \\titleformat*{\\subparagraph}{\\sffamily\\fontsize{14}{14}\\raggedright\\bfseries\\ttfamily\\color{resonateorange}}
 \\usepackage[breaklinks=true,linktocpage,xetex]{hyperref} 
+\\usepackage{bookmark}
+\\bookmarksetup{numbered=false,open=true}
 \\hypersetup{colorlinks, citecolor=electricblue,filecolor=electricblue,linkcolor=electricblue,urlcolor=electricblue}
 
 \\renewcommand\\maketitle{}
@@ -242,3 +248,13 @@
 (setq org-latex-to-pdf-process 
   '("xelatex -interaction nonstopmode %f"
      "xelatex -interaction nonstopmode %f")) ;; for multiple passes
+
+(let* ((this-file (or load-file-name buffer-file-name))
+       (prose-helper (and this-file
+                          (expand-file-name "jay-latex-prose-defaults.el"
+                                            (file-name-directory this-file)))))
+  (when (and prose-helper (file-readable-p prose-helper))
+    (load prose-helper nil 'nomessage)))
+
+(when (fboundp 'jay/latex-apply-prose-defaults)
+  (jay/latex-apply-prose-defaults "resonate"))
