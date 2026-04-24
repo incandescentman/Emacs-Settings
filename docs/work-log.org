@@ -1389,5 +1389,9 @@
 - Kept widow/orphan control and =\emergencystretch=3em= intact, and expanded the helper's legacy-block cleanup so repeated =M-x jay-load-latex= reloads strip older experiments cleanly.
 - Result in the real PDF: the bad page-3 list break now reads =during the / session.= instead of =during the ses- / sion.=, while the bullets remain justified.
 
+* 2026-04-24: Broaden export signature handling to catch =Warmly,=
+- Updated the signature-line-break preservation helper in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] so HTML/LaTeX export now treats =Warmly,= the same way it already treated =Best,=, =Cheers,=, =Thanks,=, =Regards,=, and =Warm regards,=.
+- Regenerated [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.el][org-export.el]] from the literate source and re-ran the structural validation pass afterward.
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.

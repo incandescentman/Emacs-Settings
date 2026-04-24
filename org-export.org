@@ -339,8 +339,8 @@ Instead of canceling export. So that I can export org-roam nodes if I want to.
     'my-org-latex-strip-emoji)
 
 ;; Preserve line breaks in email signature blocks during export
-;; Applies only when "Best,", "Cheers,", "Thanks,", "Regards,", or
-;; "Warm regards," is followed by an actual line break.
+;; Applies only when "Best,", "Cheers,", "Thanks,", "Regards,",
+;; "Warmly,", or "Warm regards," is followed by an actual line break.
 (defun jay/org-export--replace-signature-breaks (text separator)
   "Replace signature newlines in TEXT with SEPARATOR."
   (with-temp-buffer
@@ -348,7 +348,7 @@ Instead of canceling export. So that I can export org-roam nodes if I want to.
     (goto-char (point-min))
     ;; First: common signoffs followed by a line break, then a name.
     (while (re-search-forward
-            "\\(Best,\\|Cheers,\\|Thanks,\\|Regards,\\|Warm regards,\\)[ \t]*\n[ \t]*\\([A-Z][a-z]+\\)"
+            "\\(Best,\\|Cheers,\\|Thanks,\\|Regards,\\|Warmly,\\|Warm regards,\\)[ \t]*\n[ \t]*\\([A-Z][a-z]+\\)"
             nil t)
       (replace-match (format "%s%s%s"
                              (match-string 1)
