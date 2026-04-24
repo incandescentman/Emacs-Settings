@@ -1381,5 +1381,13 @@
 - Reworked =jay/latex--strip-prose-defaults= to strip only exact known legacy shared-default blocks, never generic brace lines. After =M-x jay-load-latex=, the proposal exported cleanly again.
 - Also broadened the final-output signature filter in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] / [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.el][org-export.el]] so HTML/LaTeX preserves line breaks for =Best,=, =Cheers,=, =Thanks,=, =Regards,=, and =Warm regards,=.
 
+* 2026-04-24: Replace anti-runt default with =\righthyphenmin=5=
+- Tested the actual exported [[file+emacs:/Users/jay/Dropbox/roam/storytelling-nyc-roam/Metabolic Mind Proposal.pdf][Metabolic Mind Proposal.pdf]] after the earlier anti-runt changes and confirmed two things:
+  - the ragged-right bullet experiment was aesthetically wrong for this template
+  - =\finalhyphendemerits=1000000= still did not fix the real =ses- / sion.= break in the numbered list
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/jay-latex-prose-defaults.el][latex-templates/jay-latex-prose-defaults.el]] to use =\righthyphenmin=5= as the active prose default instead of =\finalhyphendemerits=1000000=.
+- Kept widow/orphan control and =\emergencystretch=3em= intact, and expanded the helper's legacy-block cleanup so repeated =M-x jay-load-latex= reloads strip older experiments cleanly.
+- Result in the real PDF: the bad page-3 list break now reads =during the / session.= instead of =during the ses- / sion.=, while the bullets remain justified.
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.

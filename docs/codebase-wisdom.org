@@ -853,3 +853,47 @@ Two good debugging moves surfaced the real cause quickly:
 - If a helper rewrites LaTeX class strings, strip only exact known injected blocks, never generic structural lines such as =}= or =}{%=.
 - When a proposal export dies with =\AddToHook= runaway-argument errors, inspect the generated =.tex= for an earlier missing closing brace before blaming XeLaTeX or the document body.
 - Prefer block-level replacement (exact legacy snippet removal) over line-by-line heuristics when making LaTeX helper code idempotent.
+
+* TeX Hyphenation Knobs: Theoretical Clean Can Lose to Empirical Badness
+  Date: 2026-04-23
+
+** Trigger
+A bullet in [[file+emacs:/Users/jay/Dropbox/roam/storytelling-nyc-roam/20260422-xia-luu-baszucki-proposal.org][20260422-xia-luu-baszucki-proposal.org]] rendered with a "runt": ~ses-~ on line 1, ~sion.~ stranded alone on line 2. Over a long thread, two theoretical fixes were tried, committed, and tested — and both visibly failed in the exported PDF even though they were applied correctly at the preamble.
+
+Attempts in order:
+1. =\hyphenpenalty=10000= + =\righthyphenmin=4= + =\setlist{before=\RaggedRight}=. Blunt but working. Codex critiqued as over-aggressive, and the =\RaggedRight= in lists (=ragged2e=) doesn't actually prevent list hyphenation the way Claude's commit message implied — =\RaggedRight= has a finite =\RaggedRightRightskip= of ~2em and still permits hyphenation under pressure.
+2. Swap to =\finalhyphendemerits=1000000= + =\setlist{before=\RaggedRight}=. Codex's theoretically cleaner fix, targeting the exact penultimate-line-hyphenation pattern.
+3. Drop =\setlist{before=\RaggedRight}= after Jay disliked the ragged-bullet texture, leaving =\finalhyphendemerits=1000000= alone. Jay re-exported — *same runt*.
+
+** Mechanism
+=\finalhyphendemerits= adds a per-break demerit when the penultimate line is hyphenated and the next line is the paragraph's last. In principle that's exactly this failure. In practice, TeX's line-break algorithm picks the line-break set with the minimum total demerits, and each break contributes =(\linepenalty + \badness)² + penalty_demerits=.
+
+In Garamond Premier Pro at 12pt with =\setstretch{1.2}= and a narrow enumitem measure, the non-hyphenated alternative breakpoints for that specific bullet produce loose line 1s with badness values where =badness²= dominates — often 25M+ demerits per alternative. =\finalhyphendemerits=1000000= contributes only 1M to the hyphen-ending break. So TeX still picks the hyphen. The theory is right; the arithmetic just doesn't favor =\finalhyphendemerits= in this preamble.
+
+Diagnostic that settled it: an empirical knob matrix run against the actual document with the real class preamble. Tested knobs A–I; only =\hyphenpenalty=10000=, =\righthyphenmin=5=, =\pretolerance=10000=, and =\hyphenation{session}= actually eliminated the runt. =\finalhyphendemerits=1000000=, =\hyphenpenalty=5000=, =\finalhyphendemerits= + =\hyphenpenalty=5000=, =\righthyphenmin=4=, and =\doublehyphendemerits= all failed.
+
+The adopted fix: =\righthyphenmin=5= in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/jay-latex-prose-defaults.el][latex-templates/jay-latex-prose-defaults.el]]. It refuses hyphenation whenever the tail landing on the next line would be ≤4 characters — which covers the ugly runt cases — and leaves long-tail hyphenation untouched.
+
+** Fast-test protocol
+Before recommending a hyphenation knob for a specific failure, run this against the real document:
+
+#+begin_src sh
+cp /path/to/user-source.org /tmp/runt.org
+emacs --batch \
+  --eval "(require 'ox-latex)" \
+  --eval "(load \"/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el\" nil 'nomessage)" \
+  --eval "(find-file \"/tmp/runt.org\")" \
+  --eval "(org-latex-export-to-latex)"
+cd /tmp && xelatex -interaction=nonstopmode runt.tex >/dev/null 2>&1 && \
+             xelatex -interaction=nonstopmode runt.tex >/dev/null 2>&1
+pdftotext -layout /tmp/runt.pdf - | grep -A2 "target phrase"
+#+end_src
+
+This is fast (~5s per iteration) and rules out both cache-staleness and theoretical misfires.
+
+** Actionable insights
+- TeX hyphenation fixes must be *tested empirically against the real preamble*. The demerit arithmetic depends on font metrics, measure, and line stretch — theoretical knobs that "should" work often don't, because alternative-break badness (=badness²=) outstrips modest per-break penalties.
+- =\finalhyphendemerits= is not a reliable anti-runt fix in Garamond + tight enumitem measures. Don't reach for it first for this codebase's prose classes.
+- =\righthyphenmin=N= is the narrowest knob that actually fixes short-tail runts. Each bump up the scale (=3= → =4= → =5=) forbids more hyphenations whose tails would be shorter than =N=. The default is =3= for English; this codebase uses =5= in prose defaults.
+- =\RaggedRight= from =ragged2e= is *not* a no-hyphenation command — it still permits hyphenation under pressure (finite =\RaggedRightRightskip=). Only standard =\raggedright= eliminates hyphenation by giving =\rightskip= infinite stretch.
+- When an AI collaborator (Codex, Claude, whatever) recommends a theoretical TeX knob confidently, run the empirical test matrix before adopting. Confident theoretical wrong answers are expensive to unwind — three commits this session tried knobs that didn't work.

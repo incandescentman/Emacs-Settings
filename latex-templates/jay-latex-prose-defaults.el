@@ -13,10 +13,8 @@
                "  \\clubpenalty=10000"
                "}"
                "\\emergencystretch=3em"
-               "% Strongly penalize hyphenation on the penultimate line so a hyphenated word never strands its tail alone on the last line of a paragraph."
-               "\\finalhyphendemerits=1000000"
-               "% Ragged-right inside lists so bullets never hyphenate."
-               "\\setlist{before=\\RaggedRight}")
+               "% Prevent ugly short hyphen tails on the next line."
+               "\\righthyphenmin=5")
              "\n")
   "Shared LaTeX defaults for prose-oriented document classes.")
 
@@ -30,19 +28,11 @@
       "  \\widowpenalty=10000"
       "  \\clubpenalty=10000"
       "}"
-      "\\emergencystretch=3em")
-    "\n")
-   (string-join
-    '("% Shared prose typography defaults"
-      "\\IfFileExists{nowidow.sty}{%"
-      "  \\usepackage[all]{nowidow}"
-      "}{%"
-      "  \\widowpenalty=10000"
-      "  \\clubpenalty=10000"
-      "}"
       "\\emergencystretch=3em"
-      "% Strongly penalize hyphenation on the penultimate line so a hyphenated word never strands its tail alone on the last line of a paragraph."
-      "\\finalhyphendemerits=1000000")
+      "% Discourage hyphenation; runts prevented by enforcing a 4-char right minimum."
+      "\\hyphenpenalty=10000"
+      "\\righthyphenmin=4"
+      "\\setlist{before=\\RaggedRight}")
     "\n")
    (string-join
     '("% Shared prose typography defaults"
@@ -67,10 +57,30 @@
       "  \\clubpenalty=10000"
       "}"
       "\\emergencystretch=3em"
-      "% Discourage hyphenation; runts prevented by enforcing a 4-char right minimum."
-      "\\hyphenpenalty=10000"
-      "\\righthyphenmin=4"
-      "\\setlist{before=\\RaggedRight}")
+      "% Prevent ugly short hyphen tails on the next line."
+      "\\righthyphenmin=5")
+    "\n")
+   (string-join
+    '("% Shared prose typography defaults"
+      "\\IfFileExists{nowidow.sty}{%"
+      "  \\usepackage[all]{nowidow}"
+      "}{%"
+      "  \\widowpenalty=10000"
+      "  \\clubpenalty=10000"
+      "}"
+      "\\emergencystretch=3em"
+      "% Strongly penalize hyphenation on the penultimate line so a hyphenated word never strands its tail alone on the last line of a paragraph."
+      "\\finalhyphendemerits=1000000")
+    "\n")
+   (string-join
+    '("% Shared prose typography defaults"
+      "\\IfFileExists{nowidow.sty}{%"
+      "  \\usepackage[all]{nowidow}"
+      "}{%"
+      "  \\widowpenalty=10000"
+      "  \\clubpenalty=10000"
+      "}"
+      "\\emergencystretch=3em")
     "\n"))
   "Exact legacy shared prose-default blocks to strip before reinserting.")
 
