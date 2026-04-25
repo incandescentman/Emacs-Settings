@@ -61,14 +61,33 @@
 
 ** flyspell-correct-space
 #+begin_src emacs-lisp
+(defvar jay/jinx-corrections-log
+  (expand-file-name "~/emacs/Spelling/jinx-corrections.log")
+  "Path where `jay/jinx-correct-word-near-point' appends each correction.
+Set to nil to disable logging.")
+
+(defun jay/jinx-log-correction (wrong suggestions)
+  "Append timestamp, WRONG, and top SUGGESTIONS to `jay/jinx-corrections-log'.
+The first suggestion is the one that gets applied; the next few are kept
+as context so ranking quality can be audited against other backends."
+  (when jay/jinx-corrections-log
+    (let ((line (format "%s\t%s\t%s\n"
+                        (format-time-string "%Y-%m-%d %H:%M:%S")
+                        wrong
+                        (mapconcat #'identity (seq-take suggestions 5) ","))))
+      (ignore-errors
+        (write-region line nil jay/jinx-corrections-log 'append 'silent)))))
+
 (defun jay/jinx-save-correction-as-abbrev (wrong right)
-  "Save WRONG -> RIGHT using Flyspell's abbrev behavior."
+  "Save WRONG -> RIGHT using Flyspell's abbrev behavior.
+Strip text properties from RIGHT so abbrev expansions serialize cleanly."
   (when (and (require 'flyspell nil t)
              (bound-and-true-p flyspell-abbrev-p))
-    (let ((table (flyspell-abbrev-table)))
+    (let ((table (flyspell-abbrev-table))
+          (plain-right (substring-no-properties right)))
       (if (flyspell-already-abbrevp table wrong)
-          (flyspell-change-abbrev table wrong right)
-        (flyspell-define-abbrev wrong right)))))
+          (flyspell-change-abbrev table wrong plain-right)
+        (flyspell-define-abbrev wrong plain-right)))))
 
 (defun jay/jinx-correct-word-near-point ()
   "Auto-correct word at or before point using Jinx's first suggestion.
@@ -88,6 +107,7 @@ Accepted corrections are also saved as abbrevs, like the old Flyspell path."
                        (overlay-start ov) (overlay-end ov)))
                 (suggestions (jinx--correct-suggestions word)))
       (when-let ((choice (car suggestions)))
+        (jay/jinx-log-correction word suggestions)
         (jay/jinx-save-correction-as-abbrev word choice)
         (jinx--correct-replace ov choice)))))
 
@@ -114,6 +134,19 @@ Accepted corrections are also saved as abbrevs, like the old Flyspell path."
          (enchant-dir (expand-file-name "~/.config/enchant"))
          (enchant-dict (expand-file-name "en_US.dic" enchant-dir))
          (ordering-file (expand-file-name "enchant.ordering" enchant-dir))
+         ;; Homebrew's enchant on this machine ships only
+         ;; enchant_aspell.so and enchant_applespell.so — there is
+         ;; no enchant_hunspell.so. Listing hunspell here is
+         ;; harmless (the provider doesn't exist, Enchant falls
+         ;; through to aspell) and documents intent: if a
+         ;; Hunspell-capable Enchant build is ever installed
+         ;; (MacPorts =enchant2 +hunspell=, or a personal Homebrew
+         ;; tap that adds =depends_on "hunspell"=), this ordering
+         ;; will start using it without any code change.
+         ;; AppleSpell is not a viable fallback on this Homebrew
+         ;; build: the AppleSpell provider loads but doesn't claim
+         ;; English, so =en_US:applespell= was empirically a no-op
+         ;; (verified 2026-04-25).
          (ordering "en:hunspell,aspell\nen_US:hunspell,aspell\n"))
     (when (file-exists-p personal)
       (make-directory enchant-dir t)

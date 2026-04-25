@@ -1,6 +1,41 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-25: Revert AppleSpell experiment — confirmed no-op on this Homebrew build
+- Earlier today I changed the =ordering= literal in =jay/ensure-jinx-personal-dictionary= ([[file+emacs:/Users/jay/emacs/emacs-settings/spellcheck.org][spellcheck.org]]) and the live =~/.config/enchant/enchant.ordering= from =en_US:hunspell,aspell= to =en_US:applespell,aspell=, on the theory that Apple's NSSpellChecker would activate inside GUI Emacs even though =enchant-2= showed no AppleSpell suggestions on the CLI.
+- Codex empirically refuted that: a direct Swift+AppKit CLI call to =NSSpellChecker.shared= returned good English guesses (=archieve → ["archive", "achieve"]=, =dmaange → ["damage", "damming"]=), so AppleSpell itself is fine from any process. The blocker is at the Enchant layer — =enchant-lsmod-2 -lang en_US= reports =en_US (aspell)= even when the user ordering file says =en_US:applespell= only. The AppleSpell provider in this Homebrew build registers but doesn't claim English. So listing =applespell= first was empirically a no-op (verified 2026-04-25).
+- Reverted both the source =ordering= literal and the live =~/.config/enchant/enchant.ordering= back to =en:hunspell,aspell\nen_US:hunspell,aspell\n=. Live behavior unchanged from before the revert (still falls through to Aspell), but the comment in the source no longer claims AppleSpell is being used.
+- Updated the inline comment in [[file+emacs:/Users/jay/emacs/emacs-settings/spellcheck.org][spellcheck.org]] to document why =hunspell= is listed: harmless on Homebrew today (provider missing, falls through), and ready to auto-pick up a Hunspell backend if one is ever installed (MacPorts =enchant2 +hunspell= or a personal Homebrew tap with =depends_on "hunspell"=). Recorded the AppleSpell empirical result inline so the next reader doesn't retry the same path.
+- Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/spellcheck.org][spellcheck.org]], =check-parens= clean.
+- Next step is *not* a backend rebuild yet — it's data collection. The corrections logger added earlier today writes =timestamp \t WRONG \t top-5= to =~/emacs/Spelling/jinx-corrections.log= on every backtick auto-correct. After ~1 week of normal usage, the log tells us empirically whether Aspell's #1 picks are bad enough to justify MacPorts/personal-tap work or whether the Aspell engine plus Jay's existing personal dictionary are good enough to stay on.
+- Scheduled a one-time remote agent (=trig_0115GxZg9qkiLY99H4D3hyYE=, [[https://claude.ai/code/routines/trig_0115GxZg9qkiLY99H4D3hyYE][routine link]]) to fire on 2026-05-02 9am ET. The agent's only job is to create a Gmail draft titled /Jinx corrections log: review/ containing a paste-ready prompt for a local Claude Code session — the actual log analysis happens locally where the file exists, not in the remote sandbox. Verdict gets appended to =/Users/jay/Dropbox/roam/notes/20260424122818-jinx.org= under a =* Verdict (2026-05-02)= heading.
+
+* 2026-04-25: Strip text properties before saving Jinx corrections as abbrevs
+- Symptom: =.abbrev_defs= entries written via the Jinx backtick-correct path were being serialized with embedded propertized-string syntax, e.g. =("damxage" #("damage" 0 6 (jinx--suffix nil jinx--prefix #("1 " 0 2 (face jinx-key)) jinx--group "Suggestions from dictionary 'en_US' - aspell")) nil :count 1)= instead of plain =("damxage" "damage" nil :count 1)=.
+- Root cause: =jinx--correct-suggestions= returns strings with text properties on them (face metadata for the =1 = key-hint prefix Jinx draws in the chooser). =flyspell-define-abbrev= → =define-abbrev= stores the expansion verbatim, and =write-abbrev-file= prints it with =prin1=, which preserves text properties via =#("..." 0 N (...))= reader syntax.
+- Fix: in =jay/jinx-save-correction-as-abbrev= ([[file+emacs:/Users/jay/emacs/emacs-settings/spellcheck.org][spellcheck.org]]), wrap RIGHT in =substring-no-properties= before passing to =flyspell-define-abbrev= / =flyspell-change-abbrev=. New abbrevs serialize cleanly.
+- Cleanup (done by Codex earlier in this session): existing damaged entries in =/Users/jay/emacs/aquamacs-jay/.abbrev_defs= rewritten in place to plain-string form. Backup at =/Users/jay/emacs/abbrevs/.abbrev_defs.bak-20260425-170521=.
+- Lesson recorded in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/codebase-wisdom.org][docs/codebase-wisdom.org]] so future wrappers around Jinx don't repeat the trap.
+
+* 2026-04-25: Try AppleSpell as Jinx backend (with Aspell fallback)
+- Edited the =ordering= literal in =jay/ensure-jinx-personal-dictionary= ([[file+emacs:/Users/jay/emacs/emacs-settings/spellcheck.org][spellcheck.org]]) from =en:hunspell,aspell\nen_US:hunspell,aspell\n= (which silently fell through to Aspell — Homebrew's enchant has no Hunspell backend) to =en:applespell,aspell\nen_US:applespell,aspell\n=. Added an inline comment explaining the rationale.
+- Replaced live =~/.config/enchant/enchant.ordering= to match (kept a backup at =enchant.ordering.bak-2026-04-25=).
+- Why a CLI test isn't conclusive: =enchant-2= debug output shows AppleSpell provider is *registered* but enumerates zero language tags, almost certainly because NSSpellChecker only reports languages inside a GUI app context. Inside GUI Emacs the Cocoa context is present, so AppleSpell *may* fire there even though it returns Aspell-style suggestions on the CLI. Verification can only be done from inside Emacs.
+- Aspell remains the fallback in the ordering, so if AppleSpell silently does nothing inside Emacs too, Jinx still works.
+- Investigated option #3 (rebuild Enchant with Hunspell backend) without acting on it yet:
+  - Homebrew enchant formula at =/opt/homebrew/Cellar/enchant/2.8.15/.brew/enchant.rb= only =depends_on "aspell"=; configure auto-detects backends from whatever dev headers are visible.
+  - =hunspell 1.7.2= is installed and its dev headers exist at =/opt/homebrew/include/hunspell/hunspell.h=, but post-install they don't add the Enchant backend retroactively.
+  - Cleanest persistent fix: personal Homebrew tap with a modified formula adding =depends_on "hunspell"=, then =brew reinstall enchant --build-from-source=. Then symlink =~/emacs/Spelling/en_US-large.{aff,dic}= into =~/.config/enchant/hunspell/en_US.{aff,dic}= and switch ordering back to =en_US:hunspell,aspell=. Not done yet pending the AppleSpell test result.
+
+* 2026-04-25: Log Jinx auto-corrections to a file for ranking audits
+- Background: switched from Flyspell+Hunspell to Jinx, but on this machine Enchant only ships =enchant_aspell.so= and =enchant_applespell.so= — no Hunspell backend — so Jinx's suggestion ranking comes from Aspell despite =~/.config/enchant/enchant.ordering= preferring Hunspell. Suggestion quality is therefore *different* from the old Flyspell setup, not strictly better or worse.
+- To replace memory-based reports with real data, added a small log helper to [[file+emacs:/Users/jay/emacs/emacs-settings/spellcheck.org][spellcheck.org]]:
+  - new =jay/jinx-corrections-log= defvar (defaults to =~/emacs/Spelling/jinx-corrections.log=, =nil= disables)
+  - new =jay/jinx-log-correction= helper writes a tab-separated line: =timestamp \t WRONG \t suggestion1,suggestion2,...= (top 5 suggestions; the first is the one applied)
+  - =jay/jinx-correct-word-near-point= now calls the logger right before saving the abbrev
+- No behavior change for the auto-correct path itself: still picks =(car suggestions)=, still saves the abbrev, still replaces in the buffer.
+- Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/spellcheck.org][spellcheck.org]] with explicit-target =org-babel-tangle= and confirmed =check-parens= passes on [[file+emacs:/Users/jay/emacs/emacs-settings/spellcheck.el][spellcheck.el]].
+
 * 2026-04-21: Best-practice audit — no broad refactor needed
 - Reviewed the "general best practices" checklist and confirmed the major items are already implemented in this config (module ownership boundaries, Org-roam note metadata conventions, stable capture templates, dynamic agenda sources, writing-mode/pasteboard workflow, export filename hygiene, startup profiling, and codebase-wisdom incident logging).
 - Decision: do not run a broad "quality pass" for those areas; keep maintenance incident-driven.
@@ -1392,6 +1427,11 @@
 * 2026-04-24: Broaden export signature handling to catch =Warmly,=
 - Updated the signature-line-break preservation helper in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] so HTML/LaTeX export now treats =Warmly,= the same way it already treated =Best,=, =Cheers,=, =Thanks,=, =Regards,=, and =Warm regards,=.
 - Regenerated [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.el][org-export.el]] from the literate source and re-ran the structural validation pass afterward.
+
+* 2026-04-25: Strip Jinx text properties before saving abbrevs
+- Fixed [[file+emacs:/Users/jay/emacs/emacs-settings/spellcheck.org][spellcheck.org]] so =jay/jinx-save-correction-as-abbrev= saves plain strings with =substring-no-properties= before handing them to Flyspell's abbrev helpers. This prevents entries like =#("damage" ... jinx--suffix ...)= from being serialized into [[file+emacs:/Users/jay/emacs/abbrevs/.abbrev_defs][~/emacs/abbrevs/.abbrev_defs]].
+- Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/spellcheck.el][spellcheck.el]] from the literate source and re-ran the structural validation pass.
+- Cleaned the already-corrupted abbrev file in place so entries such as =damxage= and =dmaange= now serialize as ordinary string expansions again, with a safety backup at [[file+emacs:/Users/jay/emacs/abbrevs/.abbrev_defs.bak-20260425-170521][~/emacs/abbrevs/.abbrev_defs.bak-20260425-170521]].
 
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.

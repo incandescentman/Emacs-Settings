@@ -2,6 +2,43 @@
 #+DATE: 2025-09-24
 #+DESCRIPTION: Debugging post-mortems and prevention checklists.
 
+* Jinx Suggestions Are Propertized Strings — Strip Them Before Serializing Anywhere
+  Date: 2026-04-25
+
+** Trigger
+After wiring =jay/jinx-correct-word-near-point= to also save accepted corrections to the global abbrev table (the way the old Flyspell path did via =flyspell-abbrev-p t=), abbrev entries in =/Users/jay/emacs/aquamacs-jay/.abbrev_defs= started appearing as embedded propertized-string blobs:
+
+#+begin_src emacs-lisp
+("damxage" #("damage" 0 6 (jinx--suffix nil jinx--prefix #("1 " 0 2 (face jinx-key)) jinx--group "Suggestions from dictionary 'en_US' - aspell")) nil :count 1)
+#+end_src
+
+instead of the plain form the old Flyspell-driven entries had:
+
+#+begin_src emacs-lisp
+("damxage" "damage" nil :count 1)
+#+end_src
+
+Abbrev expansion still worked at runtime, but the file was visibly corrupted, and the propertized blobs broke any tooling that assumed plain strings.
+
+** Mechanism
+=jinx--correct-suggestions= returns each suggestion with text properties already attached — Jinx puts =jinx--suffix=, =jinx--prefix= (containing the boxed =1 = key-hint with =face jinx-key=), and =jinx--group= on the strings so the chooser UI can render them. =flyspell-define-abbrev= → =define-abbrev= stores the EXPANSION argument verbatim. =write-abbrev-file= prints abbrev table entries with =prin1=, which faithfully serializes text properties using Elisp's =#("..." 0 N (props))= reader syntax. Anywhere a Jinx-returned string crosses into a serializer, the properties tag along.
+
+** The Fix
+Wrap any Jinx suggestion in =substring-no-properties= before passing it to a function that may serialize it. In =jay/jinx-save-correction-as-abbrev= ([[file+emacs:/Users/jay/emacs/emacs-settings/spellcheck.org][spellcheck.org]]):
+
+#+begin_src emacs-lisp
+(let ((table (flyspell-abbrev-table))
+      (plain-right (substring-no-properties right)))
+  (if (flyspell-already-abbrevp table wrong)
+      (flyspell-change-abbrev table wrong plain-right)
+    (flyspell-define-abbrev wrong plain-right)))
+#+end_src
+
+The propertized version is only safe inside the Jinx UI flow itself (=jinx--correct-replace=) — it's part of the reason the chooser can render suggestions correctly.
+
+** Actionable insight
+If a future helper consumes a value from =jinx--correct-suggestions=, =jinx--bounds-of-word=, or any other Jinx internal and writes it through a serializer (=write-abbrev-file=, =prin1=-into-cache, =insert-into-buffer-then-save=, =setf= into a customize-saved variable, log files that go through =prin1=, etc.), strip text properties first. Plain =write-region= of a =format=-built string is safe because =format= drops properties; =prin1=-style serialization is the trap.
+
 * Vertico Resorts =completing-read= Candidates Unless The Table Declares Otherwise
   Date: 2026-04-21
 
