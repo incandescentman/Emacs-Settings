@@ -69,6 +69,15 @@ Quick bindings:
 - Directory: =~/Dropbox/roam/=
 - Database: XDG cache managed
 - Focus: full work setup
+- Current restored single-letter captures include:
+  - =i= creative idea
+  - =G= income generation
+  - =N= narrative / memoir
+  - =Q= sentence
+  - =t= therapy
+- The =J= submenu now only keeps the remaining legacy captures that were not promoted back to single-letter keys:
+  - =JL= Library of articles poems and essays
+  - =JT= temporary
 
 ** My-Life
 

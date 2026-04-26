@@ -17,7 +17,8 @@
 - Trimmed the =J= submenu so it only keeps the still-submenu-only legacy templates:
   - =JL= Library of articles poems and essays
   - =JT= temporary
-- Left unrelated local edits in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/lab/startup-profile.org][docs/lab/startup-profile.org]] untouched.
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/docs/org-roam-profiles.org][docs/org-roam-profiles.org]] so the guide reflects the live default-profile key layout after the remap.
+- Included the latest startup timing snapshot already present in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/lab/startup-profile.org][docs/lab/startup-profile.org]] in this docs checkpoint.
 
 * 2026-04-26: Recover missing Org-roam work templates under a legacy submenu
 - Audited Org-roam template history across [[file+emacs:/Users/jay/emacs/emacs-settings/docs/work-log.org][docs/work-log.org]] and git commits including =1e3537da= (/ordering roam capture templates/), =f5d88ec2= (/Fix org-roam dailies template and restore legacy captures/), and =bdd9c732= (/Clean up org-roam profile templates/).
