@@ -148,29 +148,30 @@ Additional keyword ARGS allow callers to override pieces of the template:
     ("e" "emacs" "emacs" "emacs")
     ("f" "finances and housekeeping" "finances" "finances")
     ("g" "ChatGPT Outputs" "chatgpt-outputs" "gpt")
+    ("G" "income generation" "incomegen" "business"
+     :filetags ":business:")
     ("H" "Plans" "project" "project")
     ("I" "intelligence" "AI" "intelligence"
      :body "- Links ::\n- Source ::\n\n\n* ${title}\n%?")
+    ("i" "creative idea" "ideas" "idea")
     ("j" "job application" "job-applications" "job")
     ("k" "kanban" "kanban" "kanban")
     ("L" "Learning, lectures, and classes" "lectures" "learning")
-    ("l" "logistics of OpenAI" "logistics" "library")
     ("M" "Momentum --- 2025 job hunt" "job-hunt-2025" "momentum")
     ("m" "mantras and intentions" "mantras" "mantras")
+    ("N" "narrative / memoir" "memoir" "memoir")
     ("n" "note" "notes" "note")
     ("O" "Outline / Structure / Schelling Points" "structure" "structure")
-    ("o" "OpenAI, i.e. work" "notes" "work")
     ("P" "photography" "photography" "photography")
     ("p" "person" "person" "person"
      :body "- Links :: [[id:20240426T130414.177117][🌐 People]]\n- Source ::\n\n* ${title}\n%?")
-    ("q" "quotes about AI" "quotes" "quote")
+    ("Q" "sentence" "sentences" "sentence")
     ("R" "recipe" "recipes" "recipe")
     ("r" "social / relationships" "social" "social")
     ("S" "Socratic AI" "socratic-ideas" "socratic")
     ("s" "Storytelling and Writing" "storytelling" "storytelling")
     ("T" "Travel" "travel" "travel")
-    ("t" "AI conversation topic" "ongoing-conversations-with-ai" "note"
-     :body "- Links :: [[id:ca89a85b-c00e-437b-b6b7-0876faac73ca][AI Conversation Briefings]]\n\n- ${title}\n%?")
+    ("t" "therapy" "therapy" "therapy")
     ("u" "approved language" "approved-language" "language")
     ("W" "writers" "writing" "writers"
      :filetags ":writers:person:")
@@ -193,13 +194,7 @@ Additional keyword ARGS allow callers to override pieces of the template:
 (defconst jay/org-roam-default-legacy-recovery-templates
   (list
    '("J" "Recovered legacy templates")
-   (jay/roam-template "Jc" "creative idea" "ideas" "idea")
-   (jay/roam-template "Ji" "incomegen" "incomegen" "business"
-                      :filetags ":business:")
    (jay/roam-template "JL" "Library of articles poems and essays" "library" "library")
-   (jay/roam-template "Jm" "memoir" "memoir" "memoir")
-   (jay/roam-template "Js" "sentence" "sentences" "sentence")
-   (jay/roam-template "Jt" "therapy" "therapy" "therapy")
    (jay/roam-template "JT" "temporary" "temp" "temp"))
   "Recovered legacy capture templates for the default profile.")
 

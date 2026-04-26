@@ -1,6 +1,24 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-26: Promote recovered Org-roam templates back to single-letter keys
+- Updated the default/work capture menu in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-profiles.el][jay-org-roam-suite/jay-org-roam-profiles.el]] after reviewing the recovered-template pass with Jay.
+- Deleted these current templates as no longer needed:
+  - =l= logistics of OpenAI
+  - =o= OpenAI, i.e. work
+  - =q= quotes about AI
+  - =t= AI conversation topic
+- Promoted these restored legacy templates back to top-level single-letter keys:
+  - =i= creative idea
+  - =G= income generation
+  - =N= narrative / memoir
+  - =Q= sentence
+  - =t= therapy
+- Trimmed the =J= submenu so it only keeps the still-submenu-only legacy templates:
+  - =JL= Library of articles poems and essays
+  - =JT= temporary
+- Left unrelated local edits in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/lab/startup-profile.org][docs/lab/startup-profile.org]] untouched.
+
 * 2026-04-26: Recover missing Org-roam work templates under a legacy submenu
 - Audited Org-roam template history across [[file+emacs:/Users/jay/emacs/emacs-settings/docs/work-log.org][docs/work-log.org]] and git commits including =1e3537da= (/ordering roam capture templates/), =f5d88ec2= (/Fix org-roam dailies template and restore legacy captures/), and =bdd9c732= (/Clean up org-roam profile templates/).
 - Confirmed the March 2026 cleanup merged and alphabetized template lists but did *not* remove default-profile entries; the real gap was older work templates that still have active directories in =/Users/jay/Dropbox/roam/= but no current capture entries.
