@@ -187,10 +187,28 @@ Additional keyword ARGS allow callers to override pieces of the template:
                         "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n#+FILETAGS: :crm:")))
   "Data-driven specs for the default profile's capture templates.")
 
+;; Legacy work templates with active directories still in use under
+;; /Users/jay/Dropbox/roam. Keep them in a submenu so we can recover the
+;; capture targets without disturbing newer top-level keys.
+(defconst jay/org-roam-default-legacy-recovery-templates
+  (list
+   '("J" "Recovered legacy templates")
+   (jay/roam-template "Jc" "creative idea" "ideas" "idea")
+   (jay/roam-template "Ji" "incomegen" "incomegen" "business"
+                      :filetags ":business:")
+   (jay/roam-template "JL" "Library of articles poems and essays" "library" "library")
+   (jay/roam-template "Jm" "memoir" "memoir" "memoir")
+   (jay/roam-template "Js" "sentence" "sentences" "sentence")
+   (jay/roam-template "Jt" "therapy" "therapy" "therapy")
+   (jay/roam-template "JT" "temporary" "temp" "temp"))
+  "Recovered legacy capture templates for the default profile.")
+
 ;; DEFAULT PROFILE TEMPLATES (Your current work setup)
 (defvar jay/org-roam-capture-templates-default
-  (mapcar (lambda (spec) (apply #'jay/roam-template spec))
-          jay/org-roam-default-template-specs)
+  (append
+   (mapcar (lambda (spec) (apply #'jay/roam-template spec))
+           jay/org-roam-default-template-specs)
+   jay/org-roam-default-legacy-recovery-templates)
   "Capture templates for the default (work) profile.")
 
 ;; MY-LIFE PROFILE TEMPLATES (Personal/life notes)

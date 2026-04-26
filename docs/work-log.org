@@ -1,6 +1,22 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-26: Recover missing Org-roam work templates under a legacy submenu
+- Audited Org-roam template history across [[file+emacs:/Users/jay/emacs/emacs-settings/docs/work-log.org][docs/work-log.org]] and git commits including =1e3537da= (/ordering roam capture templates/), =f5d88ec2= (/Fix org-roam dailies template and restore legacy captures/), and =bdd9c732= (/Clean up org-roam profile templates/).
+- Confirmed the March 2026 cleanup merged and alphabetized template lists but did *not* remove default-profile entries; the real gap was older work templates that still have active directories in =/Users/jay/Dropbox/roam/= but no current capture entries.
+- Added a dedicated =J= submenu in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-profiles.el][jay-org-roam-suite/jay-org-roam-profiles.el]] so the recovered templates do not disturb newer top-level keys.
+- Restored these legacy capture targets:
+  - =Jc= creative idea → =ideas/=
+  - =Ji= incomegen → =incomegen/=
+  - =JL= Library of articles poems and essays → =library/=
+  - =Jm= memoir → =memoir/=
+  - =Js= sentence → =sentences/=
+  - =Jt= therapy → =therapy/=
+  - =JT= temporary → =temp/=
+- Why these ones: each target had both historical capture-template evidence *and* a live directory with existing notes, so recovery was grounded in real usage instead of guesswork.
+- Left the current =o= "OpenAI, i.e. work" template unchanged even though =/Users/jay/Dropbox/roam/openai/= is large, because this audit did not find a historical capture template targeting =openai/= and changing that path would have been speculative.
+- Validation: =check-parens= passes on [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-profiles.el][jay-org-roam-suite/jay-org-roam-profiles.el]].
+
 * 2026-04-25: Revert AppleSpell experiment — confirmed no-op on this Homebrew build
 - Earlier today I changed the =ordering= literal in =jay/ensure-jinx-personal-dictionary= ([[file+emacs:/Users/jay/emacs/emacs-settings/spellcheck.org][spellcheck.org]]) and the live =~/.config/enchant/enchant.ordering= from =en_US:hunspell,aspell= to =en_US:applespell,aspell=, on the theory that Apple's NSSpellChecker would activate inside GUI Emacs even though =enchant-2= showed no AppleSpell suggestions on the CLI.
 - Codex empirically refuted that: a direct Swift+AppKit CLI call to =NSSpellChecker.shared= returned good English guesses (=archieve → ["archive", "achieve"]=, =dmaange → ["damage", "damming"]=), so AppleSpell itself is fine from any process. The blocker is at the Enchant layer — =enchant-lsmod-2 -lang en_US= reports =en_US (aspell)= even when the user ordering file says =en_US:applespell= only. The AppleSpell provider in this Homebrew build registers but doesn't claim English. So listing =applespell= first was empirically a no-op (verified 2026-04-25).
