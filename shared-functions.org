@@ -1255,7 +1255,9 @@ Defines ~ibuffer-do-replace-string~:
   "Non-nil if buffer is in buffer-stack-tracked."
   (let ((ignore-regex (regexp-opt buffer-stack-ignored-names)))
     (not (or (string-match ignore-regex (buffer-name buffer))
-             (member buffer buffer-stack-untracked)))))
+             (member buffer buffer-stack-untracked)
+             (with-current-buffer buffer
+               (derived-mode-p 'dired-mode))))))
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 
 #+END_SRC

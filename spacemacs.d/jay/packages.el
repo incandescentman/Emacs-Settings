@@ -1,4 +1,4 @@
-;;; packages.el --- jay Layer packages File for Spacemacs
+;;; packages.el --- jay Layer packages File for Spacemacs -*- lexical-binding: t; -*-
 ;;
 ;; Copyright (c) 2012-2014 Sylvain Benner
 ;; Copyright (c) 2014-2015 Sylvain Benner & Contributors
@@ -30,6 +30,7 @@ jay-packages
   dired+
   dired-details+
 ;;  dired-hacks-utils
+  dired-narrow
   dired-quick-sort
 ;;  dired-single
   dired-sort-menu
@@ -135,6 +136,11 @@ adaptive-wrap
 (defun jay/init-engine-mode () (use-package engine-mode))
 (defun jay/init-point-stack  () (use-package point-stack))
 (defun jay/init-dired-details  () (use-package dired-details))
+(defun jay/init-dired-narrow ()
+  (use-package dired-narrow
+    :after dired
+    :bind (:map dired-mode-map
+                ("/" . dired-narrow))))
 (defun jay/init-dired-sort-menu  () (use-package dired-sort-menu))
 (defun jay/init-dired-details+  () (use-package dired-details+))
 (defun jay/init-maxframe () (use-package maxframe))

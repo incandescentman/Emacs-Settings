@@ -1476,5 +1476,15 @@
 - Deliberately left legacy Dired packages and declarations untouched for this checkpoint so the old tool surface remains easy to restore if the new built-in path feels worse in live use.
 - Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]] from the literate source and re-ran =check-parens= on the generated file afterward.
 
+* 2026-04-27: Add =dired-narrow= as a minimal second Dired checkpoint
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/jay/packages.el][spacemacs.d/jay/packages.el]] to include =dired-narrow= in the Jay layer package list and initialize it with a Dired-local keybinding on =/=.
+- Kept the change intentionally small: no removals, no related Dired package cleanup, and no further Dired behavior changes beyond the live-filter command itself.
+- Ran a structural =check-parens= pass on [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/jay/packages.el][spacemacs.d/jay/packages.el]] after editing.
+- Added a first-line =lexical-binding= header to [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/jay/packages.el][spacemacs.d/jay/packages.el]] after the repo's pre-commit hook rejected the file without one.
+
+* 2026-04-27: Keep Dired buffers out of =buffer-stack-up= / =buffer-stack-down=
+- Updated the custom =buffer-stack-filter-regexp= in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so buffers derived from =dired-mode= are skipped by buffer-stack navigation based on major mode, not on name heuristics.
+- Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]] from the literate source and re-ran =check-parens= on the generated file afterward.
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.
