@@ -194,7 +194,7 @@ The following documentation files provide detailed information about various asp
 
 ** Remind Jay to use these
 - *KK* (key chord): Runs =consult-imenu= — jump to any heading, function, or structural element in the current buffer. Use it instead of scrolling or =C-s= searching when you know the name of the section you want.
-- In Dired, press *=/=* to narrow the listing to matching filenames. Use it when a directory is visually noisy and you want to temporarily filter down to just the files you care about.
+- In Dired, press *=/=* or *=s-f=* to narrow the listing to matching filenames. Use it when a directory is visually noisy and you want to temporarily filter down to just the files you care about.
 
 ** Guidance for AI/LLM Editing Sessions
 - *Don't ask, just do*: When Jay provides a file path, READ IT FIRST before asking questions. If he says "here's an error" or "look at this" with a path, just read the file—don't ask what it is or request more context.

@@ -38,6 +38,20 @@
   (view-echo-area-messages)
   (other-window 1))
 
+(defun jay/search-forward-dwim ()
+  "Use Dired narrowing in Dired, otherwise start case-insensitive isearch."
+  (interactive)
+  (if (derived-mode-p 'dired-mode)
+      (cond
+       ((fboundp 'jay/dired-narrow-dwim)
+        (call-interactively #'jay/dired-narrow-dwim))
+       ((require 'dired-narrow nil t)
+        (call-interactively #'dired-narrow))
+       (t
+        (require 'dired-x)
+        (call-interactively #'dired-isearch-filenames)))
+    (call-interactively #'isearch-forward-ignore-case)))
+
 (defun visit-messages-buffer-full-screen ()
   "Visit the *Messages* buffer in full screen."
   (interactive)
@@ -110,7 +124,7 @@
     ;; Search & Replace
     ;; ==================================================================
     ("C-s"           . consult-line)
-    ("s-f"           . isearch-forward-ignore-case)
+    ("s-f"           . jay/search-forward-dwim)
     ("s-F"           . pasteboard-search-for-clipboard-contents)
     ("s-h"           . replace-string)
     ("s-g"           . isearch-repeat-forward)

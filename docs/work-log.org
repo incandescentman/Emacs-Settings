@@ -1509,5 +1509,11 @@
 - Updated the live Dired keybinding block in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so =A-f= now runs =jay/dired-narrow-dwim= alongside =/= in Dired.
 - Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]] from the literate source and re-ran =check-parens= on the generated file afterward.
 
+* 2026-04-27: Make =s-f= narrow in Dired via the winning keymap layer
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] so the global =s-f= binding now runs =jay/search-forward-dwim= instead of plain =isearch-forward-ignore-case=. In Dired buffers it dispatches to =jay/dired-narrow-dwim= when available, otherwise falls back to Dired filename search; outside Dired it keeps the old case-insensitive isearch behavior.
+- Cleaned up the Dired block in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] by removing the earlier =A-f= major-mode bindings. Those could not win in live use because [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] installs =s-f= in the higher-priority global =key-minor-mode-map=.
+- Updated the Dired reminder line in [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.org][CLAUDE.org]] so future sessions will prompt Jay about both =/= and =s-f= for narrowing.
+- Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]] from the literate source and re-ran =check-parens= on the generated file afterward. Also re-ran a structural =check-parens= pass on [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] and batch-verified that =s-f= resolves to =jay/search-forward-dwim= even in a Dired buffer.
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.
