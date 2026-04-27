@@ -7311,7 +7311,12 @@ c-u s-L
       comp-deferred-compilation           t           ; JIT-compile packages in the background
       comp-deferred-compilation-black-list '("/mu4e.*\\.el$")) ; skip anything poky
 
-(add-hook 'prog-mode-hook #'display-line-numbers-mode)
+(defun jay/enable-line-numbers-in-prog-buffers ()
+  "Enable line numbers in programming buffers except Emacs Lisp."
+  (unless (derived-mode-p 'emacs-lisp-mode)
+    (display-line-numbers-mode 1)))
+
+(add-hook 'prog-mode-hook #'jay/enable-line-numbers-in-prog-buffers)
 
 (setq native-comp-jit-compilation t
 package-native-compile    t)

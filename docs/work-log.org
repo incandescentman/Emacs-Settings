@@ -1486,5 +1486,10 @@
 - Updated the custom =buffer-stack-filter-regexp= in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so buffers derived from =dired-mode= are skipped by buffer-stack navigation based on major mode, not on name heuristics.
 - Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]] from the literate source and re-ran =check-parens= on the generated file afterward.
 
+* 2026-04-27: Add =dired-narrow= to Spacemacs additional packages and disable line numbers in Emacs Lisp
+- Added =dired-narrow= to [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]] under =dotspacemacs-additional-packages= so Spacemacs has a direct package-install path for it, instead of relying only on the Jay layer declarations.
+- Updated the line-number owner in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] from a blanket =prog-mode-hook= → =display-line-numbers-mode= to a small helper that enables line numbers in programming buffers except buffers derived from =emacs-lisp-mode=.
+- Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]] from the literate source and re-ran =check-parens= on both the generated file and [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]] afterward.
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.

@@ -109,6 +109,7 @@ This function should only modify configuration layer settings."
                                       dash
                                       deadgrep
                                       define-word
+                                      dired-narrow
                                       dired-quick-sort
                                       ;; dired-sort-menu
                                       discover-my-major
