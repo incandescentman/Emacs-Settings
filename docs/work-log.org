@@ -1468,5 +1468,13 @@
 - Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/spellcheck.el][spellcheck.el]] from the literate source and re-ran the structural validation pass.
 - Cleaned the already-corrupted abbrev file in place so entries such as =damxage= and =dmaange= now serialize as ordinary string expansions again, with a safety backup at [[file+emacs:/Users/jay/emacs/abbrevs/.abbrev_defs.bak-20260425-170521][~/emacs/abbrevs/.abbrev_defs.bak-20260425-170521]].
 
+* 2026-04-27: Dired long listings plus centered wide-screen layout without Olivetti
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so Dired now uses =-alh= listings while still enabling =dired-hide-details-mode= by default. Result: the day-to-day view still collapses to filenames, but toggling details now reveals real metadata instead of a second empty hiding layer.
+- Added =jay-dired-center-mode= in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]], with customizable width =jay-dired-centered-width=, so Dired uses symmetric window margins to keep file listings visually centered on very wide monitors.
+- Dired centering explicitly turns off =olivetti-mode= if it is active, and the global Olivetti bootstrap now skips =dired-mode= buffers entirely. This keeps Dired out of prose-layout behavior while preserving Olivetti elsewhere.
+- Added a small set of built-in Dired defaults in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]]: =dired-create-destination-dirs 'ask=, =dired-vc-rename-file t=, =dired-auto-revert-buffer t=, and =dired-do-revert-buffer t=.
+- Deliberately left legacy Dired packages and declarations untouched for this checkpoint so the old tool surface remains easy to restore if the new built-in path feels worse in live use.
+- Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]] from the literate source and re-ran =check-parens= on the generated file afterward.
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.

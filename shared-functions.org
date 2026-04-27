@@ -1322,18 +1322,53 @@ dired-omit-extensions
 #+END_SRC
 
 #+begin_src emacs-lisp
-;; Enable hiding details by default in all Dired buffers
+;; Keep Dired readable on very wide monitors without using Olivetti.
+(defcustom jay-dired-centered-width 120
+  "Maximum centered content width for Dired windows."
+  :type 'integer
+  :group 'dired)
+
+(defun jay/dired-center-current-window ()
+  "Center the current Dired window using symmetric margins."
+  (when (derived-mode-p 'dired-mode)
+    (let* ((total-width (window-total-width))
+           (content-width (min jay-dired-centered-width total-width))
+           (margin (max 0 (/ (- total-width content-width) 2))))
+      (set-window-margins nil margin margin))))
+
+(defun jay/dired-center-windows ()
+  "Apply Dired centering margins to all windows showing this buffer."
+  (dolist (win (get-buffer-window-list (current-buffer) nil t))
+    (with-selected-window win
+      (jay/dired-center-current-window))))
+
+(define-minor-mode jay-dired-center-mode
+  "Center Dired listings with window margins instead of Olivetti."
+  :lighter nil
+  (if jay-dired-center-mode
+      (progn
+        (when (bound-and-true-p olivetti-mode)
+          (olivetti-mode -1))
+        (add-hook 'window-configuration-change-hook #'jay/dired-center-windows nil t)
+        (setq-local truncate-lines t)
+        (jay/dired-center-windows))
+    (remove-hook 'window-configuration-change-hook #'jay/dired-center-windows t)
+    (dolist (win (get-buffer-window-list (current-buffer) nil t))
+      (set-window-margins win nil nil))))
+
+;; Enable Dired details toggling on top of a real long listing so hidden
+;; details can be revealed on demand.
 (with-eval-after-load 'dired
   (require 'dired-x)
-  (add-hook 'dired-mode-hook #'dired-hide-details-mode))
-
-;; Show only filenames (one per line) in Dired
-(setq dired-listing-switches "-1a")
-
-;; Optional: Ensure it also works for dired buffers created in other ways
-(with-eval-after-load 'dired
-  (setq dired-hide-details-hide-symlink-targets nil)  ; Show symlink targets
-  (setq dired-hide-details-hide-information-lines t)) ; Hide the "total" line
+  (setq dired-listing-switches "-alh"
+        dired-hide-details-hide-symlink-targets nil
+        dired-hide-details-hide-information-lines t
+        dired-create-destination-dirs 'ask
+        dired-vc-rename-file t
+        dired-auto-revert-buffer t
+        dired-do-revert-buffer t)
+  (add-hook 'dired-mode-hook #'dired-hide-details-mode)
+  (add-hook 'dired-mode-hook #'jay-dired-center-mode))
 #+end_src
 
 * Word count
@@ -2551,7 +2586,6 @@ object satisfying `yas--field-p' to restrict the expansion to."
   (help-mode       . olivetti-mode)
   (prog-mode       . olivetti-mode)
   (magit-status-mode . olivetti-mode)
-  (dired-mode      . olivetti-mode)
   (Info-mode       . olivetti-mode)
   (eww-mode        . olivetti-mode)
   ;; Turn on visual-line-mode whenever we enter olivetti-mode:
@@ -5659,7 +5693,8 @@ This tells Emacs to simply insert a "<" whenever you press that key, bypassing a
 #+begin_src emacs-lisp
 (define-globalized-minor-mode olivetti-global-mode olivetti-mode
  (lambda ()
-  (unless (minibufferp)
+  (unless (or (minibufferp)
+              (derived-mode-p 'dired-mode))
    (olivetti-mode 1))))
 
 (olivetti-global-mode)
