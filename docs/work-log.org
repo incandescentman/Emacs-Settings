@@ -1496,5 +1496,8 @@
 - Added around-advice for =buffer-stack-up= and =buffer-stack-down= in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so buffer-stack navigation actively advances past Dired buffers instead of relying only on the passive stack filter.
 - Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]] from the literate source and re-ran =check-parens= on the generated file afterward.
 
+* 2026-04-27: Add =dired-narrow= reminder to the repo's "use these" prompts
+- Updated the =** Remind Jay to use these= section in [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.org][CLAUDE.org]] to remind future sessions to prompt Jay about Dired narrowing with =/= when a directory is noisy and he wants to temporarily filter the listing.
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.
