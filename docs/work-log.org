@@ -1491,5 +1491,10 @@
 - Updated the line-number owner in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] from a blanket =prog-mode-hook= → =display-line-numbers-mode= to a small helper that enables line numbers in programming buffers except buffers derived from =emacs-lisp-mode=.
 - Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]] from the literate source and re-ran =check-parens= on both the generated file and [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]] afterward.
 
+* 2026-04-27: Bind =/= in Dired directly and actively skip Dired in buffer-stack navigation
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so Dired now binds =/= directly in the live =with-eval-after-load 'dired= block, using =jay/dired-narrow-dwim=. When =dired-narrow= is installed it calls that package; otherwise it falls back to built-in =dired-isearch-filenames= so =/= is never left undefined.
+- Added around-advice for =buffer-stack-up= and =buffer-stack-down= in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so buffer-stack navigation actively advances past Dired buffers instead of relying only on the passive stack filter.
+- Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]] from the literate source and re-ran =check-parens= on the generated file afterward.
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.

@@ -1260,6 +1260,21 @@ Defines ~ibuffer-do-replace-string~:
                (derived-mode-p 'dired-mode))))))
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)
 
+(defun jay/buffer-stack-skip-dired (orig-fun &rest args)
+  "Run ORIG-FUN until buffer-stack lands on a non-Dired buffer."
+  (let ((seen nil)
+        (max-hops 50))
+    (apply orig-fun args)
+    (while (and (> max-hops 0)
+                (derived-mode-p 'dired-mode)
+                (not (memq (current-buffer) seen)))
+      (push (current-buffer) seen)
+      (setq max-hops (1- max-hops))
+      (apply orig-fun args))))
+
+(advice-add 'buffer-stack-up :around #'jay/buffer-stack-skip-dired)
+(advice-add 'buffer-stack-down :around #'jay/buffer-stack-skip-dired)
+
 #+END_SRC
 
 ** recentf-exclude
@@ -1358,6 +1373,14 @@ dired-omit-extensions
     (dolist (win (get-buffer-window-list (current-buffer) nil t))
       (set-window-margins win nil nil))))
 
+(defun jay/dired-narrow-dwim ()
+  "Use `dired-narrow' when available, otherwise fall back to filename search."
+  (interactive)
+  (if (require 'dired-narrow nil t)
+      (call-interactively #'dired-narrow)
+    (message "dired-narrow is not installed yet; using filename search instead")
+    (call-interactively #'dired-isearch-filenames)))
+
 ;; Enable Dired details toggling on top of a real long listing so hidden
 ;; details can be revealed on demand.
 (with-eval-after-load 'dired
@@ -1370,7 +1393,8 @@ dired-omit-extensions
         dired-auto-revert-buffer t
         dired-do-revert-buffer t)
   (add-hook 'dired-mode-hook #'dired-hide-details-mode)
-  (add-hook 'dired-mode-hook #'jay-dired-center-mode))
+  (add-hook 'dired-mode-hook #'jay-dired-center-mode)
+  (define-key dired-mode-map (kbd "/") #'jay/dired-narrow-dwim))
 #+end_src
 
 * Word count
