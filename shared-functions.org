@@ -1398,7 +1398,9 @@ dired-omit-extensions
         wdired-allow-to-change-permissions t)
   (add-hook 'dired-mode-hook #'dired-hide-details-mode)
   (add-hook 'dired-mode-hook #'jay-dired-center-mode)
-  (define-key dired-mode-map (kbd "/") #'jay/dired-narrow-dwim))
+  (define-key dired-mode-map (kbd "/") #'jay/dired-narrow-dwim)
+  (define-key dired-mode-map (kbd "A-f") #'jay/dired-narrow-dwim)
+  (define-key dired-mode-map (kbd "A-f") #'jay/dired-narrow-dwim))
 #+end_src
 
 * Word count

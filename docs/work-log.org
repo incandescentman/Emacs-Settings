@@ -1505,5 +1505,9 @@
 - Deliberately left the existing omit-mode question untouched for a separate runtime-based decision.
 - Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]] from the literate source and re-ran =check-parens= on the generated file afterward.
 
+* 2026-04-27: Bind =A-f= to Dired narrowing
+- Updated the live Dired keybinding block in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so =A-f= now runs =jay/dired-narrow-dwim= alongside =/= in Dired.
+- Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]] from the literate source and re-ran =check-parens= on the generated file afterward.
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.
