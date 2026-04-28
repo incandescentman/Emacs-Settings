@@ -101,6 +101,32 @@ Captain-mode auto-capitalization doesn't fire when typing a period after a trail
 
 *Context:* Noticed during the defadvice-to-advice-add migration session. May be pre-existing — user was not certain it previously worked.
 
+** [ACTIVE] Capture and diagnose intermittent =s-z= undo dead-ends
+Date: 2026-04-28
+
+Sometimes =s-z= stops with "No further undo information" / "no further undo available" even though the buffer still feels like it should have more same-session history.
+
+*Current instrumentation (done):*
+- Temporary stalled-undo logger is installed in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]].
+- Log file: =/Users/jay/.emacs.d/.cache/jay-undo-debug.log=
+- Quick-open command: =M-x jay/open-undo-debug-log=
+
+*Next steps:*
+1. Restart Emacs and confirm startup is clean.
+2. Reproduce the =s-z= stall once in normal use.
+3. Open =/Users/jay/.emacs.d/.cache/jay-undo-debug.log= and inspect the newest block.
+4. Classify the failure before changing bindings:
+   - if =s-z-binding= is wrong or =key-minor-mode= is off, debug the keymap/minibuffer path
+   - if =pending-undo-list= is already =t= with the expected =s-z= binding, debug the =undo-fu= / undo-history path
+   - if the log shows a different command path than expected, trace that command instead of changing =s-z= blindly
+5. Only after one real captured failure decide whether the fix belongs in:
+   - =keys.el= / keymap state
+   - =undo-fu= behavior or version pinning
+   - a separate escape-hatch command rather than changing normal =s-z=
+
+*Important constraint:*
+- Do not "fix" this by making =s-z= always send a prefix arg to =undo-fu-only-undo=. That changes step size but does not bypass the checkpoint logic we inspected in the live =undo-fu= code.
+
 ** [ACTIVE] Harden Pasteboard Regression Tests
 
 *Why it matters*:

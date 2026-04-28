@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-28: Add durable follow-up plan for the stalled =s-z= investigation
+- Added an active debugging checklist to [[file+emacs:/Users/jay/emacs/emacs-settings/docs/critical-next-steps.org][docs/critical-next-steps.org]] instead of leaving the next steps only in chat.
+- Why there: this is an open investigation queue item, not yet a stable lesson for [[file+emacs:/Users/jay/emacs/emacs-settings/docs/codebase-wisdom.org][docs/codebase-wisdom.org]] and not just historical change context for [[file+emacs:/Users/jay/emacs/emacs-settings/docs/work-log.org][work-log.org]].
+- The checklist records the log file path (= /Users/jay/.emacs.d/.cache/jay-undo-debug.log =), the quick-open command (=M-x jay/open-undo-debug-log=), the reproduce-once workflow, and the decision tree for whether the eventual fix belongs in keymap state, =undo-fu= behavior, or a separate escape hatch.
+- Also recorded the constraint from the code inspection: rebinding =s-z= to always pass a prefix arg to =undo-fu-only-undo= is *not* the right fix, because it changes step size but does not bypass the checkpoint logic.
+
 * 2026-04-27: Add stalled undo logger for intermittent =s-z= dead-ends
 - Added temporary runtime instrumentation in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] around =undo=, =undo-only=, =undo-fu-only-undo=, and =undo-fu-only-redo=.
 - Scope: the logger is intentionally low-noise. It only appends an entry when a top-level undo/redo path errors or returns with *no buffer change* — the class of event we care about for "No further undo information" / "no further undo available" stalls.
