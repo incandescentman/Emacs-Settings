@@ -3533,6 +3533,155 @@ into the main dumped emacs"
    (undo-fu-only-redo)
   (user-error (message "❤️"))))
 
+(defvar jay/undo-debug-log-file
+  (expand-file-name ".cache/jay-undo-debug.log" user-emacs-directory)
+  "Path where stalled undo/redo state is appended for temporary debugging.")
+
+(defvar jay/undo-debug--active nil
+  "Non-nil while top-level undo debug instrumentation is already running.")
+
+(defun jay/open-undo-debug-log ()
+  "Open the undo debug log file."
+  (interactive)
+  (find-file jay/undo-debug-log-file))
+
+(defun jay/undo-debug--undo-list-summary (undo-list)
+  "Return a compact summary string for UNDO-LIST."
+  (cond
+   ((eq undo-list t)
+    "t")
+   ((null undo-list)
+    "nil")
+   ((not (consp undo-list))
+    (format "%S" undo-list))
+   (t
+    (let ((scan undo-list)
+          (count 0)
+          (groups 0)
+          (boundaries 0)
+          (in-group nil)
+          (head nil)
+          (head-limit 6)
+          (scan-limit 40))
+      (while (and (consp scan) (< count scan-limit))
+        (let ((elt (car scan)))
+          (when (< count head-limit)
+            (setq head (append head (list elt))))
+          (if (null elt)
+              (progn
+                (setq boundaries (1+ boundaries))
+                (setq in-group nil))
+            (unless in-group
+              (setq groups (1+ groups))
+              (setq in-group t))))
+        (setq count (1+ count))
+        (setq scan (cdr scan)))
+      (format "consp scanned=%d%s groups=%d boundaries=%d head=%S tail=%S"
+              count
+              (if (consp scan) "+" "")
+              groups
+              boundaries
+              head
+              (cond
+               ((consp scan) 'consp)
+               ((null scan) 'nil)
+               (t scan)))))))
+
+(defun jay/undo-debug--state ()
+  "Capture the current undo-related runtime state."
+  (list
+   (cons 'buffer-name (buffer-name))
+   (cons 'buffer-file-name buffer-file-name)
+   (cons 'major-mode major-mode)
+   (cons 'modified (buffer-modified-p))
+   (cons 'point (point))
+   (cons 'mark (mark t))
+   (cons 'mark-active mark-active)
+   (cons 'this-command this-command)
+   (cons 'last-command last-command)
+   (cons 'real-this-command real-this-command)
+   (cons 'keys (ignore-errors
+                 (key-description (this-command-keys-vector))))
+   (cons 'key-minor-mode (bound-and-true-p key-minor-mode))
+   (cons 's-z-binding (key-binding (kbd "s-z") t))
+   (cons 'pending-undo-list
+         (jay/undo-debug--undo-list-summary pending-undo-list))
+   (cons 'buffer-undo-list
+         (jay/undo-debug--undo-list-summary buffer-undo-list))
+   (cons 'undo-fu--respect
+         (when (boundp 'undo-fu--respect)
+           undo-fu--respect))
+   (cons 'undo-fu--was-redo
+         (when (boundp 'undo-fu--was-redo)
+           undo-fu--was-redo))
+   (cons 'undo-fu--in-region
+         (when (boundp 'undo-fu--in-region)
+           undo-fu--in-region))))
+
+(defun jay/undo-debug--append-entry (command reason before-tick after-tick before-state after-state
+                                             &optional error-text)
+  "Append a stalled undo/redo log entry for COMMAND with REASON.
+BEFORE-TICK and AFTER-TICK record `buffer-chars-modified-tick' values.
+BEFORE-STATE and AFTER-STATE are alists from `jay/undo-debug--state'.
+When ERROR-TEXT is non-nil, include it in the log entry."
+  (make-directory (file-name-directory jay/undo-debug-log-file) t)
+  (with-temp-buffer
+    (insert (format "===== %s %S =====\n"
+                    (format-time-string "%Y-%m-%d %H:%M:%S %z")
+                    command))
+    (insert (format "reason: %s\n" reason))
+    (when error-text
+      (insert (format "error: %s\n" error-text)))
+    (insert (format "before-tick: %s\n" before-tick))
+    (insert (format "after-tick: %s\n" after-tick))
+    (insert "before:\n")
+    (dolist (entry before-state)
+      (insert (format "  %s: %S\n" (car entry) (cdr entry))))
+    (insert "after:\n")
+    (dolist (entry after-state)
+      (insert (format "  %s: %S\n" (car entry) (cdr entry))))
+    (insert "\n")
+    (write-region (point-min) (point-max) jay/undo-debug-log-file 'append 'silent)))
+
+(defun jay/undo-debug--around (orig-fun &rest args)
+  "Run ORIG-FUN with stalled undo/redo logging."
+  (if jay/undo-debug--active
+      (apply orig-fun args)
+    (let* ((jay/undo-debug--active t)
+           (command (or this-command orig-fun))
+           (before-tick (buffer-chars-modified-tick))
+           (before-state (jay/undo-debug--state))
+           (error-data nil)
+           (result nil))
+      (condition-case err
+          (setq result (apply orig-fun args))
+        (error
+         (setq error-data err)))
+      (let* ((after-tick (buffer-chars-modified-tick))
+             (after-state (jay/undo-debug--state))
+             (error-text (when error-data
+                           (error-message-string error-data)))
+             (reason
+              (cond
+               (error-text error-text)
+               ((= before-tick after-tick)
+                (format "no-buffer-change pending=%S"
+                        pending-undo-list))
+               (t nil))))
+        (when reason
+          (jay/undo-debug--append-entry
+           command reason before-tick after-tick before-state after-state error-text)))
+      (if error-data
+          (signal (car error-data) (cdr error-data))
+        result))))
+
+(jay/advice-add-once 'undo :around #'jay/undo-debug--around)
+(jay/advice-add-once 'undo-only :around #'jay/undo-debug--around)
+
+(with-eval-after-load 'undo-fu
+  (jay/advice-add-once 'undo-fu-only-undo :around #'jay/undo-debug--around)
+  (jay/advice-add-once 'undo-fu-only-redo :around #'jay/undo-debug--around))
+
 (setq undo-tree-auto-save-history nil)
 
 (setq undo-limit 67108864) ; 64mb.

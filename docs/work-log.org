@@ -1,6 +1,13 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-27: Add stalled undo logger for intermittent =s-z= dead-ends
+- Added temporary runtime instrumentation in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] around =undo=, =undo-only=, =undo-fu-only-undo=, and =undo-fu-only-redo=.
+- Scope: the logger is intentionally low-noise. It only appends an entry when a top-level undo/redo path errors or returns with *no buffer change* — the class of event we care about for "No further undo information" / "no further undo available" stalls.
+- Log file: =/Users/jay/.emacs.d/.cache/jay-undo-debug.log=
+- Captured state includes: current keys, =this-command= / =last-command= / =real-this-command=, whether =key-minor-mode= is live, the current =s-z= binding, buffer/file/mode/point info, and compact summaries of =pending-undo-list=, =buffer-undo-list=, and the main =undo-fu= internal flags.
+- Added =M-x jay/open-undo-debug-log= for quick inspection in a live Emacs session.
+
 * 2026-04-27: Fix minibuffer =s-c= so Org link editing copies only the link target
 - Problem: in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]], =s-l= on an existing Org link still opens =org-insert-link='s =Link:= minibuffer as expected, but =s-c= was using =copy-minibuffer-contents= implemented as a raw =(point-min) → (point-max)= copy.
 - Root cause: in a real minibuffer that range includes the prompt text, so copying from the Org link editor could capture =Link: https://...= instead of just the link value Jay was trying to grab.
