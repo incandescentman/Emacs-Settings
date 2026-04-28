@@ -60,13 +60,14 @@
     (switch-to-buffer (current-buffer))))
 
 (defun copy-minibuffer-contents (&optional _arg)
-  "Copy the entire contents of the minibuffer to the kill‑ring."
+  "Copy the editable minibuffer contents to the kill ring and clipboard."
   (interactive)
-  (let ((inhibit-read-only t))
-    (goto-char (point-min))
-    (push-mark (point) t t)
-    (goto-char (point-max))
-    (copy-region-as-kill (region-beginning) (region-end))))
+  (let ((contents (if (minibufferp)
+                      (minibuffer-contents-no-properties)
+                    (buffer-substring-no-properties (point-min) (point-max)))))
+    (kill-new contents)
+    (when (fboundp 'gui-select-text)
+      (gui-select-text contents))))
 
 (defun my/org-show-level-1 () "Show org headings to level 1." (interactive) (org-show-level 1))
 (defun my/org-show-level-2 () "Show org headings to level 2." (interactive) (org-show-level 2))

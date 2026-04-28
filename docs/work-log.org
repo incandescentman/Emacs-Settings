@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-27: Fix minibuffer =s-c= so Org link editing copies only the link target
+- Problem: in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]], =s-l= on an existing Org link still opens =org-insert-link='s =Link:= minibuffer as expected, but =s-c= was using =copy-minibuffer-contents= implemented as a raw =(point-min) → (point-max)= copy.
+- Root cause: in a real minibuffer that range includes the prompt text, so copying from the Org link editor could capture =Link: https://...= instead of just the link value Jay was trying to grab.
+- Fix: rewrote =copy-minibuffer-contents= to use =minibuffer-contents-no-properties= when actually inside a minibuffer, then send that string to both the kill ring and macOS clipboard via =kill-new= + =gui-select-text=.
+- Safety: outside a minibuffer, the helper still falls back to copying the current buffer contents, so the function remains robust if reused elsewhere.
+
 * 2026-04-26: Promote recovered Org-roam templates back to single-letter keys
 - Updated the default/work capture menu in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-profiles.el][jay-org-roam-suite/jay-org-roam-profiles.el]] after reviewing the recovered-template pass with Jay.
 - Deleted these current templates as no longer needed:
