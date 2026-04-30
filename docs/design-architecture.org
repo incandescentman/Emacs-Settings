@@ -315,6 +315,7 @@ This config uses these Spacemacs layers:
 - *auto-completion*: Company-mode completion
 - *compleseus*: Completion framework (alternative to Helm/Ivy)
 - *spell-checking*: Jinx for live spell checking via Enchant, plus Ispell/Flyspell with hunspell for older commands and compatibility
+- *syntax-checking*: Flycheck integration and Spacemacs checker commands
 - *osx*: macOS-specific settings
 - *emacs-lisp*: Elisp development tools
 
@@ -323,6 +324,12 @@ This config uses these Spacemacs layers:
 - Consistent keybindings
 - Integration with Spacemacs infrastructure
 - Community maintenance
+
+*When this config should use a layer vs a package*
+- Prefer [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]]'s =dotspacemacs-additional-packages= for standalone tools and packages with substantial local configuration.
+- Add a Spacemacs layer only when it buys a coherent subsystem, meaningful Spacemacs integration, or a maintained package bundle that would be annoying to recreate by hand.
+- Concrete example: [[file+emacs:/Users/jay/emacs/emacs-settings/spellcheck.org][spellcheck.org]] owns the real Jinx/Hunspell behavior, so =jinx= belongs in =dotspacemacs-additional-packages= rather than needing a new layer.
+- Current conclusion from the 2026-04-28 layer audit: keep the existing convenience layers =spell-checking= and =syntax-checking=, but do not add the =latex= layer unless standalone =.tex= editing becomes a real workflow beyond Org export.
 
 ** Custom Color Themes
 
@@ -556,6 +563,14 @@ emacs --timed-requires
 3. Test loading order (make sure dependencies load first)
 
 ** Adding a Spacemacs Layer
+
+Before adding a new layer, check whether a package would be the simpler fit:
+
+1. Look in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]] for =dotspacemacs-additional-packages= first.
+
+2. If the package is already primarily configured in a subsystem file such as [[file+emacs:/Users/jay/emacs/emacs-settings/spellcheck.org][spellcheck.org]] or [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]], prefer keeping it there instead of wrapping it in a new layer.
+
+3. Add the layer only if it clearly adds value: shared keybindings, coordinated companion packages, or Spacemacs integration that would otherwise be tedious to rebuild locally.
 
 1. Edit =spacemacs.d/init.el=
 

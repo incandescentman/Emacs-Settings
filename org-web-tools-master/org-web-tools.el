@@ -131,10 +131,10 @@ Pandoc >= 1.16 deprecates `--no-wrap' in favor of
                 :value-type string))
 
 (defcustom org-web-tools-pandoc-sleep-time 0.2
-  "Wait this long for Pandoc to start the first time in a session..
-Normally this should not need to be changed, but if Pandoc takes
-unusually long to start on your system (which it seems to on
-FreeBSD, for some reason), you may need to increase this."
+  "Retained for backward compatibility with older org-web-tools builds.
+Older versions used this while polling an asynchronous Pandoc
+startup probe.  The current probe is synchronous and does not use
+this value."
   :type 'float)
 
 (defun org-web-tools--html-to-org-with-pandoc (html &optional selector)
@@ -172,33 +172,40 @@ When SELECTOR is non-nil, the HTML is filtered using
   (or org-web-tools--pandoc-no-wrap-option
       (setq org-web-tools--pandoc-no-wrap-option (org-web-tools--check-pandoc-no-wrap-option))))
 
+(defun org-web-tools--pandoc-option-probe (option)
+  "Return (EXIT-CODE . OUTPUT) after probing Pandoc with OPTION."
+  (with-temp-buffer
+    (let ((stderr-file (make-temp-file "org-web-tools-pandoc-stderr")))
+      (unwind-protect
+          (let ((exit-code (process-file "pandoc" nil (list t stderr-file) nil
+                                         "--dump-args" option)))
+            (cons exit-code
+                  (concat (buffer-string)
+                          (with-temp-buffer
+                            (insert-file-contents stderr-file)
+                            (buffer-string)))))
+        (when (file-exists-p stderr-file)
+          (delete-file stderr-file))))))
+
 (defun org-web-tools--check-pandoc-no-wrap-option ()
   "Return appropriate no-wrap option string depending on Pandoc version."
-  ;; Pandoc >= 1.16 deprecates the --no-wrap option, replacing it with
-  ;; --wrap=none.  Sending the wrong option causes output to STDERR,
-  ;; which `call-process-region' doesn't like.  So we test Pandoc to see
-  ;; which option to use.
-  (with-temp-buffer
-    (let* ((limit 3)
-           (checked 0)
-           (process (start-process "test-pandoc" (current-buffer)
-                                   "pandoc" "--dump-args" "--no-wrap")))
-      (while (process-live-p process)
-        (if (= checked limit)
-            (progn
-              ;; Pandoc didn't exit in time.  Kill it and raise an
-              ;; error.  This function will return `nil' and
-              ;; `org-web-tools--pandoc-no-wrap-option' will remain
-              ;; `nil', which will cause this function to run again and
-              ;; set the const when a capture is run.
-              (set-process-query-on-exit-flag process nil)
-              (error "Unable to test Pandoc.  Try increasing `org-web-tools-pandoc-sleep-time'.  If it still doesn't work, please report this bug! (Include the output of \"pandoc --dump-args --no-wrap\")"))
-          (sleep-for org-web-tools-pandoc-sleep-time)
-          (cl-incf checked)))
-      (if (and (zerop (process-exit-status process))
-               (not (string-match "--no-wrap is deprecated" (buffer-string))))
-          "--no-wrap"
-        "--wrap=none"))))
+  ;; Prefer the current flag first: Pandoc 3.x removes --no-wrap
+  ;; entirely, while older versions may only understand --no-wrap.
+  (let* ((wrap-none-probe (org-web-tools--pandoc-option-probe "--wrap=none"))
+         (wrap-none-exit (car wrap-none-probe))
+         (wrap-none-output (string-trim (cdr wrap-none-probe))))
+    (if (zerop wrap-none-exit)
+        "--wrap=none"
+      (let* ((no-wrap-probe (org-web-tools--pandoc-option-probe "--no-wrap"))
+             (no-wrap-exit (car no-wrap-probe))
+             (no-wrap-output (string-trim (cdr no-wrap-probe))))
+        (if (zerop no-wrap-exit)
+            "--no-wrap"
+          (error (concat "Unable to determine Pandoc wrapping option. "
+                         "`pandoc --dump-args --wrap=none` exited %s: %s; "
+                         "`pandoc --dump-args --no-wrap` exited %s: %s")
+                 wrap-none-exit wrap-none-output
+                 no-wrap-exit no-wrap-output))))))
 
 (defun org-web-tools--clean-pandoc-output ()
   "Remove unwanted things in current buffer of Pandoc output."

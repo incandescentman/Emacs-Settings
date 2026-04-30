@@ -1,6 +1,10 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-04-28: Document the Spacemacs layer-vs-package rule
+- Recorded in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/design-architecture.org][docs/design-architecture.org]] that this config should prefer [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]]'s =dotspacemacs-additional-packages= for standalone tools and use Spacemacs layers only when they add real subsystem value or meaningful Spacemacs integration.
+- Captured the current decision from the layer audit: keep the existing =spell-checking= and =syntax-checking= convenience layers, but do not add the =latex= layer unless standalone =.tex= editing becomes a real workflow beyond Org export.
+
 * 2026-04-28: Add durable follow-up plan for the stalled =s-z= investigation
 - Added an active debugging checklist to [[file+emacs:/Users/jay/emacs/emacs-settings/docs/critical-next-steps.org][docs/critical-next-steps.org]] instead of leaving the next steps only in chat.
 - Why there: this is an open investigation queue item, not yet a stable lesson for [[file+emacs:/Users/jay/emacs/emacs-settings/docs/codebase-wisdom.org][docs/codebase-wisdom.org]] and not just historical change context for [[file+emacs:/Users/jay/emacs/emacs-settings/docs/work-log.org][work-log.org]].
@@ -1533,6 +1537,11 @@
 - Cleaned up the Dired block in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] by removing the earlier =A-f= major-mode bindings. Those could not win in live use because [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] installs =s-f= in the higher-priority global =key-minor-mode-map=.
 - Updated the Dired reminder line in [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.org][CLAUDE.org]] so future sessions will prompt Jay about both =/= and =s-f= for narrowing.
 - Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]] from the literate source and re-ran =check-parens= on the generated file afterward. Also re-ran a structural =check-parens= pass on [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] and batch-verified that =s-f= resolves to =jay/search-forward-dwim= even in a Dired buffer.
+
+* 2026-04-30: Fix org-web-tools Pandoc option detection for Pandoc 3.x
+- Updated the vendored [[file+emacs:/Users/jay/emacs/emacs-settings/org-web-tools-master/org-web-tools.el][org-web-tools-master/org-web-tools.el]] probe that chooses Pandoc's no-wrap flag. It now probes synchronously, prefers =--wrap=none=, and only falls back to =--no-wrap= for older Pandoc versions.
+- This avoids the brittle async timeout path that raised =Unable to test Pandoc= even though Pandoc itself was installed and working.
+- Added focused regression coverage in [[file+emacs:/Users/jay/emacs/emacs-settings/tests/org-web-tools-pandoc-tests.el][tests/org-web-tools-pandoc-tests.el]] for the flag chooser's three cases: prefer current flag, fall back to legacy flag, and surface both failures clearly.
 
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.

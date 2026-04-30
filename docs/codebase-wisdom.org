@@ -934,3 +934,35 @@ This is fast (~5s per iteration) and rules out both cache-staleness and theoreti
 - =\righthyphenmin=N= is the narrowest knob that actually fixes short-tail runts. Each bump up the scale (=3= → =4= → =5=) forbids more hyphenations whose tails would be shorter than =N=. The default is =3= for English; this codebase uses =5= in prose defaults.
 - =\RaggedRight= from =ragged2e= is *not* a no-hyphenation command — it still permits hyphenation under pressure (finite =\RaggedRightRightskip=). Only standard =\raggedright= eliminates hyphenation by giving =\rightskip= infinite stretch.
 - When an AI collaborator (Codex, Claude, whatever) recommends a theoretical TeX knob confidently, run the empirical test matrix before adopting. Confident theoretical wrong answers are expensive to unwind — three commits this session tried knobs that didn't work.
+
+* Minibuffer Copy Helpers: Copy Contents, Not Prompt Text
+  Date: 2026-04-27
+
+** Trigger
+On an existing Org link, =s-l= correctly opened =org-insert-link='s =Link:= minibuffer, but =s-c= copied the whole prompt line instead of just the link target Jay wanted.
+
+** Mechanism
+The keybinding was not the regression. In this codebase, minibuffer =s-c= was already correctly bound to =copy-minibuffer-contents=. The bug was inside that helper: it copied =(point-min)= → =(point-max)=, which in a live minibuffer includes prompt text like =Link: = in addition to the editable field.
+
+For minibuffer text, buffer bounds are the wrong API. The right one is =minibuffer-contents-no-properties=.
+
+** Actionable insight
+- When a minibuffer key "looks broken," verify the command's *behavior*, not just the winning keymap entry.
+- For copying or inspecting user-entered minibuffer text, use =minibuffer-contents-no-properties= instead of raw buffer bounds.
+- If the command should also reach the macOS clipboard, pair =kill-new= with =gui-select-text=, but guard the latter so batch or non-GUI contexts still work.
+
+* Pandoc CLI Drift: Probe the Current Flag, Don't Trust the Legacy Timeout Error
+  Date: 2026-04-30
+
+** Trigger
+Capturing a page with [[file+emacs:/Users/jay/emacs/emacs-settings/org-web-tools-master/org-web-tools.el][org-web-tools-master/org-web-tools.el]] failed before conversion with =Unable to test Pandoc. Try increasing `org-web-tools-pandoc-sleep-time'=. The failure happened inside =org-web-tools--check-pandoc-no-wrap-option= while probing Pandoc, not in Jay's cleanup wrapper and not because Pandoc was missing.
+
+** Mechanism
+Current Pandoc on this machine (=pandoc 3.9.0.2=) exits immediately on =pandoc --dump-args --no-wrap= with =--no-wrap has been removed. Use --wrap=none instead.= The vendored =org-web-tools= copy still used an older async probe that spawned =pandoc --dump-args --no-wrap= and blamed startup timing if the process looked live during a short polling window. That error text sent attention in the wrong direction: the real incompatibility was CLI drift, not a slow binary.
+
+The robust fix was to stop polling and probe synchronously: try =--wrap=none= first, fall back to =--no-wrap= only for older Pandoc versions, and include both probe results if neither works.
+
+** Actionable insight
+- When a dependency probe claims "timeout" or "slow startup," run the exact external command yourself before tuning sleep knobs.
+- For Pandoc wrapping in this codebase, prefer a direct feature probe of =--wrap=none= and only fall back to =--no-wrap= for older versions.
+- If a vendored third-party helper drifts against a system dependency, patch the vendored copy in-repo and record the failure mode here so future sessions do not keep chasing the misleading message.
