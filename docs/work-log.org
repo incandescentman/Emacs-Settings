@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-05-01: Share Org-style writing keys with =fountain-mode=
+- Added a shared =my/writing-mode-bindings= alist in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] for prose-editing behavior that should feel the same across writing modes.
+- Wired [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] to install that shared set into =fountain-mode-map=, including backtick for =jay/jinx-correct-word-near-point= plus the smart punctuation, smart space, kill-clause, and sentence-kill helpers already used in Org.
+- Kept Fountain's own screenplay-structure bindings intact on purpose: no override for its native =M-RET= section-heading command or =M-<up>/<down>= block movement.
+
 * 2026-04-28: Document the Spacemacs layer-vs-package rule
 - Recorded in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/design-architecture.org][docs/design-architecture.org]] that this config should prefer [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]]'s =dotspacemacs-additional-packages= for standalone tools and use Spacemacs layers only when they add real subsystem value or meaningful Spacemacs integration.
 - Captured the current decision from the layer audit: keep the existing =spell-checking= and =syntax-checking= convenience layers, but do not add the =latex= layer unless standalone =.tex= editing becomes a real workflow beyond Org export.

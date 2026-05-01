@@ -569,43 +569,48 @@
 ;; Declarative alists so the dump function in keybinding-docs.el can
 ;; iterate them.  Installation still uses with-eval-after-load.
 
+(defconst my/writing-mode-bindings
+  '(("C-k"     . my/kill-line-dwim)
+    ("<SPC>"   . smart-space)
+    ("s-v"     . pasteboard-paste-adaptive)
+    ("`"       . jay/jinx-correct-word-near-point)
+    ("."       . smart-period)
+    (","       . comma-or-smart-comma)
+    ("?"       . smart-question-mark)
+    ("!"       . smart-exclamation-point)
+    (";"       . smart-semicolon)
+    (":"       . colon-or-smart-colon)
+    ("<left>"  . jay/left-char)
+    ("<right>" . jay/right-char)
+    ("M-k"     . kill-clause)
+    ("M-K"     . kill-sentence-maybe-else-kill-line))
+  "Writing-oriented bindings shared by prose-centric major modes.")
+
 (defconst my/org-mode-bindings
-  '(("<return>"       . smart-return)
-    ("C-k"            . my/kill-line-dwim)
-    ("<SPC>"          . smart-space)
-    ("s-v"            . pasteboard-paste-adaptive)
-    ("s-l"            . org-insert-link)
-    ("s-k c s"        . org-clone-subtree)    ; overrides global in Org
-    ("C-c e"          . eval-adaptive)
-    ("C-c C-s"        . org-schedule)
-    ("C-c C-r"        . palimpsest-move-region-to-bottom)
-    ("`"              . jay/jinx-correct-word-near-point)
-    ("."              . smart-period)
-    (","              . comma-or-smart-comma)
-    ("?"              . smart-question-mark)
-    ("!"              . smart-exclamation-point)
-    (";"              . smart-semicolon)
-    (":"              . colon-or-smart-colon)
-    ("<C-S-right>"    . org-shiftmetaright)
-    ("<C-S-left>"     . org-shiftmetaleft)
-    ("<C-right>"      . org-metaright)
-    ("<C-left>"       . org-metaleft)
-    ("<C-up>"         . org-metaup)
-    ("<C-down>"       . org-metadown)
-    ("M-<return>"     . smart-org-meta-return-dwim)
-    ("M-S-<return>"   . smart-org-insert-todo-heading-dwim)
-    ("C-M-<return>"   . smart-org-insert-subheading)
-    ("<C-S-M-return>" . smart-org-insert-todo-subheading)
-    ("<C-s-return>"   . smart-org-insert-todo-subheading)
-    ("<C-return>"     . return-insert-blank-line-before)
-    ("<C-S-return>"   . smart-org-insert-todo-heading-dwim)
-    ("<M-up>"         . up-by-degrees)
-    ("<M-down>"       . down-by-degrees)
-    ("<left>"         . jay/left-char)
-    ("<right>"        . jay/right-char)
-    ("DEL"            . new-org-delete-backward-char)
-    ("M-k"            . kill-clause)
-    ("M-K"            . kill-sentence-maybe-else-kill-line))
+  (append
+   my/writing-mode-bindings
+   '(("<return>"       . smart-return)
+     ("s-l"            . org-insert-link)
+     ("s-k c s"        . org-clone-subtree)    ; overrides global in Org
+     ("C-c e"          . eval-adaptive)
+     ("C-c C-s"        . org-schedule)
+     ("C-c C-r"        . palimpsest-move-region-to-bottom)
+     ("<C-S-right>"    . org-shiftmetaright)
+     ("<C-S-left>"     . org-shiftmetaleft)
+     ("<C-right>"      . org-metaright)
+     ("<C-left>"       . org-metaleft)
+     ("<C-up>"         . org-metaup)
+     ("<C-down>"       . org-metadown)
+     ("M-<return>"     . smart-org-meta-return-dwim)
+     ("M-S-<return>"   . smart-org-insert-todo-heading-dwim)
+     ("C-M-<return>"   . smart-org-insert-subheading)
+     ("<C-S-M-return>" . smart-org-insert-todo-subheading)
+     ("<C-s-return>"   . smart-org-insert-todo-subheading)
+     ("<C-return>"     . return-insert-blank-line-before)
+     ("<C-S-return>"   . smart-org-insert-todo-heading-dwim)
+     ("<M-up>"         . up-by-degrees)
+     ("<M-down>"       . down-by-degrees)
+     ("DEL"            . new-org-delete-backward-char)))
   "Bindings installed into `org-mode-map'.")
 
 (defconst my/org-mode-unbindings
@@ -625,6 +630,12 @@
 (defconst my/org-src-mode-bindings
   '(("C-c C-c" . org-edit-src-exit))
   "Bindings installed into `org-src-mode-map'.")
+
+(defconst my/fountain-mode-bindings
+  my/writing-mode-bindings
+  "Bindings installed into `fountain-mode-map'.
+Keeps Fountain's screenplay-structure commands intact while sharing the
+same prose-editing keys used in Org buffers.")
 
 (defconst my/flyspell-bindings
   '(("C-;" . org-def))
@@ -691,6 +702,7 @@ minibuffer completion UI is active.")
 (defconst my/mode-binding-registry
   '(("org-mode-map"          . my/org-mode-bindings)
     ("org-src-mode-map"       . my/org-src-mode-bindings)
+    ("fountain-mode-map"      . my/fountain-mode-bindings)
     ("flyspell-mode-map"      . my/flyspell-bindings)
     ("isearch-mode-map"       . my/isearch-bindings)
     ("help-mode-map"          . my/help-mode-bindings)
@@ -751,6 +763,9 @@ Each element of ADLIST should look like (FUNCTION WHERE AD-FN)."
 
 (with-eval-after-load 'org-src
   (my/install-mode-bindings org-src-mode-map my/org-src-mode-bindings))
+
+(with-eval-after-load 'fountain-mode
+  (my/install-mode-bindings fountain-mode-map my/fountain-mode-bindings))
 
 (with-eval-after-load 'flyspell
   (my/install-mode-bindings flyspell-mode-map my/flyspell-bindings))
