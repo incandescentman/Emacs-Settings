@@ -31,6 +31,12 @@ Important interpretation:
 - [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][/Users/jay/emacs/emacs-settings/search-commands.org]] did have avoidable eager work, and moving =consult-org-roam= plus =affe= off the startup path reduced it sharply.
 - One profile entry may still show a multi-second =search-commands.org= load immediately after edits; treat that as a re-tangle spike if it coincides with a freshly rewritten [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.el][/Users/jay/emacs/emacs-settings/search-commands.el]].
 
+How to read the profile:
+- Trust the /ordering/ of the repeated module timings more than the raw =Total init time= line.
+- In current steady-state snapshots, the recurring startup hotspots are still [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][/Users/jay/emacs/emacs-settings/shared-functions.org]] first, [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][/Users/jay/emacs/emacs-settings/search-commands.org]] second, and [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el]] third.
+- Treat raw =Total init time= with caution. The profile writer records per-module timings from explicit wrappers, but the total comes from =before-init-time= / =after-init-time= and the writer itself has a late idle-timer fallback in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][/Users/jay/emacs/emacs-settings/spacemacs-new-config.el]]. That means some snapshots can show totals that do not line up cleanly with the measured rows.
+- Practical rule: use the file to spot stable relative costs and repeated regressions, not to over-interpret a single weird total.
+
 * First Audit Snapshot
 
 The first focused audit of [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][/Users/jay/emacs/emacs-settings/shared-functions.org]] used the live tangled runtime file:
