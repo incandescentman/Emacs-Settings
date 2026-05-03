@@ -1636,6 +1636,7 @@
 - Verified the live startup path with a disposable named daemon: the resulting session had =darkroom-tentative-mode= on both =org-mode-hook= and =text-mode-hook=, and a fresh Org buffer entered tentative darkroom mode with =visual-line-mode= enabled.
 - Added [[file+emacs:/Users/jay/emacs/emacs-settings/docs/darkroom-mode-guide.org][docs/darkroom-mode-guide.org]] as a practical evaluation guide covering what Darkroom actually changes, how this repo currently wires it, which settings are worth experimenting with, and what signals point toward keeping it or reverting to Olivetti.
 - Added the new Darkroom guide to the repo's documentation indexes in [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.org][CLAUDE.org]] and [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][docs/instructions.org]] so future sessions can find it quickly.
+- Fixed Org-mode =check-parens= false alarms in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][docs/instructions.org]] by rewriting fragile inline examples: a punctuation-cleanup example from =... -> ...= to =... to ...=, a source-block trigger example into plain quoted text plus =TAB=, and a punctuation-heavy forbidden-character list into named words. The file itself was not structurally broken on disk; the failures were triggered by those specific inline-formatting patterns when visited in Org mode.
 
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.

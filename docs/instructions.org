@@ -168,7 +168,7 @@ Both commands work on the active region if one is selected, otherwise on the who
 - Safe defaults for ordinary prose
 - Keeps legitimate phrases like =I like cats=
 - Cleans repeated words like =hello hello=
-- Fixes spacing such as =Hello , world= -> =Hello, world=
+- Fixes spacing such as =Hello , world= to =Hello, world=
 
 *Aggressive =whittle-transcript=*
 - Designed for transcript junk rather than polished prose
@@ -360,7 +360,7 @@ Many files are =.org= files containing code blocks:
 5. =C-c C-v t= to tangle (generate =.el= file)
 
 ** To Add Code:
-1. Type =<s TAB= to insert a new source block
+1. Type the string "<s" and press =TAB= to insert a new source block
 2. Add =emacs-lisp= as the language
 3. Write your code
 4. Tangle with =C-c C-v t=
@@ -585,7 +585,7 @@ When you export an Org file to PDF, the output PDF is renamed in place to use =#
 
 Behavior:
 - Spaces are preserved (readable as an email attachment).
-- Filesystem-hostile characters (=/=, =\=, =:=, =*=, =?=, =\"=, =<=, =>=, =|=, control chars) are stripped.
+- Filesystem-hostile characters such as slash, backslash, colon, asterisk, question mark, double quote, less-than, greater-than, pipe, and control characters are stripped.
 - Runs of whitespace collapse to a single space; trailing periods are trimmed.
 - Existing files with the target name are overwritten silently.
 - If the Org buffer has no =#+TITLE:=, the original basename is kept as a fallback.
