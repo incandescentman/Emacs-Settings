@@ -1,3 +1,4 @@
+;;; spacemacs-new-config.el --- additional Spacemacs config -*- lexical-binding: t; -*-
 ;; ------------- init.el (or early-load file) --------------------------
 (require 'cl-lib)
 
@@ -480,6 +481,20 @@ With prefix arg FIX-HINTS, append actionable remediation commands."
 (use-package reveal-in-finder
   :defer
   )
+
+(use-package atomic-chrome
+  :defer 1
+  :config
+  (setq atomic-chrome-default-major-mode 'org-mode
+        atomic-chrome-buffer-open-style 'frame)
+  (atomic-chrome-start-server))
+
+(use-package ultra-scroll
+  :init
+  (setq scroll-conservatively 101
+        scroll-margin 0)
+  :config
+  (ultra-scroll-mode 1))
 
 ;; (recenter-top-bottom)
 (setq case-fold-search t)

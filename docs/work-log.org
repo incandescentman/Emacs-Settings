@@ -1,6 +1,63 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-05-03: Import retrospective summaries from CLAUDE.org
+- Moved the "Recent Major Updates" topic-grouped summaries out of [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.org][CLAUDE.org]] into this file, where change history actually belongs.
+- Why moved: =CLAUDE.org= is for AI-facing rules and durable conventions, not change history. The summaries were burning context budget every session, going stale (latest entry was March 2026 with no updates since), and duplicating the work-log's purpose.
+- The per-event detail for most of these is already covered in earlier work-log entries (e.g. 2026-03-02 agenda layout fix, 2026-03-03 dynamic agenda, the April Org-roam suite consolidation series). The block below preserves the *retrospective topic framing* for readers who want a higher-level view.
+
+** Imported retrospective: Org-Agenda Dynamic Dashboard & Dailies Fix (Mar 2026)
+- *Agenda Rewrite*: Replaced static tag-driven agenda (=#focus= / =#admin= / =#connect= / =#batch=) with dynamic TODO dashboard in =goals-agenda.org=.
+- *Dynamic Sources*: Agenda files built on every open via =:before= advice on =org-agenda= — pulls from today's journal + last 3 journal files + all velocity project files + lead tracking files.
+- *No Tags Required*: Plain =TODO= headings are sufficient for agenda visibility. Energy tags are optional organizational sugar.
+- *Journal Carry-Forward*: =jay/recent-journal-files= lists the journal directory and picks the actual last 3-4 files by filename sort (not calendar math), so skipped days don't break the chain.
+- *Dailies Navigation Fix*: Removed stray daily note at roam root that was confusing =org-roam-dailies-goto-previous-note=. Daily notes live in =~/Dropbox/roam/journal/=.
+- *Recurring Reset*: Rescheduled 7 recurring items (daily/weekly repeaters) from 2024–2025 dates to current, eliminating "Sched.400x" clutter.
+
+** Imported retrospective: Org 9.8 Compatibility & Navigation (Feb 2026)
+- *Link Preview Migration*: Migrated =org-yt.el= and =shared-functions= from deprecated =org-toggle-inline-images= / =org-display-inline-images= to new =org-link-preview= API.
+- *Backward Compatibility*: Added version-checking wrappers that work on Org 9.6+ and will use native Org 9.8 features when available.
+- *Repeat-mode Navigation*: Enabled =repeat-mode= with custom repeat maps for Org heading/block/link navigation (press =C-c C-n=, then just =n= to continue).
+- *Which-key Descriptions*: Added descriptive labels for all custom prefix keys (=s-k=, =s-/=, =s-u=, =]=) and org-roam bindings for better discoverability.
+- *Legacy Cleanup*: Removed the old =org-roam-config-legacy.el= shim after the suite became the only live Org-roam entry point.
+
+** Imported retrospective: Web Page Capture (Feb 2026)
+- *org-web-tools*: Installed for capturing web pages as org-mode content
+- *Chrome Integration*: =jay/get-url-from-chrome= grabs URL from frontmost Chrome tab via AppleScript
+- *Clean Commands*: =jay/org-web-tools-read-url-as-org-clean= and =jay/org-web-tools-insert-web-page-as-entry-clean=
+- *Enhanced Cleanup*: All paste/capture methods (=chatgpt2org=, =org-web-tools=, =pasteboard-paste-adaptive=) now:
+  - Strip social share links, base64 images, view counts
+  - Remove relative timestamps ("2 years ago", "3 months ago")
+  - Remove whitespace-only lines
+  - Remove blank lines between headings and body text (proper org-mode style)
+  - Convert bold lines that look like headings to actual org headings
+
+** Imported retrospective: Org Roam Profile System (Nov 2025, updated Mar 2026)
+- *Multi-Graph Support*: Distinct profiles for 'Work' (default), 'My Life', 'Social', and 'Parents'.
+- *Architecture*: Modularized into =jay-org-roam-suite/= (Core, Profiles, Templates, Extras sidecar).
+- *Features*: Independent databases, capture templates, and export paths per profile.
+- *Template Cleanup (Mar 2026)*: Merged default profile's two template lists into one alphabetically sorted list (A a B b C c...). Simplified parents profile to standard templates (conversation, document, interview, note, person, story, task).
+- *Commands*: =s-u P= to switch, =s-u 1/2/3/4= shortcuts.
+
+** Imported retrospective: Documentation Overhaul (Oct 2025)
+- *Complete Rewrite*: Transformed technical notes into user-friendly guides (=instructions.org=, =design-architecture.org=).
+- *New Guides*: Added =org-roam-profiles.org=, =pasteboard-markdown-detection.org=.
+- *Philosophy*: Shifted to "comprehensive guides teaching concepts".
+
+** Imported retrospective: Pasteboard & Editor Hardening
+- *Pure Elisp*: Converted =pasteboard-copy-and-paste-functions= to pure =.el= for reliability.
+- *Smart Paste*: Improved Markdown detection, blockquote handling, and table formatting.
+- *Formatting*: Added =scripts/org_spacing_formatter.py= for automatic heading spacing.
+
+** Imported retrospective: LaTeX & Publishing
+- *New Templates*: Added 'Hipster CV' and 'Elegant Less Whitespace' templates in =latex-templates/=.
+- *Export*: Enhanced =ox-astro= integration with profile-aware source roots.
+
+** Imported retrospective: System Stability
+- *Cloud Storage*: Fixed critical Dropbox/CloudStorage path resolution issues and timeouts.
+- *File Watchers*: Optimized =file-notify= to prevent sync errors with mobile edits.
+- *Startup*: Cleaned up unused packages and deprecated variables.
+
 * 2026-05-01: Share Org-style writing keys with =fountain-mode=
 - Added a shared =my/writing-mode-bindings= alist in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] for prose-editing behavior that should feel the same across writing modes.
 - Wired [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] to install that shared set into =fountain-mode-map=, including backtick for =jay/jinx-correct-word-near-point= plus the smart punctuation, smart space, kill-clause, and sentence-kill helpers already used in Org.

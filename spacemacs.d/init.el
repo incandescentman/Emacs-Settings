@@ -88,6 +88,7 @@ This function should only modify configuration layer settings."
    dotspacemacs-additional-packages '(
                                       amx
                                       affe
+                                      atomic-chrome
                                       org-transclusion
                                       ctrlf
                                       web-mode
@@ -180,6 +181,7 @@ This function should only modify configuration layer settings."
                                       ;; tiny
                                       titlecase
                                       ts
+                                      ultra-scroll
                                       unfill
                                       wc-goal-mode
                                       wc-mode
