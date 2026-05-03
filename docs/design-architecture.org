@@ -692,6 +692,47 @@ Functions detect context and do the right thing. =pasteboard-paste-adaptive= cle
 - Org-roam: https://www.orgroam.com/manual.html
 - Emacs Lisp: https://www.gnu.org/software/emacs/manual/html_node/elisp/
 
+* Imported from CLAUDE.org (2026-05-03)
+
+These sections used to live in =CLAUDE.org=. Moved here because they describe *project architecture and conventions*, not *AI rules*. Kept verbatim except for light editorial integration.
+
+** Loading Order
+1. Spacemacs core initialization
+2. Layer configuration (org, auto-completion, compleseus, etc.)
+3. =spacemacs-new-config.el=
+4. =jay-osx.el= (provides the early =key-minor-mode-map=)
+5. =gnu-emacs-startup.el=
+6. =org-authoring.el=
+7. =spellcheck.el=
+8. =org-export.el=
+9. =shared-functions.el=
+10. =jay-org-roam-core.el=
+11. =jay-org-roam-extras.el=
+12. Various feature modules (deferred or immediate)
+13. Local configuration (=local-config.el=)
+
+** Configuration Patterns
+
+*** Good Practices Already in Place
+- Literate programming for documentation
+- Modular file organization
+- Deferred loading for performance
+- Platform-specific customizations isolated
+- Version control with recovery scripts
+- Custom layer for Spacemacs integration
+
+*** Areas for Enhancement
+- Dependency management between modules
+- Better separation of concerns
+- More consistent error handling
+- Automated testing/validation
+- Performance monitoring
+
+** Key Internal Dependencies
+- =key-minor-mode-map= is initialized in =jay-osx.el=, but =keys.el= owns =key-minor-mode= itself. This split matters because the map needs to exist before any layer that wants to bind into it loads.
+- External: Spacemacs, org-roam, Hunspell, various ELPA packages.
+- External paths used at runtime: =~/emacs/Spelling/=, =~/Dropbox/writing/=, plus various project directories under =~/Library/CloudStorage/Dropbox/github/=.
+
 ** Related Files
 
 - =instructions.org= - How to use this config

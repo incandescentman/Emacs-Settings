@@ -540,6 +540,28 @@ emacs --eval '(message "Startup time: %s" (emacs-init-time))' --kill
 - [ ] Can anything move from active → planned → done?
 - [ ] Are stretch goals still relevant?
 
+* Imported from CLAUDE.org (2026-05-03): Potential Future Improvements
+
+These priority lists used to live in =CLAUDE.org=. They were moved here because they describe *project work* (things that could be done), not *AI rules* (how AI sessions should behave). Items are mostly generic config-hygiene goals; treat them as background candidates rather than active commitments.
+
+** High Priority
+1. *[OPTIONAL] Deprecated Functions*: Update remaining deprecated functions (e.g., =cl-return= instead of =return=)
+2. *[OPTIONAL] Lexical Binding*: Ensure all files properly declare lexical-binding on first line. Pre-commit hook now enforces this for staged =.el= files; remaining gaps are in untouched legacy files.
+3. *[OPTIONAL] Error Handling*: Add error checking for missing files/directories in configuration
+
+** Medium Priority
+1. *[OPTIONAL] Performance*: Profile startup time and optimize loading order
+2. *[OPTIONAL] Documentation*: Add docstrings to custom functions
+3. *[OPTIONAL] Consistency*: Standardize quote style ('quote vs ')
+4. *[OPTIONAL] Path Management*: Use variables instead of hardcoded paths ("/Users/jay/")
+5. *[OPTIONAL] Cleanup*: Remove large blocks of commented-out code
+
+** Low Priority
+1. *[OPTIONAL] Indentation*: Standardize to spaces or tabs (currently mixed)
+2. *[OPTIONAL] Naming Convention*: Establish consistent prefix for custom functions
+3. *[OPTIONAL] Compilation*: Set up automatic byte-compilation for better performance
+4. *[OPTIONAL] Testing*: Add basic tests for critical custom functions
+
 * Related Documentation
 
 - =work-log.org= - History of what's been done
