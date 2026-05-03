@@ -32,6 +32,45 @@
 (autoload 'smart-semicolon "/Users/jay/emacs/emacs-settings/spacecraft-mode" nil t)
 (autoload 'colon-or-smart-colon "/Users/jay/emacs/emacs-settings/spacecraft-mode" nil t)
 
+;; Autoloads for commands defined by darkroom.el
+(autoload 'darkroom-mode "darkroom" nil t)
+(autoload 'darkroom-tentative-mode "darkroom" nil t)
+(autoload 'darkroom-increase-margins "darkroom" nil t)
+(autoload 'darkroom-decrease-margins "darkroom" nil t)
+
+(defun jay/toggle-darkroom ()
+  "Toggle the current buffer's distraction-free writing view.
+If darkroom is already active, disable both darkroom modes. When
+enabling from a single-window frame, prefer `darkroom-tentative-mode'
+so it exits automatically after splits; otherwise enable
+`darkroom-mode' immediately in the current window."
+  (interactive)
+  (cond
+   ((bound-and-true-p darkroom-tentative-mode)
+    (darkroom-tentative-mode -1))
+   ((bound-and-true-p darkroom-mode)
+    (darkroom-mode -1))
+   ((= (count-windows) 1)
+    (darkroom-tentative-mode 1))
+   (t
+    (darkroom-mode 1))))
+
+(defun jay/darkroom-expand ()
+  "Increase darkroom margins in the current buffer."
+  (interactive)
+  (unless (or (bound-and-true-p darkroom-mode)
+              (bound-and-true-p darkroom-tentative-mode))
+    (user-error "Darkroom is not active in this buffer"))
+  (darkroom-increase-margins))
+
+(defun jay/darkroom-shrink ()
+  "Decrease darkroom margins in the current buffer."
+  (interactive)
+  (unless (or (bound-and-true-p darkroom-mode)
+              (bound-and-true-p darkroom-tentative-mode))
+    (user-error "Darkroom is not active in this buffer"))
+  (darkroom-decrease-margins))
+
 (defun visit-messages-buffer ()
   "Switch to the *Messages* buffer in another window."
   (interactive)
@@ -175,10 +214,10 @@
     ("M-d"           . org-todo)
     ("M-s-9"         . org-todo)
     ("s-j"           . org-todo)
-    ("s-k o l"       . olivetti-mode)
-    ("] ol"          . olivetti-mode)
-    ("s-k o e"       . olivetti-expand)
-    ("s-_"           . olivetti-shrink)
+    ("s-k o l"       . jay/toggle-darkroom)
+    ("] ol"          . jay/toggle-darkroom)
+    ("s-k o e"       . jay/darkroom-expand)
+    ("s-_"           . jay/darkroom-shrink)
     ("s-k o m"       . org-mode)
     ("s-k o a"       . org-agenda)
     ("s-k o s"       . org-schedule)
@@ -884,7 +923,7 @@ Each element of ADLIST should look like (FUNCTION WHERE AD-FN)."
 
     ;; ] subgroups
     "] i"     "insert"
-    "] o"     "olivetti"
+    "] o"     "darkroom"
 
     ;; Important individual commands
     "s-d"     "org-todo"

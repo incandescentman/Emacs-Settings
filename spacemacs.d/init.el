@@ -139,7 +139,7 @@ This function should only modify configuration layer settings."
                                       maxframe
                                       multiple-cursors
                                       mw-thesaurus
-                                      olivetti
+                                      darkroom
                                       openwith
                                       orderless
                                       ;; org-ai

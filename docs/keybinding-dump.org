@@ -66,10 +66,10 @@ Do NOT edit — add notes in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/k
 - ~M-d~ :: =org-todo=
 - ~M-s-9~ :: =org-todo=
 - ~s-j~ :: =org-todo=
-- ~s-k o l~ :: =olivetti-mode=
-- ~] ol~ :: =olivetti-mode=
-- ~s-k o e~ :: =olivetti-expand=
-- ~s-_~ :: =olivetti-shrink=
+- ~s-k o l~ :: =jay/toggle-darkroom=
+- ~] ol~ :: =jay/toggle-darkroom=
+- ~s-k o e~ :: =jay/darkroom-expand=
+- ~s-_~ :: =jay/darkroom-shrink=
 - ~s-k o m~ :: =org-mode=
 - ~s-k o a~ :: =org-agenda=
 - ~s-k o s~ :: =org-schedule=

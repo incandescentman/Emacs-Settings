@@ -1,6 +1,28 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-05-03: Restructure =CLAUDE.org= to focus on AI-actionable rules only
+- Promoted the "Remind Jay to use these" section to the top of [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.org][CLAUDE.org]] (was buried at line ~195) and added a strong directive preamble: AI sessions MUST proactively surface a relevant reminder at session start, not treat the section as a passive list. Documented past failure mode (sessions ignoring the section entirely) to discourage repeat behavior. Added rate-limit guidance ("once per session, don't lecture") to prevent over-reminding.
+- Added GhostText / =atomic-chrome= to the reminder list, tied to the new package install in the parallel work-log entry.
+- Fixed inaccurate description of [[file+emacs:/Users/jay/emacs/emacs-settings/spacecraft-mode.org][spacecraft-mode.org]] in [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.org][CLAUDE.org]]. Two top-level lines (line 41 in §Documentation Files, line 67 in §Key Components) labeled spacecraft-mode as a "distraction-free writing environment", which contradicted the file-ownership-boundaries rule lower in the same file. Replaced both with the accurate description: /prose-editing behavior (sentence movement, sentence killing, kill-word helpers, capitalization/smart punctuation)/. Distraction-free UI is owned by =writeroom-mode= and =olivetti=, not spacecraft-mode.
+- Slimmed [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.org][CLAUDE.org]] from 13 H2 sections to 7 by relocating non-AI-rule content:
+  - "Recent Major Updates" retrospective summaries → [[file+emacs:/Users/jay/emacs/emacs-settings/docs/work-log.org][docs/work-log.org]] (see paired entry below).
+  - "Potential Future Improvements" priority lists → [[file+emacs:/Users/jay/emacs/emacs-settings/docs/critical-next-steps.org][docs/critical-next-steps.org]] under a new "Imported from CLAUDE.org (2026-05-03)" section, tagged =[OPTIONAL]= to match that file's existing status-marker convention.
+  - "Configuration Patterns" + "Loading Order" subsection of Configuration Architecture + "Key Dependencies" → [[file+emacs:/Users/jay/emacs/emacs-settings/docs/design-architecture.org][docs/design-architecture.org]] under a new "Imported from CLAUDE.org (2026-05-03)" section.
+  - "Notes for Next Session" generic items → cut. Preserved the one specific item — a startup smoke-test command — by folding it into the AI Guidance bullet list.
+  - "Open Bugs" pointer at critical-next-steps.org → cut. Redundant: critical-next-steps.org is already listed in the Documentation Files section, so AI sessions know to look there.
+  - Stale file-size numbers in "Note on File Size" → cut. Kept the don't-split-casually rule and renamed the section to "When To Split A Large Module".
+  - Trailing =/Generated:/= / =/Updated:/= / =/Last fixes:/= footer → cut. Stale metadata.
+- Net effect: ~80 lines removed from [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.org][CLAUDE.org]], ~63 lines re-homed in the two destination docs (some saved by consolidation). Final structure: Overview, Remind Jay to use these, Documentation Files, Configuration Architecture, Guidance for AI/LLM Editing Sessions, Checkpoint Protocol, When To Split A Large Module.
+- Why this matters: every AI session reads [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.org][CLAUDE.org]] at startup. Project-history and roadmap content burns context budget without changing behavior. Slimmer file = sharper signal for "how should this AI session act?".
+
+* 2026-05-03: Add =atomic-chrome= and =ultra-scroll= for browser-textarea editing and macOS smooth scroll
+- Added =atomic-chrome= to =dotspacemacs-additional-packages= in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]] and configured it in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][spacemacs-new-config.el]] with =default-major-mode= = =org-mode=, =buffer-open-style= = ='frame=, deferred 1s, server started in =:config=. Pairs with the GhostText (or "Chrome Emacs") browser extension to live-sync any browser textarea (Substack drafts, GitHub PRs, social compose boxes) into a real Emacs buffer.
+- Added =ultra-scroll= to the same additional-packages list and configured it in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][spacemacs-new-config.el]] with the package's recommended =scroll-conservatively=101= and =scroll-margin=0= (these prevent Emacs from recentering during smooth scroll, which is the whole point). Activates =ultra-scroll-mode= globally for pixel-smooth trackpad scrolling on macOS.
+- Both packages are on MELPA, so Spacemacs handles install on next launch.
+- Picked =org-mode= over =markdown-mode= for atomic-chrome at Jay's request. Caveat: =*bold*=, headings, and links sync to the browser as raw org markup. If a specific site (e.g. Substack) needs markdown sync instead, the right knob is =atomic-chrome-url-major-mode-alist= — not implemented yet, deferred until the org→browser leak actually bites.
+- Added a missing =-*- lexical-binding: t -*-= header to [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][spacemacs-new-config.el]]. Pre-existing issue; surfaced by the pre-commit hook because the file was being modified in this commit.
+
 * 2026-05-03: Import retrospective summaries from CLAUDE.org
 - Moved the "Recent Major Updates" topic-grouped summaries out of [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.org][CLAUDE.org]] into this file, where change history actually belongs.
 - Why moved: =CLAUDE.org= is for AI-facing rules and durable conventions, not change history. The summaries were burning context budget every session, going stale (latest entry was March 2026 with no updates since), and duplicating the work-log's purpose.
@@ -1604,6 +1626,16 @@
 - Updated the vendored [[file+emacs:/Users/jay/emacs/emacs-settings/org-web-tools-master/org-web-tools.el][org-web-tools-master/org-web-tools.el]] probe that chooses Pandoc's no-wrap flag. It now probes synchronously, prefers =--wrap=none=, and only falls back to =--no-wrap= for older Pandoc versions.
 - This avoids the brittle async timeout path that raised =Unable to test Pandoc= even though Pandoc itself was installed and working.
 - Added focused regression coverage in [[file+emacs:/Users/jay/emacs/emacs-settings/tests/org-web-tools-pandoc-tests.el][tests/org-web-tools-pandoc-tests.el]] for the flag chooser's three cases: prefer current flag, fall back to legacy flag, and surface both failures clearly.
+
+* 2026-05-03: Replace Olivetti with Darkroom for distraction-free writing
+- Replaced the live =olivetti= writing layout in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] with =darkroom=, keeping the writing stack centered while removing buffer chrome instead of only adding margins.
+- Added a Jay-specific fixed-width darkroom margin helper (=jay/darkroom-body-width= defaults to 80 columns) and set =darkroom-text-scale-increase= to 0 so the swap preserves the existing text size instead of silently enlarging it.
+- Switched the writing-mode hooks to =darkroom-tentative-mode= for =org-mode=, =markdown-mode=, =text-mode=, =message-mode=, =fountain-mode=, and =poetry-mode= so single-window writing enters darkroom automatically and split windows exit it automatically.
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] so the old Olivetti shortcuts now drive darkroom: =s-k o l= / =] ol= toggle the view, =s-k o e= widens margins, and =s-_= narrows them.
+- Removed the stale Olivetti-specific split/global helper blocks, updated =poet-mode= and =wide-screen= to use darkroom state instead, and swapped the package manifest entries in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]] and [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/jay/packages.el][spacemacs.d/jay/packages.el]] from =olivetti= to =darkroom=.
+- Verified the live startup path with a disposable named daemon: the resulting session had =darkroom-tentative-mode= on both =org-mode-hook= and =text-mode-hook=, and a fresh Org buffer entered tentative darkroom mode with =visual-line-mode= enabled.
+- Added [[file+emacs:/Users/jay/emacs/emacs-settings/docs/darkroom-mode-guide.org][docs/darkroom-mode-guide.org]] as a practical evaluation guide covering what Darkroom actually changes, how this repo currently wires it, which settings are worth experimenting with, and what signals point toward keeping it or reverting to Olivetti.
+- Added the new Darkroom guide to the repo's documentation indexes in [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.org][CLAUDE.org]] and [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][docs/instructions.org]] so future sessions can find it quickly.
 
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.

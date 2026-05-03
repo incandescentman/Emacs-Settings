@@ -795,6 +795,7 @@ See [[file+emacs:/Users/jay/emacs/emacs-settings/docs/][docs/]] folder for detai
 - [[file+emacs:/Users/jay/emacs/emacs-settings/docs/work-log.org][work-log.org]] - History of changes
 - [[file+emacs:/Users/jay/emacs/emacs-settings/docs/codebase-wisdom.org][codebase-wisdom.org]] - Lessons learned from debugging
 - [[file+emacs:/Users/jay/emacs/emacs-settings/docs/pasteboard-architecture.org][pasteboard-architecture.org]] - How clipboard integration works
+- [[file+emacs:/Users/jay/emacs/emacs-settings/docs/darkroom-mode-guide.org][darkroom-mode-guide.org]] - How Darkroom works here and how to evaluate it against Olivetti
 - [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-consolidation-plan.org][keybinding-consolidation-plan.org]] - Plan for centralizing all keybindings
 - [[file+emacs:/Users/jay/emacs/emacs-settings/docs/macOS-command-key-bindings.org][macOS-command-key-bindings.org]] - All Command-key (s-) bindings
 - [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-annotations.org][keybinding-annotations.org]] - Manual notes for keybindings (survives regeneration)

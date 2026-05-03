@@ -22,6 +22,7 @@ The following documentation files provide detailed information about various asp
 - [[file+emacs:docs/design-architecture.org][📄 design-architecture.org]] - Design principles and architectural decisions
 - [[file+emacs:docs/the-emacs-settings-approach.org][📄 the-emacs-settings-approach.org]] - Philosophy and approach of this configuration
 - [[file+emacs:docs/visual-design-philosophy.org][📄 visual-design-philosophy.org]] - Visual design principles and theming approach
+- [[file+emacs:docs/darkroom-mode-guide.org][📄 darkroom-mode-guide.org]] - How Darkroom works in this config, what it changes, and how to evaluate it against Olivetti
 - [[file+emacs:docs/pasteboard-architecture.org][📄 pasteboard-architecture.org]] - Architecture of the clipboard integration system
 - [[file+emacs:docs/org-element-cache-fix.org][📄 org-element-cache-fix.org]] - Documentation of org-element cache fixes
 - [[file+emacs:docs/backup-system.org][📄 backup-system.org]] - Backup and recovery system documentation
