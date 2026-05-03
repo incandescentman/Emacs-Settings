@@ -233,6 +233,28 @@ Skip capitalization if the line is an Org bullet."
 
 #+END_SRC
 
+** fill and unfill helpers
+#+BEGIN_SRC emacs-lisp
+(defun jay/unfill-paragraph-dwim ()
+  "Unfill prose while preserving Org structure.
+In Org buffers, use `org-fill-paragraph' with a huge `fill-column' so
+Org itself decides which elements count as fillable prose.  That keeps
+drawers, property drawers, planning lines, tables, and other
+non-paragraph structure intact.  With an active region in Org mode,
+unfill each fillable element in the region."
+  (interactive)
+  (let ((fill-column most-positive-fixnum))
+    (cond
+     ((and (derived-mode-p 'org-mode) (use-region-p))
+      (org-fill-paragraph nil 'region))
+     ((derived-mode-p 'org-mode)
+      (org-fill-paragraph))
+     ((use-region-p)
+      (fill-region (region-beginning) (region-end)))
+     (t
+      (fill-paragraph)))))
+#+END_SRC
+
 ** sentence editing helpers
 #+BEGIN_SRC emacs-lisp
 (defun kill-sentence-to-period ()

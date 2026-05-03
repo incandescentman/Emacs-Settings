@@ -31,6 +31,7 @@
 (autoload 'smart-exclamation-point "/Users/jay/emacs/emacs-settings/spacecraft-mode" nil t)
 (autoload 'smart-semicolon "/Users/jay/emacs/emacs-settings/spacecraft-mode" nil t)
 (autoload 'colon-or-smart-colon "/Users/jay/emacs/emacs-settings/spacecraft-mode" nil t)
+(autoload 'jay/unfill-paragraph-dwim "/Users/jay/emacs/emacs-settings/spacecraft-mode" nil t)
 
 ;; Autoloads for commands defined by darkroom.el
 (autoload 'darkroom-mode "darkroom" nil t)
@@ -319,7 +320,7 @@ so it exits automatically after splits; otherwise enable
     ("M-s-v"         . html2org-clipboard)
     ("C-s-c"         . ox-clip-formatted-copy)
     ("s-k g b"       . gist-buffer-to-pasteboard)
-    ("s-k u p"       . unfill-paragraph)
+    ("s-k u p"       . jay/unfill-paragraph-dwim)
     ("M--"           . cycle-hyphenation-or-toggle-item)
     ("M-_"           . em-dash)
     ("s-k r l"       . remove-hyperlink-at-point)

@@ -162,7 +162,7 @@ Annotations from [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-an
 - ~M-s-v~ :: =html2org-clipboard=
 - ~C-s-c~ :: =ox-clip-formatted-copy=
 - ~s-k g b~ :: =gist-buffer-to-pasteboard=
-- ~s-k u p~ :: =unfill-paragraph=
+- ~s-k u p~ :: =jay/unfill-paragraph-dwim=
 - ~M--~ :: =cycle-hyphenation-or-toggle-item=
 - ~M-_~ :: =em-dash=
 - ~s-k r l~ :: =remove-hyperlink-at-point=

@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-05-03: Make =s-k u p= Org-aware so drawers keep their line breaks
+- Replaced the raw =unfill-paragraph= binding behind [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]]'s =s-k u p= with a new [[file+emacs:/Users/jay/emacs/emacs-settings/spacecraft-mode.org][spacecraft-mode.org]] helper, =jay/unfill-paragraph-dwim=.
+- Why: the upstream =unfill.el= command calls plain =fill-paragraph= with a huge =fill-column=, which bypasses Org's own structure-aware filler and can collapse non-prose lines such as property drawers.
+- Fix: in Org buffers, the new helper now uses =org-fill-paragraph= with =fill-column= set to =most-positive-fixnum=. That lets Org decide what counts as fillable prose, so property drawers, drawers, planning lines, tables, and similar structure stay intact while normal prose still unfills. Outside Org, the helper falls back to plain =fill-paragraph= / =fill-region= behavior.
+- This keeps the nice one-key workflow while making the smart behavior come from Org itself instead of hand-rolled regex exceptions.
+
 * 2026-05-03: Restructure =CLAUDE.org= to focus on AI-actionable rules only
 - Promoted the "Remind Jay to use these" section to the top of [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.org][CLAUDE.org]] (was buried at line ~195) and added a strong directive preamble: AI sessions MUST proactively surface a relevant reminder at session start, not treat the section as a passive list. Documented past failure mode (sessions ignoring the section entirely) to discourage repeat behavior. Added rate-limit guidance ("once per session, don't lecture") to prevent over-reminding.
 - Added GhostText / =atomic-chrome= to the reminder list, tied to the new package install in the parallel work-log entry.

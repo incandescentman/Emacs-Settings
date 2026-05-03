@@ -171,7 +171,7 @@ Notes:
 - ~s-k t d~ :: =org-todo-list=
 - ~s-k t s~ :: =org-toggle-time-stamp-overlays=
 - ~s-k t t~ :: =toggle-between-src-and-example-block=
-- ~s-k u p~ :: =unfill-paragraph=
+- ~s-k u p~ :: =jay/unfill-paragraph-dwim=
 - ~s-k v~ :: =org-paste-subtree=
 - ~s-k w c~ :: =wc-mode=
 - ~s-k w m~ :: =whitespace-mode=
