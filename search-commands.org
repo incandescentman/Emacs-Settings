@@ -860,6 +860,14 @@ of the path stays visible.")
 The candidate list and matching behavior are identical either way; only
 the display layout changes. Flip with `setq' for an A/B trial.")
 
+;; Jay's active preference (overrides the defvar default above). The
+;; defvar's documented default stays `folder-first' as the neutral
+;; baseline so the docstring still describes both options accurately;
+;; this `setq' is the actual choice for this config. Flip back with
+;; `(setq jay/recent-file-display-order 'folder-first)' if the
+;; basename-first layout doesn't pan out after a few days of use.
+(setq jay/recent-file-display-order 'filename-first)
+
 (defun jay/recent-file--canonical (path)
   "Return PATH canonicalized: symlinks resolved, HOME abbreviated to \"~\".
 Resolving via `file-truename' collapses the macOS CloudStorage
