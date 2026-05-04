@@ -1,6 +1,33 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-05-04: Append fresh startup profile snapshots after the current Org upgrade
+- Added four new measurements to [[file+emacs:/Users/jay/emacs/emacs-settings/docs/lab/startup-profile.org][docs/lab/startup-profile.org]] showing the current runtime state on Emacs 29.4 / Org 9.8.3.
+- The new samples capture total init times from 2.406s down to 2.087s across repeated launches, with [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] and [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][search-commands.org]] still the heaviest org-babel loads in this config.
+
+* 2026-05-04: Keep =adaptive-wrap= out of Org; let =org-indent-mode= own Org continuation indentation
+- Follow-up correction after direct property-level verification: in this config, Org is not a generic text buffer for wrapping purposes. [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] explicitly enables =org-indent-mode=, and upstream Org's own =org-indent-mode= already sets both =line-prefix= and =wrap-prefix= for heading-body paragraphs and list items.
+- The local batch check confirmed the actual conflict: before running =adaptive-wrap-prefix-function= on an Org heading-body line, Org had already installed the expected prefix properties; after running it, those prefix properties were gone at that line. So the display bug was not "Org needed more refresh" but "generic adaptive-wrap was the wrong owner for Org wrap-prefix."
+- Fix in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]]:
+  - Narrowed =jay/sync-adaptive-wrap-prefix-mode= so it only enables =adaptive-wrap-prefix-mode= in =text-mode=-derived buffers that are /not/ Org and do not already have =org-indent-mode= managing indentation.
+  - Removed the earlier visible-region refresh helpers (=jay/adaptive-wrap-refresh-visible-region= and friends), since they were built on the wrong diagnosis and just re-ran the conflicting layer more aggressively.
+- Resulting rule: Org continuation indentation is now owned solely by Org's own indentation system; =adaptive-wrap= remains available only for non-Org prose modes where no outline-aware indent engine is already in charge.
+
+* 2026-05-04: Refresh =adaptive-wrap= when scrolling reveals new text
+- Follow-up on the new prose-wrapping experiment in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]]: the initial =adaptive-wrap-prefix-mode= wiring handled the text that was already visible when the mode turned on, but Jay found a real display bug in live use. After scrolling with normal motion commands (=down-arrow=, =beginning-of-buffer=, page-style movement), newly revealed text often showed only the first line at the correct Org indent; wrapped continuation lines stayed stale until =reflash-indentation= forced a repaint.
+- Root cause: upstream =adaptive-wrap= computes =wrap-prefix= through =jit-lock=. That means fresh text exposed by scrolling can lag until some later refontification event touches the region.
+- Fix: added a tiny buffer-local visible-region refresh layer around the existing =adaptive-wrap= experiment:
+  - =jay/adaptive-wrap-refresh-visible-region= runs =jit-lock-fontify-now= over the selected window's visible region when the window start/end changes.
+  - =jay/adaptive-wrap-enable-visible-refresh= installs that as a buffer-local =post-command-hook= only for prose buffers where =adaptive-wrap-prefix-mode= is actually active.
+  - =jay/adaptive-wrap-disable-visible-refresh= removes the hook and clears the cached window bounds when the mode is not in use.
+- Scope discipline: this is still deliberately narrow. It does not touch buffer text, does not change paragraph indentation rules, and does not add a global scroll hook for unrelated buffers. It only keeps wrapped continuation indentation in sync for the visible part of prose buffers that opted into =adaptive-wrap=.
+
+* 2026-05-04: Add a reversible =adaptive-wrap= trial for prose buffers
+- Added =adaptive-wrap= to the live package manifests in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]] and [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/jay/packages.el][spacemacs.d/jay/packages.el]], and removed it from the excluded-package lists so Spacemacs can install it normally.
+- Wired a narrow sync helper, =jay/sync-adaptive-wrap-prefix-mode=, into [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]]. The helper follows =visual-line-mode= but only in =text-mode=-derived buffers, so Org / Markdown / Message-style prose gets wrapped continuation-line indentation while Olivetti-enabled programming and utility buffers stay unchanged.
+- Why this shape: the experiment is deliberately low-risk. It layers onto the existing =visual-line-mode= behavior instead of replacing it, and it avoids a global =visual-line-mode-hook= rule that would have spilled into every Olivetti buffer in this config.
+- Rollback path: remove =adaptive-wrap= from the package manifests again and delete the helper + =use-package adaptive-wrap= block from [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]].
+
 * 2026-05-04: Fix two display bugs in the =filename-first= s-r layout
 - *Bug 1 — phantom trailing whitespace.* The parent column was padded to a shared width (clamped between =jay/recent-file-parent-column-min= and =-max=) so basenames could line up. That makes sense in =folder-first= where the basename column needs to start at a fixed offset, but in =filename-first= the parent is the last thing on each line, so the padding was dead weight — and because the whole padded string was =shadow=-faced, the invisible whitespace extended the shadow band past the visible path, looking like a phantom underline after every entry.
 - *Bug 2 — left-truncation in the wrong direction.* Long parents that exceeded =parent-col= were left-truncated with a leading ellipsis (e.g. =…apps/socratic/src/content/blog=). For folder-first that was the right call: it preserved the deepest, most-distinctive part of the path next to the basename. For filename-first it hid exactly the part that disambiguates which filesystem tree the file lives in (=~/Dropbox/...= vs =~/work/...=), which was exactly the wrong information to lose.

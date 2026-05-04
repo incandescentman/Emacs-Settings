@@ -139,6 +139,7 @@ This function should only modify configuration layer settings."
                                       maxframe
                                       multiple-cursors
                                       mw-thesaurus
+                                      adaptive-wrap
                                       olivetti
                                       openwith
                                       orderless
@@ -251,7 +252,6 @@ This function should only modify configuration layer settings."
    dotspacemacs-excluded-packages '(
                                     poetry
                                     vim-powerline
-                                    adaptive-wrap
                                     auto-encryption-mode
                                     clean-aindent-mode
                                     company

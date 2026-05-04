@@ -2603,6 +2603,26 @@ object satisfying `yas--field-p' to restrict the expansion to."
 ;; --------------------------------------------------------------------
 ;; 2) Olivetti for a centered text area
 ;; --------------------------------------------------------------------
+(defun jay/sync-adaptive-wrap-prefix-mode ()
+  "Mirror adaptive wrap to visual line mode in non-Org prose buffers.
+Org already manages its own `line-prefix' and `wrap-prefix' through
+`org-indent-mode', so enabling generic `adaptive-wrap-prefix-mode'
+there clobbers Org's correct continuation indentation.  Keep
+adaptive-wrap for other text-derived modes, while leaving
+olivetti-enabled programming and utility buffers alone."
+  (if (and visual-line-mode
+           (derived-mode-p 'text-mode)
+           (not (derived-mode-p 'org-mode))
+           (not (bound-and-true-p org-indent-mode)))
+      (adaptive-wrap-prefix-mode 1)
+    (when (bound-and-true-p adaptive-wrap-prefix-mode)
+      (adaptive-wrap-prefix-mode -1))))
+
+(use-package adaptive-wrap
+  :ensure t
+  :commands (adaptive-wrap-prefix-mode)
+  :hook (visual-line-mode . jay/sync-adaptive-wrap-prefix-mode))
+
 (use-package olivetti
   :ensure t
   :hook

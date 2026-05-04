@@ -27,6 +27,7 @@ jay-packages
   counsel
   crux
   cyberpunk-theme
+  adaptive-wrap
   dired+
   dired-details+
 ;;  dired-hacks-utils
@@ -107,7 +108,6 @@ which require an initialization must be listed explicitly in the list."
 '(
 
   ;; "List of packages to exclude."
-adaptive-wrap
   ))
 
 ;; For each package, define a function jay/init-<package-jay>
@@ -145,6 +145,7 @@ adaptive-wrap
 (defun jay/init-dired-details+  () (use-package dired-details+))
 (defun jay/init-maxframe () (use-package maxframe))
 (defun jay/init-palimpsest () (use-package palimpsest))
+(defun jay/init-adaptive-wrap () (use-package adaptive-wrap))
 (defun jay/init-olivetti () (use-package olivetti))
 
 
