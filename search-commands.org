@@ -921,35 +921,49 @@ CAND is the basename (what Vertico displays as the completion); the
 parent-directory column is rendered in `shadow' face on either side of
 CAND, controlled by `jay/recent-file-display-order'. PATHS must be
 the candidate list as passed to the completion UI so widths reflect
-the currently visible set."
+the currently visible set.
+
+In `folder-first' the parent column is padded to a shared width
+(clamped between `jay/recent-file-parent-column-min' and
+`-max') so basenames line up vertically; parents wider than the column
+are left-truncated with a leading ellipsis to keep the deepest, most
+distinctive part of the path visible next to the basename.
+
+In `filename-first' the parent has no neighboring column to align
+with, so it is rendered as the full path with no padding and no
+truncation — overflow is left to Vertico's normal minibuffer
+handling. Truncating the head of the path here would hide exactly the
+part that disambiguates which filesystem tree the file lives in."
   (let* ((parents
           (mapcar (lambda (p)
                     (directory-file-name (or (file-name-directory p) "")))
                   paths))
          (basenames (mapcar #'file-name-nondirectory paths))
+         (filename-first-p (eq jay/recent-file-display-order 'filename-first))
+         (basename-col (apply #'max 0 (mapcar #'length basenames)))
          (widest-parent (apply #'max 0 (mapcar #'length parents)))
          (parent-col (min jay/recent-file-parent-column-max
                           (max jay/recent-file-parent-column-min
-                               widest-parent)))
-         (basename-col (apply #'max 0 (mapcar #'length basenames)))
-         (filename-first-p (eq jay/recent-file-display-order 'filename-first)))
+                               widest-parent))))
     (cl-mapcar
      (lambda (path parent base)
-       (let* ((shown
-               (if (> (length parent) parent-col)
-                   (concat "…"
-                           (substring parent
-                                      (1+ (- (length parent) parent-col))))
-                 parent))
-              (parent-pad (make-string (max 0 (- parent-col (length shown)))
-                                       ?\s))
-              (parent-display
-               (concat (propertize shown 'face 'shadow) parent-pad)))
-         (if filename-first-p
-             (let ((base-pad
-                    (make-string (max 0 (- basename-col (length base))) ?\s)))
-               (list base "" (concat base-pad "  " parent-display)))
-           (list base (concat parent-display "  ") ""))))
+       (if filename-first-p
+           (let ((base-pad
+                  (make-string (max 0 (- basename-col (length base))) ?\s)))
+             (list base ""
+                   (concat base-pad "  "
+                           (propertize parent 'face 'shadow))))
+         (let* ((shown
+                 (if (> (length parent) parent-col)
+                     (concat "…"
+                             (substring parent
+                                        (1+ (- (length parent) parent-col))))
+                   parent))
+                (parent-pad
+                 (make-string (max 0 (- parent-col (length shown))) ?\s)))
+           (list base
+                 (concat (propertize shown 'face 'shadow) parent-pad "  ")
+                 ""))))
      paths parents basenames)))
 
 (defun jay/consult-recent-file-folder-first ()
