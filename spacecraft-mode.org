@@ -235,18 +235,68 @@ Skip capitalization if the line is an Org bullet."
 
 ** fill and unfill helpers
 #+BEGIN_SRC emacs-lisp
+(defconst jay/org-unfill-protected-labels '("HED" "SUBHED")
+  "Org paragraph labels that `jay/unfill-paragraph-dwim' must not merge.")
+
+(defun jay/org-unfill-protected-paragraph-p ()
+  "Return non-nil when point is in a protected Org label paragraph.
+This keeps title-label runs like \"HED:\" and \"SUBHED:\" on separate
+lines instead of merging them into one paragraph."
+  (when (derived-mode-p 'org-mode)
+    (let ((element (org-element-at-point)))
+      (when (eq (org-element-type element) 'paragraph)
+        (save-excursion
+          (goto-char (org-element-begin element))
+          (let ((end (org-element-end element))
+                (label-regexp
+                 (concat "[ \t]*"
+                         (regexp-opt jay/org-unfill-protected-labels t)
+                         ":[ \t]*\\S-"))
+                saw-line
+                all-protected)
+            (setq all-protected t)
+            (while (and all-protected (< (point) end))
+              (unless (looking-at-p "[ \t]*$")
+                (setq saw-line t)
+                (setq all-protected (looking-at-p label-regexp)))
+              (forward-line 1))
+            (and saw-line all-protected)))))))
+
+(defun jay/org-unfill-region-preserving-structure ()
+  "Unfill each fillable Org element in the active region.
+Protected title-label paragraphs like \"HED:\" and \"SUBHED:\" are
+skipped so they do not collapse onto one line."
+  (let ((origin (point-marker))
+        (start (region-beginning)))
+    (unwind-protect
+        (progn
+          (goto-char (region-end))
+          (skip-chars-backward " \t\n")
+          (let ((org--single-lines-list-is-paragraph nil))
+            (while (> (point) start)
+              (unless (jay/org-unfill-protected-paragraph-p)
+                (org-fill-element))
+              (org-backward-paragraph)
+              (skip-chars-backward " \t\n"))))
+      (goto-char origin)
+      (set-marker origin nil))))
+
 (defun jay/unfill-paragraph-dwim ()
   "Unfill prose while preserving Org structure.
 In Org buffers, use `org-fill-paragraph' with a huge `fill-column' so
 Org itself decides which elements count as fillable prose.  That keeps
 drawers, property drawers, planning lines, tables, and other
 non-paragraph structure intact.  With an active region in Org mode,
-unfill each fillable element in the region."
+unfill each fillable element in the region.  Protected title-label
+paragraphs like \"HED:\" and \"SUBHED:\" are skipped."
   (interactive)
   (let ((fill-column most-positive-fixnum))
     (cond
      ((and (derived-mode-p 'org-mode) (use-region-p))
-      (org-fill-paragraph nil 'region))
+      (jay/org-unfill-region-preserving-structure))
+     ((and (derived-mode-p 'org-mode)
+           (jay/org-unfill-protected-paragraph-p))
+      nil)
      ((derived-mode-p 'org-mode)
       (org-fill-paragraph))
      ((use-region-p)
