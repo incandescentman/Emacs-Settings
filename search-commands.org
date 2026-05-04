@@ -10,6 +10,7 @@ and full text, respectively, is a logical choice.
 
 * search
 #+begin_src emacs-lisp
+;;; search-commands.el --- Search command helpers  -*- lexical-binding: t; -*-
 #+end_src
 
 
@@ -860,6 +861,19 @@ cleanly. Returns nil for inputs that do not exist or are remote."
                (file-exists-p expanded))
       (abbreviate-file-name (file-truename expanded)))))
 
+(defvar jay/recent-file-ignored-prefixes '("/private/tmp/")
+  "Canonical-path prefixes to exclude from
+`jay/consult-recent-file-folder-first'. Each entry is matched with
+`string-prefix-p' against the symlink-resolved path, so on macOS
+`/tmp/...' entries (which `file-truename' resolves to `/private/tmp/...')
+are caught by the single `/private/tmp/' prefix.")
+
+(defun jay/recent-file--ignored-p (canonical)
+  "Return non-nil when CANONICAL should be hidden from the recent-file picker.
+Compared against `jay/recent-file-ignored-prefixes'."
+  (seq-some (lambda (prefix) (string-prefix-p prefix canonical))
+            jay/recent-file-ignored-prefixes))
+
 (defun jay/recent-file-candidates-folder-first ()
   "Return a deduplicated list of canonical recent-file paths.
 Order follows `recentf-list' (most recent first). Each entry is an
@@ -867,12 +881,17 @@ abbreviated, symlink-resolved path like =~/Dropbox/roam/foo.org=; the
 folder-first column layout is applied later by
 `jay/recent-file--affix' via `affixation-function' metadata, so these
 strings stay clean and remain safe to hand to Embark, Marginalia,
-`find-file', etc."
+`find-file', etc.
+
+Paths matching any prefix in `jay/recent-file-ignored-prefixes' are
+dropped from the candidate list."
   (let ((seen (make-hash-table :test 'equal))
         (paths nil))
     (dolist (entry recentf-list)
       (let ((canonical (jay/recent-file--canonical entry)))
-        (when (and canonical (not (gethash canonical seen)))
+        (when (and canonical
+                   (not (jay/recent-file--ignored-p canonical))
+                   (not (gethash canonical seen)))
           (puthash canonical t seen)
           (push canonical paths))))
     (nreverse paths)))
