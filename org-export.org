@@ -678,6 +678,7 @@ process the whole buffer."
         (files '("elegant-helvetica.el"
                  "beautiful-racket.el"
                  "elegant-garamond.el"
+                 "new-yorker.el"
                  "blue-invoice.el"
                  "blue-invoice-with-letterhead.el"
                  "jay-latex-yosemite-setup.el")))
@@ -700,6 +701,7 @@ process the whole buffer."
   '(("elegant-helvetica" . "/Users/jay/emacs/emacs-settings/latex-templates/elegant-helvetica.el")
     ("beautiful-racket" . "/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el")
     ("elegant-garamond" . "/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el")
+    ("new-yorker" . "/Users/jay/emacs/emacs-settings/latex-templates/new-yorker.el")
     ("blue-invoice" . "/Users/jay/emacs/emacs-settings/latex-templates/blue-invoice.el")
     ("blue-invoice-letterhead" . "/Users/jay/emacs/emacs-settings/latex-templates/blue-invoice-with-letterhead.el"))
   "Mapping of Org LaTeX class names to the template files that define them.")

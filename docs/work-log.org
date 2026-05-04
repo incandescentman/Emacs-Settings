@@ -1,6 +1,10 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-05-04: Restore the =new-yorker= LaTeX template to the live export set
+- Moved [[file+emacs:/Users/jay/emacs/emacs-settings/archive/latex-templates/new-yorker.el][archive/latex-templates/new-yorker.el]] back into [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/new-yorker.el][latex-templates/new-yorker.el]] so the class is live again instead of archived-only.
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] so =jay-load-latex= loads =new-yorker.el= at export time and the preflight class-to-template map recognizes the =new-yorker= class again.
+
 * 2026-05-04: Append fresh startup profile snapshots after the current Org upgrade
 - Added four new measurements to [[file+emacs:/Users/jay/emacs/emacs-settings/docs/lab/startup-profile.org][docs/lab/startup-profile.org]] showing the current runtime state on Emacs 29.4 / Org 9.8.3.
 - The new samples capture total init times from 2.406s down to 2.087s across repeated launches, with [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] and [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][search-commands.org]] still the heaviest org-babel loads in this config.
