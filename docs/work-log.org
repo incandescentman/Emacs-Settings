@@ -1679,5 +1679,11 @@
 - Mirrored that protection in the active-region Org path too, so unfill-on-region leaves those title-label paragraphs alone instead of collapsing them during the per-element loop.
 - Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/spacecraft-mode.el][spacecraft-mode.el]], re-ran =check-parens= on the tangled file, passed the startup smoke test, verified the protection live against throwaway copies of [[file+emacs:/Users/jay/Dropbox/roam/ideas/slop/slop-optimization-log-v5.org][slop-optimization-log-v5.org]], and appended the resulting startup timing snapshots to [[file+emacs:/Users/jay/emacs/emacs-settings/docs/lab/startup-profile.org][docs/lab/startup-profile.org]].
 
+* 2026-05-04: Make =jay/unfill-paragraph-dwim= actually unwrap ordinary Org prose
+- Reworked the Org-mode path in [[file+emacs:/Users/jay/emacs/emacs-settings/spacecraft-mode.org][spacecraft-mode.org]] so ordinary paragraph elements now unfill via =fill-region-as-paragraph= instead of delegating all the way to =org-fill-paragraph=, which had been leaving wrapped prose untouched in real files.
+- Kept the =HED:= / =SUBHED:= protection in place, but moved it into the paragraph-specific helper so the single-point and region paths share one unfill decision instead of splitting the logic across separate branches.
+- Left non-paragraph Org elements on Org's own fill machinery, so tables, planning lines, drawers, source blocks, and other structural elements still keep their existing behavior while prose paragraphs finally unwrap.
+- Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/spacecraft-mode.el][spacecraft-mode.el]], re-ran =check-parens= on the tangled file, passed the startup smoke test, verified the new prose path on synthetic wrapped Org paragraphs plus a mixed region, rechecked that [[file+emacs:/Users/jay/Dropbox/roam/ideas/slop/slop-optimization-log-v5.org][slop-optimization-log-v5.org]] title labels still stay untouched, rechecked that planning lines in [[file+emacs:/Users/jay/Dropbox/roam/socratic-ideas/20251207195511-my_fathers_stories.org][my_fathers_stories.org]] still stay untouched, and appended the new timing snapshot to [[file+emacs:/Users/jay/emacs/emacs-settings/docs/lab/startup-profile.org][docs/lab/startup-profile.org]].
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.
