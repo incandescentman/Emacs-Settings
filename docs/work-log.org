@@ -1,6 +1,13 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-05-04: A/B knob for folder-first vs filename-first in =jay/consult-recent-file-folder-first=
+- Added =jay/recent-file-display-order= defvar (defaults to ='folder-first=) in [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][search-commands.org]] and rewired =jay/recent-file--affix= to switch on it. Both layouts use the same canonical paths, the same matching, and the same =shadow= face on the parent — only the visual order changes.
+- =folder-first= (current default): parent path on the left, padded to width of the widest visible parent (clamped between =jay/recent-file-parent-column-min= and =-max=); basename on the right. Better when many candidates share basenames and the folder is the disambiguator.
+- =filename-first= (new option): basename at column 0, padded to the width of the widest visible basename; parent path on the right in =shadow= face. Closer to the consult-buffer / project-find-file convention where what you type lines up with column 0.
+- Verified both layouts produce correctly-aligned columns via a batch test against synthetic paths (folder column = =widest-parent= width, basename column = =widest-basename= width). Tangle and =check-parens= clean.
+- Intent: live with each layout for a few days then pick. Flip with =(setq jay/recent-file-display-order 'filename-first)=. The function name stays =jay/consult-recent-file-folder-first= regardless of which layout is active — the name describes the picker's identity, not its current visual order.
+
 * 2026-05-04: Filter =/private/tmp/= entries out of =jay/consult-recent-file-folder-first=
 - Added =jay/recent-file-ignored-prefixes= (defaulting to =("/private/tmp/")=) and =jay/recent-file--ignored-p= predicate in [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][search-commands.org]], and threaded the predicate into =jay/recent-file-candidates-folder-first= so any canonical path matching a listed prefix gets dropped from the =s-r= picker.
 - Why one prefix covers both =/tmp/...= and =/private/tmp/...= entries: =jay/recent-file--canonical= already runs every recentf entry through =file-truename=, which resolves =/tmp= → =/private/tmp= on macOS. By the time the ignore predicate runs, both spellings have collapsed to =/private/tmp/...=, so a single prefix catches everything.

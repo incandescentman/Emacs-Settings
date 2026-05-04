@@ -849,6 +849,17 @@ Longer parent paths are left-truncated with a leading ellipsis so the
 filename column still lines up and the most distinctive (deepest) part
 of the path stays visible.")
 
+(defvar jay/recent-file-display-order 'folder-first
+  "Visual order for the `jay/consult-recent-file-folder-first' picker.
+- `folder-first': parent path on the left (shadow face), basename on the
+  right. Better when many candidates share basenames and the folder is
+  the disambiguator.
+- `filename-first': basename on the left at column 0, parent path on the
+  right (shadow face). Better when basenames are mostly unique and you
+  want the typed-against text leftmost.
+The candidate list and matching behavior are identical either way; only
+the display layout changes. Flip with `setq' for an A/B trial.")
+
 (defun jay/recent-file--canonical (path)
   "Return PATH canonicalized: symlinks resolved, HOME abbreviated to \"~\".
 Resolving via `file-truename' collapses the macOS CloudStorage
@@ -898,31 +909,40 @@ dropped from the candidate list."
 
 (defun jay/recent-file--affix (paths)
   "Return affixation triples (CAND PREFIX SUFFIX) for PATHS.
-CAND is the basename (what Vertico displays as the completion);
-PREFIX is the parent-directory column in `shadow' face, padded to a
-shared width so basenames line up vertically; SUFFIX is empty. PATHS
-must be the candidate list as passed to the completion UI, so widths
-reflect the currently visible set."
+CAND is the basename (what Vertico displays as the completion); the
+parent-directory column is rendered in `shadow' face on either side of
+CAND, controlled by `jay/recent-file-display-order'. PATHS must be
+the candidate list as passed to the completion UI so widths reflect
+the currently visible set."
   (let* ((parents
           (mapcar (lambda (p)
                     (directory-file-name (or (file-name-directory p) "")))
                   paths))
-         (widest (apply #'max 0 (mapcar #'length parents)))
-         (col (min jay/recent-file-parent-column-max
-                   (max jay/recent-file-parent-column-min widest))))
+         (basenames (mapcar #'file-name-nondirectory paths))
+         (widest-parent (apply #'max 0 (mapcar #'length parents)))
+         (parent-col (min jay/recent-file-parent-column-max
+                          (max jay/recent-file-parent-column-min
+                               widest-parent)))
+         (basename-col (apply #'max 0 (mapcar #'length basenames)))
+         (filename-first-p (eq jay/recent-file-display-order 'filename-first)))
     (cl-mapcar
-     (lambda (path parent)
+     (lambda (path parent base)
        (let* ((shown
-               (if (> (length parent) col)
+               (if (> (length parent) parent-col)
                    (concat "…"
                            (substring parent
-                                      (1+ (- (length parent) col))))
+                                      (1+ (- (length parent) parent-col))))
                  parent))
-              (pad (make-string (max 0 (- col (length shown))) ?\s))
-              (prefix (concat (propertize shown 'face 'shadow) pad "  "))
-              (base (file-name-nondirectory path)))
-         (list base prefix "")))
-     paths parents)))
+              (parent-pad (make-string (max 0 (- parent-col (length shown)))
+                                       ?\s))
+              (parent-display
+               (concat (propertize shown 'face 'shadow) parent-pad)))
+         (if filename-first-p
+             (let ((base-pad
+                    (make-string (max 0 (- basename-col (length base))) ?\s)))
+               (list base "" (concat base-pad "  " parent-display)))
+           (list base (concat parent-display "  ") ""))))
+     paths parents basenames)))
 
 (defun jay/consult-recent-file-folder-first ()
   "Find a recent file using a folder-first picker.
