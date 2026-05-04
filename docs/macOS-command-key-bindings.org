@@ -58,7 +58,7 @@ Notes:
 - ~s-V~ :: =pasteboard-paste-adjusted-subtrees-adaptive=
 - ~s-W~ :: =open-weeklies=
 - ~s-\~ :: =visit-most-recent-file=
-- ~s-_~ :: =jay/darkroom-shrink=
+- ~s-_~ :: =olivetti-shrink=
 - ~s-`~ :: =other-window-or-frame=
 - ~s-a~ :: =mark-whole-buffer= (global-map: =copy-minibuffer-contents= in minibuffer)
 - ~s-b~ :: =narrow-or-widen-dwim=
@@ -149,8 +149,8 @@ Notes:
 - ~s-k o a~ :: =org-agenda=
 - ~s-k o c~ :: =org-wc-display=
 - ~s-k o d~ :: =org-deadline=
-- ~s-k o e~ :: =jay/darkroom-expand=
-- ~s-k o l~ :: =jay/toggle-darkroom=
+- ~s-k o e~ :: =olivetti-expand=
+- ~s-k o l~ :: =olivetti-mode=
 - ~s-k o m~ :: =org-mode=
 - ~s-k o s~ :: =org-schedule=
 - ~s-k o t~ :: =org-timeline-export-to-html-and-open=

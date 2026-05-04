@@ -415,30 +415,40 @@ Adds an empty line before the cloned subtree."
   #+BEGIN_SRC emacs-lisp
 (when (require 'orgalist nil 'noerror)
   (add-hook 'fountain-mode-hook #'(lambda () (orgalist-mode 1))))
-;; (add-hook 'fountain-mode-hook 'turn-on-auto-capitalize-mode 'append)
 (add-hook 'fountain-mode-hook (lambda () (imenu-list-minor-mode 1)))
 
-(defcustom fountain-export-default-command
-  'fountain-export-shell-script
-  "\\<fountain-mode-map>Default function to call with \\[fountain-export-default]."
-  :type '(radio (function-item fountain-export-shell-script)
-                (function-item fountain-export-buffer-to-html))
-  :group 'fountain-export)
-
-(defcustom fountain-export-shell-script
-  "afterwriting --config ~/.config/afterwriting/config.json --source %s --pdf --overwrite"
-  "Shell command string to convert Fountain source to ouput.
-\"%s\" will be substituted with `buffer-file-name'"
-  :type 'string
-  :group 'fountain-export)
-
-(defun fountain-export-shell-script (&optional buffer)
-  "Call shell script defined in `fountain-export-shell-script'."
+(defun jay/fountain-export-and-open ()
+  "Export the current Fountain buffer to PDF via afterwriting and open it."
   (interactive)
-  (let* ((buffer (or buffer (current-buffer)))
-         (file (shell-quote-argument (buffer-file-name buffer)))
-         (command (format fountain-export-shell-script file)))
-    (async-shell-command command "*Fountain Export Process*")))
+  (unless (derived-mode-p 'fountain-mode)
+    (user-error "Not a fountain-mode buffer"))
+  (unless buffer-file-name
+    (user-error "Buffer is not visiting a file"))
+  (when (buffer-modified-p) (save-buffer))
+  (let* ((source buffer-file-name)
+         (pdf (concat (file-name-sans-extension source) ".pdf"))
+         (default-directory (file-name-directory source))
+         (config (expand-file-name "~/.config/afterwriting/config.json"))
+         (cmd (format "afterwriting %s --source %s --pdf %s --overwrite"
+                      (if (file-exists-p config)
+                          (concat "--config " (shell-quote-argument config))
+                        "")
+                      (shell-quote-argument source)
+                      (shell-quote-argument pdf)))
+         (proc (start-process-shell-command
+                "fountain-export" "*Fountain Export*" cmd)))
+    (message "Exporting → %s" (file-name-nondirectory pdf))
+    (set-process-sentinel
+     proc
+     (lambda (p _event)
+       (when (eq (process-status p) 'exit)
+         (if (zerop (process-exit-status p))
+             (progn
+               (message "Fountain → %s" pdf)
+               (call-process "open" nil 0 nil pdf))
+           (message "Fountain export failed (exit %d); see *Fountain Export*"
+                    (process-exit-status p))
+           (display-buffer "*Fountain Export*")))))))
 
 (setq fountain-export-include-title-page nil)
 (setq fountain-export-html-replace-alist

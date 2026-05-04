@@ -59,7 +59,7 @@ helm
   multiple-cursors
   nm
 ;;  notmuch
-  darkroom
+  olivetti
   openwith
   org-bookmark-heading
   org-fstree
@@ -145,7 +145,7 @@ adaptive-wrap
 (defun jay/init-dired-details+  () (use-package dired-details+))
 (defun jay/init-maxframe () (use-package maxframe))
 (defun jay/init-palimpsest () (use-package palimpsest))
-(defun jay/init-darkroom () (use-package darkroom))
+(defun jay/init-olivetti () (use-package olivetti))
 
 
 (defun jay/init-recentf () (use-package recentf))

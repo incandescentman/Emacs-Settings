@@ -1339,7 +1339,7 @@ dired-omit-extensions
 #+END_SRC
 
 #+begin_src emacs-lisp
-;; Keep Dired readable on very wide monitors without borrowing writing-mode margins.
+;; Keep Dired readable on very wide monitors without using Olivetti.
 (defcustom jay-dired-centered-width 120
   "Maximum centered content width for Dired windows."
   :type 'integer
@@ -1360,10 +1360,12 @@ dired-omit-extensions
       (jay/dired-center-current-window))))
 
 (define-minor-mode jay-dired-center-mode
-  "Center Dired listings with plain window margins."
+  "Center Dired listings with window margins instead of Olivetti."
   :lighter nil
   (if jay-dired-center-mode
       (progn
+        (when (bound-and-true-p olivetti-mode)
+          (olivetti-mode -1))
         (add-hook 'window-configuration-change-hook #'jay/dired-center-windows nil t)
         (setq-local truncate-lines t)
         (jay/dired-center-windows))
@@ -2596,47 +2598,38 @@ object satisfying `yas--field-p' to restrict the expansion to."
 #+END_SRC
 
 
-* darkroom
+* olivetti
 #+BEGIN_SRC emacs-lisp
 ;; --------------------------------------------------------------------
-;; 2) Darkroom for a centered text area without extra chrome
+;; 2) Olivetti for a centered text area
 ;; --------------------------------------------------------------------
-(defcustom jay/darkroom-body-width 80
-  "Target body width, in columns, for Jay's darkroom writing view."
-  :type 'integer
-  :group 'convenience)
-
-(defun jay/darkroom-fixed-width-margins (window)
-  "Center WINDOW around `jay/darkroom-body-width' columns."
-  (let* ((window-width (if (windowp window)
-                           (window-total-width window)
-                         window))
-         (content-width (min jay/darkroom-body-width window-width))
-         (margin (max 0 (/ (- window-width content-width) 2))))
-    (cons margin margin)))
-
-(defun jay/darkroom-refresh-current-buffer ()
-  "Reapply darkroom margins in the current buffer when darkroom is active."
-  (when (or (bound-and-true-p darkroom-mode)
-            (bound-and-true-p darkroom-tentative-mode))
-    (dolist (win (get-buffer-window-list (current-buffer) nil t))
-      (with-selected-window win
-        (darkroom--set-margins)))))
-
-(use-package darkroom
+(use-package olivetti
   :ensure t
-  :hook ((org-mode      . darkroom-tentative-mode)
-         (markdown-mode . darkroom-tentative-mode)
-         (text-mode     . darkroom-tentative-mode)
-         (message-mode  . darkroom-tentative-mode)
-         (fountain-mode . darkroom-tentative-mode)
-         (poetry-mode   . darkroom-tentative-mode)
-         ;; Turn on visual-line-mode whenever darkroom actually activates.
-         (darkroom-mode . turn-on-visual-line-mode))
+  :hook
+  (org-mode        . olivetti-mode)
+  (markdown-mode   . olivetti-mode)
+  (text-mode       . olivetti-mode)
+  (message-mode    . olivetti-mode)
+  (emacs-lisp-mode . olivetti-mode)
+  (css-mode        . olivetti-mode)
+  (Custom-mode     . olivetti-mode)
+    (sh-mode         . olivetti-mode)
+  (web-mode        . olivetti-mode)
+  (fundamental-mode . olivetti-mode)
+  (help-mode       . olivetti-mode)
+  (prog-mode       . olivetti-mode)
+  (magit-status-mode . olivetti-mode)
+  (Info-mode       . olivetti-mode)
+  (eww-mode        . olivetti-mode)
+  ;; Turn on visual-line-mode whenever we enter olivetti-mode:
+  (olivetti-mode   . turn-on-visual-line-mode)
   :config
-  (setq darkroom-margins #'jay/darkroom-fixed-width-margins
-        darkroom-text-scale-increase 0)
-  ;; Keep org tags aligned in the narrowed writing column.
+  ;; Set your desired body width here:
+  (setq olivetti-body-width 80)
+
+  ;; Unbind these if you like:
+
+  ;; Optional: keep org-tags aligned
   (setq org-tags-column 40))
 #+END_SRC
 
@@ -4114,13 +4107,15 @@ time-stamp-pattern "50//*Invoice date:\\*+\s%:y-%02m-%02d\\\\?$"
 
 ;;  (typo-mode 1)      ;; Good for symbols like em-dash
 
+(add-hook 'poetry-mode-hook 'olivetti-mode 1)
+
 (defun poet-mode ()
 (interactive)
 (set-face-attribute 'default nil :family "Iosevka" :height 130)
 (set-face-attribute 'fixed-pitch nil :family "Iosevka")
 	(variable-pitch-mode 1)
 (poetry-mode)
-(darkroom-mode 1)
+(olivetti-mode 1)
 ;; (turn-off-auto-capitalize-mode)
 
 )
@@ -4249,8 +4244,7 @@ Multiple cursors:
 #+begin_src emacs-lisp
 (defun wide-screen ()
 (interactive)
-(setq jay/darkroom-body-width 72)
-(jay/darkroom-refresh-current-buffer)
+(setq olivetti-body-width 72)
 )
 #+end_src
 
@@ -4774,24 +4768,17 @@ To use this function, highlight the region you want to add numbering to and then
  :config (setq org-panes-split-overview-horizontally t)
      (setq org-panes-main-size 70))
 
-; org-panes and darkroom don't play well together
+; org-panes and olivetti don't play well together
 ; because they both change window sizes. this function
-; turns darkroom off first if it's on, so that
+; turns olivetti-mode off first if it's on, so that
 ; org-panes doesn't get confused about the window size
-(defun org-panes-check-darkroom ()
+(defun org-panes-check-olivetti ()
  (interactive)
- (cond
-  ((bound-and-true-p darkroom-tentative-mode)
-   (darkroom-tentative-mode -1)
-   (org-panes))
-  ((bound-and-true-p darkroom-mode)
-   (darkroom-mode -1)
-   (org-panes)
-   (darkroom-mode 1))
-  (t
-   (org-panes))))
-
-(defalias 'org-panes-check-olivetti #'org-panes-check-darkroom)
+ (if (bound-and-true-p olivetti-mode)
+   (progn (olivetti-mode -1)
+       (org-panes)
+       (olivetti-mode))
+    (org-panes)))
 
      #+END_EXAMPLE
 
@@ -5762,10 +5749,16 @@ Emacs sessions are independent of each other, so global variables like move-or-c
 #+end_src
 
 
-* darkroom split handling
+* disable Olivetti on split
 #+begin_SRC emacs-lisp
-;; `darkroom-tentative-mode' already exits on split windows and re-enters
-;; when the frame returns to a single window, so no extra split hook is needed.
+(defun activate-olivetti-in-split ()
+ (when (not (bound-and-true-p disable-olivetti-auto-toggle))
+  (if (< (window-width) 80)
+    (olivetti-mode -1)
+   (olivetti-mode 1))))
+
+(add-hook 'org-mode-hook (lambda ()
+              (add-hook 'window-configuration-change-hook 'activate-olivetti-in-split nil t)))
 
 #+END_SRC
 
@@ -5875,10 +5868,15 @@ If all else fails, as a last resort, you could use a keybinding to insert a "<" 
 
 This tells Emacs to simply insert a "<" whenever you press that key, bypassing any other logic that might be attached to it.
 
-* global darkroom mode
+* global Olivetti mode
 #+begin_src emacs-lisp
-;; Darkroom is hook-driven above instead of being globally forced into every
-;; buffer, because unlike Olivetti it also hides buffer chrome.
+(define-globalized-minor-mode olivetti-global-mode olivetti-mode
+ (lambda ()
+  (unless (or (minibufferp)
+              (derived-mode-p 'dired-mode))
+   (olivetti-mode 1))))
+
+(olivetti-global-mode)
 #+end_src
 
 * org-mode timestamp format
