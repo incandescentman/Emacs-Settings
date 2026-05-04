@@ -633,12 +633,37 @@
   "Bindings installed into `org-src-mode-map'.")
 
 (defconst my/fountain-mode-bindings
-  (append
-   '(("s-p" . jay/fountain-export-and-open))
-   my/writing-mode-bindings)
+  my/writing-mode-bindings
   "Bindings installed into `fountain-mode-map'.
 Keeps Fountain's screenplay-structure commands intact while sharing the
-same prose-editing keys used in Org buffers.")
+same prose-editing keys used in Org buffers.
+
+Note: keys that need to *override* `key-minor-mode-map' (e.g. `s-p',
+which is globally bound to `org-export-dispatch') cannot live here —
+minor-mode keymaps win over major-mode keymaps. Those go in
+`my/fountain-key-minor-override-map' below and are installed via a
+buffer-local entry in `minor-mode-overriding-map-alist'.")
+
+(defvar my/fountain-key-minor-override-map nil
+  "Per-buffer override map that beats `key-minor-mode-map' in Fountain buffers.
+Built by `my/fountain-install-key-minor-overrides'; parented to
+`key-minor-mode-map' so unaffected keys still resolve normally.")
+
+(defun my/fountain-install-key-minor-overrides ()
+  "Override conflicting `key-minor-mode-map' keys for the current Fountain buffer.
+`key-minor-mode' is a minor mode, so its keymap takes precedence over
+`fountain-mode-map'.  This hook installs a buffer-local entry in
+`minor-mode-overriding-map-alist' that wins against `key-minor-mode-map'
+for the listed keys (currently just `s-p' → Fountain export) and falls
+through to the global map for everything else."
+  (let ((override (make-sparse-keymap)))
+    (set-keymap-parent override key-minor-mode-map)
+    (define-key override (kbd "s-p") #'jay/fountain-export-and-open)
+    (setq-local my/fountain-key-minor-override-map override)
+    (setq-local minor-mode-overriding-map-alist
+                (cons (cons 'key-minor-mode override)
+                      (assq-delete-all 'key-minor-mode
+                                       minor-mode-overriding-map-alist)))))
 
 (defconst my/flyspell-bindings
   '(("C-;" . org-def))
@@ -768,7 +793,8 @@ Each element of ADLIST should look like (FUNCTION WHERE AD-FN)."
   (my/install-mode-bindings org-src-mode-map my/org-src-mode-bindings))
 
 (with-eval-after-load 'fountain-mode
-  (my/install-mode-bindings fountain-mode-map my/fountain-mode-bindings))
+  (my/install-mode-bindings fountain-mode-map my/fountain-mode-bindings)
+  (add-hook 'fountain-mode-hook #'my/fountain-install-key-minor-overrides))
 
 (with-eval-after-load 'flyspell
   (my/install-mode-bindings flyspell-mode-map my/flyspell-bindings))

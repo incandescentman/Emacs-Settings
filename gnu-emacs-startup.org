@@ -437,18 +437,23 @@ Adds an empty line before the cloned subtree."
                       (shell-quote-argument pdf)))
          (proc (start-process-shell-command
                 "fountain-export" "*Fountain Export*" cmd)))
+    ;; Stash the PDF path on the process so the sentinel can find it
+    ;; without depending on lexical closure capture (this file is
+    ;; dynamically bound).
+    (process-put proc 'fountain-pdf pdf)
     (message "Exporting → %s" (file-name-nondirectory pdf))
     (set-process-sentinel
      proc
      (lambda (p _event)
        (when (eq (process-status p) 'exit)
-         (if (zerop (process-exit-status p))
-             (progn
-               (message "Fountain → %s" pdf)
-               (call-process "open" nil 0 nil pdf))
-           (message "Fountain export failed (exit %d); see *Fountain Export*"
-                    (process-exit-status p))
-           (display-buffer "*Fountain Export*")))))))
+         (let ((out (process-get p 'fountain-pdf)))
+           (if (zerop (process-exit-status p))
+               (progn
+                 (message "Fountain → %s" out)
+                 (call-process "open" nil 0 nil out))
+             (message "Fountain export failed (exit %d); see *Fountain Export*"
+                      (process-exit-status p))
+             (display-buffer "*Fountain Export*"))))))))
 
 (setq fountain-export-include-title-page nil)
 (setq fountain-export-html-replace-alist

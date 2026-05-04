@@ -2,6 +2,60 @@
 #+DATE: 2025-09-24
 #+DESCRIPTION: Debugging post-mortems and prevention checklists.
 
+* =key-minor-mode-map= Wins Over Major-Mode Keymaps — Use =minor-mode-overriding-map-alist= For Per-Mode Overrides
+  Date: 2026-05-03
+
+** Trigger
+Adding =s-p= → =jay/fountain-export-and-open= to =my/fountain-mode-bindings= in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]], and installing it into =fountain-mode-map= via =my/install-mode-bindings=, did nothing visible. Pressing =s-p= in a Fountain buffer still ran =org-export-dispatch=. The binding was structurally correct — it just lost the precedence battle.
+
+** Mechanism
+This config wraps a near-global keymap, =key-minor-mode-map=, in the =key-minor-mode= minor mode (defined at the top of [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]]) and installs =my/global-key-bindings= into it. Among those is =("s-p" . org-export-dispatch)=. Emacs's keymap precedence rule is unambiguous: minor-mode keymaps (resolved through =minor-mode-map-alist=) win over major-mode keymaps. A binding installed into =fountain-mode-map= for any key already in =key-minor-mode-map= is therefore dead — the major map never gets the lookup.
+
+This isn't a Fountain-specific problem. It applies to *every* major mode in this config. The reason it doesn't bite more often is that most mode-specific bindings happen to use keys that aren't already in =key-minor-mode-map=. Anytime you want a major mode to *override* a globally-bound key, the major map is the wrong place to put it.
+
+The same trap is already documented inline at [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]]'s =my/vertico-override-bindings= comment (lines ~691–695): /"These must go in =vertico-map= (not =key-minor-mode-map=) because =key-minor-mode= is intentionally disabled inside the minibuffer..."/ — a different precedence puzzle, but the same family.
+
+** The Fix
+Use =minor-mode-overriding-map-alist=, which is a per-buffer override mechanism that Emacs explicitly designs into =key-lookup= for exactly this case. Hook a function onto the major mode that builds a small keymap parented to =key-minor-mode-map= (so unaffected keys still resolve normally), defines the conflict-keys, and installs it via =minor-mode-overriding-map-alist=. The override is buffer-local, so it doesn't leak to non-Fountain buffers.
+
+The current implementation lives in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] as =my/fountain-install-key-minor-overrides= and is hooked from =fountain-mode-hook= inside the =with-eval-after-load 'fountain-mode= block. The pattern generalizes — any future major-mode override of a =key-minor-mode-map= binding should follow the same shape.
+
+** Actionable insight
+*Symptom:* "I added a binding to =my/<MODE>-mode-bindings= and =my/install-mode-bindings= installed it correctly, but pressing the key still runs the global command." → The key collides with =my/global-key-bindings= and the major-mode binding is shadowed. =describe-key= will report the global command. The fix is *not* to change install order, define-key into a different map, or adjust load timing — it's to use =minor-mode-overriding-map-alist= via a buffer-local hook on the mode.
+
+*Don't:* set =key-minor-mode= to nil in the mode-hook (kills every other global binding), or rely on =local-set-key= (modifies the major-mode map, which still loses the precedence battle).
+
+* Process Sentinels In Dynamically-Bound Files Can't Capture =let*= Bindings — Use =process-put= / =process-get=
+  Date: 2026-05-03
+
+** Trigger
+=jay/fountain-export-and-open= in [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org][gnu-emacs-startup.org]] built a sentinel lambda that referenced =pdf= from the surrounding =let*=. The first invocation produced =Debugger entered--Lisp error: (void-variable pdf)= when the sentinel fired, even though =pdf= was clearly bound when the lambda was constructed.
+
+** Mechanism
+[[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.el][gnu-emacs-startup.el]] (the tangled output) does not have a =;;; -*- lexical-binding: t -*-= file header, so it loads under dynamic binding. Under dynamic binding, a lambda is *not* a closure — it does not capture surrounding variable bindings. When =let*= unwinds at the end of the function call, the =pdf= binding is gone. The lambda then runs later (when the async process exits) with no =pdf= in scope, and dies with =void-variable=.
+
+This is not specific to sentinels — anywhere a lambda escapes its lexical scope (timer callbacks, hooks, advice functions, after-change-functions) the same trap applies in dynamically-bound files.
+
+** The Fix
+Two viable options. The current code uses option (1):
+
+1. *Pass state via process properties.* =process-put= attaches data to the process object before installing the sentinel; =process-get= retrieves it inside the sentinel. The process object itself is the argument to the sentinel and is always live, so this works regardless of binding mode:
+   #+begin_src emacs-lisp
+   (process-put proc 'fountain-pdf pdf)
+   (set-process-sentinel
+    proc
+    (lambda (p _event)
+      (let ((out (process-get p 'fountain-pdf)))
+        ...)))
+   #+end_src
+
+2. *Add the lexical-binding header to the file.* Cleaner long-term, but for tangled =.org= → =.el= files you have to add it via a =:tangle= header argument or an =#+begin_src emacs-lisp= block that emits the cookie. Touching the file header has wider implications (other code in the same file might rely on dynamic binding), so option (1) is the localized fix.
+
+** Actionable insight
+*Symptom:* Async callback in a =gnu-emacs-startup.org= / =shared-functions.org= / any other tangled or non-lexical Elisp file complains about a void variable that you can clearly see in the surrounding =let*= or =defun= arglist. → It's not a typo. The lambda escaped its scope and the binding unwound.
+
+*Quick triage:* check =(elt (assq 'lexical-binding file-local-variables-alist) 1)= in the file's buffer, or look at the first line for the =-*- lexical-binding: t -*-= cookie. If absent and the lambda is async, refactor to =process-put= / =process-get= or a similarly explicit data-passing channel. Don't reach for =lexical-let= — it's been deprecated since Emacs 24.
+
 * Jinx Suggestions Are Propertized Strings — Strip Them Before Serializing Anywhere
   Date: 2026-04-25
 
