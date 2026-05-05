@@ -111,11 +111,15 @@ Falls back to: macOS clipboard → kill-ring → prompt
 
 Converts HTML you've already copied to org-mode.
 
-| Key   | Command              | What It Does                                   |
-|-------+----------------------+------------------------------------------------|
-| =s-L= | =html2org-clipboard= | Pastes clipboard HTML as clean org-mode text   |
+| Keys                  | Command              | What It Does                                   |
+|-----------------------+----------------------+------------------------------------------------|
+| =C-v= / =C-s-v= / =M-s-v= | =html2org-clipboard= | Pastes clipboard HTML as clean org-mode text   |
 
 *Usage:* Select content in browser, copy (Cmd-C), then run =html2org-clipboard=.
+
+Notes:
+- Best for copied fragments, selected passages, and ChatGPT output already on the clipboard.
+- For full article pages, especially sites like Substack, use =jay/org-web-tools-read-url-as-org-clean= instead. URL capture is much better at extracting the main article and skipping page chrome, comments, and footer cruft.
 
 *** When to Use Which
 

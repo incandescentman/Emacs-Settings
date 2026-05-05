@@ -1,4 +1,4 @@
-;;; chatgpt2org.el --- Converts HTML clipboard content from ChatGPT to Org-mode format
+;;; chatgpt2org.el --- Converts HTML clipboard content from ChatGPT to Org-mode format -*- lexical-binding: t; -*-
 
 ;; Authors: Jay Dixit <jaydixit.work@gmail.com>, ChatGPT 4
 ;; URL: https://github.com/incandescentman/chatgpt2org
@@ -12,84 +12,127 @@
 
 ;;; Code:
 
+(defun chatgpt2org--substack-p (text)
+  "Return non-nil when TEXT appears to come from a Substack page."
+  (string-match-p "substack\\.com" text))
+
+(defun chatgpt2org--strip-substack-boilerplate (text)
+  "Remove obvious Substack UI chrome from TEXT."
+  (when (chatgpt2org--substack-p text)
+    ;; Substack clipboard HTML often includes large chunks of comment/feed UI.
+    ;; When a comments marker is present, keep the article-ish content above it.
+    (setq text
+          (replace-regexp-in-string
+           "^[0-9]+ Comments\\(?:\n.*\\)*\\'"
+           ""
+           text))
+    ;; If comments were already trimmed separately, still drop the common footer.
+    (setq text
+          (replace-regexp-in-string
+           "^© [0-9]\\{4\\} .*\\(?:\n.*\\)*\\'"
+           ""
+           text))
+    ;; Remove bare Substack shell links and image-only masthead cruft.
+    (setq text
+          (replace-regexp-in-string
+           "^\\[\\[https://substackcdn\\.com/image/fetch/[^]]*\\]\\]\n?"
+           ""
+           text))
+    (setq text
+          (replace-regexp-in-string
+           "^\\[\\[https://[^]\n]*substack\\.com[^]\n]*\\]\\[\\]\\]\n?"
+           ""
+           text))
+    ;; Remove standalone social/action metadata lines.
+    (dolist (regexp '("^\\(?:Like\\(?:d\\)?\\(?: ([0-9]+)\\)?\\|Reply\\(?: ([0-9]+)\\)?\\|Share\\|Edited\\)\\s-*$"
+                      "^\\(?:Mar [0-9]+\\|Apr [0-9]+\\|May [0-9]+\\|[0-9]+d\\)\\s-*$"))
+      (setq text (replace-regexp-in-string regexp "" text))))
+  text)
+
+(defun chatgpt2org--cleanup-org-string (org-content)
+  "Clean ORG-CONTENT produced from clipboard HTML."
+  ;; Remove base64-encoded image links.
+  (setq org-content (replace-regexp-in-string "\\[\\[data:image[^]]*\\]\\]" "" org-content :fixedcase :literal))
+
+  ;; Replace links
+  (setq org-content (replace-regexp-in-string "^\\[\\[https://chat.openai.com.*$" "" org-content))
+  (setq org-content (replace-regexp-in-string "^\\[\\[https://lh3.googleusercontent.*$" "" org-content))
+
+  ;; Remove standalone empty links like [[javascript:void(0)][]].
+  (setq org-content (replace-regexp-in-string "^\\[\\[[^]\n]+\\]\\[\\]\\]\n?" "" org-content))
+
+  ;; Remove social share links (links with empty/icon-only descriptions like [//])
+  (setq org-content (replace-regexp-in-string "\\[\\[[^]]+\\]\\[//\\]\\]" "" org-content))
+  ;; Remove social share links with nested base64 images in description
+  (setq org-content (replace-regexp-in-string "\\[\\[[^]]+\\]\\[/\\[\\[data:image[^]]*\\]\\]/\\]\\]" "" org-content))
+  ;; Remove mailto share links
+  (setq org-content (replace-regexp-in-string "\\[\\[mailto:\\?subject=[^]]*\\]\\[[^]]*\\]\\]" "" org-content))
+  ;; Remove common social share domains entirely
+  (setq org-content (replace-regexp-in-string "\\[\\[https://\\(www\\.\\)?\\(facebook\\.com/sharer\\|twitter\\.com/intent\\|linkedin\\.com/shareArticle\\|pinterest\\.com/pin/create\\|web\\.whatsapp\\.com/send\\|xing\\.com/spi/shares\\)[^]]*\\]\\[[^]]*\\]\\]" "" org-content))
+
+  ;; Replace excessive newlines
+  (setq org-content (replace-regexp-in-string "\\n\\n\\n\\n\\n\\n\\n" "\\n\\n" org-content))
+  (setq org-content (replace-regexp-in-string "\\n\\n\\n\\n" "\\n\\n" org-content))
+
+  ;; Remove view counts like //6,728 (handles EOF without trailing newline)
+  (setq org-content (replace-regexp-in-string "^//[0-9,]+\\(?:\n\\|\\'\\)" "" org-content))
+
+  ;; Remove unnecessary symbols and strings
+  (setq org-content (replace-regexp-in-string "^<<.*\n" "" org-content))
+  (setq org-content (replace-regexp-in-string "￼" "" org-content))
+  (setq org-content (replace-regexp-in-string " " " " org-content))
+  (setq org-content (replace-regexp-in-string "\\\\\\\\" "" org-content))
+  (setq org-content (replace-regexp-in-string "\u202F" " " org-content)) ; Narrow NBSP
+  (setq org-content (replace-regexp-in-string "\u200B" "" org-content))  ; Zero-width space
+
+  (setq org-content (replace-regexp-in-string "”" "\"" org-content))
+  (setq org-content (replace-regexp-in-string "Okay" "OK" org-content))
+  (setq org-content (replace-regexp-in-string "okay" "OK" org-content))
+  (setq org-content (replace-regexp-in-string "“" "\"" org-content))
+
+  ;; Remove properties
+  (setq org-content (replace-regexp-in-string ":PROPERTIES:\n\\(.*\n\\)*?:END:" "" org-content))
+  (setq org-content (replace-regexp-in-string ":PROPERTIES:\\([^\000]*?\\):END:" "" org-content))
+
+  ;; Fix a bug involved with parsing code blocks
+  (setq org-content (replace-regexp-in-string "\\(#\\+begin_example\\)\n\\s-*\\([a-zA-Z]*\\)Copy code" "\\1 \\2\n" org-content))
+
+  ;; Replace "=" enclosed text with "~" enclosed text
+  (setq org-content (replace-regexp-in-string "\\(\\W\\|=\\|^\\)=\\([^=]*\\)=\\(\\W\\|=\\|$\\)" "\\1~\\2~\\3" org-content))
+
+  ;; Add two line breaks before #+begin for both src and example, and one line break before #+end, and remove leading spaces
+  (setq org-content (replace-regexp-in-string "\\(\n\\)?\\s-+\\(#\\+begin_\\(src\\|example\\)\\)" "\n\n\\2" org-content))
+  (setq org-content (replace-regexp-in-string "\\(\n\\)?\\s-+\\(#\\+end_\\(src\\|example\\)\\)" "\n\\2" org-content))
+
+  ;; Pandoc turns <strong>/<b> into *bold* even when it was a visual heading.
+  ;; Promote standalone bold lines to level-3 headings to restore structure.
+  ;; Anchors ensure we only match full-line bold, not inline emphasis.
+  ;; e.g., "*1. Classic Unalome:*" -> "*** 1. Classic Unalome:"
+  (setq org-content (replace-regexp-in-string "^\\*\\([0-9]+\\. [^*]+\\):\\*$" "*** \\1:" org-content))
+  ;; e.g., "*Heading:*" or "*Heading*" at start of line
+  (setq org-content (replace-regexp-in-string "^\\*\\([A-Z][^*]+\\)\\*$" "*** \\1" org-content))
+
+  ;; Remove relative timestamps like "2 years ago", "3 months ago" (handles EOF)
+  (setq org-content (replace-regexp-in-string "^\\([0-9]+\\|a\\|an\\) \\(year\\|month\\|week\\|day\\|hour\\|minute\\|second\\)s? ago\\(?:\n\\|\\'\\)" "" org-content))
+
+  ;; Remove lines that are only whitespace (consume the newline too)
+  (setq org-content (replace-regexp-in-string "^[ \t]+\\(?:\n\\|\\'\\)" "" org-content))
+
+  ;; Remove blank line between heading and body text (preserve before headings and # directives)
+  (setq org-content (replace-regexp-in-string "^\\(\\*+ .+\\)\n\n+\\([^*\n#]\\)" "\\1\n\\2" org-content))
+
+  ;; Remove trailing asterisks from headings when separated by whitespace
+  ;; (e.g., "** Heading **" -> "** Heading")
+  (setq org-content (replace-regexp-in-string "^\\(\\*+ .*?\\)\\s-+\\*+\\s-*$" "\\1" org-content))
+
+  (chatgpt2org--strip-substack-boilerplate org-content))
+
 (defun chatgpt2org ()
  "Convert clipboard contents from HTML to Org, remove base64-encoded images, and then paste (yank)."
  (interactive)
- (let* ((cmd "osascript -e 'the clipboard as \"HTML\"' | perl -ne 'print chr foreach unpack(\"C*\",pack(\"H*\",substr($_,11,-3)))' | pandoc -f html -t json | pandoc -f json -t org")
+ (let* ((cmd "osascript -e 'the clipboard as \"HTML\"' | perl -ne 'print chr foreach unpack(\"C*\",pack(\"H*\",substr($_,11,-3)))' | pandoc --quiet -f html -t json 2>/dev/null | pandoc --quiet -f json -t org 2>/dev/null")
         (org-content (shell-command-to-string cmd)))
-   (setq org-content (replace-regexp-in-string "\\[\\[data:image[^]]*\\]\\]" "" org-content :fixedcase :literal))
-
-   ;; Replace links
-   (setq org-content (replace-regexp-in-string "^\\[\\[https://chat.openai.com.*$" "" org-content))
-   (setq org-content (replace-regexp-in-string "^\\[\\[https://lh3.googleusercontent.*$" "" org-content))
-
-   ;; Remove social share links (links with empty/icon-only descriptions like [//])
-   (setq org-content (replace-regexp-in-string "\\[\\[[^]]+\\]\\[//\\]\\]" "" org-content))
-   ;; Remove social share links with nested base64 images in description
-   (setq org-content (replace-regexp-in-string "\\[\\[[^]]+\\]\\[/\\[\\[data:image[^]]*\\]\\]/\\]\\]" "" org-content))
-   ;; Remove mailto share links
-   (setq org-content (replace-regexp-in-string "\\[\\[mailto:\\?subject=[^]]*\\]\\[[^]]*\\]\\]" "" org-content))
-   ;; Remove common social share domains entirely
-   (setq org-content (replace-regexp-in-string "\\[\\[https://\\(www\\.\\)?\\(facebook\\.com/sharer\\|twitter\\.com/intent\\|linkedin\\.com/shareArticle\\|pinterest\\.com/pin/create\\|web\\.whatsapp\\.com/send\\|xing\\.com/spi/shares\\)[^]]*\\]\\[[^]]*\\]\\]" "" org-content))
-
-   ;; Replace excessive newlines
-   (setq org-content (replace-regexp-in-string "\\n\\n\\n\\n\\n\\n\\n" "\\n\\n" org-content))
-   (setq org-content (replace-regexp-in-string "\\n\\n\\n\\n" "\\n\\n" org-content))
-
-   ;; Remove view counts like //6,728 (handles EOF without trailing newline)
-   (setq org-content (replace-regexp-in-string "^//[0-9,]+\\(?:\n\\|\\'\\)" "" org-content))
-
-   ;; Remove unnecessary symbols and strings
-   (setq org-content (replace-regexp-in-string "^<<.*\n" "" org-content))
-   (setq org-content (replace-regexp-in-string "￼" "" org-content))
-   (setq org-content (replace-regexp-in-string " " " " org-content))
-   (setq org-content (replace-regexp-in-string "\\\\\\\\" "" org-content))
-   (setq org-content (replace-regexp-in-string "\u202F" " " org-content)) ; Narrow NBSP
-   (setq org-content (replace-regexp-in-string "\u200B" "" org-content))  ; Zero-width space
-
-
-   (setq org-content (replace-regexp-in-string "”" "\"" org-content))
-   (setq org-content (replace-regexp-in-string "Okay" "OK" org-content))
-   (setq org-content (replace-regexp-in-string "okay" "OK" org-content))
-   (setq org-content (replace-regexp-in-string "“" "\"" org-content))
-
-
-
-   ;; Remove properties
-   (setq org-content (replace-regexp-in-string ":PROPERTIES:\n\\(.*\n\\)*?:END:" "" org-content))
-   (setq org-content (replace-regexp-in-string ":PROPERTIES:\\([^\000]*?\\):END:" "" org-content))
-
-   ;; Fix a bug involved with parsing code blocks
-   (setq org-content (replace-regexp-in-string "\\(#\\+begin_example\\)\n\\s-*\\([a-zA-Z]*\\)Copy code" "\\1 \\2\n" org-content))
-
-   ;; Replace "=" enclosed text with "~" enclosed text
-   (setq org-content (replace-regexp-in-string "\\(\\W\\|=\\|^\\)=\\([^=]*\\)=\\(\\W\\|=\\|$\\)" "\\1~\\2~\\3" org-content))
-
-   ;; Add two line breaks before #+begin for both src and example, and one line break before #+end, and remove leading spaces
-   (setq org-content (replace-regexp-in-string "\\(\n\\)?\\s-+\\(#\\+begin_\\(src\\|example\\)\\)" "\n\n\\2" org-content))
-   (setq org-content (replace-regexp-in-string "\\(\n\\)?\\s-+\\(#\\+end_\\(src\\|example\\)\\)" "\n\\2" org-content))
-
-   ;; Pandoc turns <strong>/<b> into *bold* even when it was a visual heading.
-   ;; Promote standalone bold lines to level-3 headings to restore structure.
-   ;; Anchors ensure we only match full-line bold, not inline emphasis.
-   ;; e.g., "*1. Classic Unalome:*" -> "*** 1. Classic Unalome:"
-   (setq org-content (replace-regexp-in-string "^\\*\\([0-9]+\\. [^*]+\\):\\*$" "*** \\1:" org-content))
-   ;; e.g., "*Heading:*" or "*Heading*" at start of line
-   (setq org-content (replace-regexp-in-string "^\\*\\([A-Z][^*]+\\)\\*$" "*** \\1" org-content))
-
-   ;; Remove relative timestamps like "2 years ago", "3 months ago" (handles EOF)
-   (setq org-content (replace-regexp-in-string "^\\([0-9]+\\|a\\|an\\) \\(year\\|month\\|week\\|day\\|hour\\|minute\\|second\\)s? ago\\(?:\n\\|\\'\\)" "" org-content))
-
-   ;; Remove lines that are only whitespace (consume the newline too)
-   (setq org-content (replace-regexp-in-string "^[ \t]+\\(?:\n\\|\\'\\)" "" org-content))
-
-   ;; Remove blank line between heading and body text (preserve before headings and # directives)
-   (setq org-content (replace-regexp-in-string "^\\(\\*+ .+\\)\n\n+\\([^*\n#]\\)" "\\1\n\\2" org-content))
-
-   ;; Remove trailing asterisks from headings when separated by whitespace
-   ;; (e.g., "** Heading **" -> "** Heading")
-   (setq org-content (replace-regexp-in-string "^\\(\\*+ .*?\\)\\s-+\\*+\\s-*$" "\\1" org-content))
-
+   (setq org-content (chatgpt2org--cleanup-org-string org-content))
    (kill-new org-content)
    (yank)))
 
