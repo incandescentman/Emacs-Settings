@@ -204,6 +204,44 @@ This avoids `replace-regexp', which can trip overlay cleanup in some setups."
 
 #+END_SRC
 
+** contract signature blanks
+#+begin_src emacs-lisp
+(defconst jay/org-contract-signature-rule
+  "@@latex:\\rule{2.75in}{0.4pt}@@"
+  "Inline LaTeX rule used for simple contract signature blanks.")
+
+(defun jay/org-buffer-has-filetag-p (tag)
+  "Return non-nil when the current Org buffer declares file TAG."
+  (save-excursion
+    (goto-char (point-min))
+    (let ((case-fold-search t)
+          (tag-fragment (downcase (format ":%s:" tag))))
+      (catch 'found
+        (while (re-search-forward "^#\\+filetags:[ \t]*\\(.*\\)$" nil t)
+          (let ((value (downcase (match-string-no-properties 1))))
+            (when (string-match-p (regexp-quote tag-fragment) value)
+              (throw 'found t))))
+        nil))))
+
+(defun jay/org-export-contract-signature-blanks (backend)
+  "Rewrite contract-style underscore blanks into LaTeX rules during export.
+Only applies to LaTeX exports from Org files tagged with :contract:."
+  (when (and (org-export-derived-backend-p backend 'latex)
+             (jay/org-buffer-has-filetag-p "contract"))
+    (save-excursion
+      (goto-char (point-min))
+      (while (re-search-forward
+              "^\\([ \t]*\\(?:Signature\\|Date\\):\\)[ \t]*_\\{5,\\}[ \t]*$"
+              nil t)
+        (let ((label (match-string 1)))
+          (replace-match
+           (format "%s %s" label jay/org-contract-signature-rule)
+           t t))))))
+
+(add-hook 'org-export-before-processing-functions
+          #'jay/org-export-contract-signature-blanks)
+#+end_src
+
 ** default org-css
 #+begin_SRC emacs-lisp
 (defvar my-org-selected-css "/Users/jaydixit/Dropbox/web-design/custom-css/sans-serif.css"

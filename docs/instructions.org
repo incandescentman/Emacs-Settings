@@ -122,6 +122,23 @@ Converts HTML you've already copied to org-mode.
 - *org-web-tools*: Capture an entire article from a URL (auto-extracts main content)
 - *html2org-clipboard*: Paste a specific selection you copied (ChatGPT output, partial page)
 
+** Editing Browser Textareas in Emacs (GhostText)
+
+Any time you find yourself writing more than a sentence into a browser textarea — Substack drafts, GitHub PR descriptions, social compose boxes, ChatGPT — edit it in Emacs instead via =atomic-chrome= + the GhostText Chrome extension.
+
+Workflow:
+1. Click into the textarea in Chrome
+2. Click the GhostText icon in the Chrome toolbar
+3. An Emacs frame opens with the contents in =org-mode=
+4. Type — the browser auto-syncs both ways
+5. Kill the buffer (=C-x k=) to disconnect
+
+Notes:
+- Works on any =<textarea>= or contenteditable field, not just specific sites
+- Buffer opens in =org-mode= by default, so you get all your prose tools
+- The Chrome extension must be installed: GhostText (search the Chrome Web Store)
+- Emacs side is wired up via =atomic-chrome= (added 2026-04 in commit =e4f42654=)
+
 Both tools automatically strip:
 - Base64-encoded images
 - Social share buttons (Facebook, Twitter, LinkedIn, etc.)
@@ -192,6 +209,19 @@ After =whittle-transcript=:
 The dog ran. I think this is fine
 #+end_example
 
+*** Prose Editing and Wrapping
+
+For writing prose, a few editing behaviors are worth knowing:
+
+| Key         | Command                      | What It Does |
+|-------------+------------------------------+--------------|
+| =s-k u p=   | =jay/unfill-paragraph-dwim= | Unfills the current paragraph, or the active region if one is selected |
+
+Notes:
+- In Org buffers, =s-k u p= uses Org-aware unfilling, so it preserves structure like property drawers and avoids clobbering protected title-label paragraphs.
+- In Org and text buffers, long lines soft-wrap visually. In Org, wrapped body paragraphs and list items stay visually indented under the heading or list body instead of snapping back to column 0.
+- Focused writing width is handled by =olivetti-mode= in prose buffers. If you want to toggle it manually, use =s-k o l=. For the longer explanation of how the writing environment is set up, see [[file+emacs:/Users/jay/emacs/emacs-settings/docs/darkroom-mode-guide.org][docs/darkroom-mode-guide.org]].
+
 ** Org-Roam Profiles
 
 Switch between completely separate note databases:
@@ -258,6 +288,19 @@ Quick appearance changes:
 | =matrix=          | Green-on-black cyberpunk      |
 | =spacemacs-light= | Spacemacs light theme         |
 
+** Focus Mode (darkroom)
+
+For distraction-free writing, =darkroom= dims everything except the prose:
+
+| Command                  | Effect                                                 |
+|--------------------------+--------------------------------------------------------|
+| =M-x darkroom-mode=      | Toggle full focus mode (centers text, hides chrome)    |
+| =M-x darkroom-tentative-mode= | Auto-enable when there's a single window only     |
+
+Notes:
+- =darkroom= replaced =olivetti= as the primary focus tool in 2026 (commit =493e2e45=); =olivetti= was later restored as a secondary option (commit =74e5cef2=).
+- Use =darkroom= when you want the full distraction-stripped experience; =olivetti= when you just want centered margins without the chrome dimming.
+
 * Common Workflows
 
 ** Taking Notes from the Web
@@ -322,8 +365,26 @@ Note: [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-fun
 | =SPC /=   | Project search | Search current project (ripgrep) |
 | =SPC s s= | Search symbol | Find symbol in project           |
 | =SPC s f= | Search file   | Find file by name                |
+| =s-r=     | Recent files  | Filename-first picker, hides =/private/tmp/= |
+| =KK=      | =consult-imenu= | Jump to a heading/function/section in the current buffer |
 
 These use =ripgrep= for fast searching. Install: =brew install ripgrep=
+
+=KK= is a key chord: press =K= twice quickly. It is the fastest way to jump around a big Org file, config file, or source buffer when you already know the section name.
+
+** Narrowing Dired Listings
+
+When a directory is visually noisy, narrow the Dired listing live:
+
+| Key      | Command         | What It Does                                  |
+|----------+-----------------+-----------------------------------------------|
+| =/=      | =dired-narrow=  | Filter the listing to filenames matching input |
+| =s-f=    | =dired-narrow=  | Same — Cmd-f also narrows in Dired             |
+| =A-f=    | =dired-narrow=  | Same — Option-f variant                        |
+
+Type characters and the listing shrinks to matches. =RET= confirms (keeps narrowed view in your selection), =C-g= cancels. Useful when you've opened a folder with hundreds of files and want to see just the =.org= files or files matching a slug.
+
+(Added 2026-04, commits =4fefbb7d=, =914edf13=, =adf8ddf1=, =e912ab63=.)
 
 ** Embark Context Actions
 
@@ -399,6 +460,17 @@ The default template (=org-latex-default-class=). Features:
 ** beautiful-racket-classic
 
 The original beautiful-racket template without Tufte enhancements.
+
+** new-yorker
+
+A magazine-style template modeled on /The New Yorker/'s editorial typography. Restored 2026 (commits =0492d609=, =ce0378b6=).
+
+Use it by adding =#+LATEX_CLASS: new-yorker= to your org file. Features:
+- Display headline font and a distinctive byline treatment
+- Editorial body type sized for long-form reading
+- Suited to essays, profiles, narrative non-fiction — anywhere you'd want the page to /look/ like a magazine feature rather than a manuscript
+
+The template files live in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/][latex-templates/]]. If you tweak the template and re-export in the same session, reload classes first with =M-x jay-load-latex= (the cached class definitions trap applies to this template too).
 
 ** Table Export Behavior (2026-02)
 
@@ -592,6 +664,34 @@ Behavior:
 - PDF export only — HTML/ODT/DOCX output is not renamed.
 
 Implemented as =:filter-return= advice on =org-latex-export-to-pdf= in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]].
+
+** Contract Signature Lines
+
+When writing contracts for LaTeX/PDF export, do not rely on long underscore runs as the primary source form for signature blanks. In this config's Org→LaTeX export path, underscores already have underline semantics, so punctuation-based signature lines are the wrong primitive.
+
+Best practice:
+
+#+BEGIN_EXAMPLE
+#+filetags: :contract:
+#+MACRO: sigline @@latex:\rule{2.75in}{0.4pt}@@
+
+Signature: {{{sigline}}}
+Date: {{{sigline}}}
+#+END_EXAMPLE
+
+Notes:
+- Prefer the =sigline= macro form. It is explicit in the Org source and exports cleanly.
+- If a contract file is tagged =:contract:=, LaTeX export will also auto-repair simple lines like =Signature: ______= and =Date: ______= into real =\rule{...}= signature blanks in the temporary export buffer.
+- For more complex layouts (multiple signers, signature/date columns, witness blocks), use a small =#+begin_export latex= block with =tabular= or =minipage= instead of trying to build the layout out of punctuation.
+
+** Fountain (Screenplay) → PDF
+
+For =.fountain= screenplay files, =s-p= exports the buffer to PDF using the Fountain → PDF pipeline. (Added 2026-04, commits =74e5cef2=, =890f1d2d=.)
+
+Notes:
+- Only active in =fountain-mode= buffers — won't shadow =s-p= elsewhere
+- Org-shared writing keys are also available in =fountain-mode= (commit =1683feea=) so prose-editing muscle memory carries over
+- If the binding ever stops working, see the [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.md][CLAUDE.md]] note about =key-minor-mode-map= shadowing — Fountain bindings are installed via the buffer-local override pattern for exactly that reason
 
 ** Table Regression / Rollback
 
@@ -838,9 +938,11 @@ Always *incarnadine red* (deep crimson) - distinctive but not jarring. All theme
 | =Cmd-v=        | Smart paste                | Paste (auto-cleans)       |
 | =Cmd-u 1=      | Work notes                 | Switch to work profile    |
 | =Cmd-u 2=      | Personal notes             | Switch to personal        |
+| =KK=           | Buffer outline             | Jump within current buffer |
 | =SPC a o r c=  | Capture                    | Create new note           |
 | =SPC a o r f=  | Find note                  | Search notes              |
 | =SPC /=        | Search project             | Ripgrep search            |
+| =s-k u p=      | Smart unfill               | Flatten prose without breaking Org structure |
 | =SPC f e R=    | Reload config              | After making changes      |
 | =C-c C-v t=    | Tangle                     | Generate .el from .org    |
 

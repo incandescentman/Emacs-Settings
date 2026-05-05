@@ -2,6 +2,61 @@
 #+DATE: 2025-09-24
 #+DESCRIPTION: Debugging post-mortems and prevention checklists.
 
+* Contract Signature Blanks In Org LaTeX Should Be Real Rules, Not Underscore Runs
+  Date: 2026-05-05
+
+** Trigger
+In [[file+emacs:/Users/jay/emacs/emacs-settings/metabolic-mind-contract-1.org][metabolic-mind-contract-1.org]], signature and date blanks were written as long underscore runs:
+
+#+begin_src org
+Signature: ________________________________
+Date: ____________________________________
+#+end_src
+
+Those exported weirdly in PDF because this config's Org→LaTeX stack treats underscores as underline markup rather than as inert blank lines.
+
+** Mechanism
+The export behavior is not accidental. [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] explicitly maps underscore emphasis to LaTeX underline commands:
+
+#+begin_src emacs-lisp
+("_" "\\underline{%s}" nil)
+#+end_src
+
+and also routes underline text markup through =\uline{...}=. So a row of underscores in contract signature blocks is the wrong primitive for "blank line" in this repo's LaTeX exports.
+
+** The Fix
+For future contracts, the clearest explicit source form is still an Org macro that emits a literal LaTeX rule:
+
+#+begin_src org
+#+MACRO: sigline @@latex:\rule{2.75in}{0.4pt}@@
+#+end_src
+
+Then use it like:
+
+#+begin_src org
+Signature: {{{sigline}}}
+Date: {{{sigline}}}
+#+end_src
+
+For more complex contract layouts (signature + date columns, multiple signers, etc.), use a small =#+begin_export latex= block with =tabular= or =minipage= rather than trying to compose the geometry out of punctuation characters.
+
+This repo now also has a narrow export safety net in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]]: during *LaTeX export only*, if an Org file is tagged =:contract:= and contains simple lines like:
+
+#+begin_src org
+Signature: ________________________________
+Date: ____________________________________
+#+end_src
+
+the export preprocessor rewrites just those lines into literal =\rule{...}= blanks in the temporary export buffer. That means future contracts can still export cleanly even if the source uses underscore blanks by habit.
+
+** Actionable insight
+For future Codex sessions working on contracts in this repo:
+
+- Prefer a file-local =sigline= macro for ordinary contracts; it keeps the source explicit and portable.
+- If a contract Org file is tagged =:contract:=, this repo's LaTeX export path will automatically repair simple =Signature:= / =Date:= underscore blanks into real rules.
+- If the layout is more complex than one line per signer, use explicit LaTeX export blocks.
+- Do *not* "fix" this by changing global underscore export behavior in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] unless there is a repo-wide decision to change underline semantics everywhere.
+
 * Missing XeLaTeX Display Fonts Can Make Headings Vanish Into =nullfont=
   Date: 2026-05-04
 

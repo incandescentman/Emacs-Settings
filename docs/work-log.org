@@ -1,6 +1,14 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-05-05: Replace underscore signature blanks with LaTeX rules in the Metabolic Mind contract
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/metabolic-mind-contract-1.org][metabolic-mind-contract-1.org]] to stop using underscore runs for signature/date blanks, since this export stack treats underscores as underline markup in LaTeX.
+- Added a LaTeX-only =sigline= Org macro and replaced the signature/date placeholders with ={{{sigline}}}= so PDF export gets real signature rules while the Org source stays readable.
+- Captured the repeatable future-Codex rule in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/codebase-wisdom.org][docs/codebase-wisdom.org]]: for contracts exported to PDF, use a =sigline= macro or explicit LaTeX rules, not underscore runs.
+- Added a narrow contract-only export safety net in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]]: during LaTeX export, Org files tagged =:contract:= now rewrite simple =Signature:= / =Date:= underscore blanks into literal =\rule{2.75in}{0.4pt}= lines in the temporary export buffer, without changing global underscore semantics.
+- Added a future-Jay how-to section to [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][docs/instructions.org]] explaining the preferred =sigline= macro workflow, the =:contract:= auto-repair behavior, and when to switch to explicit LaTeX blocks for more complex signature layouts.
+- Also expanded [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][docs/instructions.org]] with the remaining high-value user-facing gaps: =KK= / =consult-imenu= for in-buffer jumping, =s-k u p= for Org-aware unfill, and a short explanation of prose wrapping/focus mode with a pointer to [[file+emacs:/Users/jay/emacs/emacs-settings/docs/darkroom-mode-guide.org][docs/darkroom-mode-guide.org]].
+
 * 2026-05-04: Give =new-yorker= a dedicated display face and template-owned byline font
 - Cleaned up [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/new-yorker.el][latex-templates/new-yorker.el]] so the class no longer abuses =\ttfamily= as its New Yorker display face.
 - Added a dedicated =\newyorkerdisplayface= font family (prefer =Irvin=, fall back to =Courier Prime=) for section headings and display typography, while restoring the actual monospace slot to =Courier Prime= for any real =\texttt{}= content.
