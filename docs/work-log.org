@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-05-05: Improve elegant-garamond running-header extraction without losing the small-caps feel
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][latex-templates/elegant-garamond.el]] and [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond-tabularray.el][latex-templates/elegant-garamond-tabularray.el]] so the running headers now use a dedicated Adobe Garamond Pro small-caps font instead of inheriting Garamond Premier Pro small caps from the body font.
+- Chose this as the compromise path after reproducing the extraction bug in a standalone XeLaTeX file: Garamond Premier Pro small caps were clearly corrupting =pdftotext= output, while Adobe Garamond Pro small caps preserved the look better than full uppercase and extracted less badly.
+- Recorded the debugging lesson in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/codebase-wisdom.org][docs/codebase-wisdom.org]] so future LaTeX template work does not misdiagnose header-extraction bugs as Org-export failures.
+
 * 2026-05-05: Replace underscore signature blanks with LaTeX rules in the Metabolic Mind contract
 - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/metabolic-mind-contract-1.org][metabolic-mind-contract-1.org]] to stop using underscore runs for signature/date blanks, since this export stack treats underscores as underline markup in LaTeX.
 - Added a LaTeX-only =sigline= Org macro and replaced the signature/date placeholders with ={{{sigline}}}= so PDF export gets real signature rules while the Org source stays readable.
