@@ -35,7 +35,10 @@
 \\defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
 \\setromanfont{Adobe Caslon Pro}
  \\setsansfont{Adobe Caslon Pro}
-  \\setmonofont{Irvin}
+  % Keep a dedicated display face for New Yorker-style headings/bylines,
+  % and reserve the actual monospaced slot for real monospace text.
+  \\IfFontExistsTF{Irvin}{\\newfontfamily\\newyorkerdisplayface{Irvin}}{\\newfontfamily\\newyorkerdisplayface{Courier Prime}}
+  \\setmonofont{Courier Prime}
 
 \\else
   \\usepackage[mathletters]{ucs}
@@ -130,6 +133,9 @@
 \\Large
 \\itshape
 }
+
+
+\\newcommand{\\newyorkerbylinefont}{\\newyorkerdisplayface\\fontsize{23}{30}\\selectfont}
 
 
 
@@ -296,12 +302,12 @@
 \\titlespacing{\\paragraph}{0pt}{0pt}{.5em}[]
 
 
-\\titleformat*{\\section}{\\ttfamily\\fontsize{60}{30}\\raggedright\\ttfamily\\color{spacegrey}}
-\\titleformat*{\\subsection}{\\ttfamily\\setstretch{0.1}\\fontsize{24}{36}\\raggedright\\ttfamily}
-\\titleformat*{\\subsubsection}{\\ttfamily\\scshape\\fontsize{18}{16}\\raggedright\\ttfamily}\\color{spacegrey}
+\\titleformat*{\\section}{\\newyorkerdisplayface\\fontsize{60}{30}\\selectfont\\raggedright\\color{spacegrey}}
+\\titleformat*{\\subsection}{\\newyorkerdisplayface\\fontsize{24}{36}\\selectfont\\raggedright}
+\\titleformat*{\\subsubsection}{\\newyorkerdisplayface\\scshape\\fontsize{18}{16}\\selectfont\\raggedright}\\color{spacegrey}
 
-\\titleformat*{\\paragraph}{\\ttfamily\\bfseries\\fontsize{17}{12}\\raggedright}
-\\titleformat*{\\subparagraph}{\\sffamily\\fontsize{16}{12}\\raggedright\\ttfamily\\bfseries}
+\\titleformat*{\\paragraph}{\\newyorkerdisplayface\\bfseries\\fontsize{17}{12}\\selectfont\\raggedright}
+\\titleformat*{\\subparagraph}{\\sffamily\\fontsize{16}{12}\\selectfont\\raggedright\\ttfamily\\bfseries}
 
 \\DeclareTextFontCommand{\\nonsection}{\\sffamily\\fontsize{19}{19}\\raggedright\\sffamily\\textlf}
 

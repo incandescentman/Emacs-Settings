@@ -2,6 +2,36 @@
 #+DATE: 2025-09-24
 #+DESCRIPTION: Debugging post-mortems and prevention checklists.
 
+* Missing XeLaTeX Display Fonts Can Make Headings Vanish Into =nullfont=
+  Date: 2026-05-04
+
+** Trigger
+The restored [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/new-yorker.el][latex-templates/new-yorker.el]] class looked structurally fine, and a generated file such as [[file+emacs:/Users/jay/Dropbox/kanban/finished/misshelved_jay-dixit_v3-shorter.tex][/Users/jay/Dropbox/kanban/finished/misshelved_jay-dixit_v3-shorter.tex]] clearly contained =\section{Misshelved}= and =\subsection{A Compendium of Misshelved Books}=. But the compiled PDF started visually with =By Jay Dixit= and the section/subsection headings appeared to be missing.
+
+** Mechanism
+In =new-yorker.el=, section and subsection headings are formatted with =\ttfamily=. Under XeLaTeX, that template was also hard-coding =\setmonofont{Irvin}=. On this machine, =Irvin= is not installed. The XeLaTeX log showed repeated =fontspec= errors:
+
+#+begin_src text
+Package fontspec Error: The font "Irvin" cannot be found
+Missing character: There is no x ("78) in font nullfont!
+#+end_src
+
+So the heading commands were still present in the document structure, and later running headers still said =MISSHELVED= via =\leftmark=, but the actual heading glyphs were being typeset with =nullfont=. The result looks like "Org dropped my title," but the real problem is "the chosen display/typewriter face doesn't exist, so visible heading text disappears."
+
+** The Fix
+Guard display-font assumptions with a runtime fallback in the template itself. The current =new-yorker.el= now does:
+
+#+begin_src latex
+\IfFontExistsTF{Irvin}{\setmonofont{Irvin}}{\setmonofont{Courier Prime}}
+#+end_src
+
+That keeps the intended Irvin look when available, but preserves visible section headings on machines that do not have Irvin installed.
+
+The stronger follow-up cleanup was to stop using =\ttfamily= as the New Yorker display voice at all. The template now defines a dedicated =\newyorkerdisplayface= family for headings/bylines and restores the true monospace slot to =Courier Prime=. That keeps display typography and actual code/monospace text from being conflated.
+
+** Actionable insight
+When a PDF "loses" only headings or titles, inspect the generated =.tex= and the XeLaTeX log before blaming Org export. If the structure is still there but the text vanishes selectively, grep the log for the exact font family used by that heading style. A missing font can degrade only the commands that rely on that family, while body text and running headers continue to work and make the failure look like a spacing or export bug.
+
 * =key-minor-mode-map= Wins Over Major-Mode Keymaps — Use =minor-mode-overriding-map-alist= For Per-Mode Overrides
   Date: 2026-05-03
 

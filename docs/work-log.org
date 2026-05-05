@@ -1,6 +1,17 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-05-04: Give =new-yorker= a dedicated display face and template-owned byline font
+- Cleaned up [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/new-yorker.el][latex-templates/new-yorker.el]] so the class no longer abuses =\ttfamily= as its New Yorker display face.
+- Added a dedicated =\newyorkerdisplayface= font family (prefer =Irvin=, fall back to =Courier Prime=) for section headings and display typography, while restoring the actual monospace slot to =Courier Prime= for any real =\texttt{}= content.
+- Added =\newyorkerbylinefont= in the template so source files can request the correct byline styling without hard-coding a separate display font locally.
+- Updated the real working source [[file+emacs:/Users/jay/Dropbox/kanban/finished/misshelved_jay-dixit_v3-shorter.txt][/Users/jay/Dropbox/kanban/finished/misshelved_jay-dixit_v3-shorter.txt]] to use =\newyorkerbylinefont= instead of a local =Neutraface= declaration.
+
+* 2026-05-04: Make =new-yorker= headings survive a missing Irvin font
+- Debugged a live export regression against [[file+emacs:/Users/jay/Dropbox/kanban/finished/misshelved_jay-dixit_v3-shorter.txt][/Users/jay/Dropbox/kanban/finished/misshelved_jay-dixit_v3-shorter.txt]] and its generated =.tex=: the document structure still contained =\section{Misshelved}= and =\subsection{A Compendium of Misshelved Books}=, but the rendered PDF was starting with =By Jay Dixit= and skipping those visible headings.
+- Root cause was in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/new-yorker.el][latex-templates/new-yorker.el]]: the template sets section headings in =\ttfamily=, and under XeLaTeX it was hard-coding =\setmonofont{Irvin}=. On this machine =Irvin= is not installed, so XeLaTeX fell back to =nullfont= for those headings and effectively dropped them from the page.
+- Fix: changed =new-yorker.el= to keep =Irvin= when available but fall back to =Courier Prime= when it is not, so heading text stays visible instead of disappearing.
+
 * 2026-05-04: Restore the =new-yorker= LaTeX template to the live export set
 - Moved [[file+emacs:/Users/jay/emacs/emacs-settings/archive/latex-templates/new-yorker.el][archive/latex-templates/new-yorker.el]] back into [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/new-yorker.el][latex-templates/new-yorker.el]] so the class is live again instead of archived-only.
 - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] so =jay-load-latex= loads =new-yorker.el= at export time and the preflight class-to-template map recognizes the =new-yorker= class again.
