@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-05-07: Add =M-W= kill-to-buffer-beginning binding
+- Added =kill-to-buffer-beginning= in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] as a named wrapper around the existing prefix path in =kill-to-buffer-end-or-beginning=.
+- Bound =M-W= in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] so Jay can kill from point to the beginning of the buffer directly, while keeping plain =M-w= on the existing point-to-buffer-end behavior.
+- Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]] and updated the keybinding reference docs.
+
 * 2026-05-05: Improve elegant-garamond running-header extraction without losing the small-caps feel
 - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][latex-templates/elegant-garamond.el]] and [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond-tabularray.el][latex-templates/elegant-garamond-tabularray.el]] so the running headers now use a dedicated Adobe Garamond Pro small-caps font instead of inheriting Garamond Premier Pro small caps from the body font.
 - Chose this as the compromise path after reproducing the extraction bug in a standalone XeLaTeX file: Garamond Premier Pro small caps were clearly corrupting =pdftotext= output, while Adobe Garamond Pro small caps preserved the look better than full uppercase and extracted less badly.

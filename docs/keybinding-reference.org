@@ -220,6 +220,7 @@ Annotations from [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-an
 - *[NEW]* - ~M-j~ :: =aide-openai-complete-buffer-insert=
 - *[NEW]* - ~<M-S-backspace>~ :: =backward-kill-sexp=
 - *[NEW]* - ~M-w~ :: =kill-to-buffer-end-or-beginning=
+- *[NEW]* - ~M-W~ :: =kill-to-buffer-beginning=
 - *[NEW]* - ~] ]~ :: =insert-right-bracket=
 - *[NEW]* - ~s-k d l~ :: =double-line-breaks-in-region=
 - *[NEW]* - ~s-k dd~ :: =delete-duplicate-lines-keep-blanks=

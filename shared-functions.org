@@ -3311,6 +3311,10 @@ cmd)
   (kill-region (mark) (point))
   (recenter-top-bottom))
 
+(defun kill-to-buffer-beginning ()
+  (interactive)
+  (kill-to-buffer-end-or-beginning 4))
+
 #+END_SRC
 
 ** navigation

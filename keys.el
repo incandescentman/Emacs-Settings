@@ -346,6 +346,7 @@
     ("M-j"           . aide-openai-complete-buffer-insert)
     ("<M-S-backspace>" . backward-kill-sexp)
     ("M-w"           . kill-to-buffer-end-or-beginning)
+    ("M-W"           . kill-to-buffer-beginning)
     ("] ]"           . insert-right-bracket)
     ("s-k d l"       . double-line-breaks-in-region)
     ("s-k dd"        . delete-duplicate-lines-keep-blanks)
