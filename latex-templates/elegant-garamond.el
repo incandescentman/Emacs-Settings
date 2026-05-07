@@ -96,15 +96,6 @@
     Extension = .otf
   ]{Helvetica Neue LT Pro}
   \\newcommand{\\jayfooterbrandstyle}[1]{{\\jayfooterbrandfont\\color{jayfooterbrandgrey}\\addfontfeatures{LetterSpace=-5}\\fontsize{50}{50}\\selectfont \\MakeUppercase{#1}}}
-  \\newfontfamily\\jayheaderfont[
-    Path = /Users/jay/Library/Fonts/,
-    UprightFont = Adobe-Garamond-Pro,
-    ItalicFont = Adobe-Garamond-Pro-Italic,
-    BoldFont = Adobe-Garamond-Pro-Bold,
-    BoldItalicFont = Adobe-Garamond-Pro-Bold-Italic,
-    Extension = .ttf
-  ]{Adobe Garamond Pro}
-  \\newcommand{\\jayheaderstyle}{\\jayheaderfont\\scshape}
 
   % Set main font to Garamond Premier Pro
   \\setromanfont[
@@ -130,7 +121,6 @@
   \\usepackage[mathletters]{ucs}
   \\usepackage[utf8x]{inputenc}
   \\newcommand{\\jayfooterbrandstyle}[1]{{\\sffamily\\bfseries\\color{jayfooterbrandgrey}\\fontsize{50}{50}\\selectfont \\MakeUppercase{#1}}}
-  \\newcommand{\\jayheaderstyle}{\\scshape}
 \\fi
 
 % Color Definitions
@@ -180,11 +170,11 @@
     {\\expandafter\\jay@leftheader@split\\@title\\\\\\jay@leftheader@end}
     {\\def\\jayresolvedleftheader{\\the\\leftheader}}%
   \\expandafter\\ifstrempty\\expandafter{\\the\\leftheaderurl}
-    {\\lhead{{\\jayheaderstyle \\jayresolvedleftheader}}}
-    {\\lhead{{\\jayheaderstyle \\href{\\the\\leftheaderurl}{\\jayresolvedleftheader}}}}%
+    {\\lhead{\\scshape\\jayresolvedleftheader}}
+    {\\lhead{\\scshape\\href{\\the\\leftheaderurl}{\\jayresolvedleftheader}}}%
 }
 \\makeatother
-\\rhead{{\\jayheaderstyle \\nouppercase{\\rightmark}}}
+\\rhead{\\scshape{\\nouppercase{\\rightmark}}}
 \\AtBeginDocument{\\jayapplyleftheader}
 
 % Footer configuration (controlled from org file)

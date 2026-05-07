@@ -12,12 +12,12 @@ The running headers in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templa
 The bug lives in the font/style combination, not in Org export itself. A minimal XeLaTeX repro using =Garamond Premier Pro= plus =\scshape= produced the same dropped-glyph extraction outside this repo. =pdffonts= still reported Unicode maps, so the failure was not "no ToUnicode at all"; it was the way the Garamond Premier Pro small-caps glyphs mapped back into extracted text. Swapping the same repro to Adobe Garamond Pro small caps improved extraction substantially, though it still did not round-trip as perfectly as plain uppercase.
 
 ** The Fix
-For the compromise path where the visual small-caps feel matters, the template now keeps =Garamond Premier Pro= as the body font but moves only the running headers onto Adobe Garamond Pro small caps via a dedicated =\jayheaderfont=. That improves copy/search/accessibility behavior without flattening the headers into all-caps.
+The Adobe Garamond Pro small-caps experiment did improve extraction, but it looked visibly wrong in the real contract and was reverted. The current template therefore stays on Garamond Premier Pro small caps for visual consistency, and this note should be read as a trap report rather than a description of the live template state.
 
 ** Actionable insight
 - If an =elegant-garamond= export has headers that *look* fine but extract as garbage, test the font/style in a tiny standalone XeLaTeX file before blaming Org.
 - If exact text extraction matters more than the look, use =\MakeUppercase= rather than any small-caps variant.
-- If the look matters and partial improvement is acceptable, isolate the running headers onto Adobe Garamond Pro rather than using Garamond Premier Pro small caps.
+- If you try the Adobe Garamond Pro compromise again, treat it as an aesthetic experiment, not a settled fix; in this repo it improved extraction but was rejected visually.
 
 * Contract Signature Blanks In Org LaTeX Should Be Real Rules, Not Underscore Runs
   Date: 2026-05-05

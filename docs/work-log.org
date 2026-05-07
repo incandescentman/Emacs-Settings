@@ -6,6 +6,11 @@
 - Bound =M-W= in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] so Jay can kill from point to the beginning of the buffer directly, while keeping plain =M-w= on the existing point-to-buffer-end behavior.
 - Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]] and updated the keybinding reference docs.
 
+* 2026-05-05: Revert the Adobe Garamond Pro running-header experiment
+- Restored [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][latex-templates/elegant-garamond.el]] and [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond-tabularray.el][latex-templates/elegant-garamond-tabularray.el]] to Garamond Premier Pro small caps for the running headers after reviewing the contract PDF and deciding the mixed-font compromise looked wrong on the page.
+- Kept the extraction post-mortem in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/codebase-wisdom.org][docs/codebase-wisdom.org]] but revised it so it now records the Adobe Garamond Pro attempt as a rejected experiment rather than the live template state.
+- Kept the May 5 startup timing snapshots in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/lab/startup-profile.org][docs/lab/startup-profile.org]] as lab evidence from the same export-debugging session.
+
 * 2026-05-05: Improve elegant-garamond running-header extraction without losing the small-caps feel
 - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][latex-templates/elegant-garamond.el]] and [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond-tabularray.el][latex-templates/elegant-garamond-tabularray.el]] so the running headers now use a dedicated Adobe Garamond Pro small-caps font instead of inheriting Garamond Premier Pro small caps from the body font.
 - Chose this as the compromise path after reproducing the extraction bug in a standalone XeLaTeX file: Garamond Premier Pro small caps were clearly corrupting =pdftotext= output, while Adobe Garamond Pro small caps preserved the look better than full uppercase and extracted less badly.
