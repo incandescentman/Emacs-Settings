@@ -1,6 +1,10 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-05-08: Append fresh startup profile snapshots
+- Added two new Emacs 29.4 / Org 9.8.3 measurements to [[file+emacs:/Users/jay/emacs/emacs-settings/docs/lab/startup-profile.org][docs/lab/startup-profile.org]].
+- The new samples record total init times of 1.677s and 0.830s, with [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]], [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][search-commands.org]], and [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-core.el]] still the main measured startup costs.
+
 * 2026-05-07: Add =M-W= kill-to-buffer-beginning binding
 - Added =kill-to-buffer-beginning= in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] as a named wrapper around the existing prefix path in =kill-to-buffer-end-or-beginning=.
 - Bound =M-W= in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] so Jay can kill from point to the beginning of the buffer directly, while keeping plain =M-w= on the existing point-to-buffer-end behavior.
