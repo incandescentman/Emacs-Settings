@@ -366,6 +366,7 @@ Instead of canceling export. So that I can export org-roam nodes if I want to.
 ;; Render supported emoji in LaTeX exports that load twemojis; strip the rest.
 (defconst jay/org-latex-twemoji-replacements
   '(("❤️" . "red heart")
+    ("🌹" . "rose")
     ("⚖️" . "balance scale")
     ("⚡" . "zap")
     ("✨" . "sparkles")
