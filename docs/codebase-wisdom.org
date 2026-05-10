@@ -997,6 +997,32 @@ XeLaTeX could not use Apple Color Emoji directly in this export stack, but the i
 - Use a before-processing hook for raw source rewrites that must become Org export snippets; plain-text filters are too late because Org may escape literal backslashes.
 - Be careful with =#+OPTIONS: \n:t= near raw LaTeX command lines. Preserved line breaks can append =\\[0pt]= after commands like =\thispagestyle= or =\end{center}=, which must be avoided or cleaned in a final-output filter.
 
+* Raw LaTeX Groups In Org Need Export Blocks
+  Date: 2026-05-10
+
+** The Bug
+After removing a centering environment around the Slopocalypse byline in [[file+emacs:/Users/jay/Dropbox/roam/ideas/slop/20260504145512-notes_from_the_slopocalypse_v7.org][notes_from_the_slopocalypse_v7.org]], the source had a standalone LaTeX grouping form:
+#+begin_src org
+{\neutraface\fontsize{23}{30}\selectfont
+By Jay Dixit}
+#+end_src
+Org exported the braces as visible text in the PDF instead of preserving them as LaTeX grouping.
+
+** The Truth
+Raw LaTeX command lines can pass through directly, but mixed raw LaTeX grouping plus ordinary text is ambiguous to Org. When the grouping braces are supposed to be LaTeX syntax, the whole cluster needs to be inside a LaTeX export block or an inline LaTeX snippet.
+
+** The Fix
+Wrap the grouped byline in an explicit LaTeX export block:
+#+begin_src org
+#+begin_export latex
+\noindent{\neutraface\fontsize{23}{30}\selectfont By Jay Dixit}
+#+end_export
+#+end_src
+
+** Lessons Learned / Prevention Checklist
+- Use =#+begin_export latex= for multi-token LaTeX clusters that mix commands, grouping braces, and text.
+- After removing a LaTeX environment wrapper, inspect the generated PDF or =pdftotext -bbox-layout= output for literal syntax characters that Org may have treated as prose.
+
 * Tangled Parser Errors: Fix the Org Source, Not the Generated Elisp
   Date: 2026-04-11
 

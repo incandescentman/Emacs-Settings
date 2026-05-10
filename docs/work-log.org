@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-05-10: Record Slopocalypse source-level title and byline polish
+- Followed up on the exported New Yorker draft by editing the real source file, [[file+emacs:/Users/jay/Dropbox/roam/ideas/slop/20260504145512-notes_from_the_slopocalypse_v7.org][notes_from_the_slopocalypse_v7.org]], so the byline is left-aligned instead of centered and the title fits on one line at a smaller local section size.
+- Kept the title sizing as a source-local =#+LATEX_HEADER= override rather than changing [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/new-yorker.el][new-yorker.el]] for every future =new-yorker= export.
+- Re-exported [[file+emacs:/Users/jay/Dropbox/roam/ideas/slop/Notes from the Slopocalypse v7.pdf][Notes from the Slopocalypse v7.pdf]] and rendered page 1 to verify the one-line title and left-aligned byline visually.
+
 * 2026-05-10: Fix emoji PDF export for the Slopocalypse New Yorker draft
 - Fixed LaTeX PDF export for [[file+emacs:/Users/jay/Dropbox/roam/ideas/slop/20260504145512-notes_from_the_slopocalypse_v7.org][notes_from_the_slopocalypse_v7.org]], whose intentional emoji were either disappearing or becoming replacement glyphs in [[file+emacs:/Users/jay/Dropbox/roam/ideas/slop/Notes from the Slopocalypse v7.pdf][Notes from the Slopocalypse v7.pdf]].
 - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] so LaTeX exports that opt into =twemojis= rewrite supported raw emoji to =\texttwemoji{...}= before Org parses the buffer; exports that do not opt in keep the old compile-safe stripping behavior.
