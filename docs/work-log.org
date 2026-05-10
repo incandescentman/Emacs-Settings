@@ -1786,5 +1786,11 @@
 - Left non-paragraph Org elements on Org's own fill machinery, so tables, planning lines, drawers, source blocks, and other structural elements still keep their existing behavior while prose paragraphs finally unwrap.
 - Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/spacecraft-mode.el][spacecraft-mode.el]], re-ran =check-parens= on the tangled file, passed the startup smoke test, verified the new prose path on synthetic wrapped Org paragraphs plus a mixed region, rechecked that [[file+emacs:/Users/jay/Dropbox/roam/ideas/slop/slop-optimization-log-v5.org][slop-optimization-log-v5.org]] title labels still stay untouched, rechecked that planning lines in [[file+emacs:/Users/jay/Dropbox/roam/socratic-ideas/20251207195511-my_fathers_stories.org][my_fathers_stories.org]] still stay untouched, and appended the new timing snapshot to [[file+emacs:/Users/jay/emacs/emacs-settings/docs/lab/startup-profile.org][docs/lab/startup-profile.org]].
 
+* 2026-05-10: Tune Slopocalypse v7 PDF paragraph spacing
+- Updated [[file+emacs:/Users/jay/Dropbox/roam/ideas/slop/20260504145512-notes_from_the_slopocalypse_v7.org][Notes from the Slopocalypse v7]] to keep =\n:t= line-preserving LaTeX export while overriding =\parskip= locally to =2pt plus 1pt minus 1pt=.
+- Tried global ragged-right variants, then removed them: =\AtBeginDocument{\raggedright}= collapsed the paragraph breathing in this export, while the =ragged2e= variant introduced visible hyphenation.
+- Regenerated [[file+emacs:/Users/jay/Dropbox/roam/ideas/slop/Notes from the Slopocalypse v7.pdf][Notes from the Slopocalypse v7.pdf]] and verified it with =pdfinfo=; the rebuilt PDF is valid and currently exports as 8 pages.
+- The generated PDF remains ignored by [[file+emacs:/Users/jay/Dropbox/roam/.gitignore][the Roam vault .gitignore]], so the committed Roam change is the Org source metadata rather than the PDF artifact.
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.
