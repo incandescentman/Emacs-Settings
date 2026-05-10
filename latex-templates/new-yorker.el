@@ -47,6 +47,7 @@
 \\usepackage{xurl} % Better URL line breaking
 \\usepackage{paralist}
 \\usepackage{tikz}
+\\usepackage{twemojis}
 \\usepackage{calc}
 \\usepackage{eso-pic}
 \\usepackage{etoolbox}
@@ -134,6 +135,10 @@
 \\itshape
 }
 
+\\newenvironment{jframe}
+{\\begin{center}}
+{\\end{center}}
+
 
 \\newcommand{\\newyorkerbylinefont}{\\newyorkerdisplayface\\fontsize{23}{30}\\selectfont}
 
@@ -188,6 +193,12 @@
 \\renewcommand{\\labelitemii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
 \\renewcommand{\\labelitemiii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
 \\renewcommand{\\labelitemiv}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+\\providecommand{\\labelitemv}{}
+\\providecommand{\\labelitemvi}{}
+\\providecommand{\\labelitemvii}{}
+\\providecommand{\\labelitemviii}{}
+\\providecommand{\\labelitemix}{}
+\\providecommand{\\labelitemx}{}
 \\renewcommand{\\labelitemv}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
 \\renewcommand{\\labelitemvi}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
 \\renewcommand{\\labelitemvii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
@@ -390,7 +401,8 @@
      ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
 
-(setq org-latex-to-pdf-process
+(setq org-latex-compiler "xelatex"
+      org-latex-pdf-process
   '("xelatex -interaction nonstopmode %f"
      "xelatex -interaction nonstopmode %f")) ;; for multiple passes
 

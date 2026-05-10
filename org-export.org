@@ -363,11 +363,96 @@ Instead of canceling export. So that I can export org-roam nodes if I want to.
 (add-to-list 'org-export-filter-plain-text-functions
     'my-org-add-class-to-hash-tags)
 
-;; Strip emoji from LaTeX exports
-(defun my-org-latex-strip-emoji (text backend info)
-  "Remove emoji from LaTeX export."
+;; Render supported emoji in LaTeX exports that load twemojis; strip the rest.
+(defconst jay/org-latex-twemoji-replacements
+  '(("❤️" . "red heart")
+    ("⚖️" . "balance scale")
+    ("⚡" . "zap")
+    ("✨" . "sparkles")
+    ("🤝" . "handshake")
+    ("📊" . "bar chart")
+    ("🌌" . "milky way")
+    ("🧠" . "brain")
+    ("🫥" . "dotted line face")
+    ("🧳" . "luggage"))
+  "Emoji-to-twemojis mappings used by `my-org-latex-strip-emoji'.")
+
+(defun jay/org-latex--stringify-header-value (value)
+  "Return VALUE as a newline-separated string for LaTeX header checks."
+  (cond
+   ((null value) "")
+   ((stringp value) value)
+   ((listp value) (mapconcat (lambda (item) (format "%s" item)) value "\n"))
+   (t (format "%s" value))))
+
+(defun jay/org-latex--twemojis-enabled-p (info)
+  "Return non-nil when the current LaTeX export loads the twemojis package."
+  (let ((latex-class (plist-get info :latex-class))
+        (latex-header (jay/org-latex--stringify-header-value
+                       (plist-get info :latex-header))))
+    (or (member latex-class '("new-yorker"))
+        (string-match-p "\\\\usepackage\\(?:\\[[^]]+\\]\\)?{twemojis}"
+                        latex-header))))
+
+(defun jay/org-latex--keyword-values (key)
+  "Return all Org keyword values for KEY in the current buffer."
+  (cdr (assoc key (org-collect-keywords (list key)))))
+
+(defun jay/org-latex--twemojis-enabled-in-buffer-p ()
+  "Return non-nil when the current Org buffer opts into twemojis."
+  (let ((latex-class (car (jay/org-latex--keyword-values "LATEX_CLASS")))
+        (latex-header (mapconcat #'identity
+                                 (jay/org-latex--keyword-values "LATEX_HEADER")
+                                 "\n")))
+    (or (member latex-class '("new-yorker"))
+        (string-match-p "\\\\usepackage\\(?:\\[[^]]+\\]\\)?{twemojis}"
+                        latex-header))))
+
+(defun jay/org-latex-rewrite-emoji-before-processing (backend)
+  "Rewrite supported raw emoji before LaTeX export parses the buffer.
+
+This keeps readable emoji in Org source while giving LaTeX literal export
+snippets it can compile."
   (when (org-export-derived-backend-p backend 'latex)
-    (replace-regexp-in-string "[🀀-🫿]" "" text)))
+    (let ((use-twemojis (jay/org-latex--twemojis-enabled-in-buffer-p)))
+      (save-excursion
+        (dolist (replacement jay/org-latex-twemoji-replacements)
+          (goto-char (point-min))
+          (while (search-forward (car replacement) nil t)
+            (replace-match
+             (if use-twemojis
+                 (format "@@latex:\\texttwemoji{%s}@@" (cdr replacement))
+               "")
+             t t)))
+        (goto-char (point-min))
+        (while (search-forward "️" nil t)
+          (replace-match "" t t))
+        (goto-char (point-min))
+        (while (re-search-forward "[🀀-🫿]" nil t)
+          (replace-match "" t t))))))
+
+(add-to-list 'org-export-before-processing-functions
+             #'jay/org-latex-rewrite-emoji-before-processing)
+
+(defun my-org-latex-strip-emoji (text backend info)
+  "Render or remove emoji from LaTeX export.
+
+Known emoji become `\\texttwemoji{...}' when the export class/header loads
+twemojis. Otherwise they are stripped to preserve the old compile-safe default."
+  (when (org-export-derived-backend-p backend 'latex)
+    (let ((use-twemojis (jay/org-latex--twemojis-enabled-p info)))
+      (dolist (replacement jay/org-latex-twemoji-replacements)
+        (setq text
+              (replace-regexp-in-string
+               (regexp-quote (car replacement))
+               (if use-twemojis
+                   (format "\\texttwemoji{%s}" (cdr replacement))
+                 "")
+               text t t)))
+      ;; Remove Unicode variation selectors left behind by text-vs-emoji forms.
+      (setq text (replace-regexp-in-string "️" "" text t t))
+      ;; Preserve the old fallback for emoji we have not mapped yet.
+      (replace-regexp-in-string "[🀀-🫿]" "" text t t))))
 
 (add-to-list 'org-export-filter-plain-text-functions
     'my-org-latex-strip-emoji)
@@ -375,6 +460,40 @@ Instead of canceling export. So that I can export org-roam nodes if I want to.
 ;; Also apply to headlines where emoji often appear
 (add-to-list 'org-export-filter-headline-functions
     'my-org-latex-strip-emoji)
+
+(defun jay/org-latex-clean-preserved-breaks-after-commands (text backend info)
+  "Remove preserved line breaks that are invalid after standalone LaTeX commands.
+
+Org's `\\n:t' export option can append `\\\\[0pt]' after raw LaTeX command
+lines and environments. That is useful in prose, but invalid after commands such
+as `\\thispagestyle' or `\\end{center}'."
+  (when (org-export-derived-backend-p backend 'latex)
+    (with-temp-buffer
+      (insert text)
+      (goto-char (point-min))
+      (while (re-search-forward
+              "^\\(\\\\vspace{0\\)}\\\\\\\\\\[0pt\\]$"
+              nil t)
+        (replace-match "\\1pt}" nil nil))
+      (goto-char (point-min))
+      (while (re-search-forward
+              "^\\(\\\\\\(?:thispagestyle\\|vspace\\){[^}\n]+}\\)\\\\\\\\\\[0pt\\]$"
+              nil t)
+        (replace-match "\\1" nil nil))
+      (goto-char (point-min))
+      (while (re-search-forward
+              "^\\(\\\\newfontfamily\\\\[[:alnum:]@]+{[^}\n]+}\\)\\\\\\\\\\[0pt\\]$"
+              nil t)
+        (replace-match "\\1" nil nil))
+      (goto-char (point-min))
+      (while (re-search-forward
+              "^\\(\\\\end{\\(?:center\\|jframe\\)}\\)\\\\\\\\\\[0pt\\]$"
+              nil t)
+        (replace-match "\\1" nil nil))
+      (buffer-string))))
+
+(add-to-list 'org-export-filter-final-output-functions
+             #'jay/org-latex-clean-preserved-breaks-after-commands)
 
 ;; Preserve line breaks in email signature blocks during export
 ;; Applies only when "Best,", "Cheers,", "Thanks,", "Regards,",

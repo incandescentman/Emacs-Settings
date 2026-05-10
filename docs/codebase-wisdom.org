@@ -980,6 +980,23 @@ Add the emoji stripping filter to BOTH plain-text and headline filters:
 - When a filter "doesn't work," verify the content type actually passes through that filter
 - Test with emoji in different locations (body text, headings, lists) to catch all cases
 
+* Emoji in LaTeX Export: Use Twemojis When The Emoji Are Intentional
+  Date: 2026-05-10
+
+** The Bug
+[[file+emacs:/Users/jay/Dropbox/roam/ideas/slop/20260504145512-notes_from_the_slopocalypse_v7.org][notes_from_the_slopocalypse_v7.org]] intentionally used emoji as part of the piece's visual rhythm. The old LaTeX export safety net stripped high-plane emoji and let lower-plane emoji like =⚡=, =❤️=, =⚖️=, and =✨= fall through as replacement glyphs in [[file+emacs:/Users/jay/Dropbox/roam/ideas/slop/Notes from the Slopocalypse v7.pdf][Notes from the Slopocalypse v7.pdf]].
+
+** The Truth
+XeLaTeX could not use Apple Color Emoji directly in this export stack, but the installed =twemojis= package worked because it renders emoji as graphics rather than relying on a color emoji font. For intentional emoji, stripping was the wrong policy; the source should stay readable while LaTeX receives explicit =\texttwemoji{...}= commands.
+
+** The Fix
+[[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] now rewrites supported raw emoji to =@@latex:\texttwemoji{...}@@= in an =org-export-before-processing-functions= hook when the buffer's LaTeX class or header opts into =twemojis=. [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/new-yorker.el][new-yorker.el]] loads =twemojis=, so =new-yorker= exports preserve the mapped emoji; other LaTeX exports keep the older compile-safe stripping behavior.
+
+** Lessons Learned / Prevention Checklist
+- If emoji are semantically intentional, prefer an explicit rendering backend such as =twemojis= over broad stripping.
+- Use a before-processing hook for raw source rewrites that must become Org export snippets; plain-text filters are too late because Org may escape literal backslashes.
+- Be careful with =#+OPTIONS: \n:t= near raw LaTeX command lines. Preserved line breaks can append =\\[0pt]= after commands like =\thispagestyle= or =\end{center}=, which must be avoided or cleaned in a final-output filter.
+
 * Tangled Parser Errors: Fix the Org Source, Not the Generated Elisp
   Date: 2026-04-11
 
