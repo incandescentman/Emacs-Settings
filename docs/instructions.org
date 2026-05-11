@@ -655,6 +655,33 @@ you must be able
 
 On export, those blocks become true LaTeX =verse= environments. Normal code languages still export as code/verbatim.
 
+** Emoji In LaTeX/PDF Export
+
+Some LaTeX classes, including =new-yorker=, render intentional emoji through the =twemojis= package. The mapping lives in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] as =jay/org-latex-twemoji-replacements=.
+
+If PDF export warns that an unmapped emoji will be stripped, add that emoji to the map:
+
+#+BEGIN_SRC emacs-lisp
+("🦋" . "butterfly")
+#+END_SRC
+
+The right-hand name must be a =twemojis= name. To find the name, search the installed =twemojis.sty= file:
+
+#+BEGIN_SRC sh
+rg -n "butterfly|1f98b" "$(kpsewhich twemojis.sty)"
+#+END_SRC
+
+After editing [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]], delete the stale tangled file, retangle, and check parens:
+
+#+BEGIN_SRC sh
+cd /Users/jay/emacs/emacs-settings
+rm /Users/jay/emacs/emacs-settings/org-export.el
+emacs --batch -Q --eval "(progn (require 'org) (org-babel-tangle-file \"/Users/jay/emacs/emacs-settings/org-export.org\" \"/Users/jay/emacs/emacs-settings/org-export.el\" \"emacs-lisp\"))"
+emacs --batch /Users/jay/emacs/emacs-settings/org-export.el --eval "(check-parens)"
+#+END_SRC
+
+Then re-export the Org file. If the warning is gone and the PDF renders the emoji, the map entry is good.
+
 ** PDF Filename From =#+TITLE:=
 
 When you export an Org file to PDF, the output PDF is renamed in place to use =#+TITLE:= as its basename. For example, =20260401-paul-follow-up-answers-email-draft.org= with =#+TITLE: Answers to follow-up questions= exports to =Answers to follow-up questions.pdf= in the same directory, not =20260401-paul-follow-up-answers-email-draft.pdf=.

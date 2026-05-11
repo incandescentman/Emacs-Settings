@@ -1,6 +1,10 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-05-11: Document how to add unmapped emoji for LaTeX export
+- Added a user-facing =Emoji In LaTeX/PDF Export= section to [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][docs/instructions.org]] so the unmapped-emoji warning now has a durable follow-up recipe.
+- The instructions point at =jay/org-latex-twemoji-replacements= in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]], show how to find the matching =twemojis= name with =kpsewhich= and =rg=, and include the retangle plus =check-parens= commands for [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.el][org-export.el]].
+
 * 2026-05-10: Warn before stripping unmapped emoji from LaTeX exports
 - Added an unmapped-emoji warning path in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] so LaTeX export names any high-plane emoji that are not in =jay/org-latex-twemoji-replacements= before the compile-safe stripping fallback removes them.
 - Kept the existing behavior for mapped emoji and stripped fallbacks: supported symbols still become =\texttwemoji{...}= in =twemojis= exports, while unknown high-plane emoji no longer disappear silently.
