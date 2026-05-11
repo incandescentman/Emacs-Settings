@@ -370,16 +370,24 @@ Instead of canceling export. So that I can export org-roam nodes if I want to.
     ("⚖️" . "balance scale")
     ("⚡" . "zap")
     ("✨" . "sparkles")
+    ("🛠️" . "hammer and wrench")
     ("🤝" . "handshake")
+    ("🎯" . "bullseye")
+    ("♟️" . "chess pawn")
     ("📊" . "bar chart")
+    ("🚀" . "rocket")
+    ("🔓" . "unlock")
     ("🌌" . "milky way")
     ("🧠" . "brain")
     ("🫥" . "dotted line face")
+    ("👣" . "footprints")
+    ("🗺" . "world map")
+    ("🤯" . "exploding head")
     ("🧳" . "luggage"))
   "Emoji-to-twemojis mappings used by `my-org-latex-strip-emoji'.")
 
-(defconst jay/org-latex-emoji-regexp "[🀀-🫿]"
-  "Regexp matching high-plane emoji that need LaTeX export handling.")
+(defconst jay/org-latex-emoji-regexp "\\(?:[🀀-🫿]️?\\|[☀-➿]️\\)"
+  "Regexp matching emoji that need LaTeX export handling.")
 
 (defun jay/org-latex--stringify-header-value (value)
   "Return VALUE as a newline-separated string for LaTeX header checks."
