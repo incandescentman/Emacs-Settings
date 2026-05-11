@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-05-10: Warn before stripping unmapped emoji from LaTeX exports
+- Added an unmapped-emoji warning path in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] so LaTeX export names any high-plane emoji that are not in =jay/org-latex-twemoji-replacements= before the compile-safe stripping fallback removes them.
+- Kept the existing behavior for mapped emoji and stripped fallbacks: supported symbols still become =\texttwemoji{...}= in =twemojis= exports, while unknown high-plane emoji no longer disappear silently.
+- Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.el][org-export.el]] and tested the warning path with a temporary Org buffer containing an unmapped emoji.
+
 * 2026-05-10: Add rose emoji support to the Slopocalypse LaTeX export bridge
 - Added =🌹= → =\texttwemoji{rose}= to the supported emoji map in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] after the live draft [[file+emacs:/Users/jay/Dropbox/roam/ideas/slop/20260504145512-notes_from_the_slopocalypse_v7.org][notes_from_the_slopocalypse_v7.org]] swapped the Sonnet 18 heart for a rose.
 - Verified the local TeX Live =twemojis= package defines the =rose= name, then retangled [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.el][org-export.el]], ran =check-parens=, and re-exported [[file+emacs:/Users/jay/Dropbox/roam/ideas/slop/Notes from the Slopocalypse v7.pdf][Notes from the Slopocalypse v7.pdf]].

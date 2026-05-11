@@ -378,6 +378,9 @@ Instead of canceling export. So that I can export org-roam nodes if I want to.
     ("🧳" . "luggage"))
   "Emoji-to-twemojis mappings used by `my-org-latex-strip-emoji'.")
 
+(defconst jay/org-latex-emoji-regexp "[🀀-🫿]"
+  "Regexp matching high-plane emoji that need LaTeX export handling.")
+
 (defun jay/org-latex--stringify-header-value (value)
   "Return VALUE as a newline-separated string for LaTeX header checks."
   (cond
@@ -394,6 +397,33 @@ Instead of canceling export. So that I can export org-roam nodes if I want to.
     (or (member latex-class '("new-yorker"))
         (string-match-p "\\\\usepackage\\(?:\\[[^]]+\\]\\)?{twemojis}"
                         latex-header))))
+
+(defun jay/org-latex--mapped-emoji-p (emoji)
+  "Return non-nil when EMOJI has a twemojis replacement."
+  (assoc emoji jay/org-latex-twemoji-replacements))
+
+(defun jay/org-latex--unmapped-emoji-in-buffer ()
+  "Return unique high-plane emoji in the current buffer with no replacement."
+  (let (unmapped)
+    (save-excursion
+      (goto-char (point-min))
+      (while (re-search-forward jay/org-latex-emoji-regexp nil t)
+        (let ((emoji (match-string-no-properties 0)))
+          (unless (or (jay/org-latex--mapped-emoji-p emoji)
+                      (member emoji unmapped))
+            (push emoji unmapped)))))
+    (nreverse unmapped)))
+
+(defun jay/org-latex-warn-about-unmapped-emoji (backend)
+  "Warn when LaTeX export will strip unsupported emoji."
+  (when (org-export-derived-backend-p backend 'latex)
+    (let ((unmapped (jay/org-latex--unmapped-emoji-in-buffer)))
+      (when unmapped
+        (display-warning
+         'org-latex
+         (format "Unmapped emoji will be stripped from LaTeX export: %s. Add them to `jay/org-latex-twemoji-replacements' in /Users/jay/emacs/emacs-settings/org-export.org to render them."
+                 (mapconcat #'identity unmapped " "))
+         :warning)))))
 
 (defun jay/org-latex--keyword-values (key)
   "Return all Org keyword values for KEY in the current buffer."
@@ -429,11 +459,14 @@ snippets it can compile."
         (while (search-forward "️" nil t)
           (replace-match "" t t))
         (goto-char (point-min))
-        (while (re-search-forward "[🀀-🫿]" nil t)
+        (while (re-search-forward jay/org-latex-emoji-regexp nil t)
           (replace-match "" t t))))))
 
 (add-to-list 'org-export-before-processing-functions
              #'jay/org-latex-rewrite-emoji-before-processing)
+
+(add-to-list 'org-export-before-processing-functions
+             #'jay/org-latex-warn-about-unmapped-emoji)
 
 (defun my-org-latex-strip-emoji (text backend info)
   "Render or remove emoji from LaTeX export.
@@ -453,7 +486,7 @@ twemojis. Otherwise they are stripped to preserve the old compile-safe default."
       ;; Remove Unicode variation selectors left behind by text-vs-emoji forms.
       (setq text (replace-regexp-in-string "️" "" text t t))
       ;; Preserve the old fallback for emoji we have not mapped yet.
-      (replace-regexp-in-string "[🀀-🫿]" "" text t t))))
+      (replace-regexp-in-string jay/org-latex-emoji-regexp "" text t t))))
 
 (add-to-list 'org-export-filter-plain-text-functions
     'my-org-latex-strip-emoji)
