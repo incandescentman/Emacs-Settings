@@ -377,6 +377,7 @@ Instead of canceling export. So that I can export org-roam nodes if I want to.
     ("🔍" . "magnifying glass tilted left")
     ("🤝" . "handshake")
     ("🎯" . "bullseye")
+    ("🩻" . "x-ray")
     ("🏆" . "trophy")
     ("♟️" . "chess pawn")
     ("📊" . "bar chart")
