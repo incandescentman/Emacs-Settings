@@ -370,19 +370,29 @@ Instead of canceling export. So that I can export org-roam nodes if I want to.
     ("⚖️" . "balance scale")
     ("⚡" . "zap")
     ("✨" . "sparkles")
+    ("💡" . "light bulb")
+    ("🔨" . "hammer")
     ("🛠️" . "hammer and wrench")
+    ("🔍" . "magnifying glass tilted left")
     ("🤝" . "handshake")
     ("🎯" . "bullseye")
+    ("🏆" . "trophy")
     ("♟️" . "chess pawn")
     ("📊" . "bar chart")
+    ("🥊" . "boxing glove")
+    ("🧲" . "magnet")
     ("🚀" . "rocket")
     ("🔓" . "unlock")
     ("🌌" . "milky way")
     ("🧠" . "brain")
+    ("🔬" . "microscope")
     ("🫥" . "dotted line face")
     ("👣" . "footprints")
+    ("🛝" . "playground slide")
+    ("🔌" . "electric plug")
     ("🗺" . "world map")
     ("🤯" . "exploding head")
+    ("🪜" . "ladder")
     ("🧳" . "luggage"))
   "Emoji-to-twemojis mappings used by `my-org-latex-strip-emoji'.")
 
@@ -506,30 +516,30 @@ twemojis. Otherwise they are stripped to preserve the old compile-safe default."
 (defun jay/org-latex-clean-preserved-breaks-after-commands (text backend info)
   "Remove preserved line breaks that are invalid after standalone LaTeX commands.
 
-Org's `\\n:t' export option can append `\\\\[0pt]' after raw LaTeX command
-lines and environments. That is useful in prose, but invalid after commands such
-as `\\thispagestyle' or `\\end{center}'."
+Org's `\\n:t' export option can append `\\\\' or `\\\\[0pt]' after raw
+LaTeX command lines and environments. That is useful in prose, but invalid after
+commands such as `\\thispagestyle' or `\\end{center}'."
   (when (org-export-derived-backend-p backend 'latex)
     (with-temp-buffer
       (insert text)
       (goto-char (point-min))
       (while (re-search-forward
-              "^\\(\\\\vspace{0\\)}\\\\\\\\\\[0pt\\]$"
+              "^\\(\\\\vspace{0\\)}\\\\\\\\\\(?:\\[0pt\\]\\)?$"
               nil t)
         (replace-match "\\1pt}" nil nil))
       (goto-char (point-min))
       (while (re-search-forward
-              "^\\(\\\\\\(?:thispagestyle\\|vspace\\){[^}\n]+}\\)\\\\\\\\\\[0pt\\]$"
+              "^\\(\\\\\\(?:thispagestyle\\|vspace\\){[^}\n]+}\\)\\\\\\\\\\(?:\\[0pt\\]\\)?$"
               nil t)
         (replace-match "\\1" nil nil))
       (goto-char (point-min))
       (while (re-search-forward
-              "^\\(\\\\newfontfamily\\\\[[:alnum:]@]+{[^}\n]+}\\)\\\\\\\\\\[0pt\\]$"
+              "^\\(\\\\newfontfamily\\\\[[:alnum:]@]+{[^}\n]+}\\)\\\\\\\\\\(?:\\[0pt\\]\\)?$"
               nil t)
         (replace-match "\\1" nil nil))
       (goto-char (point-min))
       (while (re-search-forward
-              "^\\(\\\\end{\\(?:center\\|jframe\\)}\\)\\\\\\\\\\[0pt\\]$"
+              "^\\(\\\\end{\\(?:center\\|jframe\\)}\\)\\\\\\\\\\(?:\\[0pt\\]\\)?$"
               nil t)
         (replace-match "\\1" nil nil))
       (buffer-string))))

@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-05-11: Add the next Slopocalypse emoji batch to LaTeX export
+- Added the latest emoji used in [[file+emacs:/Users/jay/Dropbox/roam/ideas/slop/20260504145512-notes_from_the_slopocalypse_v7.org][notes_from_the_slopocalypse_v7.org]] to =jay/org-latex-twemoji-replacements= in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]]: =💡=, =🔨=, =🔍=, =🏆=, =🥊=, =🧲=, =🔬=, =🛝=, =🔌=, and =🪜=.
+- Verified the matching names against the installed =twemojis.sty= definitions before updating the map.
+- Extended the LaTeX final-output cleanup in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] so preserved line breaks after standalone raw LaTeX commands are removed whether Org emits plain =\\= or the older =\\[0pt]= form.
+
 * 2026-05-11: Add the expanded Slopocalypse emoji set to LaTeX export
 - Added the new emoji used in [[file+emacs:/Users/jay/Dropbox/roam/ideas/slop/20260504145512-notes_from_the_slopocalypse_v7.org][notes_from_the_slopocalypse_v7.org]] to =jay/org-latex-twemoji-replacements= in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]]: =🛠️=, =🎯=, =♟️=, =🚀=, =🔓=, =👣=, =🗺=, and =🤯=.
 - Verified the matching names in the installed =twemojis.sty= file before adding them, and tightened the unmapped-emoji warning regexp so variation-selector emoji such as =🛠️= and =♟️= are detected as whole mapped emoji rather than as base characters.
