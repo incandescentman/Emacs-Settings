@@ -390,6 +390,7 @@ Instead of canceling export. So that I can export org-roam nodes if I want to.
     ("👣" . "footprints")
     ("🛝" . "playground slide")
     ("🔌" . "electric plug")
+    ("⚙️" . "gear")
     ("🗺" . "world map")
     ("🤯" . "exploding head")
     ("🪜" . "ladder")
