@@ -1,6 +1,19 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-05-15: Add puzzle-piece, magic-wand, and smiling-face-with-tear emoji to LaTeX export
+- Added =🧩= (puzzle piece), =🪄= (magic wand), and =🥹= (smiling face with tear) — all newly used in [[file+emacs:/Users/jay/Dropbox/roam/ideas/slop/20260504145512-notes_from_the_slopocalypse_v7.org][notes_from_the_slopocalypse_v7.org]] — to =jay/org-latex-twemoji-replacements= in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]].
+- Verified all three names against the installed =twemojis.sty= before adding them; retangled [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.el][org-export.el]] and ran =check-parens=.
+
+* 2026-05-15: Add chart-increasing and artist-palette emoji to LaTeX export
+- Added =📈= (chart increasing) and =🎨= (artist palette) — both used in [[file+emacs:/Users/jay/Dropbox/roam/ideas/slop/20260504145512-notes_from_the_slopocalypse_v7.org][notes_from_the_slopocalypse_v7.org]] — to =jay/org-latex-twemoji-replacements= in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]].
+- Verified both names against the installed =twemojis.sty= before adding them; retangled [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.el][org-export.el]] and ran =check-parens=.
+
+* 2026-05-15: Fix =path-copy-path-to-clipboard= in indirect buffers
+- =path-copy-path-to-clipboard= and =path-copy-path-to-clipboard-with-quotes= in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] silently no-op'd inside indirect buffers because =(buffer-file-name)= returns nil for indirect buffers. Swapped both call sites to =(buffer-file-name (buffer-base-buffer))= so the function falls back to the base buffer's file path; non-indirect buffers are unaffected because =(buffer-base-buffer)= returns nil and =buffer-file-name= then uses the current buffer.
+- Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]] and ran =check-parens=.
+- Recorded the broader gotcha in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/codebase-wisdom.org][docs/codebase-wisdom.org]] under /=(buffer-file-name)= Returns Nil In Indirect Buffers/.
+
 * 2026-05-11: Add the next Slopocalypse emoji batch to LaTeX export
 - Added the latest emoji used in [[file+emacs:/Users/jay/Dropbox/roam/ideas/slop/20260504145512-notes_from_the_slopocalypse_v7.org][notes_from_the_slopocalypse_v7.org]] to =jay/org-latex-twemoji-replacements= in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]]: =💡=, =💼=, =🔨=, =🔍=, =🩻=, =🏆=, =🥊=, =🧲=, =🔬=, =🛝=, =🔌=, =⚙️=, and =🪜=.
 - Verified the matching names against the installed =twemojis.sty= definitions before updating the map.

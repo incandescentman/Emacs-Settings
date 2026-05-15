@@ -381,6 +381,8 @@ Instead of canceling export. So that I can export org-roam nodes if I want to.
     ("🏆" . "trophy")
     ("♟️" . "chess pawn")
     ("📊" . "bar chart")
+    ("📈" . "chart increasing")
+    ("🎨" . "artist palette")
     ("🥊" . "boxing glove")
     ("🧲" . "magnet")
     ("🚀" . "rocket")
@@ -396,7 +398,10 @@ Instead of canceling export. So that I can export org-roam nodes if I want to.
     ("🗺" . "world map")
     ("🤯" . "exploding head")
     ("🪜" . "ladder")
-    ("🧳" . "luggage"))
+    ("🧳" . "luggage")
+    ("🧩" . "puzzle piece")
+    ("🪄" . "magic wand")
+    ("🥹" . "smiling face with tear"))
   "Emoji-to-twemojis mappings used by `my-org-latex-strip-emoji'.")
 
 (defconst jay/org-latex-emoji-regexp "\\(?:[🀀-🫿]️?\\|[☀-➿]️\\)"
