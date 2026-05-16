@@ -401,7 +401,11 @@ Instead of canceling export. So that I can export org-roam nodes if I want to.
     ("🧳" . "luggage")
     ("🧩" . "puzzle piece")
     ("🪄" . "magic wand")
-    ("🥹" . "smiling face with tear"))
+    ("🥹" . "smiling face with tear")
+    ("✅" . "check mark button")
+    ("🔥" . "fire")
+    ("🔧" . "wrench")
+    ("🙌" . "raising hands"))
   "Emoji-to-twemojis mappings used by `my-org-latex-strip-emoji'.")
 
 (defconst jay/org-latex-emoji-regexp "\\(?:[🀀-🫿]️?\\|[☀-➿]️\\)"

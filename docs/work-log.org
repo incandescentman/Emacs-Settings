@@ -1,6 +1,10 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-05-15: Add check-mark, fire, wrench, and raising-hands emoji to LaTeX export
+- Added =✅= (check mark button), =🔥= (fire), =🔧= (wrench), and =🙌= (raising hands) — all newly used in [[file+emacs:/Users/jay/Dropbox/roam/ideas/slop/20260504145512-notes_from_the_slopocalypse_v7.org][notes_from_the_slopocalypse_v7.org]] — to =jay/org-latex-twemoji-replacements= in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]].
+- Verified all four names against the installed =twemojis.sty= before adding them; retangled [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.el][org-export.el]] and ran =check-parens=.
+
 * 2026-05-15: Add HTML / Prince companion CSS for the new-yorker LaTeX class
 - Created [[file+emacs:/Users/jay/emacs/emacs-settings/assets/css/new-yorker.css][assets/css/new-yorker.css]] as the HTML/Prince counterpart to [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/new-yorker.el][latex-templates/new-yorker.el]]. Mirrors the LaTeX template's color tokens (=spacegrey= #434346, =elegantblue= #4380b9 for links), font cascades (Adobe Caslon Pro body, Irvin display face for the article title only), and layout (parskip-style paragraph spacing, no parindent, tiny bullet markers, ragged-right headings).
 - Wire per-document with =#+HTML_HEAD: <link rel="stylesheet" href="/Users/jay/emacs/emacs-settings/assets/css/new-yorker.css"/>=. Companion =@page= rule sets letter size + 1in/1.5in margins for Prince so PDF output matches the LaTeX template's =hmargin=1.5in= geometry.
