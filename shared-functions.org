@@ -2146,7 +2146,7 @@ Add 'filename' to the kill ring *without duplicating it* if it's already there.
  ;; Define a local variable 'filename' to store the path of the current file or directory.
  (let ((filename (if (equal major-mode 'dired-mode)
            default-directory ; If in 'dired-mode', use the current directory.
-          (buffer-file-name)))) ; Otherwise, use the file path of the current buffer.
+          (buffer-file-name (buffer-base-buffer))))) ; Otherwise, use the file path of the current buffer (or its base, for indirect buffers).
   ;; Check if 'filename' is non-nil and is not the latest entry in the kill ring.
   (when (and filename (not (equal filename (car kill-ring))))
    ;; Add 'filename' to the kill ring without duplicating it if it's already there.
@@ -2171,7 +2171,7 @@ Useful for working with files and references:
   (interactive)
   (let ((filename (if (equal major-mode 'dired-mode)
                       default-directory
-                    (buffer-file-name))))
+                    (buffer-file-name (buffer-base-buffer)))))
     (when filename
       (with-temp-buffer
         (insert filename)

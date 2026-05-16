@@ -2,6 +2,51 @@
 #+DATE: 2025-09-24
 #+DESCRIPTION: Debugging post-mortems and prevention checklists.
 
+* Display Fonts With No Lowercase Glyphs Render Silent All-Caps When Cascaded for HTML
+  Date: 2026-05-15
+
+** Trigger
+While building [[file+emacs:/Users/jay/emacs/emacs-settings/assets/css/new-yorker.css][assets/css/new-yorker.css]] (the HTML/Prince companion to the New Yorker LaTeX class), heading text and the byline rendered as ALL CAPS in Chrome and in Prince PDF output, even though no =text-transform: uppercase= or =font-variant: small-caps= rule was in effect. Removing the explicit small-caps rule did not fix it.
+
+** Mechanism
+The font cascade started with =font-family: Irvin, "Playfair Display", "Bodoni 72", "Bodoni 72 Smallcaps", Didot, ...=. Two of those entries silently force uppercase rendering by the *font itself*, not by any CSS transform:
+- *Irvin* (the New Yorker's iconic display face, installed locally so the LaTeX template can use it) is a titling font containing only uppercase glyphs. When the browser asks it to render lowercase letters, it substitutes the uppercase form because no lowercase form exists in the font file.
+- *Bodoni 72 Smallcaps* (a default macOS font) has the smallcaps treatment baked into its glyph table — every "lowercase" character is already a smallcap.
+
+So if Irvin (or Bodoni 72 Smallcaps) is installed and is the first matching family in the cascade, the browser uses it and you get all-caps with zero CSS hint that anything is wrong. =text-transform=, =font-variant=, and =font-feature-settings= will all show "none" / "normal" in DevTools.
+
+** The Fix
+Scope uppercase-only display faces to the elements where all-caps is intended (the article title / =h1=). For headings and bylines that should read in mixed case, either:
+1. Drop the offending font from the cascade entirely, or
+2. Use a different cascade for those elements (e.g., the body serif at a larger size).
+
+In =new-yorker.css= this means =h1= keeps the Irvin cascade, while =h2-h6= and =.byline= use a Caslon body cascade or a sans-serif (Neutraface analogue) cascade that contains real mixed-case glyphs.
+
+** Actionable insight
+- *Symptom signature to recognize next time*: text rendering as ALL CAPS in HTML output despite no =text-transform= / =font-variant= rule. First diagnostic in DevTools: inspect the element's *Computed* font-family — whichever family the browser actually picked is the culprit.
+- *Display fonts to suspect on macOS*: any titling face (Irvin, old Trajan-style fonts, single-case display fonts), and the explicit "Smallcaps" family variants (Bodoni 72 Smallcaps, etc.). These are not browser bugs — the fonts genuinely lack the missing glyphs.
+- *Rule of thumb when adding a font to a CSS cascade*: if the font name includes "Smallcaps", "Titling", "Display", or "Caps", confirm it has lowercase glyphs before placing it ahead of mixed-case fonts in the fallback chain.
+- *Translation gotcha when porting LaTeX templates to CSS*: LaTeX classes can use uppercase-only display faces for section headings because LaTeX users typically intend that effect. CSS gets the same all-caps result for free, but only at heading levels where you actually want it — scope the display face to those levels.
+
+* =(buffer-file-name)= Returns Nil In Indirect Buffers
+  Date: 2026-05-15
+
+** Trigger
+=path-copy-path-to-clipboard= (bound to =s-|=) appeared to silently do nothing when invoked from inside an indirect buffer — no message, no clipboard update — even though it worked fine in the underlying file buffer.
+
+** Mechanism
+Indirect buffers (created by =clone-indirect-buffer=, =org-tree-to-indirect-buffer=, =C-x 4 c=, etc.) share text with a base buffer but are *not themselves visiting a file*. =(buffer-file-name)= consults the buffer-local =buffer-file-name= variable on the current buffer, which is nil for indirect buffers — only the base buffer holds the file path. Any function that gates behavior on =(when filename ...)= silently no-ops.
+
+** The Fix
+Use =(buffer-file-name (buffer-base-buffer))= instead of bare =(buffer-file-name)=. =(buffer-base-buffer)= returns the base buffer of an indirect buffer, or nil if the current buffer is not indirect. When passed nil, =buffer-file-name= falls back to the current buffer — so the substitution is a strict superset of the original behavior and doesn't need a conditional.
+
+Applied in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] for both =path-copy-path-to-clipboard= and =path-copy-path-to-clipboard-with-quotes=.
+
+** Actionable insight
+- Any utility that reads =(buffer-file-name)= and is callable from prose-editing contexts (Org subtree narrowing via indirect buffers, =org-edit-special= source blocks, etc.) should prefer =(buffer-file-name (buffer-base-buffer))=.
+- Same gotcha applies to =default-directory= consumers if the indirect buffer was created with a different =default-directory= than its base — but that's much rarer.
+- Symptom signature to recognize next time: a path/file-aware command works in some buffers and silently does nothing in others, with no error and no message. First diagnostic: =M-: (buffer-file-name)= in the failing buffer; if it returns nil, check =(buffer-base-buffer)=.
+
 * Garamond Premier Pro Small Caps Break PDF Header Extraction
   Date: 2026-05-05
 
