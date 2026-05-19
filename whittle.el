@@ -7,10 +7,17 @@
 ;;; Customization -------------------------------------------------------------
 
 (defvar whittle/conservative-filler-rules
-  '(("kind of like" "\\<kind of like\\>[[:space:][:punct:]]*" "")
+  ;; Two patterns per filler: the comma-bounded interjection form (",
+  ;; um, ") is removed wholesale, including both surrounding commas, so
+  ;; we don't leave a stranded leading comma like "very, hierarchical".
+  ;; The bare form ("um ") is removed afterward for any leftovers.
+  '(("kind of like" ",[[:blank:]]*\\<kind of like\\>[[:blank:]]*,?[[:blank:]]*" " ")
+    ("kind of like" "\\<kind of like\\>[[:space:][:punct:]]*" "")
+    ("i mean" ",[[:blank:]]*\\<i mean\\>[[:blank:]]*,?[[:blank:]]*" " ")
     ("i mean" "\\<i mean\\>[[:space:][:punct:]]*" "")
-    ("um/uh" "\\<\\(um+\\|uh\\)\\>[[:space:][:punct:]]*" "")
-    (", like," ",[[:space:]]*like[[:space:]]*," ", "))
+    ("um/uh" ",[[:blank:]]*\\<\\(?:um+\\|uh\\)\\>[[:blank:]]*,?[[:blank:]]*" " ")
+    ("um/uh" "\\<\\(?:um+\\|uh\\)\\>[[:space:][:punct:]]*" "")
+    (", like," ",[[:blank:]]*\\<like\\>[[:blank:]]*,[[:blank:]]*" " "))
   "Conservative filler cleanup rules as (LABEL REGEXP REPLACEMENT).")
 
 (defvar whittle/transcript-edge-filler-rules
@@ -31,12 +38,16 @@
 
 (defconst whittle/duplicate-word-exclusions
   '("that" "so" "very" "really" "yes" "no" "ha" "wow" "well" "yeah"
-    "go" "bye" "oh")
+    "go" "bye" "oh" "had" "have")
   "Words that can appear twice legitimately (case-insensitive).")
 
 (defconst whittle/false-start-prefixes
   '("a" "an" "he" "her" "his" "i" "it" "my" "our" "she" "the" "their"
-    "these" "they" "this" "those" "we" "you" "your")
+    "these" "they" "this" "those" "we" "you" "your"
+    ;; Contractions — the word-boundary in the regex won't reach across
+    ;; the apostrophe, so "it" alone won't match "it's a, it's a".
+    "he's" "i'm" "it's" "she's" "that's" "there's" "they're" "we're"
+    "what's" "you're")
   "Words that commonly begin transcript false starts.")
 
 ;;; Helpers -------------------------------------------------------------------
@@ -122,15 +133,21 @@
   (pcase-let* ((`(,start . ,limit) (whittle--region-bounds beg end))
                (limit-marker (copy-marker limit))
                (case-fold-search t)
-               ;; Use explicit Emacs word boundaries (\</\>) for readability.
-               (dup-regexp "\\<\\([[:alpha:]']+\\)\\>\\(?:[[:space:]\n–—]+\\1\\>\\)+")
+               ;; Comma is a separator too — transcripts often punctuate
+               ;; stammered repeats as "your, your" or "I, I".
+               (dup-regexp "\\<\\([[:alpha:]']+\\)\\>\\(?:[[:space:]\n,–—]+\\1\\>\\)+")
                (removed (make-hash-table :test #'equal)))
     (unwind-protect
         (save-excursion
           (goto-char start)
           (while (re-search-forward dup-regexp limit-marker t)
-            (let ((word (downcase (match-string 1))))
-              (unless (member word whittle/duplicate-word-exclusions)
+            (let ((word (downcase (match-string 1)))
+                  (preceding (char-before (match-beginning 0))))
+              ;; Skip if the first occurrence is part of a hyphenated
+              ;; compound (e.g. "goings-on on the ship" must stay), or
+              ;; if the word is in the exclusion list.
+              (unless (or (eq preceding ?-)
+                          (member word whittle/duplicate-word-exclusions))
                 (let ((match-beg (match-beginning 0))
                       (replacement (match-string 1)))
                   (whittle--increment removed word)
@@ -144,7 +161,7 @@
   (let* ((prefixes (regexp-opt whittle/false-start-prefixes t))
          (regexp (concat "\\<\\(" prefixes
                          "\\(?:[[:space:]\n]+[[:alpha:]']+\\)\\{0,2\\}\\)"
-                         "\\(?:[[:space:]\n]+\\)\\1\\>")))
+                         "\\(?:[[:space:]\n,]+\\)\\1\\>")))
     (pcase-let* ((`(,start . ,limit) (whittle--region-bounds beg end))
                  (limit-marker (copy-marker limit))
                  (case-fold-search t)
@@ -161,6 +178,38 @@
                 (goto-char match-beg))))
         (set-marker limit-marker nil))
       removed)))
+
+(defun whittle--collapse-em-dash-false-starts (beg end)
+  "Drop transcript false-start fragments ending in `—' between BEG and END.
+A candidate fragment is the text between the previous sentence boundary
+and an em-dash followed by whitespace. It is removed only if it contains
+at least one comma (a strong false-start signal — \"I, it's— I think\")
+and is 10 words or fewer. Leading-comma-less em-dash uses like \"The cat
+— a tabby — sat\" are left alone."
+  (pcase-let* ((`(,start . ,limit) (whittle--region-bounds beg end))
+               (limit-marker (copy-marker limit))
+               (count 0))
+    (unwind-protect
+        (save-excursion
+          (goto-char start)
+          (while (re-search-forward "—[[:space:]]+" limit-marker t)
+            (let* ((em-start (match-beginning 0))
+                   (em-end (match-end 0))
+                   (frag-start
+                    (save-excursion
+                      (goto-char em-start)
+                      (if (re-search-backward "[.!?\n]" start t)
+                          (progn (forward-char 1)
+                                 (skip-chars-forward " \t" em-start)
+                                 (point))
+                        start)))
+                   (fragment (buffer-substring-no-properties frag-start em-start)))
+              (when (and (string-match-p "," fragment)
+                         (<= (length (split-string fragment "[[:space:]]+" t)) 10))
+                (delete-region frag-start em-end)
+                (setq count (1+ count))))))
+      (set-marker limit-marker nil))
+    count))
 
 (defun whittle--join-transcript-lines (beg end)
   "Join mid-sentence line breaks between BEG and END."
@@ -315,6 +364,10 @@
           (whittle--remove-filler-words beg end whittle/conservative-filler-rules))
          (edge-fillers
           (whittle--remove-filler-words beg end whittle/transcript-edge-filler-rules))
+         ;; Em-dash collapse must run before false-starts/dup-words, since
+         ;; those would otherwise strip the comma that signals the fragment
+         ;; is a stammer rather than a parenthetical.
+         (em-dash-false-starts (whittle--collapse-em-dash-false-starts beg end))
          (false-starts (whittle--remove-false-starts beg end))
          (duplicate-counts (whittle--remove-duplicated-words beg end))
          (punctuation (whittle--cleanup-punctuation beg end))
@@ -323,6 +376,7 @@
      "Whittle transcript"
      (list (whittle--format-count-summary line-joins "joined lines")
            (whittle--format-count-summary filler-chains "filler chains")
+           (whittle--format-count-summary em-dash-false-starts "em-dash false starts")
            (whittle--format-table-summary conservative-fillers "fillers")
            (whittle--format-table-summary edge-fillers "edge fillers")
            (whittle--format-table-summary false-starts "false starts")

@@ -1,6 +1,26 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-05-19: Teach =whittle-transcript= to clean comma-laden false starts and em-dash interruptions
+- Source transcript that motivated the change had three patterns =whittle-transcript= was missing: comma-separated duplications (=your, your=, =I, I=, =it's a, it's a=), em-dash false starts (=Yeah, I, it's— I, I think it's like the—=), and contractions as false-start phrases (=it's a, it's a huge one=).
+- Changes in [[file+emacs:/Users/jay/emacs/emacs-settings/whittle.el][whittle.el]]:
+  1. =whittle--remove-duplicated-words=: added =,= to the separator class in =dup-regexp= so comma-stammered repeats collapse.
+  2. =whittle--remove-false-starts=: added =,= to the inter-repeat separator so phrase-level repeats with comma punctuation collapse (=it's a, it's a= → =it's a=).
+  3. New =whittle--collapse-em-dash-false-starts=: scans for =— = and removes the fragment back to the previous sentence boundary, but only when the fragment contains at least one comma (strong false-start signal) and is 10 words or fewer. Conservative-by-design — legitimate parentheticals like =The cat — a tabby — sat= lack a leading comma and are left alone.
+  4. Wired the new pass into =whittle-transcript= /before/ false-starts and dup-words (those would otherwise strip the comma that signals the fragment is a stammer, not a parenthetical).
+  5. Extended =whittle/false-start-prefixes= with common contractions (=it's=, =that's=, =we're=, =I'm=, =you're=, =they're=, =she's=, =he's=, =there's=, =what's=) — the existing word-boundary anchor (=\<it\>=) can't reach across the apostrophe in =it's=, so =it= alone never matched.
+- Tested in a batch =emacs --batch= harness against the live transcript; =Yeah, I, it's— I, I think it's like the— your, your friend= collapses to =Your friend=, =It's a, it's a huge one= collapses to =It's a huge one=. Stray mid-sentence commas (=It's, even=, =that's, captured=) and mid-sentence wrong capitalization (=Talking= after =getting used to=) are intentionally left alone — both have too high a false-positive risk to auto-fix.
+- Ran =check-parens=; no warnings.
+
+* 2026-05-19: Fix =pasteboard-paste-adaptive= corrupting single-star Org headings
+- Reported symptom: pasting text whose top-level structure used =* Heading= lines rewrote them all to =- Heading= when the same buffer contained any =-= bullets elsewhere. Repro text was a Claude reply with =* Option 1 / * Option 2 / * Option 3 / * My pick= sections plus a dash-bulleted "Three reasons" list.
+- Root cause was two compounding bugs in [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][pasteboard-copy-and-paste-functions.el]]:
+  1. =pasteboard--analyse-clipboard-text= only scored =\\*\\{2,\\}= (two-or-more-star) lines as Org headings, so single-star Org headings contributed zero to =org-score=. The 3 dash bullets in "My pick" pushed =md-score= past the +2 threshold and the analyser picked =style = 'markdown=.
+  2. The "fallback" loop in =pasteboard--clean-string= unconditionally rewrote every =^\\* = line to =- = once style was =markdown=, ignoring the neighbor-aware =pasteboard--should-convert-asterisk-line= heuristic that the primary converter respects.
+- Fix 1: =pasteboard--analyse-clipboard-text= now classifies each top-level single-star line by its non-blank neighbors via =pasteboard--neighbor-nonblank-kind=. Indented or list-neighbored lines still count as =asterisk-bullets=; lines surrounded by paragraph text now score =org-score += 1=, the same way an Org heading would.
+- Fix 2: the fallback loop now calls =pasteboard--should-convert-asterisk-line= per match, so even when style misclassifies as =markdown=, top-level =* = lines whose neighbors are paragraph text are left intact.
+- Verified against the original repro text in a batch =emacs --batch= harness: analyser now reports =style=nil=, =md-score=3=, =org-score=4=, and all four =* Option N / * My pick= headings survive =pasteboard--clean-string= unchanged. Pure markdown bullet lists (=* Apple / * Banana / * Cherry=) still classify as =markdown= via the existing =asterisk-bullets >= 3= fallback in the cascade. Ran =check-parens= and byte-compile; no new warnings.
+
 * 2026-05-15: Add check-mark, fire, wrench, and raising-hands emoji to LaTeX export
 - Added =✅= (check mark button), =🔥= (fire), =🔧= (wrench), and =🙌= (raising hands) — all newly used in [[file+emacs:/Users/jay/Dropbox/roam/ideas/slop/20260504145512-notes_from_the_slopocalypse_v7.org][notes_from_the_slopocalypse_v7.org]] — to =jay/org-latex-twemoji-replacements= in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]].
 - Verified all four names against the installed =twemojis.sty= before adding them; retangled [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.el][org-export.el]] and ran =check-parens=.
