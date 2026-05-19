@@ -713,9 +713,21 @@ Adds blank line before #+begin_src and after #+end_src for readability."
               (pcase target
                 ('md-score  (cl-incf md-score weight))
                 ('org-score (cl-incf org-score weight))))))
+        ;; Classify single-asterisk lines by neighbor context:
+        ;; indented or list-neighbored → bullet; surrounded by paragraph
+        ;; text → likely an Org heading, score as Org.
         (goto-char (point-min))
-        (while (re-search-forward "^[ \t]*\\* \\S-" nil t)
-          (cl-incf asterisk-bullets))
+        (while (re-search-forward "^\\([ \t]*\\)\\* \\S-" nil t)
+          (let* ((pos (match-beginning 0))
+                 (indent (length (match-string 1)))
+                 (prev (pasteboard--neighbor-nonblank-kind pos 'prev))
+                 (next (pasteboard--neighbor-nonblank-kind pos 'next))
+                 (listish '(asterisk-bullet dash-bullet ordered-bullet)))
+            (if (or (> indent 0)
+                    (memq prev listish)
+                    (memq next listish))
+                (cl-incf asterisk-bullets)
+                (cl-incf org-score 1))))
         (let ((style
                (cond
                 ((>= md-score (+ org-score 2)) 'markdown)
@@ -874,11 +886,14 @@ This function is pure text transformation and does not insert into buffers."
                     (when pasteboard-convert-markdown-inline-emphasis
                       (pasteboard--convert-markdown-inline-emphasis region-beg region-end))
                     (pasteboard--convert-asterisk-bullets-to-dashes region-beg region-end skip-lines)
-                    ;; Fallback: if any single-asterisk lines slipped through, coerce them now.
+                    ;; Fallback: if any single-asterisk lines slipped through,
+                    ;; coerce them now — but only when the neighbor heuristic
+                    ;; agrees they are bullets, not Org headings.
                     (goto-char region-beg)
                     (while (re-search-forward "^\\([ \t]*\\)\\* \\(.*\\)$" region-end t)
-                      (let ((line-no (line-number-at-pos (match-beginning 0))))
-                        (unless (and skip-lines (memq line-no skip-lines))
+                      (let ((match-beg (match-beginning 0))
+                            (indent (length (match-string 1))))
+                        (when (pasteboard--should-convert-asterisk-line match-beg indent skip-lines)
                           (replace-match "\\1- \\2" t))))
                     (pasteboard--tighten-markdown-table-separators region-beg region-end)
                     (when (fboundp 'normalize-dashes)

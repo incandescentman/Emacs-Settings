@@ -15,6 +15,7 @@
 - 2025-10-05 critical fix: markdown bold `**text**` → org bold `*text*` conversion order and heading detection.
 - 2025-10-10 critical fix: `pasteboard--demote-headings-in-string` regex pattern fixed to only match actual headings (with space after stars), not bold text at line start.
 - 2025-11-02 improvement: added dedicated Markdown table separator tightening and defaulted `fundamental-mode` pastes to verbatim.
+- 2026-05-19 critical fix: `pasteboard-paste-adaptive` was rewriting top-level `* Heading` lines to `- Heading` whenever the clipboard text also contained any `-` bullets. Two compounding bugs: (a) `pasteboard--analyse-clipboard-text` only scored `\\*\\{2,\\}` (two-or-more-star) lines as Org, so single-star Org headings contributed nothing to `org-score`, letting `md-score` win on any text that mixed `*` headings with `-` bullets; (b) the "fallback" coercion loop in `pasteboard--clean-string` unconditionally rewrote every `^\\* ` line to `- ` once the style was `markdown`, ignoring the neighbor-aware `pasteboard--should-convert-asterisk-line` heuristic that the primary converter respects. Fix: the analyser now classifies each top-level single-`*` line by its non-blank neighbors (paragraph-text neighbors → Org signal; list neighbors → bullet count), and the fallback loop now calls `pasteboard--should-convert-asterisk-line` per match so heading-like single-`*` lines are protected even when scoring still picks `markdown`.
 
 * Current Implementation Details
 
@@ -167,19 +168,28 @@ Detect when clipboard text is Markdown using `* ` for unordered lists, convert t
 
 ** Detection Logic
 =pasteboard--analyse-clipboard-text= scores signals:
-- *Markdown signals*: `^#` headings, `- `/`* ` bullets, ordered lists, blockquotes, fenced code, inline links, `**bold**`
-- *Org signals*: `#+` directives, TODO keywords, property drawers, multi-star headings
+- *Markdown signals*: `^#` headings, `-` / `+` bullets, ordered lists, blockquotes, fenced code, inline links, `**bold**`. Single-`*` bullets are NOT scored directly here — they are classified separately (see below).
+- *Org signals*: `#+` directives, TODO keywords, property drawers, multi-star headings (`\\*\\{2,\\}`), `SCHEDULED:` / `DEADLINE:` markers.
 
-Style selection:
-- =md-score >= org-score + 2= → Markdown
-- =org-score >= md-score + 2= → Org
-- Edge cases handle "all Markdown, no Org" and "many asterisk bullets, zero Org traits"
+After the regex-driven scoring, the analyser walks every top-level `^\\* ` line and classifies it by neighbor context (using `pasteboard--neighbor-nonblank-kind`):
+- Indented OR list-neighbored → counted as `asterisk-bullets` (markdown-bullet-like).
+- Surrounded by paragraph text or other Org headings → scored as `org-score += 1` (single-star Org heading).
+
+Style selection (cascade in order):
+1. =md-score >= org-score + 2= → Markdown
+2. =org-score >= md-score + 2= → Org
+3. =md-score >= 3= and =org-score = 0= → Markdown
+4. =md-score = 0= and =org-score > 0= → Org
+5. =asterisk-bullets >= 3= and =org-score = 0= → Markdown (catches plain `* a / * b / * c` bullet lists)
+6. Otherwise → =nil= (ambiguous — skip the markdown→org transforms)
+
+Override: if =pasteboard--text-contains-markdown-headings-p= matches any =##=–=######= heading in the text, the style is *forced* to markdown regardless of scoring.
 
 ** Conversion Workflow
 1. Headings convert first (=convert-markdown-headings-to-org=)
 2. Smart quotes, weird-space cleanup, blockquotes, links
-3. If style is markdown: =pasteboard--convert-asterisk-bullets-to-dashes=
-4. Final sweep converting remaining `* ` to `- `
+3. If style is markdown: =pasteboard--convert-asterisk-bullets-to-dashes=, which calls =pasteboard--should-convert-asterisk-line= per match (indent>0 → convert; indent=0 → convert only when a non-blank neighbor is list-like).
+4. Fallback sweep for any `^\\* ` lines that slipped through — but the fallback now also calls =pasteboard--should-convert-asterisk-line=, so heading-like single-`*` lines (text neighbors) are preserved even if step 3 missed them.
 
 ** Reference Fixtures
 Located in =debug/=:

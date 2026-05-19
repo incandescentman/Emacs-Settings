@@ -2,7 +2,46 @@
 #+DATE: 2025-09-24
 #+DESCRIPTION: Debugging post-mortems and prevention checklists.
 
-* Display Fonts With No Lowercase Glyphs Render Silent All-Caps When Cascaded for HTML
+* "Fallback" Coercion Loops Must Respect The Same Heuristic As The Primary
+  Date: 2026-05-19
+
+** Trigger
+=pasteboard-paste-adaptive= rewrote top-level =* Heading= lines to =- Heading= when the same clipboard text also contained any =-= bullets. The repro was a Claude reply that used =* Option 1 / * Option 2 / * Option 3 / * My pick= section headings plus a small =- a / - b / - c= "three reasons" list inside one of those sections. Every =* Option N= turned into =- Option N= on paste.
+
+** Mechanism
+Two bugs compounded inside [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][pasteboard-copy-and-paste-functions.el]]:
+
+1. =pasteboard--analyse-clipboard-text= only scored =\\*\\{2,\\}= (two-or-more-star) lines as Org headings. Single-star Org headings contributed *zero* to =org-score=, so any text that mixed single-star Org headings with =-= bullets always tipped =md-score >= org-score + 2= and the analyser chose =style = 'markdown=.
+
+2. The primary converter, =pasteboard--convert-asterisk-bullets-to-dashes=, was actually *correct*: it called =pasteboard--should-convert-asterisk-line= per match, and that helper would leave a top-level =* = line alone when its non-blank neighbors were plain paragraph text (heading-like) rather than other list items. But =pasteboard--clean-string= contained a "fallback" loop right after the primary that *unconditionally* rewrote every remaining =^\\* = line to =- =:
+
+   #+begin_src elisp
+   ;; Fallback: if any single-asterisk lines slipped through, coerce them now.
+   (while (re-search-forward "^\\([ \t]*\\)\\* \\(.*\\)$" region-end t)
+     (let ((line-no (line-number-at-pos (match-beginning 0))))
+       (unless (and skip-lines (memq line-no skip-lines))
+         (replace-match "\\1- \\2" t))))
+   #+end_src
+
+   The fallback's =skip-lines= protected only lines that had been recognized as =##=-style Markdown headings up front. Single-star Org headings were not on that list, so the fallback silently undid every protection the primary converter had carefully applied.
+
+The first bug alone would have been recoverable — the primary converter still made the right call on each =* = line. It was the second bug that turned the misclassification into actual data corruption.
+
+** The Fix
+Two targeted edits in [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][pasteboard-copy-and-paste-functions.el]]:
+
+1. =pasteboard--analyse-clipboard-text= now classifies every top-level single-=*= line by its non-blank neighbors via =pasteboard--neighbor-nonblank-kind=. Indented or list-neighbored lines still count as =asterisk-bullets= (bullet-like); lines surrounded by paragraph text or other Org headings score =org-score += 1= (heading-like).
+
+2. The fallback loop in =pasteboard--clean-string= now calls =pasteboard--should-convert-asterisk-line= per match — the same heuristic the primary converter uses. Heading-like top-level =* = lines are preserved even if the analyser still picks =style = 'markdown= upstream.
+
+Verified against the repro text under =emacs --batch=: analyser now reports =style = nil= (was =markdown=), and all four =* Option N / * My pick= headings survive the clean pipeline. Pure =* Apple / * Banana / * Cherry= bullet lists still classify as Markdown via the unchanged =asterisk-bullets >= 3= rule in the cascade.
+
+** Actionable insight
+- *Symptom signature*: a heuristic-aware function appears to do the right thing in isolation, but its caller still produces the wrong output. Suspect a downstream "defense-in-depth" pass that does *not* consult the same heuristic.
+- *Anti-pattern to recognize when reading code*: a comment like "Fallback: if any X slipped through, coerce them now" followed by an unconditional rewrite. If the primary path was conditional, the fallback must be conditional too — otherwise the fallback is not defense in depth, it is a silent override.
+- *Rule for adding belt-and-suspenders cleanup*: the belt and the suspenders must agree on what they are holding up. If the primary converter consults =pasteboard--should-convert-asterisk-line=, every later sweep that touches the same lines must consult it as well.
+- *Detection-vs-action separation*: when a detector (=pasteboard--analyse-clipboard-text=) feeds an action (=pasteboard--clean-string=), be skeptical of action-level fallbacks that operate on signals the detector classified ambiguously. They re-introduce the very ambiguity the detector tried to resolve.
+- *Debugging path that would have found this faster*: when an unwanted transformation happens, =M-x trace-function= the primary converter — if it shows the line being *skipped*, the corruption is happening somewhere downstream of it, not inside it. The bug is in whatever runs after.
   Date: 2026-05-15
 
 ** Trigger
