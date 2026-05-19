@@ -1,5 +1,23 @@
 ;;; whittle.el --- Clean filler and transcript artifacts -*- lexical-binding: t; -*-
 
+;;; Commentary:
+
+;; Two entry points:
+;;
+;;   `whittle' — conservative pass for any prose. Removes comma-bounded
+;;     interjections (", um, ", ", I mean, ", ", like, ", ", kind of like, "),
+;;     collapses accidental duplicated words, normalizes punctuation and case.
+;;
+;;   `whittle-transcript' — aggressive pass for speech-to-text output.
+;;     Adds line-joining for mid-sentence wraps, sentence-edge filler removal
+;;     ("Like, ..." / ". So, ..."), filler-chain collapse, and false-start
+;;     detection on top of the conservative pass.
+;;
+;; Both accept an optional region. Empty buffer or no region falls through to
+;; the whole buffer. Reports per-rule counts in the echo area on completion.
+
+;;; Code:
+
 (require 'cl-lib)
 (require 'subr-x)   ;; for `string-join'
 (require 'rx)
@@ -21,11 +39,15 @@
   "Conservative filler cleanup rules as (LABEL REGEXP REPLACEMENT).")
 
 (defvar whittle/transcript-edge-filler-rules
+  ;; Use [:blank:] (space/tab) rather than [:space:] (which includes
+  ;; newlines) for leading/trailing slop. [:space:] would let `^...*`
+  ;; anchor at a blank line and greedily eat the trailing newline,
+  ;; collapsing the paragraph break before the next paragraph's filler.
   '(("edge filler"
-     "^[[:space:]]*\\(?:\\<so\\>\\|\\<well\\>\\|\\<ok\\(?:ay\\)?\\>\\|\\<right\\>\\|\\<you know\\>\\|\\<like\\>\\)[,[:space:]-]*"
+     "^[[:blank:]]*\\(?:\\<so\\>\\|\\<well\\>\\|\\<ok\\(?:ay\\)?\\>\\|\\<right\\>\\|\\<you know\\>\\|\\<like\\>\\)[,[:blank:]-]*"
      "")
     ("edge filler"
-     "\\([.!?][[:space:]\n]+\\)\\(?:\\<so\\>\\|\\<well\\>\\|\\<ok\\(?:ay\\)?\\>\\|\\<right\\>\\|\\<you know\\>\\|\\<like\\>\\)[,[:space:]-]*"
+     "\\([.!?][[:blank:]\n]+\\)\\(?:\\<so\\>\\|\\<well\\>\\|\\<ok\\(?:ay\\)?\\>\\|\\<right\\>\\|\\<you know\\>\\|\\<like\\>\\)[,[:blank:]-]*"
      "\\1")
     ("edge filler"
      "[[:blank:]]*,?[[:blank:]]*\\(?:\\<right\\>\\|\\<you know\\>\\)\\([.?!]?\\)[[:blank:]]*$"
