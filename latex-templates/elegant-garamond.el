@@ -218,7 +218,7 @@
 % Paragraph and Indentation Settings
 \\setlength{\\parindent}{0pt}
 \\setlength{\\parskip}{6.5pt plus 1pt minus 1pt} % Space between paragraphs
-\\setstretch{1.2}
+\\setstretch{1.16}
 
 % Table of Contents Customization
 \\renewcommand{\\contentsname}{Table of Contents}

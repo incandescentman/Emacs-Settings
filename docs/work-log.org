@@ -1,6 +1,10 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-05-19: Tighten =elegant-garamond= body leading
+- Inspected the real [[file+emacs:/Users/jay/Dropbox/roam/chatgpt-outputs/Thoughts on High School and the Gifted Program.pdf][Thoughts on High School and the Gifted Program PDF]] as an =elegant-garamond= sample. The title page, quote boxes, margins, and =6.5pt= paragraph spacing looked intentional; dense prose pages were only slightly loose in body leading.
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][latex-templates/elegant-garamond.el]] to reduce =\\setstretch= from =1.2= to =1.16= while leaving margins, heading sizes, quote boxes, and =\\parskip= unchanged. This keeps general-purpose essays/proposals distinct from the denser transcript-specific =transcript-garamond= class.
+
 * 2026-05-19: Add =transcript-garamond= LaTeX class for diarized transcripts
 - Inspected the diarized Selvi PDF and identified three transcript-specific layout problems with =elegant-garamond=: orphaned =Source audio file:= line floating above the title, monumental 40pt section heading overwhelming the title block, and 1in margins giving an over-long measure for sustained transcript reading. Decided to fork rather than retrofit =elegant-garamond=, which is the polished general-purpose class for proposals/essays.
 - Created [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/transcript-garamond.el][latex-templates/transcript-garamond.el]] as a straight fork of [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][elegant-garamond.el]], then layered transcript-specific tuning: margins =1in= → =1.15in= (narrower measure, only 1 hyphenation in 26 pages vs 4+ at the wider 1.25in we first tried), section heading =40pt= → =24pt= (sober title that doesn't dominate the page), subsection heading =24pt= → =14pt= (subhead reads as metadata not navigation), and explicit subsubsection titlespacing =0pt 10pt+ 4pt+= so speaker labels (=*** Chris Weller:=) get vertical breathing room above and below.
