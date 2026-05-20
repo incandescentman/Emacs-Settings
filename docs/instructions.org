@@ -474,6 +474,18 @@ Use it by adding =#+LATEX_CLASS: new-yorker= to your org file. Features:
 - Editorial body type sized for long-form reading
 - Suited to essays, profiles, narrative non-fiction — anywhere you'd want the page to /look/ like a magazine feature rather than a manuscript
 
+Use =#+LATEX_CLASS: new-yorker-caslon= for the same layout without the Irvin/New Yorker display font; headings and bylines use Adobe Caslon Pro instead.
+
+For HTML export, wire the companion stylesheet per document:
+#+BEGIN_EXAMPLE
+#+HTML_HEAD: <link rel="stylesheet" href="/Users/jay/emacs/emacs-settings/assets/css/new-yorker.css"/>
+#+END_EXAMPLE
+
+Use the Caslon-only HTML variant when you do not want Irvin in the title:
+#+BEGIN_EXAMPLE
+#+HTML_HEAD: <link rel="stylesheet" href="/Users/jay/emacs/emacs-settings/assets/css/new-yorker-caslon.css"/>
+#+END_EXAMPLE
+
 The template files live in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/][latex-templates/]]. If you tweak the template and re-export in the same session, reload classes first with =M-x jay-load-latex= (the cached class definitions trap applies to this template too).
 
 ** Table Export Behavior (2026-02)

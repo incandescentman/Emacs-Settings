@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-05-20: Add =new-yorker-caslon= LaTeX class
+- Created [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/new-yorker-caslon.el][latex-templates/new-yorker-caslon.el]] as a sibling of [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/new-yorker.el][new-yorker.el]] for New Yorker-style layout without the Irvin heading font. The variant keeps Adobe Caslon Pro for body text and uses the same Caslon face for display headings/bylines via =\\newyorkerdisplayface=, while leaving the rest of the class behavior intact.
+- Added [[file+emacs:/Users/jay/emacs/emacs-settings/assets/css/new-yorker-caslon.css][assets/css/new-yorker-caslon.css]] as the HTML companion to the Caslon-only variant. Wire it per document with =#+HTML_HEAD: <link rel="stylesheet" href="/Users/jay/emacs/emacs-settings/assets/css/new-yorker-caslon.css"/>=.
+- Registered =new-yorker-caslon= in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] so =jay-load-latex= loads it, preflight knows where to find it, and the existing =twemojis= export handling applies to both New Yorker-derived classes.
+
 * 2026-05-19: Tighten =elegant-garamond= body leading
 - Inspected the real [[file+emacs:/Users/jay/Dropbox/roam/chatgpt-outputs/Thoughts on High School and the Gifted Program.pdf][Thoughts on High School and the Gifted Program PDF]] as an =elegant-garamond= sample. The title page, quote boxes, margins, and =6.5pt= paragraph spacing looked intentional; dense prose pages were only slightly loose in body leading.
 - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][latex-templates/elegant-garamond.el]] to reduce =\\setstretch= from =1.2= to =1.16= while leaving margins, heading sizes, quote boxes, and =\\parskip= unchanged. This keeps general-purpose essays/proposals distinct from the denser transcript-specific =transcript-garamond= class.

@@ -424,7 +424,7 @@ Instead of canceling export. So that I can export org-roam nodes if I want to.
   (let ((latex-class (plist-get info :latex-class))
         (latex-header (jay/org-latex--stringify-header-value
                        (plist-get info :latex-header))))
-    (or (member latex-class '("new-yorker"))
+    (or (member latex-class '("new-yorker" "new-yorker-caslon"))
         (string-match-p "\\\\usepackage\\(?:\\[[^]]+\\]\\)?{twemojis}"
                         latex-header))))
 
@@ -465,7 +465,7 @@ Instead of canceling export. So that I can export org-roam nodes if I want to.
         (latex-header (mapconcat #'identity
                                  (jay/org-latex--keyword-values "LATEX_HEADER")
                                  "\n")))
-    (or (member latex-class '("new-yorker"))
+    (or (member latex-class '("new-yorker" "new-yorker-caslon"))
         (string-match-p "\\\\usepackage\\(?:\\[[^]]+\\]\\)?{twemojis}"
                         latex-header))))
 
@@ -935,6 +935,7 @@ process the whole buffer."
                  "elegant-garamond.el"
                  "transcript-garamond.el"
                  "new-yorker.el"
+                 "new-yorker-caslon.el"
                  "blue-invoice.el"
                  "blue-invoice-with-letterhead.el"
                  "jay-latex-yosemite-setup.el")))
@@ -958,6 +959,7 @@ process the whole buffer."
     ("beautiful-racket" . "/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el")
     ("elegant-garamond" . "/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el")
     ("new-yorker" . "/Users/jay/emacs/emacs-settings/latex-templates/new-yorker.el")
+    ("new-yorker-caslon" . "/Users/jay/emacs/emacs-settings/latex-templates/new-yorker-caslon.el")
     ("blue-invoice" . "/Users/jay/emacs/emacs-settings/latex-templates/blue-invoice.el")
     ("blue-invoice-letterhead" . "/Users/jay/emacs/emacs-settings/latex-templates/blue-invoice-with-letterhead.el"))
   "Mapping of Org LaTeX class names to the template files that define them.")

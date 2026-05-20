@@ -1,0 +1,117 @@
+/* new-yorker-caslon.css — HTML companion to latex-templates/new-yorker-caslon.el
+   Wire per-document with:
+     #+HTML_HEAD: <link rel="stylesheet" href="/Users/jay/emacs/emacs-settings/assets/css/new-yorker-caslon.css"/>
+   (or a relative path / file:// URL depending on where the HTML lives) */
+
+:root {
+  --ny-text:       #1a1a1a;
+  --ny-spacegrey:  #434346;
+  --ny-link:       #4380b9;   /* elegantblue from new-yorker.el */
+  --ny-rule:       #d8d8d8;
+  --ny-measure:    36em;       /* ~1.5in margins on letter, give or take */
+}
+
+html { background: #fff; }
+
+body {
+  color: var(--ny-text);
+  font-family: "Adobe Caslon Pro", "Big Caslon", "Hoefler Text", Garamond, Georgia, serif;
+  font-size: 18px;
+  line-height: 1.5;
+  max-width: var(--ny-measure);
+  margin: 4rem auto;
+  padding: 0 1.25rem;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+p {
+  margin: 0 0 0.9em 0;
+  text-indent: 0;
+}
+
+/* Headings: ragged-right, spacegrey. */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--ny-spacegrey);
+  text-align: left;
+  font-weight: 400;
+  line-height: 1.1;
+  margin: 1.4em 0 0.4em;
+}
+
+/* Caslon-only title treatment: same magazine scale, no Irvin/titling-font cascade. */
+h1 {
+  font-family: "Adobe Caslon Pro", "Big Caslon", "Hoefler Text", Garamond, Georgia, serif;
+}
+
+/* h2+ use the body serif at larger sizes so subtitles, section labels, etc. read in true mixed case. */
+h2, h3, h4, h5, h6 {
+  font-family: "Adobe Caslon Pro", "Big Caslon", "Hoefler Text", Garamond, Georgia, serif;
+}
+
+h1 { font-size: 3.6rem; letter-spacing: -0.01em; margin-top: 0; }
+h2, h2 em { font-size: 1.8rem; font-weight: 700; font-style: normal; }
+h3 { font-size: 1.4rem; font-style: italic; font-weight: 400; }
+h4 { font-size: 1.15rem; font-weight: 700; }
+
+/* Byline/tagline use the same Caslon display face as the LaTeX sibling class. */
+.byline,
+p.byline,
+.subtitle,
+.tagline {
+  font-family: "Adobe Caslon Pro", "Big Caslon", "Hoefler Text", Garamond, Georgia, serif;
+  font-weight: 700;
+  font-size: 1.4rem;
+  color: var(--ny-spacegrey);
+  margin: 0.4em 0 1.6em;
+}
+
+a { color: var(--ny-link); text-decoration: none; border-bottom: 1px solid transparent; }
+a:hover { border-bottom-color: var(--ny-link); }
+
+ul, ol { padding-left: 1.4em; margin: 0.4em 0 0.9em; }
+li { margin: 0.15em 0; }
+ul li::marker { font-size: 0.7em; color: var(--ny-spacegrey); }
+
+blockquote {
+  margin: 1em 1.5em;
+  padding-left: 1em;
+  border-left: 2px solid var(--ny-rule);
+  font-style: italic;
+  color: var(--ny-spacegrey);
+}
+
+code, pre, kbd, samp { font-family: "Courier Prime", "Courier New", monospace; }
+pre { font-size: 0.9em; line-height: 1.45; padding: 1em; background: #fafafa; border: 1px solid var(--ny-rule); border-radius: 3px; }
+@media screen { pre { overflow-x: auto; } }
+code { background: #fafafa; padding: 1px 4px; border-radius: 2px; }
+pre code { background: transparent; padding: 0; }
+
+hr { border: 0; border-top: 1px solid var(--ny-rule); margin: 2em 0; }
+
+img { max-width: 100%; height: auto; display: block; margin: 1.2em auto; }
+
+/* Org-export-specific niceties */
+#table-of-contents h2 { font-size: 1.2rem; font-variant: small-caps; }
+.title { font-family: "Adobe Caslon Pro", "Big Caslon", "Hoefler Text", Garamond, Georgia, serif; }
+.subtitle { display: block; }
+
+/* Print / Prince: page-level margin lives in @page; body margins zero out so they don't stack. */
+@page {
+  size: letter;
+  margin: 1in 1.5in;   /* top/bottom 1in, left/right 1.5in — mirrors hmargin in new-yorker.el */
+}
+
+@media print {
+  body { max-width: none; margin: 0; padding: 0; font-size: 12pt; }
+  pre, code { background: transparent; }
+
+  /* Widows & orphans — Prince respects these (most browsers don't). */
+  p, li { widows: 4; orphans: 4; }
+
+  /* Keep headings glued to the paragraph that follows them. */
+  h1, h2, h3, h4, h5, h6 { page-break-after: avoid; break-after: avoid; }
+
+  /* Don't split figures, blockquotes, or code blocks across pages. */
+  figure, blockquote, pre { page-break-inside: avoid; break-inside: avoid; }
+}
