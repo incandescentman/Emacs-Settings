@@ -1,14 +1,20 @@
-;;; elegant-garamond.el --- Org LaTeX class -*- lexical-binding: t; -*-
+;;; transcript-garamond.el --- Org LaTeX class for transcripts -*- lexical-binding: t; -*-
 
-(provide 'elegant-garamond)
+;; v1: straight fork of elegant-garamond.el. Behavior is currently
+;; identical to elegant-garamond; only the class name and prose-defaults
+;; registration differ. Future revisions will diverge to handle
+;; transcript-specific concerns (title page layout, inline rendering for
+;; short turns, pagination tuned for rapid-fire speaker exchanges).
+
+(provide 'transcript-garamond)
 
 (add-to-list 'org-latex-classes
-             '("elegant-garamond"
+             '("transcript-garamond"
                "
 \\providecommand{\\DocumentMetadata}[1]{}
 \\DocumentMetadata{lang=en-US}
 \\documentclass[12pt]{article}
-\\usepackage[includeheadfoot, margin=1in]{geometry} % Standard proposal/document margins
+\\usepackage[includeheadfoot, margin=1.15in]{geometry} % Slightly wider than elegant-garamond for sustained-reading line length without forcing too many hyphenations
 \\setlength{\\footskip}{0.95in}
 
 % Package Inclusions
@@ -320,18 +326,20 @@
 % Titlesec Configuration
 \\titlespacing*{\\section}{0pt}{48pt}{0pt}
 \\titlespacing*{\\subsection}{0pt}{6pt}{0pt}
-\\titlespacing*{\\subsubsection}{0pt}{0pt}{0pt}
+% Speaker labels (subsubsection): explicit breathing room above and below
+% so each turn chunks visually instead of jamming into the body text.
+\\titlespacing*{\\subsubsection}{0pt}{10pt plus 2pt minus 1pt}{4pt plus 1pt}
 \\titlespacing{\\paragraph}{0pt}{0pt}{.5em}[]
 
 \\newcommand{\\mysectiontitle}[1]{%
   \\markboth{#1}{#1}%
   \\markright{#1}%
-  \\raggedright\\fontsize{40}{26}\\selectfont #1
+  \\raggedright\\fontsize{24}{30}\\selectfont #1
 }
 
 \\newcommand{\\mysubsectiontitle}[1]{%
   \\markright{#1}%
-  \\sffamily\\setstretch{0.1}\\fontsize{24}{36}\\raggedright\\sffamily #1
+  \\sffamily\\fontsize{14}{18}\\selectfont\\raggedright #1
 }
 
 \\newcommand{\\mysubsubsectiontitle}[1]{%
@@ -399,7 +407,7 @@
     (load prose-helper nil 'nomessage)))
 
 (when (fboundp 'jay/latex-apply-prose-defaults)
-  (jay/latex-apply-prose-defaults "elegant-garamond"))
+  (jay/latex-apply-prose-defaults "transcript-garamond"))
 
 (when (fboundp 'jay/latex-register-wrap-class)
-  (jay/latex-register-wrap-class "elegant-garamond"))
+  (jay/latex-register-wrap-class "transcript-garamond"))
