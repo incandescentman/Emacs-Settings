@@ -2,6 +2,21 @@
 ;; ------------- init.el (or early-load file) --------------------------
 (require 'cl-lib)
 
+(defun jay/apply-typing-scroll-policy ()
+  "Keep point/cursor comfortably visible while typing near window edges."
+  (setq scroll-margin 25
+        scroll-conservatively 1000
+        scroll-step 1
+        auto-window-vscroll t)
+  (setq-default make-cursor-line-fully-visible t))
+
+;; Spacemacs smooth scrolling and `ultra-scroll' both favor pixel-smooth motion
+;; over recentering. Apply this before the module-load section so the typing
+;; policy survives even if a later optional package load errors.
+(jay/apply-typing-scroll-policy)
+(add-hook 'emacs-startup-hook #'jay/apply-typing-scroll-policy)
+(run-at-time 0 nil #'jay/apply-typing-scroll-policy)
+
 (use-package ob-tangle
   :defer t)          ; 1️⃣ make sure tangling is available
 
@@ -489,13 +504,6 @@ With prefix arg FIX-HINTS, append actionable remediation commands."
         atomic-chrome-buffer-open-style 'frame)
   (atomic-chrome-start-server))
 
-(use-package ultra-scroll
-  :init
-  (setq scroll-conservatively 101
-        scroll-margin 0)
-  :config
-  (ultra-scroll-mode 1))
-
 ;; (recenter-top-bottom)
 (setq case-fold-search t)
 
@@ -568,14 +576,6 @@ With prefix arg FIX-HINTS, append actionable remediation commands."
   (advice-add 'spacemacs//space-doc-alternative-emphasis :after #'jay/apply-org-emphasis-settings))
 
 (setq org-adapt-indentation nil)
-
-;; disable smooth scrolling
-(setq scroll-step 1)
-(setq scroll-conservatively 10000)
-(setq auto-window-vscroll nil)
-;;
-
-
 
 (setq package-archive-priorities nil)
 

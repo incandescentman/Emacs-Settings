@@ -182,7 +182,6 @@ This function should only modify configuration layer settings."
                                       ;; tiny
                                       titlecase
                                       ts
-                                      ultra-scroll
                                       unfill
                                       wc-goal-mode
                                       wc-mode
@@ -627,7 +626,7 @@ It should only modify the values of Spacemacs settings."
    ;; If non-nil smooth scrolling (native-scrolling) is enabled. Smooth
    ;; scrolling overrides the default behavior of Emacs which recenters point
    ;; when it reaches the top or bottom of the screen. (default t)
-   dotspacemacs-smooth-scrolling t
+   dotspacemacs-smooth-scrolling nil
 
    ;; Show the scroll bar while scrolling. The auto hide time can be configured
    ;; by setting this variable to a number. (default t)
