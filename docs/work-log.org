@@ -1,6 +1,10 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-05-22: Guard =ido-vertical-mode= startup load
+- Fixed the startup error =Symbol's function definition is void: ido-vertical-mode= from [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] by replacing the deferred =use-package= declaration with an explicit guarded =require=. The old block declared =ido-vertical-mode= with =:defer t= and then immediately called =(ido-vertical-mode 1)=, which can leave the function undefined during =dotspacemacs/user-config=.
+- Kept built-in =ido-mode= enabled and only enables vertical display when =ido-vertical-mode= is actually loadable, so a missing add-on no longer breaks launch.
+
 * 2026-05-21: Remove =ultra-scroll= and restore typing-friendly cursor visibility
 - Removed the live =ultra-scroll= block from [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][spacemacs-new-config.el]], removed =ultra-scroll= from [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]]'s additional package list, and set =dotspacemacs-smooth-scrolling= to =nil=. Jay does not use trackpad scrolling, and both smooth-scroll layers were overriding the older typing-friendly scroll policy.
 - Replaced the later contradictory scroll block in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][spacemacs-new-config.el]] with =jay/apply-typing-scroll-policy=, applied immediately near the top of the file, on =emacs-startup-hook=, and via a zero-delay timer so it lands after Spacemacs's own smooth-scroll layer while still running before the fragile module-load section. The policy sets =scroll-margin= =25=, =scroll-conservatively= =1000=, =scroll-step= =1=, =auto-window-vscroll= =t=, and =make-cursor-line-fully-visible= =t= so point/cursor stays visibly inside the window while typing near the bottom edge.

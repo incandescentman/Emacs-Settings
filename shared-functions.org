@@ -4411,16 +4411,17 @@ Pretty cool here:
 [[https://github.com/creichert/ido-vertical-mode.el][creichert/ido-vertical-mode.el: makes ido-mode display vertically]]
 
 #+begin_src emacs-lisp
-(use-package ido-vertical-mode
-  :defer t)
+(require 'ido)
 (ido-mode 1)
-(ido-vertical-mode 1)
-(setq ido-vertical-define-keys 'C-n-and-C-p-only)
-
-(setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right)
 
 ;; optionally
 (setq ido-use-faces nil)
+
+(if (require 'ido-vertical-mode nil t)
+    (progn
+      (setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right)
+      (ido-vertical-mode 1))
+  (message "ido-vertical-mode not found; leaving ido-mode horizontal"))
 
 ;; (setq ido-use-faces t)
 ;; (set-face-attribute 'ido-vertical-first-match-face nil :foreground "orange")
