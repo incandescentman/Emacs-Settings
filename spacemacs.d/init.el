@@ -1186,7 +1186,7 @@ This function is called at the very end of Spacemacs initialization."
    '(bold ((t (:inherit font-lock-warning-face :weight bold))))
    '(flyspell-duplicate ((t (:underline (:style wave :color "red")))))
    '(flyspell-incorrect ((t (:underline (:style wave :color "red")))))
-   '(font-lock-comment-face ((t (:foreground "red" :slant italic))))
+   '(font-lock-comment-face ((t (:foreground "red"))))
    '(italic ((t (:foreground "DarkViolet" :slant italic :height 1.2 :family "Garamond"))))
    '(marginalia-documentation ((t (:inherit marginalia-key :foreground "dark red"))))
    '(org-code ((t (:foreground "#a0222b" :background "#f6f8fa" :family "Monaco" :height 0.85))))

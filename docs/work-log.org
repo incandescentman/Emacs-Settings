@@ -1,6 +1,10 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-05-22: Record startup profile and simplify comment-face styling
+- Added the latest startup timing sample to [[file+emacs:/Users/jay/emacs/emacs-settings/docs/lab/startup-profile.org][docs/lab/startup-profile.org]].
+- Removed the italic slant from =font-lock-comment-face= in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]], keeping comments red without forcing italics.
+
 * 2026-05-22: Guard =ido-vertical-mode= startup load
 - Fixed the startup error =Symbol's function definition is void: ido-vertical-mode= from [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] by replacing the deferred =use-package= declaration with an explicit guarded =require=. The old block declared =ido-vertical-mode= with =:defer t= and then immediately called =(ido-vertical-mode 1)=, which can leave the function undefined during =dotspacemacs/user-config=.
 - Kept built-in =ido-mode= enabled and only enables vertical display when =ido-vertical-mode= is actually loadable, so a missing add-on no longer breaks launch.

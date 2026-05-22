@@ -3789,3 +3789,21 @@
 | load jay-osx.el | 0.0005 |
 | load buffer-stack.el | 0.0005 |
 | load xah-replace-pairs.el | 0.0005 |
+* 2026-05-22 15:08:14
+- Emacs: 29.4
+- Org: 9.8.4
+- Total init time: 1.526s
+- Measured module loads:
+| Step | Seconds |
+|------+---------|
+| org-babel-load gnu-emacs-startup.org | 0.0541 |
+| load frame-cmds.el | 0.0174 |
+| load keys.el | 0.0130 |
+| org-babel-load org-export.org | 0.0114 |
+| load auto-capitalize.el | 0.0017 |
+| org-babel-load spellcheck.org | 0.0013 |
+| org-babel-load org-authoring.org | 0.0007 |
+| load chatgpt2org.el | 0.0007 |
+| load xah-replace-pairs.el | 0.0007 |
+| load buffer-stack.el | 0.0006 |
+| load jay-osx.el | 0.0006 |
