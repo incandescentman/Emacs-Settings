@@ -8248,15 +8248,21 @@ saved first and reverted after formatting."
 (repeat-mode 1)
 
 ;; Global line navigation repeat map
+(defun jay/repeat-undo ()
+  "Undo while keeping `jay-line-repeat-map' active."
+  (interactive)
+  (undo))
+
 (defvar jay-line-repeat-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "n") #'next-line)
     (define-key map (kbd "p") #'previous-line)
     (define-key map (kbd "k") #'kill-whole-line)
+    (define-key map (kbd "z") #'jay/repeat-undo)
     map)
-  "Repeat map for line movement and line killing.")
+  "Repeat map for line movement, line killing, and undo.")
 
-(dolist (cmd '(next-line previous-line kill-whole-line))
+(dolist (cmd '(next-line previous-line kill-whole-line jay/repeat-undo))
   (put cmd 'repeat-map 'jay-line-repeat-map))
 
 (with-eval-after-load 'org

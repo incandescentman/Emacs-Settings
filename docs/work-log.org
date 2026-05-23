@@ -1,6 +1,10 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-05-22: Add undo to line-navigation repeat map
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so =jay-line-repeat-map= now supports =z= for undo after entering the repeat state with line motion.
+- Added =jay/repeat-undo= as a wrapper command so repeat-map undo does not make ordinary global undo commands enter the line-navigation repeat map.
+
 * 2026-05-22: Record startup profile and simplify comment-face styling
 - Added the latest startup timing sample to [[file+emacs:/Users/jay/emacs/emacs-settings/docs/lab/startup-profile.org][docs/lab/startup-profile.org]].
 - Removed the italic slant from =font-lock-comment-face= in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]], keeping comments red without forcing italics.
