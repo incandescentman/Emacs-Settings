@@ -16,6 +16,7 @@
 - On macOS the recency sort uses file birth time as a fast local proxy for Finder's Date Added, falling back to modification time if birth time is unavailable.
 - Redacted an old literal OpenAI API-key example in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] that predated this checkpoint; the live API-key example still demonstrates reading the key from an external file.
 - Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]] and validated the focused behavior: newest-first ordering, directory rejection, and normal file attach.
+- Jay live-tested the revised picker in Emacs and confirmed the no-prefill, newest-first Downloads selection behavior works as intended.
 
 * 2026-05-26: Block directory inputs to =org-attach=
 - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so =org-attach-attach= refuses directory paths before Org can copy them into the attachment tree. This prevents accidental whole-folder attachments like the copied Downloads directory incident.
