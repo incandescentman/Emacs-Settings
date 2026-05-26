@@ -2,6 +2,23 @@
 #+DATE: 2025-09-24
 #+DESCRIPTION: Debugging post-mortems and prevention checklists.
 
+* Invoice Letterhead Headers Are Not The Logo Footer System
+  Date: 2026-05-26
+
+** Trigger
+Exporting the Metabolic Mind invoice from [[file+emacs:/Users/jay/Dropbox/roam/storytelling-nyc-roam/20260526150547-metabolic_mind_invoice_stnyc_2026_001.org][20260526150547-metabolic_mind_invoice_stnyc_2026_001.org]] failed because the invoice class tried to include a stale Storytelling.NYC header image path under =/Users/jay/Dropbox/github/incandescentman.github.io/=. After the path was repaired, the rendered invoice still had the header colliding with the title/body and the services table running off the page.
+
+** Mechanism
+Invoice letterhead classes use their own =\fancyhead[C]= block in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/blue-invoice-letterhead-storytelling-nyc.el][blue-invoice-letterhead-storytelling-nyc.el]], not the =\footerlogo= / =\EnableLogoFooter= system used by =elegant-garamond=. Fixing footer-logo metadata in the Org file cannot repair an invoice header image or header spacing problem.
+
+The invoice classes also predated the shared Org-table wrapping helper, so long plain Org table rows exported as fixed-width =tabular= output unless the class registered with [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/jay-latex-table-wrap.el][jay-latex-table-wrap.el]] and loaded the LaTeX table packages/column types expected by that helper.
+
+** Actionable insight
+- For invoice logo failures, inspect the invoice template's =\fancyhead[C]= block and =\letterheadlogo= value first. The current Storytelling.NYC header image path is [[file+emacs:/Users/jay/Dropbox/github/incandescentman/assets/images/2023-10-final-new-logo_high-res-no-text.png][2023-10-final-new-logo_high-res-no-text.png]]. Socratic AI invoice exports use [[file+emacs:/Users/jay/Dropbox/github/astro-monorepo/apps/socratic/src/assets/images/socratic-ai-complex-logo-transparent_color.png][socratic-ai-complex-logo-transparent_color.png]].
+- Do not debug invoice headers through =\footerlogo= / =\EnableLogoFooter=; those macros belong to the Garamond footer system.
+- Keep =blue-invoice= and =blue-invoice-letterhead= registered with =jay-latex-table-wrap.el= so invoice service tables wrap as =tabularx= instead of overflowing.
+- After editing invoice template files, reload with =M-x jay-load-latex= or restart Emacs before judging a live export, because Org LaTeX class definitions can stay cached.
+
 * Guard =org-attach-attach= Directly When Preventing Attachment Accidents
   Date: 2026-05-26
 
@@ -14,8 +31,8 @@ Org's =org-attach-attach= accepts both files and directories. When given a direc
 ** Actionable insight
 - Put safety checks around =org-attach-attach= itself when blocking dangerous attachment inputs.
 - Reject directories before calling the original function; normal file attaches should pass through unchanged.
-- If the accident starts with picker friction, improve the interactive spec too. In this config, the attach prompt should start in /Users/jay/Downloads/ and pass the newest regular non-hidden file as =read-file-name='s default filename, while the lower-level guard remains as the final backstop.
-- Verify empty-RET behavior in Jay's live completion UI before treating it as guaranteed. Vanilla =read-file-name= returns the default filename on empty input, but Helm/Ivy/Spacemacs layers may instead act on the selected candidate or directory. If that happens, put the newest filename into the initial input rather than relying only on =DEFAULT-FILENAME=.
+- If the accident starts with picker friction, improve the interactive spec too. In this config, the attach prompt should start in /Users/jay/Downloads/ and pre-fill the newest regular non-hidden filename as =read-file-name='s initial input, while the lower-level guard remains as the final backstop.
+- Do not rely on =read-file-name='s =DEFAULT-FILENAME= in Jay's compleseus/Vertico setup. Vertico's RET path exits with the highlighted candidate, and its default sorting is history/length/alpha rather than mtime, so the newest download can be buried unless it is inserted as initial input.
 - For future attachment failures, check both the Org note link and the attachment tree. A directory-shaped attachment can be large, untracked, and unreferenced.
 
 * Keep =num:t= When A LaTeX TOC Needs Unnumbered Headings

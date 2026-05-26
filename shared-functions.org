@@ -4603,7 +4603,7 @@ Source: [[https://emacs.stackexchange.com/questions/30280/how-to-conveniently-in
 #+end_src
 
 * set OpenAI API key
-Rewrite this emacs-lisp function to retrieve the API key from an external file: (setq openai-api-key "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")
+Rewrite this emacs-lisp function to retrieve the API key from an external file: (setq openai-api-key "sk-REDACTED")
 
 Here is an example of how you might rewrite the function to retrieve the API key from an external file:
 
@@ -5375,11 +5375,17 @@ With prefix ARG, insert using 'safari' custom link type."
   (let* ((dir (file-name-as-directory
                (expand-file-name jay/org-attach-source-directory)))
          (default-file (jay/org-attach--newest-regular-file dir))
+         (initial (and default-file (file-name-nondirectory default-file)))
          (prompt (if default-file
                      (format "File to keep as an attachment (default %s): "
                              (file-name-nondirectory default-file))
                    "File to keep as an attachment: ")))
-    (read-file-name prompt dir default-file t)))
+    ;; Vertico ignores `read-file-name's DEFAULT-FILENAME (it only fires on
+    ;; empty input) and sorts by history/length/alpha, not mtime, so the
+    ;; newest download is buried.  Pre-fill the newest file as INITIAL input
+    ;; instead: Vertico narrows to it and RET attaches it.  Clear the line to
+    ;; pick anything else.
+    (read-file-name prompt dir default-file t initial)))
 
 (defun jay/org-attach-attach-from-downloads (orig-fun file &optional visit-dir method)
   "Attach FILE while defaulting interactive selection to Downloads."

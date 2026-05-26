@@ -490,7 +490,7 @@ The template files live in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-te
 
 ** Table Export Behavior (2026-02)
 
-For =elegant-helvetica=, =elegant-garamond=, and =beautiful-racket= classes:
+For =elegant-helvetica=, =elegant-garamond=, =beautiful-racket=, =blue-invoice=, and =blue-invoice-letterhead= classes:
 
 - Default: plain Org tables are auto-converted to wrapping =tabularx= output.
 - Wrapped output uses left-aligned wrapping columns and light booktabs rules:
@@ -609,21 +609,26 @@ Notes:
 - The first page still suppresses headers and footers in these templates, and the footer is also suppressed on the final page. On multi-page exports, the logo footer appears only on interior pages.
 - If you edit a LaTeX template file and export in the same Emacs session, reload the template definitions first with =M-x jay-load-latex= or restart Emacs; otherwise export can keep using stale class definitions already loaded in memory.
 
-*** Invoice Letterhead Wordmark
+*** Invoice Letterhead Branding
 
 Supported classes:
 - =blue-invoice-letterhead=
 
-Override the oversized header wordmark for one document:
+Override the header wordmark and logo for one document:
 #+BEGIN_EXAMPLE
 #+LATEX_CLASS: blue-invoice-letterhead
 #+LATEX_HEADER: \letterheadbrand{SOCRATIC AI}
+#+LATEX_HEADER: \letterheadlogo{/Users/jay/Dropbox/github/astro-monorepo/apps/socratic/src/assets/images/socratic-ai-complex-logo-transparent_color.png}
 #+END_EXAMPLE
 
 Notes:
-- In [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/blue-invoice-with-letterhead.el][📄 blue-invoice-with-letterhead.el]], the default wordmark is =STORYTELLING.NYC=.
-- In [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/blue-invoice-sed-letterhead.el][📄 blue-invoice-sed-letterhead.el]], the default wordmark is =SUNJAY E. DIXIT=.
+- In [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/blue-invoice-letterhead-storytelling-nyc.el][📄 blue-invoice-letterhead-storytelling-nyc.el]], the default wordmark is =STORYTELLING.NYC=.
+- In [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/blue-invoice-letterhead-sunjay-e-dixit.el][📄 blue-invoice-letterhead-sunjay-e-dixit.el]], the default wordmark is =SUNJAY E. DIXIT=.
+- In [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/blue-invoice-letterhead-socratic-ai.el][📄 blue-invoice-letterhead-socratic-ai.el]], the default wordmark is =SOCRATIC AI= and the default logo is the Socratic AI icon. Not loaded by default; =require= it manually when needed, or use the per-document =\letterheadbrand= / =\letterheadlogo= override above with the default loaded class.
 - Existing invoice documents export unchanged unless they explicitly set =\letterheadbrand{...}=.
+- Invoice letterhead headers are separate from the configurable =\footerlogo= / =\EnableLogoFooter= system used by =elegant-garamond=. If an invoice logo fails, inspect the invoice template's =\fancyhead[C]= block and =\letterheadlogo= value, not the footer-logo macros.
+- The invoice classes now register with [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/jay-latex-table-wrap.el][📄 jay-latex-table-wrap.el]], so plain Org tables export as wrapping =tabularx= tables unless a table opts out with =:wrap nil=.
+- If you edit an invoice template and export in the same Emacs session, reload the template definitions first with =M-x jay-load-latex= or restart Emacs.
 
 *** Table Wrap Opt-Out (per table)
 

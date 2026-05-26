@@ -60,19 +60,26 @@ If =\footerbrand= is empty, the footer stays image-only. If it is set, the templ
 
 * Invoice Letterhead Branding
 
-The invoice-with-letterhead templates let you override the oversized header wordmark per document without editing the template file:
+The invoice-with-letterhead templates let you override the header wordmark and header logo per document without editing the template file:
 
 #+begin_example
 #+LATEX_CLASS: blue-invoice-letterhead
 #+LATEX_HEADER: \letterheadbrand{SOCRATIC AI}
+#+LATEX_HEADER: \letterheadlogo{/Users/jay/Dropbox/github/astro-monorepo/apps/socratic/src/assets/images/socratic-ai-complex-logo-transparent_color.png}
 #+end_example
 
 The defaults stay the same if you omit that header line:
-- [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/blue-invoice-with-letterhead.el][📄 blue-invoice-with-letterhead.el]] defaults to =STORYTELLING.NYC=
-- [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/blue-invoice-sed-letterhead.el][📄 blue-invoice-sed-letterhead.el]] defaults to =SUNJAY E. DIXIT=
+- [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/blue-invoice-letterhead-storytelling-nyc.el][📄 blue-invoice-letterhead-storytelling-nyc.el]] defaults to =STORYTELLING.NYC=
+- [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/blue-invoice-letterhead-sunjay-e-dixit.el][📄 blue-invoice-letterhead-sunjay-e-dixit.el]] defaults to =SUNJAY E. DIXIT=
+- [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/blue-invoice-letterhead-socratic-ai.el][📄 blue-invoice-letterhead-socratic-ai.el]] defaults to =SOCRATIC AI= and the Socratic AI icon. Not loaded by default in =org-export.el=; =require= it manually when needed, or use the per-document =\letterheadbrand= / =\letterheadlogo= override above with the default loaded class.
+
+Invoice letterhead headers are separate from the configurable footer logo system above. For invoice-logo failures, inspect the invoice class's =\fancyhead[C]= block and =\letterheadlogo= value. For document-footer logos, use =\footerlogo{...}= plus =\EnableLogoFooter= in an =elegant-garamond= export.
+
+Plain Org tables in =blue-invoice= and =blue-invoice-letterhead= are registered with [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/jay-latex-table-wrap.el][📄 jay-latex-table-wrap.el]], so invoice tables auto-wrap as =tabularx= unless a table uses =#+ATTR_LATEX: :wrap nil=.
 
 ** Yasnippet templates
-The corresponding yasnippet snippets in [[file+emacs:/Users/jay/emacs/interesting-snippets/org-mode/][📄 org-mode snippets]] include these headers automatically:
+The main invoice snippet uses the default Storytelling.NYC letterhead class; add the Socratic override lines above when making a Socratic AI invoice:
+- =blueinvoice= → [[file+emacs:/Users/jay/emacs/interesting-snippets/blue-invoice.yasnippet][📄 blue-invoice.yasnippet]]
 - =elegant= → =elegant.yasnippet=
 - =elegantgaramond= → =elegantgaramond.yasnippet=
 

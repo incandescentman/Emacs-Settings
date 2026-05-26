@@ -1,10 +1,10 @@
 ;;; -*- lexical-binding: t; -*-
 
-(provide 'blue-invoice)
+(provide 'blue-invoice-letterhead)
 
 (add-to-list 'org-latex-classes
-  '("blue-invoice"
-"
+             '("blue-invoice-letterhead"
+               "
 
 \\documentclass[12pt]{article}
 \\usepackage[includeheadfoot,margin=1.0in,hmargin=1.0in,vmargin=0.5in]{geometry}
@@ -18,20 +18,37 @@
   \\usepackage{fontspec,xltxtra,xunicode}
   \\defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
 
+\\usepackage{fontspec}
 
 % define Helvetica Now font weights
-\\setmainfont{EBGaramond}[
+\\setmainfont{HelveticaNow}[
   Path = /Users/jay/Library/Fonts/,
-        UprightFont = HelveticaNowText-Light,
-        BoldFont = HelveticaNowDisplay-Bold,
-        ItalicFont = HelveticaNowText-LightItalic,
-        BoldItalicFont = HelveticaNowDisplay-BoldIta,
+  UprightFont = HelveticaNowText-Light,
+  BoldFont = HelveticaNowDisplay-Bold,
+  ItalicFont = HelveticaNowText-LightItalic,
+  BoldItalicFont = HelveticaNowDisplay-BoldIta,
   Extension = .ttf
+]
 
 \\setromanfont{HelveticaNowText-Light}
 \\setsansfont{HelveticaNowDisplay-Regular}
+
+% define sans font
+\\setsansfont{Helvetica Neue LT Pro}[
+  Path = /Users/jay/Library/Fonts/,
+UprightFont = HelveticaNeueLTPro-MdCn,
+  BoldFont = HelveticaNeueLTPro-BdCn,
+  Extension = .otf
+]
+
 \\newfontfamily{\\thindisplayfont}{HelveticaNowDisplay-Light}
 \\setmonofont{Myriad Pro}
+
+
+\\usepackage{fancyhdr}
+\\pagestyle{fancy}
+\\renewcommand{\\headrulewidth}{0pt} % Removes the default horizontal
+
 \\else
   \\usepackage[mathletters]{ucs}
   \\usepackage[utf8x]{inputenc}
@@ -44,8 +61,7 @@
 \\usepackage{ragged2e}
 \\usepackage{tabularx}
 \\usepackage{longtable}
-\\setkeys{Gin}{resolution=72}
-\\usepackage{tikz}
+%\\usepackage{tikz}
 \\usepackage{calc}
 \\usepackage{eso-pic}
 \\usepackage{etoolbox}
@@ -68,12 +84,17 @@
 \\definecolor{elegantblue}{HTML}{1792d1}
 \\definecolor{ideablue}{HTML}{55C1E7}
 \\definecolor{libertyblue}{HTML}{73b0be}
+\\definecolor{darklibertyblue}{HTML}{19455b}
 
 
 \\newtoks\\leftheader
 \\newtoks\\leftheaderurl
 \\newtoks\\coverimage
 \\newtoks\\rightheader
+\\newtoks\\letterheadbrand
+\\letterheadbrand={SUNJAY E. DIXIT}
+\\def\\jayletterheadlogo{/Users/jay/Dropbox/github/incandescentman/assets/images/2023-10-final-new-logo_high-res-no-text.png}
+\\newcommand{\\letterheadlogo}[1]{\\def\\jayletterheadlogo{#1}}
 
 \\raggedright
 \\hyphenpenalty=5000
@@ -85,8 +106,8 @@
 
 
 %This macro is to make cleaner the specification of the titling font
-\\newfontfamily\\mytitlefont[Color={highlighteryellow}]{Arial}
-\\newfontfamily\\myauthorfont[Color={highlighteryellow}]{Arial}
+\\newfontfamily\\mytitlefont[Color={libertyblue}]{Arial}
+\\newfontfamily\\myauthorfont[Color={libertyblue}]{Arial}
 \\newfontfamily\\mybluefont[Color=libertyblue]{Arial}
 
 %Define Bold face
@@ -104,17 +125,28 @@
 
 \\usepackage[labelformat=empty]{caption}
 
+
 \\usepackage{fancyhdr}
 \\pagestyle{fancy}
-\\renewcommand{\\sectionmark}[1]{\\markboth{#1}{}}
-\\lhead{\\href{\\the\\leftheaderurl}{\\the\\leftheader}}
-\\chead{}
-\\rhead{Invoice: \\@title\\  {\\nouppercase{\\the\\rightheader}}}
+\\renewcommand{\\headrulewidth}{0pt} % Removes the default horizontal line in the header
+\\setlength{\\headheight}{0.9in}
+\\setlength{\\headsep}{0.28in}
+
+
+\\fancyhead[C]{%
+  \\makebox[\\textwidth][l]{%
+    \\raisebox{-0.08in}{\\includegraphics[height=0.62in,keepaspectratio]{\\jayletterheadlogo}}%
+    \\hspace{0.18in}%
+    {\\fontsize{44}{48}\\sffamily\\color{darklibertyblue} \\the\\letterheadbrand}%
+  }%
+}
+
+
+
+\\rhead{}
 \\lfoot{}
 \\cfoot{}
 \\rfoot{}
-
-
 
 
 \\usepackage{listings}
@@ -275,7 +307,7 @@
 
 
 % \\titlespacing{command}{left spacing}{before spacing}{after spacing}[right]
-\\titlespacing*{\\section}{0pt}{16pt}{-6pt}
+\\titlespacing*{\\section}{0pt}{24pt}{-6pt}
 \\titlespacing*{\\subsection}{0pt}{16pt}{-6pt}
 \\titlespacing*{\\subsubsection}{0pt}{6pt}{-6pt}
 
@@ -302,16 +334,16 @@
 
       [NO-DEFAULT-PACKAGES]
       [NO-PACKAGES]"
-     ("\\section{%s}" . "\\section*{%s}")
-     ("\\subsection{%s}" . "\\subsection*{%s}")
-     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-     ("\\paragraph{%s}" . "\\paragraph*{%s}")
-     ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
 
 (setq org-latex-pdf-process
-  '("xelatex -interaction nonstopmode %f"
-     "xelatex -interaction nonstopmode %f")) ;; for multiple passes
+      '("xelatex -interaction nonstopmode %f"
+        "xelatex -interaction nonstopmode %f")) ;; for multiple passes
 (setq org-latex-to-pdf-process org-latex-pdf-process)
 
 (let* ((this-file (or load-file-name buffer-file-name))
@@ -321,4 +353,4 @@
   (when (and table-helper (file-readable-p table-helper))
     (load table-helper nil 'nomessage))
   (when (fboundp 'jay/latex-register-wrap-class)
-    (jay/latex-register-wrap-class "blue-invoice")))
+    (jay/latex-register-wrap-class "blue-invoice-letterhead")))

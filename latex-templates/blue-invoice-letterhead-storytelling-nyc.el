@@ -1,3 +1,5 @@
+;;; -*- lexical-binding: t; -*-
+
 (provide 'blue-invoice-letterhead)
 
 (add-to-list 'org-latex-classes
@@ -54,6 +56,11 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 \\usepackage{url}
 \\usepackage{paralist}
 \\usepackage{graphicx}
+\\usepackage{booktabs}
+\\usepackage{array}
+\\usepackage{ragged2e}
+\\usepackage{tabularx}
+\\usepackage{longtable}
 %\\usepackage{tikz}
 \\usepackage{calc}
 \\usepackage{eso-pic}
@@ -86,6 +93,8 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 \\newtoks\\rightheader
 \\newtoks\\letterheadbrand
 \\letterheadbrand={STORYTELLING.NYC}
+\\def\\jayletterheadlogo{/Users/jay/Dropbox/github/incandescentman/assets/images/2023-10-final-new-logo_high-res-no-text.png}
+\\newcommand{\\letterheadlogo}[1]{\\def\\jayletterheadlogo{#1}}
 
 \\raggedright
 \\hyphenpenalty=5000
@@ -120,20 +129,16 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 \\usepackage{fancyhdr}
 \\pagestyle{fancy}
 \\renewcommand{\\headrulewidth}{0pt} % Removes the default horizontal line in the header
+\\setlength{\\headheight}{0.9in}
+\\setlength{\\headsep}{0.28in}
 
 
 \\fancyhead[C]{%
-  \\begin{minipage}[c][1in][c]{1\\linewidth}
-    \\includegraphics[height=1in,keepaspectratio]{/Users/jay/Dropbox/github/incandescentman.github.io/assets/images/2023-10-final-new-logo_high-res-no-text.png}
-  \\end{minipage}%
-  \\hspace{0in} % Reducing space to 0 inches between the logo and the text
-  \\begin{minipage}[c][1in][c]{0.3\\linewidth}
-    \\raggedright % Left-align the text in the minipage
-    \\raisebox{0.59in}[0pt][0pt]{ % Raise the text by 0.7 inches
-      {\\fontsize{73}{82}\\sffamily\\color{darklibertyblue} \\the\\letterheadbrand}
-    }
-  \\end{minipage}%
-  \\hspace{2.7in} % Move the text 1 inch to the left
+  \\makebox[\\textwidth][l]{%
+    \\raisebox{-0.08in}{\\includegraphics[height=0.62in,keepaspectratio]{\\jayletterheadlogo}}%
+    \\hspace{0.18in}%
+    {\\fontsize{44}{48}\\sffamily\\color{darklibertyblue} \\the\\letterheadbrand}%
+  }%
 }
 
 
@@ -175,6 +180,21 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 
 \\usepackage{enumitem}
 
+% Table configuration for automatic text wrapping
+\\newcolumntype{Y}{>{\\RaggedRight\\arraybackslash}X}
+\\newcolumntype{Z}{>{\\Centering\\arraybackslash}X}
+\\newcolumntype{W}{>{\\RaggedLeft\\arraybackslash}X}
+\\renewcommand{\\tabularxcolumn}[1]{m{#1}}
+\\newcommand{\\jaytableformat}{%
+  \\setlength{\\tabcolsep}{6pt}%
+  \\renewcommand{\\arraystretch}{1.05}%
+  \\fontsize{10}{12}\\selectfont}
+\\AtBeginEnvironment{tabularx}{\\jaytableformat}
+\\AtBeginEnvironment{tabular}{\\jaytableformat}
+\\AtBeginEnvironment{longtable}{\\jaytableformat}
+\\setlength{\\LTpre}{0pt}
+\\setlength{\\LTpost}{0pt}
+
 \\newlist{mylist}{enumerate}{10}
 
 
@@ -188,12 +208,12 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 \\renewcommand{\\labelitemii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
 \\renewcommand{\\labelitemiii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
 \\renewcommand{\\labelitemiv}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
-\\renewcommand{\\labelitemv}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
-\\renewcommand{\\labelitemvi}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
-\\renewcommand{\\labelitemvii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
-\\renewcommand{\\labelitemviii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
-\\renewcommand{\\labelitemix}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
-\\renewcommand{\\labelitemx}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+\\providecommand{\\labelitemv}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+\\providecommand{\\labelitemvi}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+\\providecommand{\\labelitemvii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+\\providecommand{\\labelitemviii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+\\providecommand{\\labelitemix}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+\\providecommand{\\labelitemx}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
 
 \\setlistdepth{10}
 \\setlist[itemize,1]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
@@ -321,6 +341,16 @@ UprightFont = HelveticaNeueLTPro-MdCn,
                ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
 
-(setq org-latex-to-pdf-process
+(setq org-latex-pdf-process
       '("xelatex -interaction nonstopmode %f"
         "xelatex -interaction nonstopmode %f")) ;; for multiple passes
+(setq org-latex-to-pdf-process org-latex-pdf-process)
+
+(let* ((this-file (or load-file-name buffer-file-name))
+       (table-helper (and this-file
+                          (expand-file-name "jay-latex-table-wrap.el"
+                                            (file-name-directory this-file)))))
+  (when (and table-helper (file-readable-p table-helper))
+    (load table-helper nil 'nomessage))
+  (when (fboundp 'jay/latex-register-wrap-class)
+    (jay/latex-register-wrap-class "blue-invoice-letterhead")))

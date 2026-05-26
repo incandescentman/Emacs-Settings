@@ -1,10 +1,20 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-05-26: Repair invoice letterhead export layout
+- Updated the blue invoice letterhead templates so the Storytelling.NYC header logo points at the live asset under [[file+emacs:/Users/jay/Dropbox/github/incandescentman/assets/images/2023-10-final-new-logo_high-res-no-text.png][2023-10-final-new-logo_high-res-no-text.png]] instead of the stale =incandescentman.github.io= path.
+- Reworked the invoice letterhead header sizing so the logo/wordmark no longer overlaps the invoice title/body, and registered the invoice classes with the shared [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/jay-latex-table-wrap.el][jay-latex-table-wrap.el]] helper so plain Org tables wrap as =tabularx= instead of overflowing the page.
+- Added invoice-specific =\letterheadlogo{...}= support and wired [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/blue-invoice-letterhead-socratic-ai.el][blue-invoice-letterhead-socratic-ai.el]] to use the Socratic AI icon at [[file+emacs:/Users/jay/Dropbox/github/astro-monorepo/apps/socratic/src/assets/images/socratic-ai-complex-logo-transparent_color.png][socratic-ai-complex-logo-transparent_color.png]].
+- Fixed the old deep-list label definitions by using =\providecommand= for itemize levels v-x, avoiding LaTeX errors when exporting with modern TeX.
+- Updated [[file+emacs:/Users/jay/emacs/interesting-snippets/blue-invoice.yasnippet][blue-invoice.yasnippet]] to generate the current letterhead invoice structure: client first, compact service table, supplier address block, and payment details.
+- Verified the Metabolic Mind invoice export from [[file+emacs:/Users/jay/Dropbox/roam/storytelling-nyc-roam/20260526150547-metabolic_mind_invoice_stnyc_2026_001.org][20260526150547-metabolic_mind_invoice_stnyc_2026_001.org]] after correcting the AP email and adding Jay's supplier address, then refreshed [[file+emacs:/Users/jay/Dropbox/roam/storytelling-nyc-roam/Invoice.pdf][Invoice.pdf]].
+
 * 2026-05-26: Default =org-attach= file picker to Downloads
-- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so interactive =org-attach-attach= starts in /Users/jay/Downloads/ and passes the newest regular non-hidden file there as the default filename. In batch tests, pressing RET on the empty prompt picks that file; Jay should still live-check this once in the real Spacemacs completion UI because Helm/Ivy can handle =read-file-name= defaults differently.
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so interactive =org-attach-attach= starts in /Users/jay/Downloads/ and pre-fills the newest regular non-hidden filename as =read-file-name='s initial input.
 - Kept the directory guard in the same advice path, so accidentally selecting a folder still raises =Refusing to attach directory= instead of copying it into the attachment tree.
-- Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]] and validated the focused behavior: newest-file selection, directory rejection, and normal file attach. If the live completion UI does not honor empty-RET defaults, change the picker to insert the newest filename as initial input instead of only passing it as =DEFAULT-FILENAME=.
+- The initial-input path is deliberate for Jay's compleseus/Vertico setup: Vertico ignores =DEFAULT-FILENAME= on RET and sorts by history/length/alpha rather than file mtime, so pre-filling the newest filename narrows the candidate list to the right file while still allowing =C-a C-k= to pick another file.
+- Redacted an old literal OpenAI API-key example in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] that predated this checkpoint; the live API-key example still demonstrates reading the key from an external file.
+- Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]] and validated the focused behavior: newest-file selection, directory rejection, and normal file attach.
 
 * 2026-05-26: Block directory inputs to =org-attach=
 - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so =org-attach-attach= refuses directory paths before Org can copy them into the attachment tree. This prevents accidental whole-folder attachments like the copied Downloads directory incident.

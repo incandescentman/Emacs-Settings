@@ -939,7 +939,7 @@ process the whole buffer."
                  "new-yorker.el"
                  "new-yorker-caslon.el"
                  "blue-invoice.el"
-                 "blue-invoice-with-letterhead.el"
+                 "blue-invoice-letterhead-storytelling-nyc.el"
                  "jay-latex-yosemite-setup.el")))
     (dolist (file files)
       (let ((full-path (expand-file-name file base)))
@@ -963,7 +963,7 @@ process the whole buffer."
     ("new-yorker" . "/Users/jay/emacs/emacs-settings/latex-templates/new-yorker.el")
     ("new-yorker-caslon" . "/Users/jay/emacs/emacs-settings/latex-templates/new-yorker-caslon.el")
     ("blue-invoice" . "/Users/jay/emacs/emacs-settings/latex-templates/blue-invoice.el")
-    ("blue-invoice-letterhead" . "/Users/jay/emacs/emacs-settings/latex-templates/blue-invoice-with-letterhead.el"))
+    ("blue-invoice-letterhead" . "/Users/jay/emacs/emacs-settings/latex-templates/blue-invoice-letterhead-storytelling-nyc.el"))
   "Mapping of Org LaTeX class names to the template files that define them.")
 
 (defun jay/org-export--keyword-value (key)
