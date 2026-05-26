@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-05-26: Block directory inputs to =org-attach=
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so =org-attach-attach= refuses directory paths before Org can copy them into the attachment tree. This prevents accidental whole-folder attachments like the copied Downloads directory incident.
+- Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]] from the literate source and validated it with =check-parens=.
+- Runtime-checked both sides of the guard: directory input now raises =Refusing to attach directory=, while attaching a normal file still succeeds.
+
 * 2026-05-25: Tighten default Org export hygiene
 - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] so default exports require explicit braces for subscript/superscript export (=org-export-with-sub-superscripts= set to the symbol ={}=), hide Org headline tags by default (=org-export-with-tags= = nil=), and suppress standalone timestamps by default (=org-export-with-timestamps= = nil=).
 - Kept section numbering and TOC defaults unchanged: global exports still default to no section numbers and no table of contents, while documents that need a LaTeX TOC can opt in with the documented =num:t= plus =\setcounter{secnumdepth}{0}= pattern.

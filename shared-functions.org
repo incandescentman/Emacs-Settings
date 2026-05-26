@@ -5353,6 +5353,17 @@ With prefix ARG, insert using 'safari' custom link type."
 
 (setq org-attach-auto-tag "ATTACHMENTS")
 (setq org-attach-id-dir "/Users/jay/dropbox/roam/attachments")
+
+(defun jay/org-attach-reject-directory (orig-fun file &optional visit-dir method)
+  "Prevent `org-attach-attach' from attaching whole directories."
+  (when (file-directory-p file)
+    (user-error "Refusing to attach directory: %s" (abbreviate-file-name file)))
+  (funcall orig-fun file visit-dir method))
+
+(with-eval-after-load 'org-attach
+  (advice-remove 'org-attach-attach #'jay/org-attach-reject-directory)
+  (advice-add 'org-attach-attach :around #'jay/org-attach-reject-directory))
+
 (defun org-roam-show-attachments (node)
   (when-let ((id (org-roam-node-id node))
              (folder (org-attach-dir-from-id id t))

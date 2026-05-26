@@ -2,6 +2,20 @@
 #+DATE: 2025-09-24
 #+DESCRIPTION: Debugging post-mortems and prevention checklists.
 
+* Guard =org-attach-attach= Directly When Preventing Attachment Accidents
+  Date: 2026-05-26
+
+** Trigger
+Trying to attach one SVG from a Roam note accidentally copied a whole =Downloads/= directory into /Users/jay/Dropbox/roam/attachments/, creating a 7.6 GB untracked attachment tree.
+
+** Mechanism
+Org's =org-attach-attach= accepts both files and directories. When given a directory and method =cp=, it normalizes the trailing slash and calls =copy-directory= into the attachment directory. Guarding only the top-level =org-attach= menu would miss programmatic callers and helper packages that call =org-attach-attach= directly.
+
+** Actionable insight
+- Put safety checks around =org-attach-attach= itself when blocking dangerous attachment inputs.
+- Reject directories before calling the original function; normal file attaches should pass through unchanged.
+- For future attachment failures, check both the Org note link and the attachment tree. A directory-shaped attachment can be large, untracked, and unreferenced.
+
 * Keep =num:t= When A LaTeX TOC Needs Unnumbered Headings
   Date: 2026-05-25
 
