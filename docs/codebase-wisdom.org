@@ -2,6 +2,37 @@
 #+DATE: 2025-09-24
 #+DESCRIPTION: Debugging post-mortems and prevention checklists.
 
+* Keep =num:t= When A LaTeX TOC Needs Unnumbered Headings
+  Date: 2026-05-25
+
+** Trigger
+In [[file+emacs:/Users/jay/Dropbox/roam/events/jay-birthday-2026/20260522233127-tarot_deck.org][Jay Birthday Tarot Deck Questions]], changing the export options from =num:t= to =num:nil= looked like the cleaner way to produce unnumbered section headings. The PDF still emitted =\tableofcontents=, but the table of contents came out empty.
+
+** Mechanism
+For LaTeX export, Org's =num:nil= does more than hide printed section numbers. It changes exported headings from normal sectioning commands to starred commands:
+
+#+begin_src latex
+\section*{Tarot Deck}
+\subsection*{THE JAY-CHARACTER CARDS}
+#+end_src
+
+Starred LaTeX section commands do not write entries to the =.toc= file by default. So =toc:t= can still emit =\tableofcontents=, but there is nothing for LaTeX to list.
+
+The older snippet pattern is intentional:
+
+#+begin_src org
+#+OPTIONS: H:5 num:t toc:t
+#+LATEX_HEADER: \setcounter{secnumdepth}{0}
+#+LATEX_HEADER: \setcounter{tocdepth}{3}
+#+end_src
+
+With =num:t=, Org emits normal =\section{...}= and =\subsection{...}= commands, which populate the table of contents. The LaTeX =secnumdepth= setting then suppresses visible printed numbers. This is not stale boilerplate; it separates TOC participation from number display.
+
+** Actionable insight
+- If a LaTeX export needs a table of contents with unnumbered-looking headings, keep =num:t= and use =\setcounter{secnumdepth}{0}=.
+- Do not "simplify" that pair to =num:nil= unless you also add explicit =\addcontentsline= handling or otherwise customize the exporter.
+- Fast diagnostic: inspect the generated =.tex=. If headings are =\section*= / =\subsection*= and the TOC is empty, the problem is section-star export, not the LaTeX class.
+
 * "Fallback" Coercion Loops Must Respect The Same Heuristic As The Primary
   Date: 2026-05-19
 

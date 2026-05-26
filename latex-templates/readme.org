@@ -15,6 +15,20 @@ When the title fallback is in effect, only =#+TITLE:= appears in the left header
 
 The right header (=\rhead=) auto-populates from the current section or subsection title. Subsubsections do not replace it.
 
+* Table of Contents and Numbering
+
+For Org files that need a LaTeX table of contents without visible section numbers, use:
+
+#+begin_example
+#+OPTIONS: H:5 num:t toc:t
+#+LATEX_HEADER: \setcounter{secnumdepth}{0}
+#+LATEX_HEADER: \setcounter{tocdepth}{3}
+#+end_example
+
+The =num:t= setting is intentional: Org emits normal =\section{...}= commands that populate the LaTeX =.toc= file. =\setcounter{secnumdepth}{0}= suppresses the printed numbers. If you use =num:nil= instead, Org emits starred headings such as =\section*=, and the table of contents will be empty unless the document adds custom =\addcontentsline= handling.
+
+* Footer Configuration
+
 For =elegant-garamond= and =elegant-garamond-tabularray=, the footer logo is also configurable per document. The template keeps the old Storytelling NYC image as the default, but you can override it and pair it with a different company name in the header:
 
 #+begin_example

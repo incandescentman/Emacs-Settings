@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-05-25: Document LaTeX TOC numbering trap
+- Documented the intentional =num:t= plus =\setcounter{secnumdepth}{0}= pattern for LaTeX exports that need a table of contents without visible section numbers.
+- Added the durable debugging note to [[file+emacs:/Users/jay/emacs/emacs-settings/docs/codebase-wisdom.org][docs/codebase-wisdom.org]], the practical usage note to [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][docs/instructions.org]], and the template reference note to [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/readme.org][latex-templates/readme.org]].
+- Verified the behavior against [[file+emacs:/Users/jay/Dropbox/roam/events/jay-birthday-2026/20260522233127-tarot_deck.org][Jay Birthday Tarot Deck Questions]]: =num:nil= exports starred =\section*= / =\subsection*= headings that leave the LaTeX TOC empty, while =num:t= exports normal section commands that populate the TOC.
+
 * 2026-05-22: Add undo to line-navigation repeat map
 - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so =jay-line-repeat-map= now supports =z= for undo after entering the repeat state with line motion.
 - Added =jay/repeat-undo= as a wrapper command so repeat-map undo does not make ordinary global undo commands enter the line-navigation repeat map.

@@ -531,6 +531,18 @@ Why this exists:
 
 ** Common LaTeX Toggles (Org Usage)
 
+*** Table of Contents Without Visible Section Numbers
+
+For LaTeX exports that should show a table of contents but should not print section numbers, keep Org numbering enabled and suppress number display in LaTeX:
+
+#+BEGIN_EXAMPLE
+#+OPTIONS: H:5 num:t toc:t
+#+LATEX_HEADER: \setcounter{secnumdepth}{0}
+#+LATEX_HEADER: \setcounter{tocdepth}{3}
+#+END_EXAMPLE
+
+Do not replace this with =num:nil= when a table of contents is needed. In LaTeX export, =num:nil= makes Org emit starred headings such as =\section*= and =\subsection*=; those do not populate the LaTeX =.toc= file unless custom =\addcontentsline= handling is added.
+
 *** Endnotes (default OFF)
 
 Supported classes:
