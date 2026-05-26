@@ -10,11 +10,12 @@
 - Verified the Metabolic Mind invoice export from [[file+emacs:/Users/jay/Dropbox/roam/storytelling-nyc-roam/20260526150547-metabolic_mind_invoice_stnyc_2026_001.org][20260526150547-metabolic_mind_invoice_stnyc_2026_001.org]] after correcting the AP email and adding Jay's supplier address, then refreshed [[file+emacs:/Users/jay/Dropbox/roam/storytelling-nyc-roam/Invoice.pdf][Invoice.pdf]].
 
 * 2026-05-26: Default =org-attach= file picker to Downloads
-- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so interactive =org-attach-attach= starts in /Users/jay/Downloads/ and pre-fills the newest regular non-hidden filename as =read-file-name='s initial input.
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so interactive =org-attach-attach= offers regular non-hidden files from /Users/jay/Downloads/ in newest-added-first order, without pre-filling a single filename.
 - Kept the directory guard in the same advice path, so accidentally selecting a folder still raises =Refusing to attach directory= instead of copying it into the attachment tree.
-- The initial-input path is deliberate for Jay's compleseus/Vertico setup: Vertico ignores =DEFAULT-FILENAME= on RET and sorts by history/length/alpha rather than file mtime, so pre-filling the newest filename narrows the candidate list to the right file while still allowing =C-a C-k= to pick another file.
+- The picker now uses a custom =completing-read= table with =display-sort-function= and =cycle-sort-function= set to =identity=, so Vertico preserves the Downloads recency ordering instead of re-sorting candidates by history/length/alpha.
+- On macOS the recency sort uses file birth time as a fast local proxy for Finder's Date Added, falling back to modification time if birth time is unavailable.
 - Redacted an old literal OpenAI API-key example in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] that predated this checkpoint; the live API-key example still demonstrates reading the key from an external file.
-- Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]] and validated the focused behavior: newest-file selection, directory rejection, and normal file attach.
+- Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]] and validated the focused behavior: newest-first ordering, directory rejection, and normal file attach.
 
 * 2026-05-26: Block directory inputs to =org-attach=
 - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so =org-attach-attach= refuses directory paths before Org can copy them into the attachment tree. This prevents accidental whole-folder attachments like the copied Downloads directory incident.

@@ -5357,35 +5357,80 @@ With prefix ARG, insert using 'safari' custom link type."
 (defvar jay/org-attach-source-directory "~/Downloads/"
   "Default source directory for choosing files to attach with org-attach.")
 
-(defun jay/org-attach--newest-regular-file (directory)
-  "Return the newest regular non-hidden file in DIRECTORY, or nil."
+(defun jay/org-attach--regular-files (directory)
+  "Return regular non-hidden files in DIRECTORY."
   (let (files)
     (dolist (file (directory-files directory t))
       (when (and (file-regular-p file)
                  (not (string-prefix-p "." (file-name-nondirectory file))))
         (push file files)))
-    (car
-     (sort files
-           (lambda (a b)
-             (time-less-p (file-attribute-modification-time (file-attributes b))
-                          (file-attribute-modification-time (file-attributes a))))))))
+    (nreverse files)))
+
+(defun jay/org-attach--macos-birthtime-table (files)
+  "Return a hash table mapping FILES to macOS birth-time seconds.
+Finder's Date Added is not exposed directly through `file-attributes'.  On
+macOS, file birth time is the closest fast local proxy for Downloads ordering."
+  (let ((table (make-hash-table :test 'equal))
+        (remaining files))
+    (when (and (eq system-type 'darwin)
+               (executable-find "stat"))
+      (while remaining
+        (let (chunk)
+          (dotimes (_ 200)
+            (when remaining
+              (push (pop remaining) chunk)))
+          (setq chunk (nreverse chunk))
+          (with-temp-buffer
+            (when (zerop (apply #'process-file
+                                "stat" nil t nil "-f" "%B\t%N" "--" chunk))
+              (goto-char (point-min))
+              (while (re-search-forward "^\\([0-9]+\\)\t\\(.+\\)$" nil t)
+                (let ((seconds (string-to-number (match-string 1)))
+                      (file (match-string 2)))
+                  (when (> seconds 0)
+                    (puthash file seconds table)))))))))
+    table))
+
+(defun jay/org-attach--file-mtime-seconds (file)
+  "Return FILE's modification time as seconds, or 0 if unavailable."
+  (let ((attrs (file-attributes file)))
+    (if attrs
+        (float-time (file-attribute-modification-time attrs))
+      0)))
+
+(defun jay/org-attach--downloads-by-date-added (directory)
+  "Return regular files in DIRECTORY sorted newest-added first.
+On macOS this uses birth time as a fast Date Added proxy, falling back to mtime."
+  (let* ((files (jay/org-attach--regular-files directory))
+         (birthtimes (jay/org-attach--macos-birthtime-table files)))
+    (sort files
+          (lambda (a b)
+            (let ((a-time (or (gethash a birthtimes)
+                              (jay/org-attach--file-mtime-seconds a)))
+                  (b-time (or (gethash b birthtimes)
+                              (jay/org-attach--file-mtime-seconds b))))
+              (if (= a-time b-time)
+                  (string-lessp (file-name-nondirectory a)
+                                (file-name-nondirectory b))
+                (> a-time b-time)))))))
 
 (defun jay/org-attach-read-file-from-downloads ()
-  "Read an attachment file, starting in `jay/org-attach-source-directory'."
+  "Read an attachment file from Downloads, sorted newest-added first."
   (let* ((dir (file-name-as-directory
                (expand-file-name jay/org-attach-source-directory)))
-         (default-file (jay/org-attach--newest-regular-file dir))
-         (initial (and default-file (file-name-nondirectory default-file)))
-         (prompt (if default-file
-                     (format "File to keep as an attachment (default %s): "
-                             (file-name-nondirectory default-file))
-                   "File to keep as an attachment: ")))
-    ;; Vertico ignores `read-file-name's DEFAULT-FILENAME (it only fires on
-    ;; empty input) and sorts by history/length/alpha, not mtime, so the
-    ;; newest download is buried.  Pre-fill the newest file as INITIAL input
-    ;; instead: Vertico narrows to it and RET attaches it.  Clear the line to
-    ;; pick anything else.
-    (read-file-name prompt dir default-file t initial)))
+         (files (jay/org-attach--downloads-by-date-added dir)))
+    (unless files
+      (user-error "No regular files found in %s" (abbreviate-file-name dir)))
+    (let* ((candidates (mapcar #'file-name-nondirectory files))
+           (table (lambda (string pred action)
+                    (if (eq action 'metadata)
+                        '(metadata (category . file)
+                                   (display-sort-function . identity)
+                                   (cycle-sort-function . identity))
+                      (complete-with-action action candidates string pred))))
+           (choice (let ((default-directory dir))
+                     (completing-read "Attach from Downloads: " table nil t))))
+      (expand-file-name choice dir))))
 
 (defun jay/org-attach-attach-from-downloads (orig-fun file &optional visit-dir method)
   "Attach FILE while defaulting interactive selection to Downloads."
