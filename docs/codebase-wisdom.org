@@ -14,7 +14,8 @@ Org's =org-attach-attach= accepts both files and directories. When given a direc
 ** Actionable insight
 - Put safety checks around =org-attach-attach= itself when blocking dangerous attachment inputs.
 - Reject directories before calling the original function; normal file attaches should pass through unchanged.
-- If the accident starts with picker friction, improve the interactive spec too. In this config, the attach prompt should start in /Users/jay/Downloads/ and default to the newest regular non-hidden file, while the lower-level guard remains as the final backstop.
+- If the accident starts with picker friction, improve the interactive spec too. In this config, the attach prompt should start in /Users/jay/Downloads/ and pass the newest regular non-hidden file as =read-file-name='s default filename, while the lower-level guard remains as the final backstop.
+- Verify empty-RET behavior in Jay's live completion UI before treating it as guaranteed. Vanilla =read-file-name= returns the default filename on empty input, but Helm/Ivy/Spacemacs layers may instead act on the selected candidate or directory. If that happens, put the newest filename into the initial input rather than relying only on =DEFAULT-FILENAME=.
 - For future attachment failures, check both the Org note link and the attachment tree. A directory-shaped attachment can be large, untracked, and unreferenced.
 
 * Keep =num:t= When A LaTeX TOC Needs Unnumbered Headings

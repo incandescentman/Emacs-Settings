@@ -2,9 +2,9 @@
 #+STARTUP: showall
 
 * 2026-05-26: Default =org-attach= file picker to Downloads
-- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so interactive =org-attach-attach= starts in /Users/jay/Downloads/ and defaults to the newest regular non-hidden file there. Pressing RET on the empty prompt now picks the likely newest download.
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so interactive =org-attach-attach= starts in /Users/jay/Downloads/ and passes the newest regular non-hidden file there as the default filename. In batch tests, pressing RET on the empty prompt picks that file; Jay should still live-check this once in the real Spacemacs completion UI because Helm/Ivy can handle =read-file-name= defaults differently.
 - Kept the directory guard in the same advice path, so accidentally selecting a folder still raises =Refusing to attach directory= instead of copying it into the attachment tree.
-- Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]] and validated the focused behavior: newest-file selection, directory rejection, and normal file attach.
+- Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]] and validated the focused behavior: newest-file selection, directory rejection, and normal file attach. If the live completion UI does not honor empty-RET defaults, change the picker to insert the newest filename as initial input instead of only passing it as =DEFAULT-FILENAME=.
 
 * 2026-05-26: Block directory inputs to =org-attach=
 - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so =org-attach-attach= refuses directory paths before Org can copy them into the attachment tree. This prevents accidental whole-folder attachments like the copied Downloads directory incident.
