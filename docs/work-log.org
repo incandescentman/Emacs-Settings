@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-05-25: Tighten default Org export hygiene
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] so default exports require explicit braces for subscript/superscript export (=org-export-with-sub-superscripts= set to the symbol ={}=), hide Org headline tags by default (=org-export-with-tags= = nil=), and suppress standalone timestamps by default (=org-export-with-timestamps= = nil=).
+- Kept section numbering and TOC defaults unchanged: global exports still default to no section numbers and no table of contents, while documents that need a LaTeX TOC can opt in with the documented =num:t= plus =\setcounter{secnumdepth}{0}= pattern.
+- Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.el][org-export.el]] from the literate source and validated it with =check-parens=.
+
 * 2026-05-25: Document LaTeX TOC numbering trap
 - Documented the intentional =num:t= plus =\setcounter{secnumdepth}{0}= pattern for LaTeX exports that need a table of contents without visible section numbers.
 - Added the durable debugging note to [[file+emacs:/Users/jay/emacs/emacs-settings/docs/codebase-wisdom.org][docs/codebase-wisdom.org]], the practical usage note to [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][docs/instructions.org]], and the template reference note to [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/readme.org][latex-templates/readme.org]].
