@@ -5354,15 +5354,47 @@ With prefix ARG, insert using 'safari' custom link type."
 (setq org-attach-auto-tag "ATTACHMENTS")
 (setq org-attach-id-dir "/Users/jay/dropbox/roam/attachments")
 
-(defun jay/org-attach-reject-directory (orig-fun file &optional visit-dir method)
-  "Prevent `org-attach-attach' from attaching whole directories."
+(defvar jay/org-attach-source-directory "~/Downloads/"
+  "Default source directory for choosing files to attach with org-attach.")
+
+(defun jay/org-attach--newest-regular-file (directory)
+  "Return the newest regular non-hidden file in DIRECTORY, or nil."
+  (let (files)
+    (dolist (file (directory-files directory t))
+      (when (and (file-regular-p file)
+                 (not (string-prefix-p "." (file-name-nondirectory file))))
+        (push file files)))
+    (car
+     (sort files
+           (lambda (a b)
+             (time-less-p (file-attribute-modification-time (file-attributes b))
+                          (file-attribute-modification-time (file-attributes a))))))))
+
+(defun jay/org-attach-read-file-from-downloads ()
+  "Read an attachment file, starting in `jay/org-attach-source-directory'."
+  (let* ((dir (file-name-as-directory
+               (expand-file-name jay/org-attach-source-directory)))
+         (default-file (jay/org-attach--newest-regular-file dir))
+         (prompt (if default-file
+                     (format "File to keep as an attachment (default %s): "
+                             (file-name-nondirectory default-file))
+                   "File to keep as an attachment: ")))
+    (read-file-name prompt dir default-file t)))
+
+(defun jay/org-attach-attach-from-downloads (orig-fun file &optional visit-dir method)
+  "Attach FILE while defaulting interactive selection to Downloads."
+  (interactive (list (jay/org-attach-read-file-from-downloads)
+                     current-prefix-arg
+                     nil))
   (when (file-directory-p file)
     (user-error "Refusing to attach directory: %s" (abbreviate-file-name file)))
   (funcall orig-fun file visit-dir method))
 
 (with-eval-after-load 'org-attach
-  (advice-remove 'org-attach-attach #'jay/org-attach-reject-directory)
-  (advice-add 'org-attach-attach :around #'jay/org-attach-reject-directory))
+  (when (fboundp 'jay/org-attach-reject-directory)
+    (advice-remove 'org-attach-attach #'jay/org-attach-reject-directory))
+  (advice-remove 'org-attach-attach #'jay/org-attach-attach-from-downloads)
+  (advice-add 'org-attach-attach :around #'jay/org-attach-attach-from-downloads))
 
 (defun org-roam-show-attachments (node)
   (when-let ((id (org-roam-node-id node))
