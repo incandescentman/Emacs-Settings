@@ -33,6 +33,7 @@ Org's =org-attach-attach= accepts both files and directories. When given a direc
 - Reject directories before calling the original function; normal file attaches should pass through unchanged.
 - If the accident starts with picker friction, improve the interactive spec too. In this config, the attach prompt should present regular non-hidden files from /Users/jay/Downloads/ in newest-added-first order, while the lower-level guard remains as the final backstop.
 - Do not rely on =read-file-name='s =DEFAULT-FILENAME= in Jay's compleseus/Vertico setup. Vertico's RET path exits with the highlighted candidate, and its default sorting is history/length/alpha rather than file recency. For ordered file pickers, use a custom completion table whose metadata declares =display-sort-function= and =cycle-sort-function= as =identity=.
+- If a custom picker narrows the normal file-navigation surface, include an explicit escape-hatch candidate that calls =read-file-name= so arbitrary existing files remain attachable.
 - For future attachment failures, check both the Org note link and the attachment tree. A directory-shaped attachment can be large, untracked, and unreferenced.
 
 * Keep =num:t= When A LaTeX TOC Needs Unnumbered Headings

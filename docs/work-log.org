@@ -13,6 +13,7 @@
 - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so interactive =org-attach-attach= offers regular non-hidden files from /Users/jay/Downloads/ in newest-added-first order, without pre-filling a single filename.
 - Kept the directory guard in the same advice path, so accidentally selecting a folder still raises =Refusing to attach directory= instead of copying it into the attachment tree.
 - The picker now uses a custom =completing-read= table with =display-sort-function= and =cycle-sort-function= set to =identity=, so Vertico preserves the Downloads recency ordering instead of re-sorting candidates by history/length/alpha.
+- The ordered Downloads list includes a =Choose another file...= escape hatch that falls back to normal =read-file-name= navigation for files outside /Users/jay/Downloads/ or inside subdirectories.
 - On macOS the recency sort uses file birth time as a fast local proxy for Finder's Date Added, falling back to modification time if birth time is unavailable.
 - Redacted an old literal OpenAI API-key example in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] that predated this checkpoint; the live API-key example still demonstrates reading the key from an external file.
 - Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]] and validated the focused behavior: newest-first ordering, directory rejection, and normal file attach.

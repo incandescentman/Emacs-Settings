@@ -5357,6 +5357,9 @@ With prefix ARG, insert using 'safari' custom link type."
 (defvar jay/org-attach-source-directory "~/Downloads/"
   "Default source directory for choosing files to attach with org-attach.")
 
+(defconst jay/org-attach-choose-another-file "Choose another file..."
+  "Completion candidate that falls back to a normal file picker.")
+
 (defun jay/org-attach--regular-files (directory)
   "Return regular non-hidden files in DIRECTORY."
   (let (files)
@@ -5421,7 +5424,8 @@ On macOS this uses birth time as a fast Date Added proxy, falling back to mtime.
          (files (jay/org-attach--downloads-by-date-added dir)))
     (unless files
       (user-error "No regular files found in %s" (abbreviate-file-name dir)))
-    (let* ((candidates (mapcar #'file-name-nondirectory files))
+    (let* ((candidates (append (mapcar #'file-name-nondirectory files)
+                               (list jay/org-attach-choose-another-file)))
            (table (lambda (string pred action)
                     (if (eq action 'metadata)
                         '(metadata (category . file)
@@ -5430,7 +5434,9 @@ On macOS this uses birth time as a fast Date Added proxy, falling back to mtime.
                       (complete-with-action action candidates string pred))))
            (choice (let ((default-directory dir))
                      (completing-read "Attach from Downloads: " table nil t))))
-      (expand-file-name choice dir))))
+      (if (string= choice jay/org-attach-choose-another-file)
+          (read-file-name "Attach file: " dir nil t)
+        (expand-file-name choice dir)))))
 
 (defun jay/org-attach-attach-from-downloads (orig-fun file &optional visit-dir method)
   "Attach FILE while defaulting interactive selection to Downloads."
