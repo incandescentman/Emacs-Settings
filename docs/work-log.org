@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-05-31: Replace Dixit self letterhead logo
+- Copied the selected generated rain-writer logo from [[file+emacs:/Users/jay/.codex/generated_images/019e7c86-e0d6-73f2-a2b9-678a04294714/ig_089effaa0849a5d6016a1bd15bdca88190bbe68c29caedce86.png][ig_089effaa0849a5d6016a1bd15bdca88190bbe68c29caedce86.png]] to the durable repo asset [[file+emacs:/Users/jay/emacs/emacs-settings/assets/images/dixit-rain-writer-logo.png][dixit-rain-writer-logo.png]], leaving the generated original in place.
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/dixit-self-letterhead.el][dixit-self-letterhead.el]] so its fancy header uses the new local logo asset instead of the temporary replacement in /Users/jay/Dropbox/github/incandescentman/assets/images/.
+- Verified the class with a forced-header Org export smoke test and XeLaTeX compile via the LaTeX plugin. The PDF at [[file+emacs:/tmp/latex-dixit-logo-check/build/dixit-logo-smoke.pdf][dixit-logo-smoke.pdf]] was generated successfully, and the TeX file list confirms the new PNG was included.
+
 * 2026-05-31: Repair active LaTeX template compile failures
 - Ran a LaTeX plugin audit across the active templates in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/][latex-templates/]], using batch Org export plus XeLaTeX compile smoke tests for each class.
 - Fixed deep itemize labels across the Beautiful Racket, New Yorker, invoice, and Dixit letterhead templates: levels v-x now use safe definitions where needed, and all explicit itemize labels use =\raisebox{0.25ex}{\tiny$\bullet$}= instead of malformed =\raise ... \hbox\tiny...= forms.

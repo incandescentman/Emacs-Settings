@@ -124,7 +124,7 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 
 \\fancyhead[C]{%
   \\begin{minipage}[c][1in][c]{1\\linewidth}
-    \\includegraphics[height=1in,keepaspectratio]{/Users/jay/Dropbox/github/incandescentman/assets/images/dixit-logo-2.jpg}
+    \\includegraphics[height=1in,keepaspectratio]{/Users/jay/emacs/emacs-settings/assets/images/dixit-rain-writer-logo.png}
   \\end{minipage}%
   \\hspace{0in} % Reducing space to 0 inches between the logo and the text
   \\begin{minipage}[c][1in][c]{0.3\\linewidth}
