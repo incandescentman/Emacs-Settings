@@ -1,3 +1,5 @@
+;;; -*- lexical-binding: t; -*-
+
 (provide 'dixit-self-letterhead)
 
 (add-to-list 'org-latex-classes
@@ -122,8 +124,7 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 
 \\fancyhead[C]{%
   \\begin{minipage}[c][1in][c]{1\\linewidth}
-    % \\includegraphics[height=0.8in,keepaspectratio]{/Users/jay/Dropbox/github/incandescentman.github.io/assets/images/dixit-logo-2.jpg}
-    \\includegraphics[height=1in,keepaspectratio]{/Users/jay/Downloads/_1af28fc4-5c8a-4c78-bde1-2e5bbfb61dd3.jpeg}
+    \\includegraphics[height=1in,keepaspectratio]{/Users/jay/Dropbox/github/incandescentman/assets/images/dixit-logo-2.jpg}
   \\end{minipage}%
   \\hspace{0in} % Reducing space to 0 inches between the logo and the text
   \\begin{minipage}[c][1in][c]{0.3\\linewidth}
@@ -187,24 +188,24 @@ UprightFont = HelveticaNeueLTPro-MdCn,
 \\renewcommand{\\labelitemii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
 \\renewcommand{\\labelitemiii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
 \\renewcommand{\\labelitemiv}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
-\\renewcommand{\\labelitemv}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
-\\renewcommand{\\labelitemvi}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
-\\renewcommand{\\labelitemvii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
-\\renewcommand{\\labelitemviii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
-\\renewcommand{\\labelitemix}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
-\\renewcommand{\\labelitemx}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+\\providecommand{\\labelitemv}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+\\providecommand{\\labelitemvi}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+\\providecommand{\\labelitemvii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+\\providecommand{\\labelitemviii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+\\providecommand{\\labelitemix}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+\\providecommand{\\labelitemx}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
 
 \\setlistdepth{10}
-\\setlist[itemize,1]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-\\setlist[itemize,2]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-\\setlist[itemize,3]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-\\setlist[itemize,4]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-\\setlist[itemize,5]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-\\setlist[itemize,6]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-\\setlist[itemize,7]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-\\setlist[itemize,8]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-\\setlist[itemize,9]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-\\setlist[itemize,10]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+\\setlist[itemize,1]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+\\setlist[itemize,2]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+\\setlist[itemize,3]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+\\setlist[itemize,4]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+\\setlist[itemize,5]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+\\setlist[itemize,6]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+\\setlist[itemize,7]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+\\setlist[itemize,8]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+\\setlist[itemize,9]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+\\setlist[itemize,10]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
 \\renewlist{itemize}{itemize}{10}
 
 

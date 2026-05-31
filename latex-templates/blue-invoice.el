@@ -20,13 +20,14 @@
 
 
 % define Helvetica Now font weights
-\\setmainfont{EBGaramond}[
+\\setmainfont{HelveticaNow}[
   Path = /Users/jay/Library/Fonts/,
         UprightFont = HelveticaNowText-Light,
         BoldFont = HelveticaNowDisplay-Bold,
         ItalicFont = HelveticaNowText-LightItalic,
         BoldItalicFont = HelveticaNowDisplay-BoldIta,
   Extension = .ttf
+]
 
 \\setromanfont{HelveticaNowText-Light}
 \\setsansfont{HelveticaNowDisplay-Regular}
@@ -44,7 +45,7 @@
 \\usepackage{ragged2e}
 \\usepackage{tabularx}
 \\usepackage{longtable}
-\\setkeys{Gin}{resolution=72}
+%\\setkeys{Gin}{resolution=72}
 \\usepackage{tikz}
 \\usepackage{calc}
 \\usepackage{eso-pic}
@@ -184,16 +185,16 @@
 \\providecommand{\\labelitemx}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
 
 \\setlistdepth{10}
-\\setlist[itemize,1]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-\\setlist[itemize,2]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-\\setlist[itemize,3]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-\\setlist[itemize,4]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-\\setlist[itemize,5]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-\\setlist[itemize,6]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-\\setlist[itemize,7]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-\\setlist[itemize,8]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-\\setlist[itemize,9]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-\\setlist[itemize,10]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+\\setlist[itemize,1]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+\\setlist[itemize,2]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+\\setlist[itemize,3]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+\\setlist[itemize,4]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+\\setlist[itemize,5]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+\\setlist[itemize,6]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+\\setlist[itemize,7]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+\\setlist[itemize,8]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+\\setlist[itemize,9]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+\\setlist[itemize,10]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
 \\renewlist{itemize}{itemize}{10}
 
 

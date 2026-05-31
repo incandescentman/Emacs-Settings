@@ -1,8 +1,12 @@
+;;; -*- lexical-binding: t; -*-
+
 (provide 'hipster-cv)
 
 (add-to-list 'org-latex-classes
-             '("hipster-cv"
-               "
+	             '("hipster-cv"
+	               "
+\\RequirePackage{fontspec}
+\\defaultfontfeatures[FontAwesome]{Path = /usr/local/texlive/2025/texmf-dist/fonts/opentype/public/fontawesome/, Extension = .otf}
 \\documentclass[lighthipster]{simplehipstercv}
 % available options: darkhipster, lighthipster, pastel, allblack, grey, verylight, withoutsidebar
 \\usepackage[utf8]{inputenc}

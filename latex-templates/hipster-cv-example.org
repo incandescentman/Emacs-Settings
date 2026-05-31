@@ -24,7 +24,7 @@
 {\setasidefontcolour
 \flushright
 \begin{center}
-    \roundpic{jack.jpg}
+    \roundpic{example-image}
 \end{center}
 
 \bg{cvgreen}{white}{About me}\\[0.5em]
@@ -80,17 +80,17 @@ Sailing the seven seas, finding hidden treasure, and avoiding the Royal Navy.
 \section*{Short Resumé}
 
 \begin{tabular}{r| p{0.5\textwidth} c}
-    \cvevent{2018--2021}{Captain of the Black Pearl}{Lead}{East Indies \color{cvred}}{Finally got the goddamn ship back. Sailed across the Caribbean and recovered the treasure of Isla de Muerta.}{disney.png} \\
-    \cvevent{2016--2017}{Captain of the Black Pearl}{Lead}{Tortuga \color{cvred}}{Found a secret treasure, lost the ship. Adventures with the Fountain of Youth.}{medal.jpeg}
+    \cvevent{2018--2021}{Captain of the Black Pearl}{Lead}{East Indies \color{cvred}}{Finally got the goddamn ship back. Sailed across the Caribbean and recovered the treasure of Isla de Muerta.}{example-image-a} \\
+    \cvevent{2016--2017}{Captain of the Black Pearl}{Lead}{Tortuga \color{cvred}}{Found a secret treasure, lost the ship. Adventures with the Fountain of Youth.}{example-image-b}
 \end{tabular}
 \vspace{3em}
 
 \begin{minipage}[t]{0.35\textwidth}
 \section*{Degrees}
 \begin{tabular}{r p{0.6\textwidth} c}
-    \cvdegree{1710}{Captain}{Certified}{Tortuga Uni \color{headerblue}}{}{disney.png} \\
-    \cvdegree{1715}{Bucaneering}{M.A.}{London \color{headerblue}}{}{medal.jpeg} \\
-    \cvdegree{1720}{Bucaneering}{B.A.}{London \color{headerblue}}{}{medal.jpeg}
+    \cvdegree{1710}{Captain}{Certified}{Tortuga Uni \color{headerblue}}{}{example-image-a} \\
+    \cvdegree{1715}{Bucaneering}{M.A.}{London \color{headerblue}}{}{example-image-b} \\
+    \cvdegree{1720}{Bucaneering}{B.A.}{London \color{headerblue}}{}{example-image-b}
 \end{tabular}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.3\textwidth}
@@ -106,8 +106,8 @@ Sailing the seven seas, finding hidden treasure, and avoiding the Royal Navy.
 
 \section*{Curriculum}
 \begin{tabular}{r| p{0.5\textwidth} c}
-    \cvevent{2018--2021}{Captain of the Black Pearl}{Lead}{East Indies \color{cvred}}{Finally got the goddamn ship back. Led crew of 50+ pirates across dangerous waters.}{disney.png} \\
-    \cvevent{2019}{Freelance Pirate}{Bucaneering}{Tortuga \color{cvred}}{This and that. The usual, aye? Raided merchant vessels and discovered new trade routes.}{medal.jpeg} \\
+    \cvevent{2018--2021}{Captain of the Black Pearl}{Lead}{East Indies \color{cvred}}{Finally got the goddamn ship back. Led crew of 50+ pirates across dangerous waters.}{example-image-a} \\
+    \cvevent{2019}{Freelance Pirate}{Bucaneering}{Tortuga \color{cvred}}{This and that. The usual, aye? Raided merchant vessels and discovered new trade routes.}{example-image-b} \\
 \end{tabular}
 \vspace{3em}
 

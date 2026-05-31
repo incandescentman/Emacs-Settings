@@ -1,6 +1,15 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-05-31: Repair active LaTeX template compile failures
+- Ran a LaTeX plugin audit across the active templates in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/][latex-templates/]], using batch Org export plus XeLaTeX compile smoke tests for each class.
+- Fixed deep itemize labels across the Beautiful Racket, New Yorker, invoice, and Dixit letterhead templates: levels v-x now use safe definitions where needed, and all explicit itemize labels use =\raisebox{0.25ex}{\tiny$\bullet$}= instead of malformed =\raise ... \hbox\tiny...= forms.
+- Repaired [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/blue-invoice.el][blue-invoice.el]] by closing the =\setmainfont= options block, using the intended Helvetica Now family name, and disabling the obsolete =\setkeys{Gin}{resolution=72}= line that fails under the current XeLaTeX graphicx stack.
+- Repaired [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket-classic.el][beautiful-racket-classic.el]] by removing a stray =\titleformat= argument, folding =\color{spacegrey}= into the subsubsection style, and correcting the =indentedsection= environment braces.
+- Repaired [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/dixit-self-letterhead.el][dixit-self-letterhead.el]] by replacing the missing Downloads image with the live logo at [[file+emacs:/Users/jay/Dropbox/github/incandescentman/assets/images/dixit-logo-2.jpg][dixit-logo-2.jpg]].
+- Repaired [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/hipster-cv.el][hipster-cv.el]] for XeLaTeX by loading =fontspec= before =\documentclass= and giving FontAwesome a direct TeX Live OTF path. Updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/hipster-cv-example.org][hipster-cv-example.org]] to use TeX Live's bundled =example-image= assets instead of missing local images.
+- Verified all 17 template classes compile in the smoke matrix, and separately verified the real Metabolic Mind invoice plus the bundled Hipster CV example. Artifacts for the successful run are under [[file+emacs:/tmp/latex-template-check-fixed2.3zcA8k/][latex-template-check-fixed2.3zcA8k]] and [[file+emacs:/tmp/latex-template-check-fixed2-real/][latex-template-check-fixed2-real]].
+
 * 2026-05-26: Repair invoice letterhead export layout
 - Updated the blue invoice letterhead templates so the Storytelling.NYC header logo points at the live asset under [[file+emacs:/Users/jay/Dropbox/github/incandescentman/assets/images/2023-10-final-new-logo_high-res-no-text.png][2023-10-final-new-logo_high-res-no-text.png]] instead of the stale =incandescentman.github.io= path.
 - Reworked the invoice letterhead header sizing so the logo/wordmark no longer overlaps the invoice title/body, and registered the invoice classes with the shared [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/jay-latex-table-wrap.el][jay-latex-table-wrap.el]] helper so plain Org tables wrap as =tabularx= instead of overflowing the page.

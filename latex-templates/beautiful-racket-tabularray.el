@@ -330,12 +330,12 @@ Contextuals=Alternate
                \\renewcommand{\\labelitemii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
                \\renewcommand{\\labelitemiii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
                \\renewcommand{\\labelitemiv}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
-               \\renewcommand{\\labelitemv}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
-               \\renewcommand{\\labelitemvi}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
-               \\renewcommand{\\labelitemvii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
-               \\renewcommand{\\labelitemviii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
-               \\renewcommand{\\labelitemix}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
-               \\renewcommand{\\labelitemx}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+               \\providecommand{\\labelitemv}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+               \\providecommand{\\labelitemvi}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+               \\providecommand{\\labelitemvii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+               \\providecommand{\\labelitemviii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+               \\providecommand{\\labelitemix}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+               \\providecommand{\\labelitemx}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
 
                \\setlistdepth{10}
                \\setlist[itemize,1]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}

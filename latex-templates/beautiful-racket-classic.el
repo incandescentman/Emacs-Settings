@@ -267,24 +267,24 @@
                \\renewcommand{\\labelitemii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
                \\renewcommand{\\labelitemiii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
                \\renewcommand{\\labelitemiv}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
-               \\renewcommand{\\labelitemv}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
-               \\renewcommand{\\labelitemvi}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
-               \\renewcommand{\\labelitemvii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
-               \\renewcommand{\\labelitemviii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
-               \\renewcommand{\\labelitemix}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
-               \\renewcommand{\\labelitemx}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+               \\providecommand{\\labelitemv}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+               \\providecommand{\\labelitemvi}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+               \\providecommand{\\labelitemvii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+               \\providecommand{\\labelitemviii}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+               \\providecommand{\\labelitemix}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
+               \\providecommand{\\labelitemx}{\\raise 0.25ex\\hbox{\\tiny$\\bullet$}}
 
                \\setlistdepth{10}
-               \\setlist[itemize,1]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-               \\setlist[itemize,2]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-               \\setlist[itemize,3]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-               \\setlist[itemize,4]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-               \\setlist[itemize,5]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-               \\setlist[itemize,6]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-               \\setlist[itemize,7]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-               \\setlist[itemize,8]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-               \\setlist[itemize,9]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
-               \\setlist[itemize,10]{label=\\raise 0.25ex\\hbox\\tiny$\\bullet$}
+               \\setlist[itemize,1]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+               \\setlist[itemize,2]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+               \\setlist[itemize,3]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+               \\setlist[itemize,4]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+               \\setlist[itemize,5]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+               \\setlist[itemize,6]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+               \\setlist[itemize,7]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+               \\setlist[itemize,8]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+               \\setlist[itemize,9]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+               \\setlist[itemize,10]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
                \\renewlist{itemize}{itemize}{10}
 
 
@@ -351,9 +351,8 @@
 
 
                \\newenvironment{indentedsection}
-               {  {\\adjustwidth{2em}{0pt}}
+               {\\adjustwidth{2em}{0pt}}
                {\\endadjustwidth}
-               }
 
                \\usepackage[HTML]{xcolor}    % For \\definecolor with the HTML model
                \\usepackage{tcolorbox}       % For creating and customizing colored boxes
@@ -436,12 +435,9 @@
                {0em}
                {\\thispagestyle{plain}\\hfill\\mysectiontitle}
 
-               {\\raggedleft\\parbox[t]{10cm}{\\ttfamily\\scshape\\fontsize{40}{36}\\selectfont\\color{spacegrey}}}
-
-
                \\titleformat*{\\subsection}{\\sffamily\\setstretch{0.7}\\fontsize{24}{36}\\raggedright\\sffamily}
 
-               \\titleformat*{\\subsubsection}{\\ttfamily\\scshape\\fontsize{18}{16}\\raggedright\\ttfamily}\\color{spacegrey}
+               \\titleformat*{\\subsubsection}{\\ttfamily\\scshape\\fontsize{18}{16}\\raggedright\\ttfamily\\color{spacegrey}}
 
                \\titleformat*{\\paragraph}{\\ttfamily\\bfseries\\fontsize{19}{12}\\raggedright}
                \\titleformat*{\\subparagraph}{\\sffamily\\fontsize{16}{12}\\raggedright\\ttfamily\\bfseries}

@@ -2,6 +2,20 @@
 #+DATE: 2025-09-24
 #+DESCRIPTION: Debugging post-mortems and prevention checklists.
 
+* Hipster CV Needs FontAwesome Seeded Before =\documentclass= Under XeLaTeX
+  Date: 2026-05-31
+
+** Trigger
+The active LaTeX template audit found that [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/hipster-cv.el][hipster-cv.el]] failed under XeLaTeX with =Package fontspec Error: The font "FontAwesome" cannot be found=, even though =kpsewhich FontAwesome.otf= found TeX Live's bundled OTF at [[file+emacs:/usr/local/texlive/2025/texmf-dist/fonts/opentype/public/fontawesome/FontAwesome.otf][FontAwesome.otf]].
+
+** Mechanism
+The local =simplehipstercv= class loads =simplehipstercv.sty= during =\documentclass=, and that style loads the old =fontawesome= package immediately. Because =fontawesome.sty= hardcodes =\newfontfamily{\FA}{FontAwesome}=, adding fontspec defaults after =\documentclass= is too late: the package has already tried and failed to resolve the font family. LuaLaTeX can find the TeX Live font in this setup, but the repo's Org PDF export path is XeLaTeX-oriented.
+
+** Actionable insight
+- For =hipster-cv=, seed FontAwesome before =\documentclass= with =\RequirePackage{fontspec}= plus =\defaultfontfeatures[FontAwesome]{Path = /usr/local/texlive/2025/texmf-dist/fonts/opentype/public/fontawesome/, Extension = .otf}=.
+- If this breaks after a TeX Live year bump, re-run =kpsewhich FontAwesome.otf= and update the path in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/hipster-cv.el][hipster-cv.el]] rather than patching [[file+emacs:/Users/jay/Library/texmf/tex/latex/simplehipstercv/simplehipstercv.sty][simplehipstercv.sty]].
+- Keep the bundled example self-contained by using TeX Live's =example-image= assets rather than local screenshots or Downloads images.
+
 * Invoice Letterhead Headers Are Not The Logo Footer System
   Date: 2026-05-26
 
