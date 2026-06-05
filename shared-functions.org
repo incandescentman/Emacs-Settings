@@ -5273,65 +5273,71 @@ Accepted formats:
 #+begin_src emacs-lisp
 (defun org-mac-link--clean-title (title)
   "Remove unwanted prefixes like '(2) ' from TITLE."
-  (replace-regexp-in-string "^([0-9]+)\\s-+" "" title))
+  (replace-regexp-in-string "^([0-9]+)\\s-+" "" (or title "")))
 
-(defun org-mac-link-chrome-copy-frontmost-url ()
-  "Retrieve the URL and title from the frontmost Google Chrome tab and copy as an Org-mode link."
-  (interactive)
+(defun org-mac-link--blank-string-p (string)
+  "Return non-nil if STRING is nil or only whitespace."
+  (or (null string)
+      (string-empty-p (string-trim string))))
+
+(defun org-mac-link-chrome--frontmost-tab-components ()
+  "Return (URL . TITLE) for the frontmost Chrome tab.
+TITLE falls back from the active tab title to the front window name. It
+may still be nil for pages that provide no usable title."
   (let* ((as-command
           "tell application \"Google Chrome\"
                if not (exists front window) then return \"NO_ACTIVE_TAB\"
                set theURL to URL of active tab of front window
                set theTitle to title of active tab of front window
-               return theURL & \"§§§\" & theTitle
+               set theWindowName to name of front window
+               return theURL & \"§§§\" & theTitle & \"§§§\" & theWindowName
            end tell")
          (as-result (string-trim (shell-command-to-string (concat "osascript -e " (shell-quote-argument as-command))))))
-    (if (string-equal as-result "NO_ACTIVE_TAB")
-        (message "No active tab found in Google Chrome.")
-      (let* ((components (split-string as-result "§§§"))
-             (url (string-trim (nth 0 components)))
-             (title (org-mac-link--clean-title (string-trim (nth 1 components))))
-             (org-link (format "[[%s][%s]]" url title)))
-        (kill-new org-link)
-(message "Copied Org link to clipboard: %s" org-link)
-))))
+    (when (string-equal as-result "NO_ACTIVE_TAB")
+      (user-error "No active tab found in Google Chrome"))
+    (let* ((components (split-string as-result "§§§"))
+           (url (string-trim (or (nth 0 components) "")))
+           (tab-title (org-mac-link--clean-title (string-trim (or (nth 1 components) ""))))
+           (window-title (org-mac-link--clean-title (string-trim (or (nth 2 components) ""))))
+           (title (cond
+                   ((not (org-mac-link--blank-string-p tab-title)) tab-title)
+                   ((not (org-mac-link--blank-string-p window-title)) window-title)
+                   (t nil))))
+      (when (org-mac-link--blank-string-p url)
+        (user-error "Google Chrome did not return a URL"))
+      (cons url title))))
 
-(defun org-mac-link-chrome-insert-frontmost-url ()
-  "Insert the URL and title from the frontmost Google Chrome tab as an Org-mode link."
+(defun org-mac-link-chrome--format-org-link (url title &optional link-type)
+  "Format URL and TITLE as an Org link, optionally using LINK-TYPE."
+  (let ((target (if link-type
+                    (format "%s:%s" link-type url)
+                  url)))
+    (if (org-mac-link--blank-string-p title)
+        (format "[[%s]]" target)
+      (format "[[%s][%s]]" target title))))
+
+(defun org-mac-link-chrome-copy-frontmost-url ()
+  "Retrieve the URL and title from the frontmost Google Chrome tab and copy as an Org-mode link."
   (interactive)
-  (let* ((as-command
-          "tell application \"Google Chrome\"
-               set theURL to URL of active tab of front window
-               set theTitle to title of active tab of front window
-               return theURL & \"§§§\" & theTitle
-           end tell")
-         (as-result (string-trim (shell-command-to-string (concat "osascript -e " (shell-quote-argument as-command)))))
-         (components (split-string as-result "§§§"))
-         (url (string-trim (nth 0 components)))
-         (title (org-mac-link--clean-title (string-trim (nth 1 components))))
-         (org-link (format "[[%s][%s]]" url title)))
-    (insert org-link)
-;; (message "Inserted Org link: %s" org-link)
-))
+  (let* ((components (org-mac-link-chrome--frontmost-tab-components))
+         (url (car components))
+         (title (cdr components))
+         (org-link (org-mac-link-chrome--format-org-link url title)))
+    (kill-new org-link)
+    (message "Copied Org link to clipboard: %s" org-link)))
 
 ;; or in Safari format
 (defun org-mac-link-chrome-insert-frontmost-url (arg)
   "Insert URL and title from frontmost Chrome tab as Org-mode link.
 With prefix ARG, insert using 'safari' custom link type."
   (interactive "P")
-  (let* ((as-command
-          "tell application \"Google Chrome\"
-               set theURL to URL of active tab of front window
-               set theTitle to title of active tab of front window
-               return theURL & \"§§§\" & theTitle
-           end tell")
-         (as-result (string-trim (shell-command-to-string (concat "osascript -e " (shell-quote-argument as-command)))))
-         (components (split-string as-result "§§§"))
-         (url (string-trim (nth 0 components)))
-         (title (org-mac-link--clean-title (string-trim (nth 1 components))))
-         (org-link (if arg
-                       (format "[[safari:%s][%s]]" url title) ; Safari format if universal arg
-                     (format "[[%s][%s]]" url title))))       ; Default format otherwise
+  (let* ((components (org-mac-link-chrome--frontmost-tab-components))
+         (url (car components))
+         (title (cdr components))
+         (org-link (org-mac-link-chrome--format-org-link
+                    url
+                    title
+                    (when arg "safari"))))
     (insert org-link)))
 
 #+end_src
