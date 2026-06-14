@@ -265,6 +265,8 @@ Mode line indicator reflects the active graph (e.g., =[Roam:Default]=, =[Roam:My
 
 Your last-used profile is remembered across sessions.
 
+Dailies commands use the active profile. After =Cmd-u 4= switches to =roam-parents=, =Cmd-:= opens or creates today's note under [[file+emacs:/Users/jay/Dropbox/roam-parents/journal/][roam-parents/journal/]], not under [[file+emacs:/Users/jay/Dropbox/roam/journal/][default roam/journal/]].
+
 *** Capture Templates
 
 Press =SPC a o r c= to capture a note. Common templates:

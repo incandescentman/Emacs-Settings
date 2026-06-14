@@ -62,6 +62,8 @@ Quick bindings:
 4. The chosen profile is saved for the next session.
 5. Emacs reports which profile is active.
 
+Dailies commands follow the active profile. After switching to =roam-parents= with =s-u 4=, =s-:= opens or creates today's note under [[file+emacs:/Users/jay/Dropbox/roam-parents/journal/][roam-parents/journal/]], not under [[file+emacs:/Users/jay/Dropbox/roam/journal/][default roam/journal/]].
+
 * Profiles
 
 ** Default

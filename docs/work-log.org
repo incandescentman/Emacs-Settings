@@ -1,6 +1,10 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-06-14: Document active-profile dailies behavior
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/docs/org-roam-profiles.org][org-roam-profiles.org]] and [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][instructions.org]] to state that dailies commands follow the active Org-roam profile.
+- Clarified that after =s-u 4= / =Cmd-u 4= switches to =roam-parents=, =s-:= / =Cmd-:= opens or creates today's daily note under [[file+emacs:/Users/jay/Dropbox/roam-parents/journal/][roam-parents/journal/]], not under [[file+emacs:/Users/jay/Dropbox/roam/journal/][default roam/journal/]].
+
 * 2026-06-14: Restore =s-u 4= to the parents Org-roam profile
 - Swapped the quick profile shortcuts in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-core.el]] back so =s-u 3= switches to =roam-social= and =s-u 4= switches to =roam-parents=.
 - Updated the Which-key labels in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-core.el]] and the quick-reference list in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/org-roam-profiles.org][org-roam-profiles.org]] to match the restored order.
