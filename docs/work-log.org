@@ -1,6 +1,10 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-06-14: Restore =s-u 4= to the parents Org-roam profile
+- Swapped the quick profile shortcuts in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-core.el]] back so =s-u 3= switches to =roam-social= and =s-u 4= switches to =roam-parents=.
+- Updated the Which-key labels in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-core.el]] and the quick-reference list in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/org-roam-profiles.org][org-roam-profiles.org]] to match the restored order.
+
 * 2026-06-05: Swap Org-roam social and parents profile shortcuts
 - Swapped the quick profile shortcuts in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-core.el]] so =s-u 3= now switches to =roam-parents= and =s-u 4= now switches to =roam-social=.
 - Updated the Which-key labels in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-core.el]] and the quick-reference list in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/org-roam-profiles.org][org-roam-profiles.org]] to match the new order.

@@ -51,8 +51,8 @@ Quick bindings:
 - =s-u C-p= show current profile info
 - =s-u 1= switch to default
 - =s-u 2= switch to my-life
-- =s-u 3= switch to roam-parents
-- =s-u 4= switch to roam-social
+- =s-u 3= switch to roam-social
+- =s-u 4= switch to roam-parents
 
 ** What happens when you switch
 
