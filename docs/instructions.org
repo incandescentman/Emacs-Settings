@@ -126,6 +126,14 @@ Notes:
 - *org-web-tools*: Capture an entire article from a URL (auto-extracts main content)
 - *html2org-clipboard*: Paste a specific selection you copied (ChatGPT output, partial page)
 
+** Org Export
+
+Org export behavior lives in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]]. It sets the default export options, HTML and LaTeX helpers, export filters, and backend-specific cleanup.
+
+Smart quotes are enabled globally with =org-export-with-smart-quotes= so HTML and LaTeX exports can use typographic quotes. Markdown-derived exports are the exception: =jay/org-export-disable-smart-quotes-for-markdown= turns =:with-smart-quotes= off through =org-export-filter-options-functions= so Markdown output keeps plain ASCII apostrophes and double quotes instead of HTML entities such as =\&rsquo;=, =\&ldquo;=, and =\&rdquo;=.
+
+If Markdown export starts producing quote entities again, check [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] before adding per-file =#+OPTIONS: ':nil= workarounds. The intended repo-wide behavior is plain quotes for Markdown and smart quotes for the other export backends.
+
 ** Editing Browser Textareas in Emacs (GhostText)
 
 Any time you find yourself writing more than a sentence into a browser textarea — Substack drafts, GitHub PR descriptions, social compose boxes, ChatGPT — edit it in Emacs instead via =atomic-chrome= + the GhostText Chrome extension.
