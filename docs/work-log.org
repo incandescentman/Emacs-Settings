@@ -1,6 +1,13 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-06-15: Keep Markdown export quotes plain
+- Added =jay/org-export-disable-smart-quotes-for-markdown= in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] so Markdown-derived exports set =:with-smart-quotes= to =nil= through =org-export-filter-options-functions= while leaving the global smart-quotes default in place for other backends.
+- Regenerated [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.el][org-export.el]] from the literate source and validated it with =check-parens=.
+- Verified the filter behavior in a batch export smoke test: Markdown output keeps =Dad's "test"= as straight quotes while HTML output still emits smart-quote entities when the same filter is applied with =org-export-with-smart-quotes= enabled.
+- Exported [[file+emacs:/Users/jay/Dropbox/roam-parents/docs/ingest-protocol.org][ingest-protocol.org]] to a temporary Markdown file and confirmed the quote/apostrophe cases render as plain text instead of =\&rsquo;= / =\&ldquo;= / =\&rdquo;= entities.
+- Ran the configured startup smoke test through =~/.emacs.d/init.el=; startup completed and reported =shift nil=. In that batch mode, Spacemacs did not reach the user-config load of [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]], so the export behavior check used a narrow isolated filter harness.
+
 * 2026-06-14: Document active-profile dailies behavior
 - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/docs/org-roam-profiles.org][org-roam-profiles.org]] and [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][instructions.org]] to state that dailies commands follow the active Org-roam profile.
 - Clarified that after =s-u 4= / =Cmd-u 4= switches to =roam-parents=, =s-:= / =Cmd-:= opens or creates today's daily note under [[file+emacs:/Users/jay/Dropbox/roam-parents/journal/][roam-parents/journal/]], not under [[file+emacs:/Users/jay/Dropbox/roam/journal/][default roam/journal/]].

@@ -37,6 +37,16 @@
 ** org-export
 #+BEGIN_SRC emacs-lisp
 (setq org-export-with-smart-quotes t)
+
+(defun jay/org-export-disable-smart-quotes-for-markdown (plist backend)
+  "Use straight quotes for Markdown exports while preserving smart quotes elsewhere."
+  (if (org-export-derived-backend-p backend 'md)
+      (plist-put plist :with-smart-quotes nil)
+    plist))
+
+(add-to-list 'org-export-filter-options-functions
+             #'jay/org-export-disable-smart-quotes-for-markdown)
+
 (setq org-export-exclude-tags (quote ("noexport" "extra")))
 
 ;; (setq org-html-head "<link rel='stylesheet' type='text/css' href='/Users/jay/Dropbox/github/incandescentman.github.io/css/neo.css'>")
