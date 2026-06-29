@@ -8139,7 +8139,22 @@ After evaluating your init-file you can use links analog to the example:
 
 * org astro
 #+begin_src emacs-lisp
-(add-to-list 'load-path "/Users/jay/Dropbox/github/ox-astro/")
+(defconst jay/ox-astro-repo "/Users/jay/Dropbox/github/ox-astro")
+
+(defun jay/ox-astro-delete-bytecode ()
+  "Delete repo-local ox-astro bytecode so Emacs loads source files."
+  (when (file-directory-p jay/ox-astro-repo)
+    (let ((deleted 0))
+      (dolist (file (directory-files-recursively jay/ox-astro-repo "\\.elc\\'"))
+        (when (file-regular-p file)
+          (delete-file file)
+          (setq deleted (1+ deleted))))
+      (when (> deleted 0)
+        (message "Deleted %d ox-astro bytecode file(s)" deleted)))))
+
+(setq load-prefer-newer t)
+(add-to-list 'load-path jay/ox-astro-repo)
+(jay/ox-astro-delete-bytecode)
 (use-package ox-astro
   :load-path "/Users/jay/Dropbox/github/ox-astro/"
   :after ox
@@ -8183,9 +8198,10 @@ After evaluating your init-file you can use links analog to the example:
    (defun ox-astro-reload ()
       "Fully reload ox-astro and its modules without restarting Emacs."
       (interactive)
-      (let ((repo "/Users/jay/Dropbox/github/ox-astro"))
+      (let ((repo jay/ox-astro-repo))
         (add-to-list 'load-path repo)
         (setq load-prefer-newer t)
+        (jay/ox-astro-delete-bytecode)
         (dolist (feat '(ox-astro-table-handlers
                         ox-astro-image-handlers
                         ox-astro-pdf-handlers
