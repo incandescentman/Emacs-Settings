@@ -1,6 +1,10 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-06-30: Strip form feeds during paste cleanup
+- Added form-feed/page-break cleanup to =smart-quotes-replacement-pairs= in [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][pasteboard-copy-and-paste-functions.el]] so =replace-smart-quotes= removes OCR/PDF =\f= characters before they can make Org redisplay choke.
+- Verified the change with =check-parens= and a batch smoke test confirming =replace-smart-quotes= removes =\f= from pasted text.
+
 * 2026-06-15: Keep Markdown export quotes plain
 - Added =jay/org-export-disable-smart-quotes-for-markdown= in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] so Markdown-derived exports set =:with-smart-quotes= to =nil= through =org-export-filter-options-functions= while leaving the global smart-quotes default in place for other backends.
 - Regenerated [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.el][org-export.el]] from the literate source and validated it with =check-parens=.
