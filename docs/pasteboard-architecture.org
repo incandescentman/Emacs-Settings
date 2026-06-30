@@ -16,13 +16,14 @@
 - 2025-10-10 critical fix: `pasteboard--demote-headings-in-string` regex pattern fixed to only match actual headings (with space after stars), not bold text at line start.
 - 2025-11-02 improvement: added dedicated Markdown table separator tightening and defaulted `fundamental-mode` pastes to verbatim.
 - 2026-05-19 critical fix: `pasteboard-paste-adaptive` was rewriting top-level `* Heading` lines to `- Heading` whenever the clipboard text also contained any `-` bullets. Two compounding bugs: (a) `pasteboard--analyse-clipboard-text` only scored `\\*\\{2,\\}` (two-or-more-star) lines as Org, so single-star Org headings contributed nothing to `org-score`, letting `md-score` win on any text that mixed `*` headings with `-` bullets; (b) the "fallback" coercion loop in `pasteboard--clean-string` unconditionally rewrote every `^\\* ` line to `- ` once the style was `markdown`, ignoring the neighbor-aware `pasteboard--should-convert-asterisk-line` heuristic that the primary converter respects. Fix: the analyser now classifies each top-level single-`*` line by its non-blank neighbors (paragraph-text neighbors → Org signal; list neighbors → bullet count), and the fallback loop now calls `pasteboard--should-convert-asterisk-line` per match so heading-like single-`*` lines are protected even when scoring still picks `markdown`.
+- 2026-06-30 improvement: `replace-smart-quotes` now normalizes OCR/PDF form-feed page breaks (`\f`) to a plain space through =smart-quotes-replacement-pairs=. Use a space rather than deleting the character so pasted prose cannot accidentally join adjacent words.
 
 * Current Implementation Details
 
 ** Text Cleaning Pipeline
 `pasteboard--clean-string` processes text in this order (ORDER MATTERS):
   1. `convert-markdown-headings-to-org` - MUST run first before asterisk processing
-  2. `replace-smart-quotes` - Converts markdown bold `**` → org bold `*`, smart quotes, etc.
+  2. `replace-smart-quotes` - Converts markdown bold `**` → org bold `*`, smart quotes, and OCR/PDF form feeds.
   3. `replace-smart-quotes-regexp`
   4. `replace-weird-spaces`
   5. `pasteboard--strip-cite-markers`
@@ -73,6 +74,7 @@ For unmatched modes, inspect characters around point:
 ** Other Implementation Notes
 - `normalize-dashes` (in `shared-functions`) now skips lines that look like Markdown tables.
 - `pasteboard--tighten-markdown-table-separators` collapses separator rows (`| --- |`) into Org-compliant `|---|` before dash normalization runs.
+- Form-feed page breaks from OCR/PDF text are normalized to one plain space in [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][pasteboard-copy-and-paste-functions.el]]. This prevents Emacs redisplay trouble while preserving word separation. Removing the page-number lines that often follow form feeds is a separate regex cleanup and is not handled by =smart-quotes-replacement-pairs=.
 - Raw helpers wrap `pbpaste` with `perl -p -e 's/\r$//'` and `tr` to remove carriage returns.
 
 * Org-Roam Specific Behavior

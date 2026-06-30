@@ -84,7 +84,7 @@
     ("\u200B" . "")   ; Zero-width space
     ("\u200C" . "")   ; Zero-width non-joiner
     ("\u200D" . "")   ; Zero-width joiner
-    ("\f" . "")       ; Form feed/page break from OCR/PDF text
+    ("\f" . " ")      ; Form feed/page break from OCR/PDF text
     ("\t" . " ")      ; Tab character replaced with a space
     ("#####" . "*****")
     ("####" . "****")
@@ -219,7 +219,7 @@ The replacements are defined in the `smart-quotes-replacement-pairs` variable."
 (add-to-list 'smart-quotes-replacement-pairs '("\u200B" . "") t) ; ZW space
 (add-to-list 'smart-quotes-replacement-pairs '("\u200C" . "") t) ; ZWNJ
 (add-to-list 'smart-quotes-replacement-pairs '("\u200D" . "") t) ; ZWJ
-(add-to-list 'smart-quotes-replacement-pairs '("\f" . "") t)     ; form feed / page break
+(add-to-list 'smart-quotes-replacement-pairs '("\f" . " ") t)    ; form feed / page break
 (add-to-list 'smart-quotes-replacement-pairs '("\t" . " ") t)
 (add-to-list 'smart-quotes-replacement-pairs '("#####" . "*****") t)
 (add-to-list 'smart-quotes-replacement-pairs '("####" . "****") t)
