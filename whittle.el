@@ -21,6 +21,7 @@
 (require 'cl-lib)
 (require 'subr-x)   ;; for `string-join'
 (require 'rx)
+(require 'seq)
 
 ;;; Customization -------------------------------------------------------------
 
@@ -62,6 +63,17 @@
   '("that" "so" "very" "really" "yes" "no" "ha" "wow" "well" "yeah"
     "go" "bye" "oh" "had" "have")
   "Words that can appear twice legitimately (case-insensitive).")
+
+(defconst whittle/duplicate-word-comma-exclusions
+  '("am" "are" "be" "been" "being" "can" "could" "did" "do" "does"
+    "had" "has" "have" "he" "her" "hers" "him" "his" "i" "is" "it"
+    "its" "me" "might" "must" "my" "our" "ours" "she" "should" "that"
+    "their" "theirs" "them" "they" "us" "was" "we" "were" "will"
+    "would" "you" "your" "yours")
+  "Function words that should not collapse when repeated across a comma.")
+
+(defvar whittle/transcript-report-directory "/tmp"
+  "Directory where `whittle-transcript-report' writes review reports.")
 
 (defconst whittle/false-start-prefixes
   '("a" "an" "he" "her" "his" "i" "it" "my" "our" "she" "the" "their"
@@ -164,12 +176,17 @@
           (goto-char start)
           (while (re-search-forward dup-regexp limit-marker t)
             (let ((word (downcase (match-string 1)))
+                  (match-text (match-string 0))
                   (preceding (char-before (match-beginning 0))))
               ;; Skip if the first occurrence is part of a hyphenated
               ;; compound (e.g. "goings-on on the ship" must stay), or
-              ;; if the word is in the exclusion list.
+              ;; if the word is in the exclusion list. Comma-separated
+              ;; function-word repeats like "is, is" are usually grammar,
+              ;; not stammers.
               (unless (or (eq preceding ?-)
-                          (member word whittle/duplicate-word-exclusions))
+                          (member word whittle/duplicate-word-exclusions)
+                          (and (string-match-p "," match-text)
+                               (member word whittle/duplicate-word-comma-exclusions)))
                 (let ((match-beg (match-beginning 0))
                       (replacement (match-string 1)))
                   (whittle--increment removed word)
@@ -302,8 +319,12 @@ and is 10 words or fewer. Leading-comma-less em-dash uses like \"The cat
       (set-marker limit-marker nil))
     count))
 
-(defun whittle--normalize-case (beg end)
-  "Capitalize lone i and sentence starts between BEG and END."
+(defun whittle--normalize-case (beg end &optional skip-initial)
+  "Capitalize lone i and sentence starts between BEG and END.
+When SKIP-INITIAL is non-nil, do not capitalize the first
+character in the region. Report mode uses this when processing
+paragraph units in temp buffers, where the first character of the
+unit is not necessarily the start of the source buffer."
   (pcase-let* ((`(,start . ,limit) (whittle--region-bounds beg end))
                (limit-marker (copy-marker limit))
                (case-fold-search nil)
@@ -314,11 +335,12 @@ and is 10 words or fewer. Leading-comma-less em-dash uses like \"The cat
           (while (re-search-forward "\\_<i\\_>" limit-marker t)
             (replace-match "I" t t)
             (setq count (1+ count)))
-          (goto-char start)
-          (skip-chars-forward " \t\n\"'([{" limit-marker)
-          (when (looking-at "[[:lower:]]")
-            (replace-match (upcase (match-string 0)) t t)
-            (setq count (1+ count)))
+          (unless skip-initial
+            (goto-char start)
+            (skip-chars-forward " \t\n\"'([{" limit-marker)
+            (when (looking-at "[[:lower:]]")
+              (replace-match (upcase (match-string 0)) t t)
+              (setq count (1+ count))))
           (goto-char start)
           (while (re-search-forward "[.?!][[:space:]\n]+" limit-marker t)
             (let ((punct-pos (match-beginning 0)))
@@ -338,6 +360,288 @@ and is 10 words or fewer. Leading-comma-less em-dash uses like \"The cat
               (setq count (1+ count)))))
       (set-marker limit-marker nil))
     count))
+
+;;; Transcript review reports --------------------------------------------------
+
+(defconst whittle--transcript-report-risk-order '("high" "medium" "low")
+  "Display order for transcript report risk sections.")
+
+(defconst whittle--transcript-report-medium-risk-passes
+  '("sentence-edge filler removal"
+    "em-dash false-start detection"
+    "false-start collapse"
+    "duplicate-word collapse"
+    "punctuation cleanup"
+    "case normalization")
+  "Passes that merit medium review risk unless promoted to high.")
+
+(defun whittle--transcript-report-pass-specs ()
+  "Return transcript dry-run pass specs as (LABEL . FUNCTION)."
+  (list
+   (cons "line-joining" #'whittle--join-transcript-lines)
+   (cons "filler-chain collapse" #'whittle--remove-filler-chains)
+   (cons "conservative filler removal"
+         (lambda (beg end)
+           (whittle--remove-filler-words beg end whittle/conservative-filler-rules)))
+   (cons "sentence-edge filler removal"
+         (lambda (beg end)
+           (whittle--remove-filler-words beg end whittle/transcript-edge-filler-rules)))
+   ;; Keep this order aligned with `whittle-transcript'.
+   (cons "em-dash false-start detection" #'whittle--collapse-em-dash-false-starts)
+   (cons "false-start collapse" #'whittle--remove-false-starts)
+   (cons "duplicate-word collapse" #'whittle--remove-duplicated-words)
+   (cons "punctuation cleanup" #'whittle--cleanup-punctuation)
+   (cons "case normalization"
+         (lambda (beg end)
+           (whittle--normalize-case beg end t)))))
+
+(defun whittle--transcript-report-source-name ()
+  "Return the current source path or buffer name for a report."
+  (or (and buffer-file-name (file-truename buffer-file-name))
+      (format "buffer:%s" (buffer-name))))
+
+(defun whittle--transcript-report-temp-file ()
+  "Return a new temp-file path for a transcript report."
+  (expand-file-name
+   (format "whittle-transcript-review-%s.org"
+           (format-time-string "%Y%m%d-%H%M%S"))
+   whittle/transcript-report-directory))
+
+(defun whittle--transcript-report-blank-line-p ()
+  "Return non-nil when point is on a blank line."
+  (save-excursion
+    (beginning-of-line)
+    (looking-at-p "[[:blank:]]*$")))
+
+(defun whittle--transcript-report-heading-line-p ()
+  "Return non-nil when point is on an org heading line."
+  (save-excursion
+    (beginning-of-line)
+    (looking-at-p "^\\*+ ")))
+
+(defun whittle--transcript-report-trim-unit (text)
+  "Remove trailing newlines from paragraph unit TEXT."
+  (replace-regexp-in-string "\n+\\'" "" text))
+
+(defun whittle--transcript-report-units (beg end)
+  "Return stable paragraph units between BEG and END.
+Units are split on blank lines. Org heading lines are boundaries
+and are excluded from cleanup."
+  (pcase-let* ((`(,start . ,limit) (whittle--region-bounds beg end))
+               (units nil)
+               (index 0)
+               (unit-start nil))
+    (cl-labels
+        ((finish-unit
+          (unit-end)
+          (when (and unit-start (< unit-start unit-end))
+            (let ((text (whittle--transcript-report-trim-unit
+                         (buffer-substring-no-properties unit-start unit-end))))
+              (unless (string-blank-p text)
+                (setq index (1+ index))
+                (push (list :index index
+                            :line (line-number-at-pos unit-start)
+                            :text text)
+                      units))))
+          (setq unit-start nil)))
+      (save-excursion
+        (goto-char start)
+        (while (< (point) limit)
+          (let ((line-start (point)))
+            (if (or (whittle--transcript-report-blank-line-p)
+                    (whittle--transcript-report-heading-line-p))
+                (progn
+                  (finish-unit line-start)
+                  (forward-line 1))
+              (unless unit-start
+                (setq unit-start line-start))
+              (forward-line 1))))
+        (finish-unit limit)))
+    (nreverse units)))
+
+(defun whittle--transcript-report-process-unit (text)
+  "Run the transcript cleanup pipeline on TEXT and return result plist."
+  (with-temp-buffer
+    (insert text)
+    (let (passes)
+      (dolist (spec (whittle--transcript-report-pass-specs))
+        (let ((before-pass (buffer-string)))
+          (funcall (cdr spec) (point-min) (point-max))
+          (unless (string= before-pass (buffer-string))
+            (push (car spec) passes))))
+      (list :after (buffer-string)
+            :passes (nreverse passes)))))
+
+(defun whittle--transcript-report-comma-function-repeat-p (text)
+  "Return non-nil if TEXT has a comma-separated repeated function word."
+  (let ((case-fold-search t)
+        (start 0)
+        found)
+    (while (and (not found)
+                (string-match
+                 "\\<\\([[:alpha:]']+\\)\\>[[:blank:]]*,[[:blank:]]*\\1\\>"
+                 text start))
+      (when (member (downcase (match-string 1 text))
+                    whittle/duplicate-word-comma-exclusions)
+        (setq found t))
+      (setq start (match-end 0)))
+    found))
+
+(defun whittle--transcript-report-risk (before passes)
+  "Return risk label for BEFORE text changed by PASSES."
+  (let ((case-fold-search t))
+    (cond
+     ((or (string-match-p "\\<\\(like\\|i mean\\|kind of like\\)\\>" before)
+          (and (member "duplicate-word collapse" passes)
+               (whittle--transcript-report-comma-function-repeat-p before))
+          (and (member "case normalization" passes)
+               (> (length passes) 1)))
+      "high")
+     ((cl-some (lambda (pass)
+                 (member pass whittle--transcript-report-medium-risk-passes))
+               passes)
+      "medium")
+     (t "low"))))
+
+(defun whittle--transcript-report-build-entries (units)
+  "Return changed report entries for paragraph UNITS."
+  (let (entries)
+    (dolist (unit units)
+      (let* ((before (plist-get unit :text))
+             (result (whittle--transcript-report-process-unit before))
+             (after (plist-get result :after))
+             (passes (plist-get result :passes)))
+        (when (and passes (not (string= before after)))
+          (push (list :unit (plist-get unit :index)
+                      :line (plist-get unit :line)
+                      :risk (whittle--transcript-report-risk before passes)
+                      :passes passes
+                      :before before
+                      :after after)
+                entries))))
+    (cl-loop for entry in (nreverse entries)
+             for number from 1
+             collect (append (list :number number) entry))))
+
+(defun whittle--transcript-report-count-by (entries key values)
+  "Return an alist counting ENTRIES by plist KEY in VALUES order."
+  (mapcar (lambda (value)
+            (cons value
+                  (cl-count-if (lambda (entry)
+                                 (equal (plist-get entry key) value))
+                               entries)))
+          values))
+
+(defun whittle--transcript-report-pass-counts (entries)
+  "Return an alist of pass labels and counts for ENTRIES."
+  (let ((pass-labels (mapcar #'car (whittle--transcript-report-pass-specs))))
+    (mapcar (lambda (label)
+              (cons label
+                    (cl-count-if (lambda (entry)
+                                   (member label (plist-get entry :passes)))
+                                 entries)))
+            pass-labels)))
+
+(defun whittle--transcript-report-count-line (counts)
+  "Return one org summary line for alist COUNTS."
+  (if (cl-some (lambda (item) (> (cdr item) 0)) counts)
+      (string-join
+       (mapcar (lambda (item)
+                 (format "%s %d" (car item) (cdr item)))
+               counts)
+       "; ")
+    "none"))
+
+(defun whittle--transcript-report-format-entry (entry)
+  "Return org text for a single report ENTRY."
+  (format (concat "*** Change %d\n"
+                  "- Approx line :: %d\n"
+                  "- Unit :: %d\n"
+                  "- Risk :: %s\n"
+                  "- Passes :: %s\n\n"
+                  "Before:\n"
+                  "#+begin_quote\n%s\n#+end_quote\n\n"
+                  "After:\n"
+                  "#+begin_quote\n%s\n#+end_quote\n\n")
+          (plist-get entry :number)
+          (plist-get entry :line)
+          (plist-get entry :unit)
+          (plist-get entry :risk)
+          (string-join (plist-get entry :passes) ", ")
+          (plist-get entry :before)
+          (plist-get entry :after)))
+
+(defun whittle--transcript-report-risk-title (risk)
+  "Return section title for RISK."
+  (pcase risk
+    ("high" "High-Risk Changes")
+    ("medium" "Medium-Risk Changes")
+    ("low" "Low-Risk Changes")
+    (_ (format "%s Changes" (capitalize risk)))))
+
+(defun whittle--transcript-report-format-risk-section (risk entries)
+  "Return org report section for RISK from ENTRIES."
+  (let ((matching (seq-filter (lambda (entry)
+                                (equal (plist-get entry :risk) risk))
+                              entries)))
+    (concat
+     (format "** %s\n\n" (whittle--transcript-report-risk-title risk))
+     (if matching
+         (mapconcat #'whittle--transcript-report-format-entry matching "")
+       "No changes.\n\n"))))
+
+(defun whittle--transcript-report-format (source temp-file entries)
+  "Return the full transcript review report for SOURCE and ENTRIES."
+  (let* ((risk-counts
+          (whittle--transcript-report-count-by
+           entries :risk whittle--transcript-report-risk-order))
+         (pass-counts (whittle--transcript-report-pass-counts entries)))
+    (concat
+     "* Whittle Transcript Review Report\n"
+     (format "- Source :: %s\n" source)
+     (format "- Generated :: %s\n" (format-time-string "[%Y-%m-%d %a %H:%M]"))
+     "- Command :: whittle-transcript-report\n"
+     "- Mode :: Dry-run report only; the source buffer is unchanged.\n"
+     "- Unit boundary :: Blank-line-delimited paragraph units; org headings are boundaries and are excluded from cleanup.\n"
+     "- Source edit target :: Codex should edit the source file above directly; this report is not a replacement transcript.\n"
+     "- Boundary caveat :: Unit-level dry runs intentionally prevent line-joining across paragraph or heading boundaries, so boundary-sensitive output may differ from a whole-buffer edit.\n"
+     (format "- Temp file :: %s\n\n" temp-file)
+     "** Instructions for Codex\n\n"
+     "Review each before/after pair, apply only the safe changes directly to the source file, and repair any broken changes instead of copying the report wholesale.\n\n"
+     "** Summary\n\n"
+     (format "- Changed units :: %d\n" (length entries))
+     (format "- Risk counts :: %s\n"
+             (whittle--transcript-report-count-line risk-counts))
+     (format "- Pass counts :: %s\n\n"
+             (whittle--transcript-report-count-line pass-counts))
+     (mapconcat (lambda (risk)
+                  (whittle--transcript-report-format-risk-section risk entries))
+                whittle--transcript-report-risk-order
+                ""))))
+
+(defun whittle--transcript-report-generate (beg end &optional temp-file)
+  "Generate a transcript review report for BEG to END.
+Return a plist with :report, :temp-file, and :entries."
+  (let* ((target-temp-file (or temp-file (whittle--transcript-report-temp-file)))
+         (units (whittle--transcript-report-units beg end))
+         (entries (whittle--transcript-report-build-entries units))
+         (source (whittle--transcript-report-source-name))
+         (report (whittle--transcript-report-format source target-temp-file entries)))
+    (list :report report
+          :temp-file target-temp-file
+          :entries entries)))
+
+(defun whittle--write-string-to-file (text file)
+  "Write TEXT to FILE, creating the parent directory if needed."
+  (make-directory (file-name-directory file) t)
+  (with-temp-file file
+    (insert text)))
+
+(defun whittle--copy-string-to-pbcopy (text)
+  "Copy TEXT to the macOS clipboard using pbcopy."
+  (with-temp-buffer
+    (insert text)
+    (call-process-region (point-min) (point-max) "pbcopy" nil nil nil)))
 
 ;;; Interactive commands ------------------------------------------------------
 
@@ -405,6 +709,19 @@ and is 10 words or fewer. Leading-comma-less em-dash uses like \"The cat
            (whittle--format-table-summary duplicate-counts "duplicates")
            (whittle--format-count-summary punctuation "punctuation fixes")
            (whittle--format-count-summary case-fixes "case fixes")))))
+
+(defun whittle-transcript-report (&optional beg end)
+  "Create a dry-run review report for transcript cleanup.
+The source buffer is not edited. The report is copied to the
+clipboard and saved under `whittle/transcript-report-directory'."
+  (interactive (whittle--interactive-bounds))
+  (let* ((result (whittle--transcript-report-generate beg end))
+         (report (plist-get result :report))
+         (temp-file (plist-get result :temp-file)))
+    (whittle--write-string-to-file report temp-file)
+    (whittle--copy-string-to-pbcopy report)
+    (message "Whittle transcript report copied to clipboard and saved to %s" temp-file)
+    result))
 
 (provide 'whittle)
 ;;; whittle.el ends here

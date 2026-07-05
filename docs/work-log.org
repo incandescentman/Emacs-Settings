@@ -1981,5 +1981,13 @@
 - The Chrome reader now records the URL, active tab title, and front window name; the formatter prefers the tab title, falls back to the window name, and finally emits a bare =[[url]]= link if no title-like text is available.
 - Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]] from the literate source, re-ran =check-parens= on the generated file, verified the blank-title formatter path parses as an Org link, and passed the startup smoke test.
 
+* 2026-07-05: Add report-first transcript cleanup workflow to =whittle=
+- Added =whittle-transcript-report= in [[file+emacs:/Users/jay/emacs/emacs-settings/whittle.el][whittle.el]] as a dry-run transcript cleanup reporter. It segments the source into blank-line-delimited paragraph units, excludes Org headings from cleanup, runs the existing transcript passes per unit, coalesces all pass hits into one before/after entry per changed unit, writes the report to =/tmp=, and copies the report to the clipboard for Codex review.
+- The report header now includes the source file path and explicitly says Codex should edit that source file directly; the report is only a review lens, not a replacement transcript.
+- Tightened duplicate-word cleanup so comma-separated function-word repeats such as =is, is= and =you, you= survive, while ordinary accidental repeats still collapse.
+- Added focused ERT coverage in [[file+emacs:/Users/jay/emacs/emacs-settings/tests/whittle-tests.el][tests/whittle-tests.el]] for the comma-repeat fix, dry-run no-mutation behavior, pass attribution, multi-pass coalescing, paragraph/heading boundaries, source-path handoff, temp-file writing, and clipboard handoff.
+- Added the reviewed implementation plan at [[file+emacs:/Users/jay/emacs/emacs-settings/docs/whittle-transcript-review-workflow-plan.org][docs/whittle-transcript-review-workflow-plan.org]].
+- Verified with =emacs --batch -Q -l tests/capture-cleanup-tests.el -l tests/org-web-tools-pandoc-tests.el -l tests/whittle-tests.el -f ert-run-tests-batch-and-exit=; 16/16 tests passed. Also smoke-tested report generation against [[file+emacs:/Users/jay/Dropbox/github/transcription/transcriptions/narratively-webinar-2026-04-22_transcript.org][the Narratively webinar transcript]], yielding 137 changed units without editing the source.
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.

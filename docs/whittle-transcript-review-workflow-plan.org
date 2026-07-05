@@ -1,0 +1,253 @@
+#+TITLE: Whittle Transcript Review Workflow Plan
+
+* Whittle Transcript Review Workflow Plan
+
+** Problem
+=whittle-transcript= in [[file+emacs:/Users/jay/emacs/emacs-settings/whittle.el][/Users/jay/emacs/emacs-settings/whittle.el]] is useful, but risky when run as a blind cleanup pass on spoken transcripts.
+
+The core problem is that spoken filler can be syntactically or rhetorically necessary. Regex cleanup cannot reliably distinguish disposable filler from words that hold a sentence together.
+
+Examples from the Narratively webinar cleanup:
+
+#+begin_example org
+Before:
+Writing can be solitary, sitting alone, thinking, I mean, I love it, I think I'm good at it...
+
+After:
+Writing can be solitary, sitting alone, thinking I love it, I think I'm good at it...
+
+Problem:
+=I mean= was acting as a bridge. Removing it created =thinking I love it=.
+#+end_example
+
+#+begin_example org
+Before:
+It wants to just write it for you, you have to stop that behavior...
+
+After:
+It wants to just write it for you have to stop that behavior...
+
+Problem:
+The repeated =you= separated two clauses. It was not disposable.
+
+Implementation note:
+This one should be prevented by a targeted duplicate-word rule fix, not merely reported for review.
+#+end_example
+
+#+begin_example org
+Before:
+It's kind of like getting advice from a friend...
+
+After:
+It's getting advice from a friend...
+
+Problem:
+=kind of like= expressed analogy. Removing it changed the meaning.
+#+end_example
+
+#+begin_example org
+Before:
+What that is, is an automation step...
+
+After:
+What that is an automation step...
+
+Problem:
+The repeated =is= was grammatically necessary.
+
+Implementation note:
+This one should be prevented by a targeted duplicate-word rule fix, not merely reported for review.
+#+end_example
+
+#+begin_example org
+Before:
+I think it's kind of like a fantasy made-up scenario that, like, oh, like, I guess...
+
+After:
+I think it's a fantasy made-up scenario that oh I guess...
+
+Problem:
+The cleanup removed spoken setup words but left ungrammatical residue.
+#+end_example
+
+#+begin_example org
+Before:
+If Claude asks me questions like, hey, Jay... psychological safety, like. I, like, you defined it really clearly...
+
+After:
+If Claude asks me questions like, hey, Jay... psychological safety, like. I you defined it really clearly...
+
+Problem:
+The process removed filler without repairing an already rough transcript fragment, producing nonsense.
+#+end_example
+
+** Proposed Solution
+Keep =whittle= in Elisp, but make the safe workflow report-first instead of edit-first. Also fold in one targeted rule fix for a bug that can be eliminated cleanly.
+
+Implement two changes:
+1. Tighten duplicate-word collapse so it does not collapse comma-separated repeated function words such as =is, is= or =you, you=.
+2. Add a new command, =whittle-transcript-report=, in [[file+emacs:/Users/jay/emacs/emacs-settings/whittle.el][/Users/jay/emacs/emacs-settings/whittle.el]].
+
+The report command should:
+1. Read the active region, or the whole buffer if no region is active.
+2. Segment the original text into stable paragraph units before running cleanup.
+3. Run the =whittle-transcript= pipeline on each unit in a temporary buffer, one pass at a time.
+4. Snapshot each unit after each individual cleanup pass.
+5. Diff each unit's previous snapshot against its next snapshot.
+6. Coalesce per-pass changes into one report entry per changed unit.
+7. Add a report summary with counts by risk tier and cleanup pass.
+8. Copy the report to the clipboard with =pbcopy=.
+9. Save the same report to a timestamped temp file for recovery.
+10. Leave the source buffer unchanged.
+
+Jay's workflow:
+1. Run =M-x whittle-transcript-report= in Emacs.
+2. Paste the clipboard contents into Codex.
+3. Codex reviews the before/after report.
+4. Codex reads the source file named in the report header and edits that file directly.
+5. Codex uses the report as the review lens: apply the safe cleanup changes, skip or repair broken changes, and make only minimal transcript fixes.
+6. Jay reviews before committing.
+
+The report is not an editable replacement transcript. It contains changed chunks only. Do not require =whittle-transcript-report= to emit a full cleaned transcript; Codex is responsible for applying reviewed edits directly to the supplied source file.
+
+** Pass Attribution
+The report must show which cleanup pass caused each change.
+
+Use segment-first attribution:
+- Split the original source text into paragraph units before cleanup.
+- Assign each unit a stable index and original starting line number.
+- Run the full cleanup pipeline sequentially inside each unit.
+- Record which passes changed that unit.
+
+Define paragraph units as blank-line-delimited blocks. Treat org heading lines matching =^\\*+ = as boundaries and exclude the heading text itself from cleanup. Line-joining must stay within a unit, so it cannot merge across blank-line paragraph breaks or org headings.
+
+Do not infer paragraph identity by diffing whole-buffer snapshots after each pass. Once the first pass changes text, later snapshots no longer match the source verbatim, which makes line lookup and multi-pass coalescing fragile.
+
+Track these passes separately:
+- =line-joining=
+- =filler-chain collapse=
+- =conservative filler removal=
+- =sentence-edge filler removal=
+- =em-dash false-start detection=
+- =false-start collapse=
+- =duplicate-word collapse=
+- =punctuation cleanup=
+- =case normalization=
+
+If one paragraph is touched by multiple passes, the report should either:
+- list one entry per pass, or
+- show one final before/after entry with =Passes ::= listing all passes involved.
+
+For v1, prefer one final entry per changed paragraph, with =Passes ::= included.
+
+Boundary caveat:
+Running cleanup per paragraph unit can differ slightly from running =whittle-transcript= over the whole buffer. The main boundary-sensitive cases are line-joining and sentence-edge filler cleanup across paragraph breaks. The report header should state that the report is a paragraph-unit dry run and may differ at unit boundaries.
+
+Case-normalization caveat:
+=whittle--normalize-case= currently capitalizes the first lowercase character in the buffer or region. If report mode runs one paragraph per temp buffer, that can create spurious =case normalization= entries at the start of every unit. Implement report mode so unit-initial capitalization is disabled or ignored unless the unit really follows a sentence boundary or org heading in the source context. Preserve existing =whittle= and =whittle-transcript= behavior outside report mode.
+
+** Report Format
+The report copied to the clipboard should be org-mode text.
+
+#+begin_example org
+* Whittle Transcript Review Report
+- Source :: /absolute/path/to/source-file.org
+- Generated :: [YYYY-MM-DD Day HH:MM]
+- Command :: whittle-transcript-report
+- Mode :: dry-run report only; source buffer unchanged
+- Diff scope :: paragraph-unit dry run; boundary-sensitive changes may differ from whole-buffer cleanup
+- Temp file :: /tmp/whittle-transcript-review-YYYYMMDD-HHMMSS.org
+- Source edit target :: Codex should edit this source file directly; this report is not a replacement transcript
+
+** Instructions for Codex
+Review each before/after pair. Read the source file named above and edit that file directly. Apply safe cleanup changes, skip or repair broken changes, and flag only cases where the after version changed meaning, became ungrammatical, lost useful spoken cadence, or deleted necessary words. Use minimal fixes. Do not rewrite for style.
+
+** Summary
+- High-risk changes :: 12
+- Medium-risk changes :: 31
+- Low-risk changes :: 80
+- Pass counts :: duplicate-word collapse 4; conservative filler removal 52; punctuation cleanup 27; case normalization 19
+
+** High-Risk Changes
+
+*** Change 1
+- Approx line :: 191
+- Passes :: duplicate-word collapse, punctuation cleanup
+- Risk :: repeated word may be grammatically necessary
+
+Before:
+#+begin_quote
+It wants to just write it for you, you have to stop that behavior.
+#+end_quote
+
+After:
+#+begin_quote
+It wants to just write it for you have to stop that behavior.
+#+end_quote
+
+** Medium-Risk Changes
+
+** Low-Risk Changes
+#+end_example
+
+Risk categories:
+- High risk :: =like=, =I mean=, =kind of like=, repeated function words if any still get collapsed, or any case normalization after a deletion.
+- Medium risk :: sentence-edge filler removal, punctuation cleanup, false-start cleanup.
+- Low risk :: =um= / =uh= removal, duplicate spaces, obvious filler-chain cleanup.
+
+** Implementation Notes
+- Do not convert =whittle.el= to Python.
+- Implement this as an Emacs-native dry-run/report command.
+- Reuse the existing cleanup helpers, but run them one by one in a temp buffer so each pass can be attributed.
+- Segment the original source first, then process each unit. Do not diff whole-buffer pass snapshots and try to reconstruct paragraph identity afterward.
+- Define units as blank-line-delimited blocks, with org headings matching =^\\*+ = treated as boundaries and excluded from cleanup.
+- Use paragraph-level changed chunks for v1. Perfect sentence segmentation is not required.
+- Keep line-joining confined to the current unit.
+- Include approximate line numbers from the original unit's starting location.
+- Include summary counts at the top of the report by risk tier and by cleanup pass.
+- Copy the final org report to the clipboard via =pbcopy=.
+- Save the final org report to a timestamped recovery file under =/tmp=, using a name like =/tmp/whittle-transcript-review-YYYYMMDD-HHMMSS.org=, and include that path in the report header.
+- Do not change the user-facing behavior of existing =whittle= or =whittle-transcript= except for the targeted duplicate-word rule fix.
+- Implement the duplicate-word fix as a small, separable checkpoint from the report command so it is easy to review or revert independently.
+- For duplicate-word collapse, preserve comma-separated repeated function words such as =is, is= and =you, you=. Continue allowing genuinely safe collapses such as obvious stammers where the rule remains valid.
+- If adding an option to =whittle--normalize-case= for report mode, default it so existing callers keep current behavior.
+
+** Tests
+Add focused ERT tests under [[file+emacs:/Users/jay/emacs/emacs-settings/tests/][/Users/jay/emacs/emacs-settings/tests/]].
+
+Test cases:
+- =whittle-transcript-report= does not mutate the source buffer.
+- The report includes before/after pairs for changed chunks.
+- The report header includes the exact source file path and says Codex should edit that file directly.
+- Each report entry includes =Passes ::=.
+- Org heading lines are not cleaned as transcript prose, and line-joining does not cross blank-line or heading boundaries.
+- The report includes summary counts by risk tier and cleanup pass.
+- The report is copied to the clipboard and written to a timestamped =/tmp/whittle-transcript-review-YYYYMMDD-HHMMSS.org= file.
+- The broken Narratively examples above are included and classified high risk.
+- Safe =um= / =uh= cleanup appears as low risk.
+- A paragraph touched by multiple passes appears once with all passes listed in =Passes ::=.
+- After the duplicate-word rule fix, =What that is, is an automation step= and =write it for you, you have to stop= survive unchanged.
+- Safe duplicate cleanup still works for cases the rule is meant to catch.
+- Report mode does not produce spurious unit-initial =case normalization= entries merely because a paragraph starts lowercase in a temp buffer.
+- =git -C /Users/jay/emacs/emacs-settings diff --check= passes.
+- Emacs batch load or =check-parens= passes for [[file+emacs:/Users/jay/emacs/emacs-settings/whittle.el][/Users/jay/emacs/emacs-settings/whittle.el]].
+
+** Documentation
+Write this plan to:
+
+[[file+emacs:/Users/jay/emacs/emacs-settings/docs/whittle-transcript-review-workflow-plan.org][/Users/jay/emacs/emacs-settings/docs/whittle-transcript-review-workflow-plan.org]]
+
+When implemented, also update:
+- [[file+emacs:/Users/jay/emacs/emacs-settings/docs/work-log.org][/Users/jay/emacs/emacs-settings/docs/work-log.org]]
+- optionally [[file+emacs:/Users/jay/emacs/emacs-settings/docs/codebase-wisdom.org][/Users/jay/emacs/emacs-settings/docs/codebase-wisdom.org]] if implementation confirms a reusable regex/transcript-cleanup lesson.
+
+** Assumptions
+- The default recommended workflow is report-first, not blind mutation.
+- Implementation should include the report command plus the targeted duplicate-word rule tightening.
+- The duplicate-word rule tightening should be implemented and reviewable as a separate checkpoint from the report command.
+- The source transcript remains unchanged by =whittle-transcript-report=.
+- Clipboard output is the primary handoff surface: Jay runs the command, pastes into Codex, and Codex reviews/fixes.
+- A timestamped =/tmp= report file is also created as a recovery path if the clipboard paste is lost or mangled.
+- Codex edits the source transcript file directly after reviewing the report; =whittle-transcript-report= does not need to create or preserve a full cleaned transcript.
+- Existing =whittle-transcript= remains available for manual direct cleanup.
+- Do not touch unrelated existing changes in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/lab/startup-profile.org][/Users/jay/emacs/emacs-settings/docs/lab/startup-profile.org]].
