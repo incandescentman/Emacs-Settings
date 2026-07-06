@@ -1348,7 +1348,7 @@ The sentence-edge filler regex in [[file+emacs:/Users/jay/emacs/emacs-settings/w
 
 ** Actionable insight
 - Do not broaden transcript filler regexes just because a word is often filler. Check whether it can function as a quote marker, tag question, discourse cue, or example marker.
-- If a cleanup can create orphan punctuation, punctuation clusters, semantic question flips, or deleted quote markers, tag it as a mechanical hazard and skip auto-apply.
+- If a cleanup can create orphan punctuation, punctuation clusters, semantic question flips, or deleted quote markers, tag it as a mechanical hazard and hold back only the risky candidate edit. Do not skip the whole paragraph if later or unrelated safe cleanup can still land.
 - Add regression fixtures from real transcript failures before tightening or loosening =whittle= rules. The small examples are more valuable than abstract heuristics because they preserve the exact discourse function that got damaged.
 - Treat ellipsis-openers and clause-joining markers as load-bearing until proven otherwise. =So…=, sentence-initial =I mean,=, and comma-bounded =like= before pronouns or imperatives are all high-risk because deleting them tends to leave orphan ellipses, lowercase sentence starts, or fused clauses.
 - Keep hazard gates profile-aware where the risk belongs specifically to aggressive transcript cleanup. Shared mechanical hazards can still protect conservative =whittle=, but transcript-only brakes should not accidentally neuter the everyday cleanup command.

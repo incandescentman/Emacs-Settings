@@ -93,10 +93,10 @@ The report command should:
 2. Segment the original text into stable paragraph units before running cleanup.
 3. Run the =whittle-transcript= pipeline on each unit in a temporary buffer, one pass at a time.
 4. Snapshot each unit after each individual cleanup pass.
-5. Diff each unit's previous snapshot against its next snapshot.
-6. Coalesce per-pass changes into one report entry per changed unit.
-7. Add a report summary with counts by risk tier and cleanup pass.
-8. Apply the final per-unit after text to the source buffer for =whittle= / =whittle-transcript=.
+5. If a pass introduces a mechanical hazard, revert just that pass, record the held-back candidate edit, and continue the pipeline from the previous safe snapshot.
+6. Coalesce safe per-pass changes into one report entry per changed unit.
+7. Add a report summary with counts by risk tier, cleanup pass, and held-back hazard tag.
+8. Apply the final safe per-unit after text to the source buffer for =whittle= / =whittle-transcript=, even when the unit also has held-back hazardous candidates.
 9. Copy a compact report to the clipboard with =pbcopy=.
 10. Save the full detailed report to a timestamped temp file for recovery.
 11. Leave the source buffer unchanged only for explicit dry-run commands such as =whittle-transcript-report=.
@@ -156,8 +156,9 @@ The report copied to the clipboard should be compact org-mode text.
 - Generated :: [YYYY-MM-DD Day HH:MM]
 - Command :: whittle-transcript
 - Mode :: Cleanup has already been applied to the source buffer; this report is for Codex verification and repair.
-- Changed units :: 123
+- Changed units :: 120
 - Applied units :: 120
+- Held back :: 8 hazardous edits for review.
 - Risk counts :: high 12; medium 31; low 80
 - Pass counts :: duplicate-word collapse 4; conservative filler removal 52; punctuation cleanup 27; case normalization 19
 - Hazard counts :: semantic-question-flip 1; quote-marker-deletion 2; orphan-ellipsis 3; like-clause-fusion 8
@@ -166,16 +167,16 @@ The report copied to the clipboard should be compact org-mode text.
 - Source edit target :: Codex should edit this source file directly; this report is not a replacement transcript
 
 ** Instructions for Codex
-The source file has already been changed by the command above for non-hazardous entries. Review each before/after pair. Hazard-tagged candidates were not auto-applied and need manual review. If an after version is wrong, edit the source file directly to repair that specific mistake. Flag only cases where the after version changed meaning, became ungrammatical, lost useful spoken cadence, or deleted necessary words. Use minimal fixes. Do not rewrite for style.
+The source file has already been changed by the command above with safe partial cleanup. Review each before/after pair. Hazardous candidate edits were held back and need manual review. If an applied after version is wrong, edit the source file directly to repair that specific mistake. Flag only cases where the after version changed meaning, became ungrammatical, lost useful spoken cadence, or deleted necessary words. Use minimal fixes. Do not rewrite for style.
 
 ** Hazard-Tagged / Not Applied
 
-*** Change 1
+*** Held Back 1
 - Approx line :: 191
-- Risk :: high
-- Passes :: sentence-edge filler removal
+- Unit :: 37
+- Pass :: sentence-edge filler removal
 - Hazards :: orphan-ellipsis
-- Safety gate :: not auto-applied; review manually
+- Safety gate :: this candidate edit was not applied; safe edits in the same unit may have landed
 
 Before excerpt:
 #+begin_quote
@@ -227,7 +228,7 @@ Risk categories:
 - Copy a compact org report to the clipboard via =pbcopy=.
 - Save the full org report to a timestamped recovery file under =/tmp=, using a name like =/tmp/whittle-transcript-review-YYYYMMDD-HHMMSS.org=, and include that path in the report header.
 - The compact clipboard report should include high- and medium-risk before/after excerpts, summarize or drop low-risk details, show changed spans rather than whole paragraphs, use a small local context window around those spans, and avoid long repeated boilerplate.
-- =whittle= and =whittle-transcript= should apply non-hazardous cleanup and copy the Codex report to the clipboard. Hazard-tagged candidates stay in the report but are not auto-applied. The compact report should put =Hazard-Tagged / Not Applied= above applied high/medium entries. Do not make the primary commands report-only.
+- =whittle= and =whittle-transcript= should apply safe partial cleanup and copy the Codex report to the clipboard. Hazardous candidate edits stay in the report but are held back. A hazard in one part of a paragraph must not block safe cleanup elsewhere in that paragraph. The compact report should put =Hazard-Tagged / Not Applied= above applied high/medium entries. Do not make the primary commands report-only.
 - Implement the duplicate-word fix as a small, separable checkpoint from the report command so it is easy to review or revert independently.
 - For duplicate-word collapse, preserve comma-separated repeated function words such as =is, is= and =you, you=. Continue allowing genuinely safe collapses such as obvious stammers where the rule remains valid.
 - For sentence-edge cleanup, preserve tag-question =right?= and sentence-opening =Like= because they often function as discourse or quote/example markers, not disposable filler.
@@ -257,7 +258,9 @@ Test cases:
 - Comma-bounded =like= before pronouns or imperatives, such as =magazines, like, I was=, =tomorrow, like, we're=, =Emily, like, you=, =hey, like, outline=, and =feedback, like, tell=, must not be auto-applied into fused clauses.
 - =published, right? So… My premise= must not become =published, My premise=.
 - Opener deletion that leaves a lowercase first word, such as =So what do you do?= or =Okay, thanks.=, is hazard-gated.
-- Hazard-tagged candidate changes are skipped by the auto-apply path.
+- Hazardous candidate changes are held back by the pass that introduced them, while safe cleanup elsewhere in the same unit still applies.
+- =I mean, this is is a draft.= becomes =I mean, this is a draft.= and reports the held-back =sentence-initial-i-mean= deletion.
+- A unit with safe =um= cleanup plus hazardous comma-bounded =like= deletion applies the safe =um= cleanup and reports the held-back =like-clause-fusion= deletion.
 - Safe =um= / =uh= cleanup appears as low risk.
 - A paragraph touched by multiple passes appears once with all passes listed in =Passes ::=.
 - After the duplicate-word rule fix, =What that is, is an automation step= and =write it for you, you have to stop= survive unchanged.

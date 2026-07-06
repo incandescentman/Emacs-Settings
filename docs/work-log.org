@@ -2010,7 +2010,7 @@
 
 * 2026-07-05: Protect Whittle transcript discourse markers
 - Removed =right= and sentence-opening =like= from the aggressive sentence-edge filler rules in [[file+emacs:/Users/jay/emacs/emacs-settings/whittle.el][whittle.el]]. Tag-question =right?= and opening =Like= often carry discourse, quote, or example-marker meaning, so they are no longer auto-deleted.
-- Added mechanical hazard tags for orphan leading punctuation, punctuation clusters, semantic question flips, and quote-marker deletion. Hazard-tagged candidate edits are still shown in the Codex report but are skipped by the auto-apply path.
+- Added mechanical hazard tags for orphan leading punctuation, punctuation clusters, semantic question flips, and quote-marker deletion. At this checkpoint, hazard-tagged candidate edits were shown in the Codex report and skipped by the auto-apply path; later work refined this to partial per-pass holdback.
 - Expanded report summaries to include hazard counts and applied-unit counts, and added safety-gate lines on hazardous report entries.
 - Added ERT coverage in [[file+emacs:/Users/jay/emacs/emacs-settings/tests/whittle-tests.el][tests/whittle-tests.el]] for the transcript failures: =That's how I use AI, right?=, =Right? I tell people...=, =That's the power. Right? Is...=, =Like I said...=, and =Like, forget the essay...=.
 
@@ -2019,6 +2019,12 @@
 - Split compact and full reports so hazard-tagged candidates appear under =Hazard-Tagged / Not Applied= before applied high/medium-risk entries.
 - Kept the highest-friction gates profile-aware where the risk is specific to aggressive transcript cleanup, while still allowing shared mechanical hazards to protect conservative =whittle= from obvious clause-fusion candidates.
 - Added ERT coverage in [[file+emacs:/Users/jay/emacs/emacs-settings/tests/whittle-tests.el][tests/whittle-tests.el]] for the second Narratively failure shapes including =So… that's how I think about it=, =I mean, he looks...=, =magazines, like, I was=, =Emily, like, you=, =hey, like, outline=, and =published, right? So… My premise=.
+
+* 2026-07-05: Apply partial Whittle cleanup inside hazard-tagged units
+- Reworked [[file+emacs:/Users/jay/emacs/emacs-settings/whittle.el][whittle.el]] so the transcript report pipeline reverts only the pass that introduces a mechanical hazard, records that candidate edit as held back, and continues applying later safe passes in the same paragraph unit.
+- Split conservative filler removal into per-rule report passes so safe filler deletions such as =um= can still land even when a separate comma-bounded =like= deletion in the same unit is held back.
+- Updated compact and full reports to count held-back hazardous edits separately from changed/applied units. The =Hazard-Tagged / Not Applied= section now quotes the specific held-back candidate span rather than treating the whole paragraph as skipped.
+- Added ERT regressions proving =I mean, this is is a draft.= becomes =I mean, this is a draft.= while reporting the held-back =sentence-initial-i-mean= deletion, and proving safe =um= cleanup still lands beside a held-back =like-clause-fusion= candidate.
 
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.

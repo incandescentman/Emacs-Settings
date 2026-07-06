@@ -86,7 +86,7 @@ is passed through to `whittle--transcript-report-generate'."
 (ert-deftest whittle-report-coalesces-multiple-passes-per-unit ()
   "One paragraph touched by several passes should produce one entry."
   (let* ((result (whittle-test--generate-report
-                  "I mean, this is is a draft.\n"
+                  "Um, this is is a draft.\n"
                   "/tmp/whittle-test-transcript.org"
                   "/tmp/whittle-test-report.org"))
          (report (plist-get result :report))
@@ -98,6 +98,53 @@ is passed through to `whittle--transcript-report-generate'."
     (should (member "duplicate-word collapse" passes))
     (should (string-match-p "- Changed units :: 1" report))
     (should (= (whittle-test--count-report-changes report) 1))))
+
+(ert-deftest whittle-transcript-applies-safe-dup-inside-i-mean-hazard ()
+  "A sentence-initial `I mean,' hazard should not block safe duplicate cleanup."
+  (let* ((temp-dir (make-temp-file "whittle-report-test" t))
+         (whittle/transcript-report-directory temp-dir)
+         copied)
+    (unwind-protect
+        (cl-letf (((symbol-function 'whittle--copy-string-to-pbcopy)
+                   (lambda (text)
+                     (setq copied text))))
+          (whittle-test--with-text
+           "I mean, this is is a draft.\n"
+           (lambda ()
+             (let ((buffer-file-name "/tmp/whittle-test-transcript.org"))
+               (whittle-transcript (point-min) (point-max))
+               (should (string= (buffer-string)
+                                "I mean, this is a draft.\n"))))))
+      (delete-directory temp-dir t))
+    (should copied)
+    (should (string-match-p "Held Back" copied))
+    (should (string-match-p "sentence-initial-i-mean" copied))
+    (should (string-match-p "duplicate-word collapse" copied))
+    (should (string-match-p "I mean, this is is a draft" copied))
+    (should (string-match-p "I mean, this is a draft" copied))))
+
+(ert-deftest whittle-transcript-applies-safe-filler-inside-like-hazard ()
+  "A risky comma-bounded `like' deletion should not block safe nearby filler cleanup."
+  (let* ((temp-dir (make-temp-file "whittle-report-test" t))
+         (whittle/transcript-report-directory temp-dir)
+         copied)
+    (unwind-protect
+        (cl-letf (((symbol-function 'whittle--copy-string-to-pbcopy)
+                   (lambda (text)
+                     (setq copied text))))
+          (whittle-test--with-text
+           "This is, um, useful when I've worked for magazines, like, I was an editor.\n"
+           (lambda ()
+             (let ((buffer-file-name "/tmp/whittle-test-transcript.org"))
+               (whittle-transcript (point-min) (point-max))
+               (should (string= (buffer-string)
+                                "This is useful when I've worked for magazines, like, I was an editor.\n"))))))
+      (delete-directory temp-dir t))
+    (should copied)
+    (should (string-match-p "Held Back" copied))
+    (should (string-match-p "like-clause-fusion" copied))
+    (should (string-match-p "conservative filler removal" copied))
+    (should (string-match-p "This is useful" copied))))
 
 (ert-deftest whittle-report-respects-unit-boundaries-and-headings ()
   "Headings are excluded and line-joining stays within paragraph units."
@@ -299,7 +346,7 @@ is passed through to `whittle--transcript-report-generate'."
           (delete-directory temp-dir t))))))
 
 (ert-deftest whittle-transcript-gates-so-ellipsis-and-i-mean-openers ()
-  "Risky transcript openers should be reported but not auto-applied."
+  "Risky transcript openers should be reported and held back."
   (dolist (case '(("So… that's how I think about it."
                    "orphan-ellipsis")
                   ("So... If you sign up for the full version."
@@ -390,8 +437,8 @@ is passed through to `whittle--transcript-report-generate'."
     (should (string-match-p "right-so-chain" copied))
     (should (string-match-p "case-clause-fusion" copied))))
 
-(ert-deftest whittle-report-flags-and-skips-mechanical-hazards ()
-  "Mechanical damage should be high risk and skipped by auto-apply."
+(ert-deftest whittle-report-flags-and-applies-partial-hazard-entries ()
+  "Hazards are recorded, while apply writes the entry's safe partial result."
   (let* ((before "That's how I use AI, right?")
          (after "That's how I use AI?")
          (passes '("sentence-edge filler removal"))
@@ -412,14 +459,14 @@ is passed through to `whittle--transcript-report-generate'."
               "forget the essay for a second."
               passes)))
     (whittle-test--with-text
-     before
+     "This is is a draft."
      (lambda ()
        (whittle--transcript-report-apply-entries
         (list (list :start (point-min)
                     :end (point-max)
-                    :after after
+                    :after "This is a draft."
                     :hazards hazards)))
-       (should (string= (buffer-string) before))))))
+       (should (string= (buffer-string) "This is a draft."))))))
 
 (ert-deftest whittle-transcript-preserves-comma-function-repeats-end-to-end ()
   "The full pipeline must not collapse comma-separated function-word repeats.

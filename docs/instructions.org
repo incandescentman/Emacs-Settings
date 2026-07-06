@@ -212,7 +212,7 @@ All three commands work on the active region if one is selected, otherwise on th
 - Preserves some intentional repeats such as =go go= and =bye bye=
 - Changes the buffer and copies a compact report Jay can paste into Codex for verification and repair
 
-The clipboard report includes a =Hazard-Tagged / Not Applied= section above applied high- and medium-risk changes. High- and medium-risk excerpts use a small local window around the changed span so one risky filler word does not dump a whole paragraph. Low-risk changes are summarized, mechanical hazard tags are counted, hazard-tagged candidates are not auto-applied, and the full detailed report is saved under =/tmp=.
+The clipboard report includes a =Hazard-Tagged / Not Applied= section above applied high- and medium-risk changes. High- and medium-risk excerpts use a small local window around the changed span so one risky filler word does not dump a whole paragraph. Low-risk changes are summarized, mechanical hazard tags are counted, hazardous candidate edits are held back while safe cleanup in the same paragraph still applies, and the full detailed report is saved under =/tmp=.
 
 *Example*
 
