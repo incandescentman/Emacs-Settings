@@ -100,6 +100,7 @@ The report command should:
 9. Copy a compact report to the clipboard with =pbcopy=.
 10. Save the full detailed report to a timestamped temp file for recovery.
 11. Leave the source buffer unchanged only for explicit dry-run commands such as =whittle-transcript-report=.
+12. Run a final-output scar scan over changed or hazard-touched units and report suspicious applied-output artifacts without changing the source again.
 
 Jay's workflow:
 1. Run =M-x whittle= or =M-x whittle-transcript= in Emacs.
@@ -110,6 +111,8 @@ Jay's workflow:
 6. Jay reviews before committing.
 
 The report is not an editable replacement transcript. The clipboard report should be compact; the full report in =/tmp= can contain every changed chunk. Codex uses the report as an audit lens over changes that have already been applied to the source file.
+
+The scar scan is an audit lens too. It should flag patterns like orphan ellipses, fused clauses, suspicious case normalization, or damaged =right? So…= transitions, but it must not become another automatic rewrite pass.
 
 ** Pass Attribution
 The report must show which cleanup pass caused each change.
@@ -160,14 +163,29 @@ The report copied to the clipboard should be compact org-mode text.
 - Applied units :: 120
 - Held back :: 8 hazardous edits for review.
 - Risk counts :: high 12; medium 31; low 80
-- Pass counts :: duplicate-word collapse 4; conservative filler removal 52; punctuation cleanup 27; case normalization 19
-- Hazard counts :: semantic-question-flip 1; quote-marker-deletion 2; orphan-ellipsis 3; like-clause-fusion 8
+- Applied pass counts :: duplicate-word collapse 4; conservative filler removal 52; punctuation cleanup 27; case normalization 19
+- Held-back hazard counts :: semantic-question-flip 1; quote-marker-deletion 2; orphan-ellipsis 3; like-clause-fusion 8
+- Scar counts :: case-clause-fusion 1; deleted-comma-before-pronoun 2
 - Temp file :: /tmp/whittle-transcript-review-YYYYMMDD-HHMMSS.org
 - Clipboard detail :: before/after excerpts for high, medium-risk changes, capped at 25 and clipped to a small local changed-span window.
 - Source edit target :: Codex should edit this source file directly; this report is not a replacement transcript
 
 ** Instructions for Codex
-The source file has already been changed by the command above with safe partial cleanup. Review each before/after pair. Hazardous candidate edits were held back and need manual review. If an applied after version is wrong, edit the source file directly to repair that specific mistake. Flag only cases where the after version changed meaning, became ungrammatical, lost useful spoken cadence, or deleted necessary words. Use minimal fixes. Do not rewrite for style.
+The source file has already been changed by the command above with safe partial cleanup. Review in this order: =Suspicious Output Scar Scan=, applied high/medium-risk changes, then held-back hazardous candidates. Scars are suspicious, not proof. Held-back candidate after text is not in the source; do not apply it just because it appears in the report. If an applied after version is wrong, edit the source file directly to repair that specific mistake. Flag only cases where the after version changed meaning, became ungrammatical, lost useful spoken cadence, or deleted necessary words. Use minimal fixes. Do not rewrite for style.
+
+** Suspicious Output Scar Scan
+
+*** Scar 1
+- Approx line :: 39
+- Unit :: 7
+- Related change :: Change 4
+- Tags :: deleted-comma-before-pronoun
+- Note :: advisory final-output scan; inspect the source before repairing
+
+Applied after excerpt:
+#+begin_quote
+thinking I love it
+#+end_quote
 
 ** Hazard-Tagged / Not Applied
 
@@ -227,8 +245,9 @@ Risk categories:
 - Include summary counts for mechanical hazard tags.
 - Copy a compact org report to the clipboard via =pbcopy=.
 - Save the full org report to a timestamped recovery file under =/tmp=, using a name like =/tmp/whittle-transcript-review-YYYYMMDD-HHMMSS.org=, and include that path in the report header.
+- The compact clipboard report should include a =Suspicious Output Scar Scan= section before applied high/medium-risk entries. Scar hits are advisory final-output warnings and should promote affected applied entries to high-risk review, but they should not change source text by themselves.
 - The compact clipboard report should include high- and medium-risk before/after excerpts, summarize or drop low-risk details, show changed spans rather than whole paragraphs, use a small local context window around those spans, and avoid long repeated boilerplate.
-- =whittle= and =whittle-transcript= should apply safe partial cleanup and copy the Codex report to the clipboard. Hazardous candidate edits stay in the report but are held back. A hazard in one part of a paragraph must not block safe cleanup elsewhere in that paragraph. The compact report should put =Hazard-Tagged / Not Applied= above applied high/medium entries. Do not make the primary commands report-only.
+- =whittle= and =whittle-transcript= should apply safe partial cleanup and copy the Codex report to the clipboard. Hazardous candidate edits stay in the report but are held back. A hazard in one part of a paragraph must not block safe cleanup elsewhere in that paragraph. The compact report should put =Suspicious Output Scar Scan= first, applied high/medium entries second, and =Hazard-Tagged / Not Applied= third. Do not make the primary commands report-only.
 - Implement the duplicate-word fix as a small, separable checkpoint from the report command so it is easy to review or revert independently.
 - For duplicate-word collapse, preserve comma-separated repeated function words such as =is, is= and =you, you=. Continue allowing genuinely safe collapses such as obvious stammers where the rule remains valid.
 - For sentence-edge cleanup, preserve tag-question =right?= and sentence-opening =Like= because they often function as discourse or quote/example markers, not disposable filler.

@@ -409,6 +409,18 @@ unit is not necessarily the start of the source buffer."
     "protected-span-overlap")
   "Display order for transcript cleanup hazard tags.")
 
+(defconst whittle--transcript-report-scar-order
+  '("orphan-leading-punctuation"
+    "orphan-ellipsis"
+    "lowercase-start-after-opener"
+    "case-clause-fusion"
+    "deleted-comma-before-pronoun"
+    "like-clause-fusion"
+    "imperative-fusion"
+    "right-so-chain"
+    "semantic-question-flip")
+  "Display order for final-output scar tags.")
+
 (defun whittle--transcript-report-pass-specs (&optional profile)
   "Return cleanup pass specs for PROFILE as (LABEL . FUNCTION).
 PROFILE is either `conservative' or `transcript', defaulting to
@@ -801,15 +813,96 @@ PASSES is the list of cleanup passes that have run so far."
        (member hazard hazards))
      whittle--transcript-report-hazard-order)))
 
+(defun whittle--transcript-report-add-scar (scars tag start end)
+  "Return SCARS with TAG at START..END added if TAG is not present."
+  (if (cl-find tag scars :key (lambda (scar) (plist-get scar :tag))
+               :test #'string=)
+      scars
+    (cons (list :tag tag :span (cons start end)) scars)))
+
+(defun whittle--transcript-report-scars (before after &optional profile)
+  "Return advisory final-output scar records for BEFORE to AFTER.
+Scars are report-only warnings. They do not change whether cleanup is
+applied; they help Codex inspect suspicious applied output."
+  (let ((transcript-profile (whittle--transcript-profile-p profile))
+        scars)
+    (cl-labels
+        ((add-match
+          (tag regexp &optional case-sensitive)
+          (let ((case-fold-search (not case-sensitive)))
+            (when (string-match regexp after)
+              (setq scars
+                    (whittle--transcript-report-add-scar
+                     scars tag (match-beginning 0) (match-end 0)))))))
+      (add-match "orphan-leading-punctuation" "\\`[[:space:]]*[?.]")
+      (add-match "orphan-ellipsis" "\\`[[:space:]]*\\(?:…\\|\\.\\.\\.\\)")
+      (when (and transcript-profile
+                 (string-match-p
+                  "\\`[[:blank:]]*\\(?:\\<so\\>\\|\\<well\\>\\|\\<ok\\(?:ay\\)?\\>\\)[,[:blank:]-]+"
+                  before)
+                 (whittle--string-match-case-p "\\`[[:blank:]]*[[:lower:]]" after))
+        (add-match "lowercase-start-after-opener"
+                   "\\`[[:blank:]]*[[:lower:]][[:alpha:]']*" t))
+      (when (and transcript-profile
+                 (whittle--string-match-case-p
+                  "\\.[[:blank:]\n]+\\(?:that\\|which\\|who\\|whose\\|whom\\|is\\|are\\|was\\|were\\|because\\|and\\|but\\)\\>"
+                  before))
+        (add-match "case-clause-fusion"
+                   "\\.[[:blank:]\n]+\\(?:That\\|Which\\|Who\\|Whose\\|Whom\\|Is\\|Are\\|Was\\|Were\\|Because\\|And\\|But\\)\\>"
+                   t))
+      (when transcript-profile
+        (add-match "deleted-comma-before-pronoun"
+                   "\\<\\(?:thinking I love\\|first of all don't\\|magazines I was\\)\\>"
+                   t))
+      (when (and transcript-profile
+                 (string-match-p ",[[:blank:]]*\\<like\\>[[:blank:]]*," before))
+        (add-match "like-clause-fusion"
+                   "\\<\\(?:magazines I was\\|tomorrow we're\\|stories I'm\\|I you\\)\\>"
+                   t)
+        (add-match "imperative-fusion"
+                   "\\<\\(?:tell me where\\|tell it what\\|outline a\\|forget the\\)\\>"
+                   t))
+      (when (and transcript-profile
+                 (string-match-p
+                  "\\<right\\>[[:blank:]]*\\?[[:blank:]]+\\<so\\>[[:blank:]]*\\(?:…\\|\\.\\.\\.\\)"
+                  before))
+        (add-match "right-so-chain"
+                   "\\<right\\>[[:blank:]]*\\?[[:blank:]]+\\(?:…\\|\\.\\.\\.\\)\\|,[[:blank:]]+My\\>"
+                   t))
+      (when (and (string-match-p
+                  "[[:blank:]]*,[[:blank:]]*\\<right\\>[[:blank:]]*\\?[[:blank:]]*\\'"
+                  before)
+                 (string-match-p "\\?[[:blank:]]*\\'" after)
+                 (not (string-match-p "\\<right\\>" after)))
+        (add-match "semantic-question-flip" "\\?[[:blank:]]*\\'" t)))
+    (seq-filter
+     (lambda (scar)
+       (member (plist-get scar :tag) whittle--transcript-report-scar-order))
+     (nreverse scars))))
+
 (defun whittle--transcript-report-hazard-p (entry)
   "Return non-nil if ENTRY has mechanical hazard tags."
   (not (null (plist-get entry :hazards))))
 
-(defun whittle--transcript-report-risk (before _after passes hazards)
+(defun whittle--transcript-report-scar-tags (entry)
+  "Return ordered scar tags for ENTRY."
+  (let ((tags (seq-uniq
+               (mapcar (lambda (scar) (plist-get scar :tag))
+                       (plist-get entry :scars))
+               #'string=)))
+    (seq-filter (lambda (tag) (member tag tags))
+                whittle--transcript-report-scar-order)))
+
+(defun whittle--transcript-report-scar-p (entry)
+  "Return non-nil if ENTRY has advisory final-output scars."
+  (not (null (plist-get entry :scars))))
+
+(defun whittle--transcript-report-risk (before _after passes hazards &optional scars)
   "Return risk label for BEFORE to AFTER changed by PASSES and HAZARDS."
   (let ((case-fold-search t))
     (cond
      ((or hazards
+          scars
           (string-match-p "\\<\\(like\\|i mean\\|kind of like\\)\\>" before)
           (and (or (member "duplicate-word collapse" passes)
                    (member "false-start collapse" passes))
@@ -832,7 +925,11 @@ PASSES is the list of cleanup passes that have run so far."
              (after (plist-get result :after))
              (passes (plist-get result :passes))
              (hazards (plist-get result :hazards))
-             (held-back (plist-get result :held-back)))
+             (held-back (plist-get result :held-back))
+             (scars
+              (when (or (and passes (not (string= before after)))
+                        held-back)
+                (whittle--transcript-report-scars before after profile))))
         (when (or (and passes (not (string= before after)))
                   held-back)
           (push (list :unit (plist-get unit :index)
@@ -840,9 +937,10 @@ PASSES is the list of cleanup passes that have run so far."
                       :start (plist-get unit :start)
                       :end (plist-get unit :end)
                       :risk (whittle--transcript-report-risk
-                             before after passes nil)
+                             before after passes nil scars)
                       :passes passes
                       :hazards hazards
+                      :scars scars
                       :held-back held-back
                       :before before
                       :after after
@@ -900,6 +998,24 @@ PASSES is the list of cleanup passes that have run so far."
              for number from 1
              collect (append (list :number number) record))))
 
+(defun whittle--transcript-report-held-only-entries (entries)
+  "Return ENTRIES that only have held-back candidates."
+  (seq-filter (lambda (entry)
+                (and (plist-get entry :held-back)
+                     (not (whittle--transcript-report-applied-entry-p entry))))
+              entries))
+
+(defun whittle--transcript-report-safe-partial-entries (entries)
+  "Return ENTRIES with applied cleanup and held-back candidates."
+  (seq-filter (lambda (entry)
+                (and (plist-get entry :held-back)
+                     (whittle--transcript-report-applied-entry-p entry)))
+              entries))
+
+(defun whittle--transcript-report-scar-entries (entries)
+  "Return ENTRIES with advisory final-output scars."
+  (seq-filter #'whittle--transcript-report-scar-p entries))
+
 (defun whittle--transcript-report-record-outcome (record)
   "Return the user-facing protection outcome for held-back RECORD."
   (cond
@@ -941,10 +1057,74 @@ PASSES is the list of cleanup passes that have run so far."
                   whittle--transcript-report-hazard-order)))
     (whittle--transcript-report-count-line counts)))
 
+(defun whittle--transcript-report-scar-summary (entries)
+  "Return one org summary line for final-output scar tags in ENTRIES."
+  (let ((counts
+         (mapcar (lambda (scar)
+                   (cons scar
+                         (cl-count-if
+                          (lambda (entry)
+                            (member scar
+                                    (whittle--transcript-report-scar-tags entry)))
+                          entries)))
+                 whittle--transcript-report-scar-order)))
+    (whittle--transcript-report-count-line counts)))
+
 (defun whittle--transcript-report-hazard-line (entry)
   "Return an org hazard line for ENTRY, or nil."
   (when-let ((hazards (plist-get entry :hazards)))
     (format "- Held-back hazards :: %s\n" (string-join hazards ", "))))
+
+(defun whittle--transcript-report-scar-line (entry)
+  "Return an org scar line for ENTRY, or nil."
+  (when-let ((scars (whittle--transcript-report-scar-tags entry)))
+    (format "- Output scars :: %s\n" (string-join scars ", "))))
+
+(defun whittle--transcript-report-scar-excerpt (entry)
+  "Return a compact excerpt around ENTRY's first output scar."
+  (let* ((after (plist-get entry :after))
+         (span (plist-get (car (plist-get entry :scars)) :span)))
+    (if span
+        (whittle--snippet-around-change after (car span) (cdr span))
+      (whittle--snippet-around-change after 0 (min (length after) 1)))))
+
+(defun whittle--transcript-report-format-scar-entry (entry number)
+  "Return org text for scar-scan ENTRY with display NUMBER."
+  (format (concat "*** Scar %d\n"
+                  "- Approx line :: %d\n"
+                  "- Unit :: %d\n"
+                  "- Related change :: Change %d\n"
+                  "- Tags :: %s\n"
+                  "- Note :: advisory final-output scan; inspect the source before repairing\n\n"
+                  "Applied after excerpt:\n"
+                  "#+begin_quote\n%s\n#+end_quote\n\n")
+          number
+          (plist-get entry :line)
+          (plist-get entry :unit)
+          (plist-get entry :number)
+          (string-join (whittle--transcript-report-scar-tags entry) ", ")
+          (whittle--transcript-report-scar-excerpt entry)))
+
+(defun whittle--transcript-report-format-scar-section (entries &optional limit)
+  "Return the suspicious final-output scar section for ENTRIES.
+When LIMIT is non-nil, show at most LIMIT scar entries."
+  (let* ((scar-entries (whittle--transcript-report-scar-entries entries))
+         (shown-entries (if limit (seq-take scar-entries limit) scar-entries))
+         (omitted-count (- (length scar-entries) (length shown-entries))))
+    (concat
+     "** Suspicious Output Scar Scan\n\n"
+     (when (> omitted-count 0)
+       (format "- Scar entries omitted from clipboard :: %d; see full report.\n\n"
+               omitted-count))
+     (if shown-entries
+         (mapconcat
+          #'identity
+          (cl-loop for entry in shown-entries
+                   for number from 1
+                   collect (whittle--transcript-report-format-scar-entry
+                            entry number))
+          "")
+       "No suspicious applied-output scars found.\n\n"))))
 
 (defun whittle--transcript-report-format-held-back (record &optional compact)
   "Return org text for a held-back hazardous edit RECORD.
@@ -996,6 +1176,7 @@ When COMPACT is non-nil, quote only local changed-span excerpts."
            (plist-get entry :risk)
            (string-join (plist-get entry :passes) ", "))
    (or (whittle--transcript-report-hazard-line entry) "")
+   (or (whittle--transcript-report-scar-line entry) "")
    (when (whittle--transcript-report-hazard-p entry)
      "- Safety gate :: hazardous candidate edit(s) held back; applied after below is the safe partial result\n")
    (format (concat "\nBefore:\n"
@@ -1070,6 +1251,7 @@ When COMPACT is non-nil, quote only local changed-span excerpts."
              (plist-get entry :risk)
              (string-join (plist-get entry :passes) ", "))
      (or (whittle--transcript-report-hazard-line entry) "")
+     (or (whittle--transcript-report-scar-line entry) "")
      (when (whittle--transcript-report-hazard-p entry)
        "- Safety gate :: hazardous candidate edit(s) held back; excerpt below is the safe partial result\n")
      (format (concat "\nBefore excerpt:\n"
@@ -1117,6 +1299,11 @@ When COMPACT is non-nil, quote only local changed-span excerpts."
 FULL-REPORT-FILE is the path to the complete before/after report."
   (let* ((applied-entries (whittle--transcript-report-applied-entries entries))
          (held-back-records (whittle--transcript-report-held-back-records entries))
+         (held-only-count
+          (length (whittle--transcript-report-held-only-entries entries)))
+         (safe-partial-count
+          (length (whittle--transcript-report-safe-partial-entries entries)))
+         (scar-entries (whittle--transcript-report-scar-entries entries))
          (risk-counts
           (whittle--transcript-report-count-by
            applied-entries :risk whittle--transcript-report-risk-order))
@@ -1141,57 +1328,70 @@ FULL-REPORT-FILE is the path to the complete before/after report."
     (concat
      (format "* %s\n" title)
      (format "- Source :: %s\n" source)
-     (format "- Command :: %s\n" command-name)
-     (format "- Mode :: %s\n"
-             (if applied
-                 "cleanup already applied; verify and repair"
-               "dry run; source unchanged"))
-     (format "- Changed units :: %d\n" applied-count)
-     (when applied
-       (format "- Applied units :: %d\n" applied-count))
-     (when (> hazard-count 0)
-       (format "- Held back :: %d hazardous edit%s for review.\n"
-               hazard-count
-               (if (= hazard-count 1) "" "s")))
-     (format "- Risk counts :: %s\n"
-             (whittle--transcript-report-count-line risk-counts))
-     (format "- Pass counts :: %s\n" (whittle--transcript-report-count-line pass-counts))
-     (format "- Hazard counts :: %s\n"
-             (whittle--transcript-report-hazard-summary entries))
-     (format "- Full report :: %s\n" full-report-file)
-     (format "- Clipboard detail :: before/after excerpts for %s-risk changes, capped at %d.\n\n"
-             (string-join whittle/report-clipboard-detail-risks ", ")
-             whittle/report-clipboard-max-detailed-entries)
-     "** Codex Instructions\n\n"
-     (if applied
-         "The source file has already been changed with safe partial cleanup. Review high/medium excerpts below. Hazardous candidate edits were held back and need manual review. If an applied change is wrong, edit the source file directly and repair only that mistake. Do not rewrite for style. Use the full report if needed.\n\n"
-       "Source unchanged. Review high/medium excerpts below, then edit the source file directly if needed. Use the full report if needed.\n\n")
-     "** Hazard-Tagged / Not Applied\n\n"
-     (when (> omitted-hazard-count 0)
-       (format "- Held-back edits omitted from clipboard :: %d; see full report.\n\n"
-               omitted-hazard-count))
-     (if shown-held-back-records
-         (mapconcat (lambda (record)
-                      (whittle--transcript-report-format-held-back record t))
-                    shown-held-back-records "")
-       "No held-back hazardous edits.\n\n")
-     "** Applied High/Medium-Risk Changes\n\n"
-     (when (> omitted-detail-count 0)
-       (format "- Detailed entries omitted from clipboard :: %d; see full report.\n\n"
-               omitted-detail-count))
-     (if shown-entries
-         (mapconcat #'whittle--transcript-report-format-compact-entry shown-entries "")
-       "No applied high- or medium-risk changes. See summary/full report if needed.\n\n")
-     "** Low-Risk Summary\n\n"
-     (if low-entries
-         (mapconcat #'whittle--transcript-report-format-one-line-entry low-entries "")
-       "No low-risk changes.\n"))))
+	     (format "- Command :: %s\n" command-name)
+	     (format "- Mode :: %s\n"
+	             (if applied
+	                 "cleanup already applied; verify and repair"
+	               "dry run; source unchanged"))
+	     (format "- Reported units :: %d\n" (length entries))
+	     (when applied
+	       (format "- Applied units :: %d\n" applied-count))
+	     (format "- Held-only units :: %d\n" held-only-count)
+	     (format "- Safe-partial units :: %d\n" safe-partial-count)
+	     (when (> hazard-count 0)
+	       (format "- Held back :: %d hazardous edit%s for review.\n"
+	               hazard-count
+	               (if (= hazard-count 1) "" "s")))
+	     (format "- Risk counts :: %s\n"
+	             (whittle--transcript-report-count-line risk-counts))
+	     (format "- Applied pass counts :: %s\n"
+	             (whittle--transcript-report-count-line pass-counts))
+	     (format "- Held-back hazard counts :: %s\n"
+	             (whittle--transcript-report-hazard-summary entries))
+	     (format "- Scar counts :: %s\n"
+	             (whittle--transcript-report-scar-summary applied-entries))
+	     (format "- Full report :: %s\n" full-report-file)
+	     (format "- Clipboard detail :: before/after excerpts for %s-risk changes, capped at %d.\n\n"
+	             (string-join whittle/report-clipboard-detail-risks ", ")
+	             whittle/report-clipboard-max-detailed-entries)
+	     "** Codex Instructions\n\n"
+	     (if applied
+	         "The source file has already been changed with safe partial cleanup. Review in this order: Suspicious Output Scar Scan, Applied High/Medium-Risk Changes, then Hazard-Tagged / Not Applied. Scars are suspicious, not proof; inspect the source path above and repair only real whittle damage. Held-back candidate after text is not in the source, so do not apply it just because it appears here. This report is not a replacement transcript. Do not rewrite for style. Use the full report if clipboard excerpts are capped.\n\n"
+	       "Source unchanged. Review in this order: Suspicious Output Scar Scan, Applied High/Medium-Risk Changes, then Hazard-Tagged / Not Applied. Scars are suspicious, not proof. If you apply or repair anything, edit the source path above directly; this report is not a replacement transcript. Do not rewrite for style. Use the full report if clipboard excerpts are capped.\n\n")
+	     (whittle--transcript-report-format-scar-section
+	      applied-entries whittle/report-clipboard-max-detailed-entries)
+	     "** Applied High/Medium-Risk Changes\n\n"
+	     (when scar-entries
+	       "- Entries with output scars are promoted to high risk for review.\n\n")
+	     (when (> omitted-detail-count 0)
+	       (format "- Detailed entries omitted from clipboard :: %d; see full report.\n\n"
+	               omitted-detail-count))
+	     (if shown-entries
+	         (mapconcat #'whittle--transcript-report-format-compact-entry shown-entries "")
+	       "No applied high- or medium-risk changes. See summary/full report if needed.\n\n")
+	     "** Hazard-Tagged / Not Applied\n\n"
+	     (when (> omitted-hazard-count 0)
+	       (format "- Held-back edits omitted from clipboard :: %d; see full report.\n\n"
+	               omitted-hazard-count))
+	     (if shown-held-back-records
+	         (mapconcat (lambda (record)
+	                      (whittle--transcript-report-format-held-back record t))
+	                    shown-held-back-records "")
+	       "No held-back hazardous edits.\n\n")
+	     "** Low-Risk Summary\n\n"
+	     (if low-entries
+	         (mapconcat #'whittle--transcript-report-format-one-line-entry low-entries "")
+	       "No low-risk changes.\n"))))
 
 (defun whittle--transcript-report-format
     (source temp-file entries command-name profile applied)
   "Return the full cleanup review report for SOURCE and ENTRIES."
   (let* ((applied-entries (whittle--transcript-report-applied-entries entries))
          (held-back-records (whittle--transcript-report-held-back-records entries))
+         (held-only-count
+          (length (whittle--transcript-report-held-only-entries entries)))
+         (safe-partial-count
+          (length (whittle--transcript-report-safe-partial-entries entries)))
          (risk-counts
           (whittle--transcript-report-count-by
            applied-entries :risk whittle--transcript-report-risk-order))
@@ -1212,34 +1412,39 @@ FULL-REPORT-FILE is the path to the complete before/after report."
      "- Unit boundary :: Blank-line-delimited paragraph units; org headings are boundaries and are excluded from cleanup.\n"
      "- Source edit target :: Codex should edit the source file above directly; this report is not a replacement transcript.\n"
      "- Boundary caveat :: Unit-level dry runs intentionally prevent line-joining across paragraph or heading boundaries, so boundary-sensitive output may differ from a whole-buffer edit.\n"
-     (format "- Temp file :: %s\n\n" temp-file)
-     "** Instructions for Codex\n\n"
-     (if applied
-         "The source file has already been changed by the command above. Review each before/after pair. If an after version is wrong, edit the source file directly to repair that specific mistake. Do not copy this report wholesale into the transcript.\n\n"
-       "Review each before/after pair, apply only the safe changes directly to the source file, and repair any broken changes instead of copying the report wholesale.\n\n")
-     "** Summary\n\n"
-     (format "- Changed units :: %d\n" applied-count)
-     (when applied
-       (format "- Applied units :: %d\n" applied-count))
-     (when (> hazard-count 0)
-       (format "- Held back :: %d hazardous edit%s for review.\n"
-               hazard-count
-               (if (= hazard-count 1) "" "s")))
-     (format "- Risk counts :: %s\n"
-             (whittle--transcript-report-count-line risk-counts))
-     (format "- Pass counts :: %s\n"
-             (whittle--transcript-report-count-line pass-counts))
-     (format "- Hazard counts :: %s\n\n"
-             (whittle--transcript-report-hazard-summary entries))
-     "** Hazard-Tagged / Not Applied\n\n"
-     (if held-back-records
-         (mapconcat #'whittle--transcript-report-format-held-back held-back-records "")
-       "No held-back hazardous edits.\n\n")
-     (mapconcat (lambda (risk)
-                  (whittle--transcript-report-format-risk-section
-                   risk applied-entries))
-                whittle--transcript-report-risk-order
-                ""))))
+	     (format "- Temp file :: %s\n\n" temp-file)
+	     "** Instructions for Codex\n\n"
+	     (if applied
+	         "The source file has already been changed by the command above. Review in this order: Suspicious Output Scar Scan, Applied High/Medium-Risk Changes, then Hazard-Tagged / Not Applied. Scars are suspicious, not proof; inspect the source path above and repair only real whittle damage. Held-back candidate after text is not in the source, so do not apply it just because it appears here. Do not copy this report wholesale into the transcript. Do not rewrite for style.\n\n"
+	       "Review in this order: Suspicious Output Scar Scan, Applied High/Medium-Risk Changes, then Hazard-Tagged / Not Applied. Scars are suspicious, not proof. If you apply or repair anything, edit the source path above directly. Do not copy this report wholesale into the transcript. Do not rewrite for style.\n\n")
+	     "** Summary\n\n"
+	     (format "- Reported units :: %d\n" (length entries))
+	     (when applied
+	       (format "- Applied units :: %d\n" applied-count))
+             (format "- Held-only units :: %d\n" held-only-count)
+             (format "- Safe-partial units :: %d\n" safe-partial-count)
+	     (when (> hazard-count 0)
+	       (format "- Held back :: %d hazardous edit%s for review.\n"
+	               hazard-count
+	               (if (= hazard-count 1) "" "s")))
+	     (format "- Risk counts :: %s\n"
+	             (whittle--transcript-report-count-line risk-counts))
+	     (format "- Applied pass counts :: %s\n"
+	             (whittle--transcript-report-count-line pass-counts))
+	     (format "- Held-back hazard counts :: %s\n"
+	             (whittle--transcript-report-hazard-summary entries))
+             (format "- Scar counts :: %s\n\n"
+                     (whittle--transcript-report-scar-summary applied-entries))
+             (whittle--transcript-report-format-scar-section applied-entries)
+	     (mapconcat (lambda (risk)
+	                  (whittle--transcript-report-format-risk-section
+	                   risk applied-entries))
+	                whittle--transcript-report-risk-order
+	                "")
+	     "** Hazard-Tagged / Not Applied\n\n"
+	     (if held-back-records
+	         (mapconcat #'whittle--transcript-report-format-held-back held-back-records "")
+	       "No held-back hazardous edits.\n\n"))))
 
 (defun whittle--transcript-report-generate
     (beg end &optional temp-file profile command-name applied)
@@ -1353,14 +1558,17 @@ Return a plist with :report, :temp-file, and :entries."
 
 (defun whittle--run-cleanup-with-report (beg end profile command-name)
   "Apply PROFILE cleanup from BEG to END and copy COMMAND-NAME report."
-  (let* ((result
-          (whittle--transcript-report-generate
-           beg end nil profile command-name t))
-         (entries (plist-get result :entries))
-         (hazard-count
-          (length (whittle--transcript-report-held-back-records entries)))
-         (applied-count
-          (length (whittle--transcript-report-applied-entries entries)))
+	  (let* ((result
+	          (whittle--transcript-report-generate
+	           beg end nil profile command-name t))
+	         (entries (plist-get result :entries))
+                 (applied-entries
+                  (whittle--transcript-report-applied-entries entries))
+	         (hazard-count
+	          (length (whittle--transcript-report-held-back-records entries)))
+	         (applied-count (length applied-entries))
+	         (scar-count
+	          (length (whittle--transcript-report-scar-entries applied-entries)))
          (full-report (plist-get result :report))
          (temp-file (plist-get result :temp-file))
          (source (plist-get result :source))
@@ -1371,11 +1579,13 @@ Return a plist with :report, :temp-file, and :entries."
     (whittle--write-string-to-file full-report temp-file)
     (whittle--copy-string-to-pbcopy clipboard-report)
     (message
-     "%s changed %d units; held back %d hazardous edit%s for review; compact Codex report copied to clipboard; full report saved to %s"
+     "%s applied %d units; held back %d hazardous edit%s for review; flagged %d output scar%s; compact Codex report copied to clipboard; full report saved to %s"
      command-name
      applied-count
      hazard-count
      (if (= hazard-count 1) "" "s")
+     scar-count
+     (if (= scar-count 1) "" "s")
      temp-file)
     (append result (list :clipboard-report clipboard-report))))
 

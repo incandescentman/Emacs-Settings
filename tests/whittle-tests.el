@@ -42,6 +42,11 @@ is passed through to `whittle--transcript-report-generate'."
     (goto-char (point-min))
     (how-many "^\\*\\*\\* Change ")))
 
+(defun whittle-test--scar-tags (before after)
+  "Return final-output scar tags for BEFORE to AFTER in transcript mode."
+  (mapcar (lambda (scar) (plist-get scar :tag))
+          (whittle--transcript-report-scars before after 'transcript)))
+
 (ert-deftest whittle-duplicate-words-preserves-comma-function-repeats ()
   "Comma-separated function-word repeats should not be collapsed."
   (whittle-test--with-text
@@ -96,8 +101,76 @@ is passed through to `whittle--transcript-report-generate'."
     (should (= (length entries) 1))
     (should (member "conservative filler removal" passes))
     (should (member "duplicate-word collapse" passes))
-    (should (string-match-p "- Changed units :: 1" report))
+    (should (string-match-p "- Reported units :: 1" report))
     (should (= (whittle-test--count-report-changes report) 1))))
+
+(ert-deftest whittle-scar-scan-detects-known-output-scars ()
+  "Final-output scar scan should catch known applied-output damage shapes."
+  (dolist (case '(("thinking, I mean, I love it"
+                   "thinking I love it"
+                   "deleted-comma-before-pronoun")
+                  ("having that social, interactive part. is really useful"
+                   "having that social, interactive part. Is really useful"
+                   "case-clause-fusion")
+                  ("documents. that I've created for Claude"
+                   "documents. That I've created for Claude"
+                   "case-clause-fusion")
+                  ("I mean, first of all, don't you think"
+                   "first of all don't you think"
+                   "deleted-comma-before-pronoun")
+                  ("When I've worked for magazines, like, I was an editor"
+                   "When I've worked for magazines I was an editor"
+                   "like-clause-fusion")
+                  ("It's gonna get published, right? So… My premise is simple"
+                   "It's gonna get published, right? … My premise is simple"
+                   "right-so-chain")
+                  ("It's gonna get published, right? So… My premise is simple"
+                   "It's gonna get published, My premise is simple"
+                   "right-so-chain")))
+    (should (member (nth 2 case)
+                    (whittle-test--scar-tags (nth 0 case) (nth 1 case))))))
+
+(ert-deftest whittle-scar-scan-renders-in-compact-and-full-reports ()
+  "Reports should surface advisory scars before normal change review."
+  (let* ((entry (list :number 1
+                      :line 39
+                      :unit 7
+                      :start 1
+                      :end 42
+                      :risk "high"
+                      :passes '("conservative filler removal")
+                      :hazards nil
+                      :scars (list (list :tag "deleted-comma-before-pronoun"
+                                          :span (cons 0 15)))
+                      :held-back nil
+                      :before "thinking, I mean, I love it"
+                      :after "thinking I love it"
+                      :full-after "thinking I love it"
+                      :full-passes '("conservative filler removal")
+                      :full-hazards nil))
+         (entries (list entry))
+         (full (whittle--transcript-report-format
+                "/tmp/source.org" "/tmp/report.org" entries
+                "whittle-transcript" 'transcript t))
+         (compact (whittle--transcript-report-format-compact
+                   "/tmp/source.org" "/tmp/report.org" entries
+                   "whittle-transcript" 'transcript t)))
+    (dolist (report (list full compact))
+      (should (string-match-p "Suspicious Output Scar Scan" report))
+      (should (string-match-p "Scar counts :: .*deleted-comma-before-pronoun 1" report))
+      (should (string-match-p "advisory final-output scan" report))
+      (should (string-match-p "Output scars :: deleted-comma-before-pronoun" report)))
+    (should (< (string-match "Suspicious Output Scar Scan" compact)
+               (string-match "Applied High/Medium-Risk Changes" compact)))))
+
+(ert-deftest whittle-scarred-entries-rank-high ()
+  "Any final-output scar should promote the applied entry to high risk."
+  (should (equal
+           (whittle--transcript-report-risk
+            "Hello , world" "Hello, world" '("punctuation cleanup") nil
+            (list (list :tag "deleted-comma-before-pronoun"
+                        :span (cons 0 5))))
+           "high")))
 
 (ert-deftest whittle-transcript-applies-safe-dup-inside-i-mean-hazard ()
   "A sentence-initial `I mean,' hazard should not block safe duplicate cleanup."
@@ -195,6 +268,21 @@ is passed through to `whittle--transcript-report-generate'."
         (dolist (hazard hazards)
           (should (string-match-p (regexp-quote hazard) copied)))
         (should (string-match-p "Outcome ::" copied))))))
+
+(ert-deftest whittle-scar-scan-stays-quiet-on-protected-narratively-shapes ()
+  "Held-back hazards should not become advisory scars when output is protected."
+  (dolist (input '("Writing can be solitary, sitting alone, thinking, I mean, I love it, I think I'm good at it, but sharing what I know and helping other people, and having that social, interactive part. is really the part that I love even more."
+                   "So… that's how I think about it."
+                   "This is a set of custom instructions, documents. that I've created..."
+                   "I mean, first of all, I mean, don't you think that people can tell when you're using AI?"
+                   "When I've worked for magazines, like, I was an editor at Psychology Today..."
+                   "It's gonna get published, right? So… My premise is that AI can help."))
+    (let* ((result (whittle-test--generate-report
+                    input
+                    "/tmp/whittle-test-transcript.org"
+                    "/tmp/whittle-test-report.org"))
+           (entries (plist-get result :entries)))
+      (should-not (whittle--transcript-report-scar-entries entries)))))
 
 (ert-deftest whittle-report-respects-unit-boundaries-and-headings ()
   "Headings are excluded and line-joining stays within paragraph units."

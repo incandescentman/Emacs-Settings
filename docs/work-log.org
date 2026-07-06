@@ -2032,5 +2032,13 @@
 - Updated Codex report records with explicit outcomes: =held back and untouched=, =safe partial cleanup applied; hazardous span protected=, or =candidate skipped because protected-span replay could not be made offset-safe=.
 - Added ERT coverage for the latest Narratively scar shapes: =thinking I love=, =part. Is really=, leading orphan ellipses, =documents. That I've created=, =first of all don't=, =magazines I was=, and =right? … My premise=.
 
+* 2026-07-05: Add advisory Whittle output scar scan
+- Added a final-output scar scan to [[file+emacs:/Users/jay/emacs/emacs-settings/whittle.el][whittle.el]] so report entries can flag suspicious applied-output artifacts such as orphan ellipses, suspicious case normalization, deleted comma/pronoun fusion, =like= clause fusion, and damaged =right? So…= transitions.
+- Kept the scar scan advisory and report-only. It promotes affected applied entries to high-risk review and adds a =Suspicious Output Scar Scan= section, but it does not rewrite the transcript or override the protected-span hazard gates.
+- Updated compact and full Codex instructions so review order is now scar scan first, applied high/medium-risk changes second, and held-back candidates third. The report now explicitly says scars are suspicious rather than proof and that held-back candidate after text is not in the source.
+- Clarified summary labels with =Reported units=, =Applied units=, =Held-only units=, =Safe-partial units=, =Applied pass counts=, =Held-back hazard counts=, and =Scar counts=.
+- Added ERT coverage for direct scar detection, scar sections in compact/full reports, scar-driven high-risk promotion, and clean protected Narratively examples that should not produce scar entries.
+- Verified with =emacs --batch -Q -l tests/whittle-tests.el -f ert-run-tests-batch-and-exit=, =check-parens= on [[file+emacs:/Users/jay/emacs/emacs-settings/whittle.el][whittle.el]] and [[file+emacs:/Users/jay/emacs/emacs-settings/tests/whittle-tests.el][tests/whittle-tests.el]], clean byte compilation of [[file+emacs:/Users/jay/emacs/emacs-settings/whittle.el][whittle.el]], and =git diff --check=. A temp-buffer smoke test on [[file+emacs:/Users/jay/Dropbox/github/transcription/transcriptions/narratively-webinar-2026-04-22_transcript.org][the Narratively webinar transcript]] reported 78 review units, 34 applied units, 67 held-back hazardous edits, and 0 scar entries without editing the source file.
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.
