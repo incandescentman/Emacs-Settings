@@ -211,7 +211,7 @@ All three commands work on the active region if one is selected, otherwise on th
 - Preserves some intentional repeats such as =go go= and =bye bye=
 - Changes the buffer and copies a compact report Jay can paste into Codex for verification and repair
 
-The clipboard report includes full before/after excerpts for high- and medium-risk changes, summarizes low-risk changes, and links to the full detailed report saved under =/tmp=.
+The clipboard report includes compact before/after excerpts for high- and medium-risk changes, using a small local window around the changed span so one risky filler word does not dump a whole paragraph. Low-risk changes are summarized, and the full detailed report is saved under =/tmp=.
 
 *Example*
 

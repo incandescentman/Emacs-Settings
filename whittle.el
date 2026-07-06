@@ -82,7 +82,7 @@
 (defvar whittle/report-clipboard-max-detailed-entries 25
   "Maximum number of full before/after entries in clipboard reports.")
 
-(defvar whittle/report-clipboard-context-chars 140
+(defvar whittle/report-clipboard-context-chars 32
   "Characters of context to keep around the changed span in clipboard reports.")
 
 (defconst whittle/false-start-prefixes

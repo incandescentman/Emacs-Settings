@@ -160,7 +160,7 @@ The report copied to the clipboard should be compact org-mode text.
 - Risk counts :: high 12; medium 31; low 80
 - Pass counts :: duplicate-word collapse 4; conservative filler removal 52; punctuation cleanup 27; case normalization 19
 - Temp file :: /tmp/whittle-transcript-review-YYYYMMDD-HHMMSS.org
-- Clipboard detail :: before/after excerpts for high, medium-risk changes, capped at 25.
+- Clipboard detail :: before/after excerpts for high, medium-risk changes, capped at 25 and clipped to a small local changed-span window.
 - Source edit target :: Codex should edit this source file directly; this report is not a replacement transcript
 
 ** Instructions for Codex
@@ -204,7 +204,7 @@ Risk categories:
 - Include summary counts at the top of the report by risk tier and by cleanup pass.
 - Copy a compact org report to the clipboard via =pbcopy=.
 - Save the full org report to a timestamped recovery file under =/tmp=, using a name like =/tmp/whittle-transcript-review-YYYYMMDD-HHMMSS.org=, and include that path in the report header.
-- The compact clipboard report should include high- and medium-risk before/after excerpts, summarize or drop low-risk details, show changed spans rather than whole paragraphs, and avoid long repeated boilerplate.
+- The compact clipboard report should include high- and medium-risk before/after excerpts, summarize or drop low-risk details, show changed spans rather than whole paragraphs, use a small local context window around those spans, and avoid long repeated boilerplate.
 - =whittle= and =whittle-transcript= should apply cleanup and copy the Codex report to the clipboard. Do not make the primary commands report-only.
 - Implement the duplicate-word fix as a small, separable checkpoint from the report command so it is easy to review or revert independently.
 - For duplicate-word collapse, preserve comma-separated repeated function words such as =is, is= and =you, you=. Continue allowing genuinely safe collapses such as obvious stammers where the rule remains valid.
@@ -216,7 +216,7 @@ Add focused ERT tests under [[file+emacs:/Users/jay/emacs/emacs-settings/tests/]
 Test cases:
 - =whittle= and =whittle-transcript= mutate the source buffer and copy the Codex report.
 - =whittle-transcript-report= does not mutate the source buffer.
-- The compact report includes before/after excerpts for high- and medium-risk changed chunks.
+- The compact report includes clipped before/after excerpts for high- and medium-risk changed chunks, including ellipses when the surrounding paragraph has been trimmed.
 - Low-risk changes are summarized without full quoted before/after blocks.
 - The report header includes the exact source file path and says Codex should edit that file directly to verify or repair already-applied changes.
 - Each report entry includes =Passes ::=.

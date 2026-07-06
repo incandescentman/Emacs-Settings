@@ -240,6 +240,43 @@ is passed through to `whittle--transcript-report-generate'."
     (should-not (string-match-p "#\\+begin_quote" copied))
     (should (string-match-p "No high- or medium-risk changes" copied))))
 
+(ert-deftest whittle-clipboard-report-trims-high-risk-excerpts ()
+  "High-risk clipboard entries should quote only the local changed span."
+  (let* ((temp-dir (make-temp-file "whittle-report-test" t))
+         (whittle/transcript-report-directory temp-dir)
+         (input (string-join
+                 '("This opening sentence has a lot of harmless setup before"
+                   "the risky phrase so the compact report should not copy"
+                   "all of it. The way the assistant works is kind of like"
+                   "getting advice from a friend who asks questions before"
+                   "making suggestions. After that comparison, the speaker"
+                   "continues with additional context that should be trimmed"
+                   "away from the clipboard excerpt.")
+                 " "))
+         copied
+         result)
+    (unwind-protect
+        (cl-letf (((symbol-function 'whittle--copy-string-to-pbcopy)
+                   (lambda (text)
+                     (setq copied text))))
+          (whittle-test--with-text
+           input
+           (lambda ()
+             (let ((buffer-file-name "/tmp/whittle-test-compact-high.org"))
+               (setq result (whittle (point-min) (point-max)))))))
+      (delete-directory temp-dir t))
+    (should result)
+    (should copied)
+    (should (string-match-p "High/Medium-Risk Changes" copied))
+    (should (string-match-p "\\.\\.\\." copied))
+    (should (string-match-p "kind of like" copied))
+    (should-not
+     (string-match-p "This opening sentence has a lot of harmless setup"
+                     copied))
+    (should-not
+     (string-match-p "additional context that should be trimmed away"
+                     copied))))
+
 (ert-deftest whittle-transcript-preserves-comma-function-repeats-end-to-end ()
   "The full pipeline must not collapse comma-separated function-word repeats.
 Regression guard: `whittle--remove-false-starts' used to eat \"you, you\"

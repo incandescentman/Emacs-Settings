@@ -2003,8 +2003,10 @@
 
 * 2026-07-05: Compact Whittle clipboard reports
 - Reduced the default Whittle clipboard payload in [[file+emacs:/Users/jay/emacs/emacs-settings/whittle.el][whittle.el]]. The clipboard report now includes concise boilerplate, summary counts, high- and medium-risk before/after excerpts around the changed span, and a low-risk one-line summary.
+- Tuned the excerpt context window to 32 characters on each side of the changed span so high-risk filler inside a paragraph stays reviewable without copying the whole paragraph into the clipboard report.
 - The full exhaustive before/after report is still written to =/tmp= and linked from the clipboard report.
 - Added regression coverage in [[file+emacs:/Users/jay/emacs/emacs-settings/tests/whittle-tests.el][tests/whittle-tests.el]] so low-risk changes do not dump quoted before/after blocks into the clipboard.
+- Added regression coverage proving high-risk entries are clipped to a local excerpt with ellipses instead of dumping the full surrounding paragraph.
 
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.
