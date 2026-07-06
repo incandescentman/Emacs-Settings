@@ -460,8 +460,8 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-colorize-cursor-according-to-state t
 
    ;; Default font or prioritized list of fonts. This setting has no effect when
-   ;; running Emacs in terminal. The font set here will be used for default and
-   ;; fixed-pitch faces. The `:size' can be specified as
+   ;; running Emacs in terminal. The font set here will be used for `default' and
+   ;; `fixed-pitch' faces. The `:size' can be specified as
    ;; a non-negative integer (pixel size), or a floating-point (point size).
    ;; Point size is recommended, because it's device independent. (default 10.0)
    dotspacemacs-default-font '("Monaco"
@@ -558,6 +558,14 @@ It should only modify the values of Spacemacs settings."
    ;; displayed in the current window. (default nil)
    dotspacemacs-switch-to-buffer-prefers-purpose nil
 
+   ;; Make consecutive tab key presses after commands such as
+   ;; `spacemacs/alternate-buffer' (SPC TAB) cycle through previous
+   ;; buffers/windows/etc. Please see the option's docstring for more information.
+   ;; Set the option to t in order to enable cycling for all current and
+   ;; future cycling commands. Alternatively, choose a subset of the currently
+   ;; supported commands: '(alternate-buffer alternate-window). (default nil)
+   dotspacemacs-enable-cycling nil
+
    ;; Whether side windows (such as those created by treemacs or neotree)
    ;; are kept or minimized by `spacemacs/toggle-maximize-window' (SPC w m).
    ;; (default t)
@@ -569,9 +577,12 @@ It should only modify the values of Spacemacs settings."
    ;; Spacemacs on Windows. Refer the FAQ.org "load-hints" session for details.
    dotspacemacs-enable-load-hints nil
 
-   ;; If t, enable the `package-quickstart' feature to avoid full package
-   ;; loading, otherwise no `package-quickstart' attemption (default nil).
-   ;; Refer the FAQ.org "package-quickstart" section for details.
+   ;; If non-nil, enable the `package-quickstart' feature to avoid activating
+   ;; all package autoloads one by one.
+   ;; Requires building and maintaining a quickstart autoload file for all
+   ;; installed packages.
+   ;; Refer to the FAQ.org "package-quickstart" section for details.
+   ;; (default nil)
    dotspacemacs-enable-package-quickstart nil
 
    ;; If non-nil a progress bar is displayed when spacemacs is loading. This
@@ -667,8 +678,11 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
    ;; over any automatically added closing parenthesis, bracket, quote, etc...
-   ;; This can be temporary disabled by pressing `C-q' before `)'. (default nil)
-   dotspacemacs-smart-closing-parenthesis 't
+   ;; This can be temporary disabled by pressing `C-q' before `)'.
+   ;; Only effective when `dotspacemacs-activate-smartparens-mode' is non-nil.
+   ;; Redundant when `smartparens-strict-mode' is enabled. (default nil)
+   dotspacemacs-smart-closing-parenthesis t
+
    ;; Select a scope to highlight delimiters. Possible values are `any',
    ;; `current', `all' or `nil'. Default is `all' (highlight any scope and
    ;; emphasis the current one). (default 'all)
