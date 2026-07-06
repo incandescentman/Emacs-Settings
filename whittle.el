@@ -405,7 +405,8 @@ unit is not necessarily the start of the source buffer."
     "lowercase-start-after-opener"
     "case-clause-fusion"
     "deleted-comma-before-pronoun"
-    "imperative-fusion")
+    "imperative-fusion"
+    "protected-span-overlap")
   "Display order for transcript cleanup hazard tags.")
 
 (defun whittle--transcript-report-pass-specs (&optional profile)
@@ -532,6 +533,58 @@ and are excluded from cleanup."
                 (member hazard before-tags))
               after-tags))
 
+(defun whittle--transcript-report-change-span (before after)
+  "Return the changed source span in BEFORE as a 1-based (START . END) pair."
+  (let* ((prefix-length (whittle--common-prefix-length before after))
+         (suffix-length (whittle--common-suffix-length before after prefix-length))
+         (before-change-end (max prefix-length (- (length before) suffix-length))))
+    (cons (1+ prefix-length) (1+ before-change-end))))
+
+(defun whittle--transcript-report-protect-char-p (char)
+  "Return non-nil when CHAR should be protected next to a held-back span."
+  (and char
+       (or (memq char '(?\s ?\t ?, ?. ?? ?! ?\; ?: ?… ?\" ?\' ?\( ?\)
+                            ?\[ ?\] ?{ ?} ?- ?– ?—))
+           (eq char ?\n))))
+
+(defun whittle--transcript-report-expand-protected-span (text span)
+  "Expand SPAN in TEXT to include adjacent punctuation and spacing."
+  (let ((start (car span))
+        (end (cdr span))
+        (length (length text)))
+    (while (and (> start 1)
+                (whittle--transcript-report-protect-char-p
+                 (aref text (- start 2))))
+      (setq start (1- start)))
+    (while (and (<= end length)
+                (whittle--transcript-report-protect-char-p
+                 (aref text (1- end))))
+      (setq end (1+ end)))
+    (cons start end)))
+
+(defun whittle--transcript-report-span-overlap-p (left right)
+  "Return non-nil when LEFT and RIGHT spans overlap."
+  (and (< (car left) (cdr right))
+       (< (car right) (cdr left))))
+
+(defun whittle--transcript-report-overlaps-protected-p (span protected-spans)
+  "Return non-nil if SPAN overlaps any span in PROTECTED-SPANS."
+  (cl-some (lambda (protected)
+             (whittle--transcript-report-span-overlap-p span protected))
+           protected-spans))
+
+(defun whittle--transcript-report-shift-protected-spans
+    (protected-spans change-span before after)
+  "Shift PROTECTED-SPANS after accepting CHANGE-SPAN from BEFORE to AFTER."
+  (let ((delta (- (length after) (length before)))
+        (change-end (cdr change-span)))
+    (mapcar (lambda (protected)
+              (if (<= change-end (car protected))
+                  (cons (+ (car protected) delta)
+                        (+ (cdr protected) delta))
+                protected))
+            protected-spans)))
+
 (defun whittle--transcript-report-run-unit (text profile revert-hazards)
   "Run PROFILE cleanup on TEXT.
 When REVERT-HAZARDS is non-nil, revert a pass that introduces a
@@ -540,7 +593,8 @@ new hazard and record the held-back candidate edit."
     (insert text)
     (let ((original text)
           passes
-          held-back)
+          held-back
+          protected-spans)
       (dolist (spec (whittle--transcript-report-pass-specs profile))
         (let* ((label (car spec))
                (before-pass (buffer-string))
@@ -552,23 +606,49 @@ new hazard and record the held-back candidate edit."
             (unless (string= before-pass after-pass)
               (let* ((candidate-passes
                       (append (nreverse (copy-sequence passes)) (list label)))
+                     (change-span
+                      (whittle--transcript-report-change-span
+                       before-pass after-pass))
+                     (protected-change-span
+                      (whittle--transcript-report-expand-protected-span
+                       before-pass change-span))
+                     (touches-protected
+                      (whittle--transcript-report-overlaps-protected-p
+                       protected-change-span protected-spans))
                      (after-hazards
                       (whittle--transcript-report-hazards
                        original after-pass candidate-passes profile))
                      (new-hazards
                       (whittle--transcript-report-new-hazards
                        before-hazards after-hazards)))
-                (if (and revert-hazards new-hazards)
-                    (progn
-                      (push (list :pass label
-                                  :hazards new-hazards
-                                  :before before-pass
-                                  :after after-pass)
-                            held-back)
-                      (erase-buffer)
-                    (insert before-pass))
-                  (unless (member label passes)
-                    (push label passes))))))))
+                (cond
+                 ((and revert-hazards touches-protected)
+                  (push (list :pass label
+                              :hazards '("protected-span-overlap")
+                              :status 'protected-overlap
+                              :before before-pass
+                              :after after-pass
+                              :protected-span protected-change-span)
+                        held-back)
+                  (erase-buffer)
+                  (insert before-pass))
+                 ((and revert-hazards new-hazards)
+                   (push (list :pass label
+                               :hazards new-hazards
+                               :status 'hazard
+                               :before before-pass
+                               :after after-pass
+                               :protected-span protected-change-span)
+                         held-back)
+                   (push protected-change-span protected-spans)
+                   (erase-buffer)
+                   (insert before-pass))
+                  (t
+                   (setq protected-spans
+                         (whittle--transcript-report-shift-protected-spans
+                          protected-spans change-span before-pass after-pass))
+                   (unless (member label passes)
+                     (push label passes)))))))))
       (list :after (buffer-string)
             :passes (nreverse passes)
             :hazards (whittle--transcript-report-hazards
@@ -673,6 +753,15 @@ PASSES is the list of cleanup passes that have run so far."
                      "\\(?:\\`\\|[.?!…][[:space:]]+\\)\\<i mean\\>[[:blank:]]*,"
                      after)))
       (push "sentence-initial-i-mean" hazards))
+    (when (and transcript-profile
+               (string-match-p
+                ",[[:blank:]]*\\<i mean\\>[[:blank:]]*,[[:blank:]]*\\(?:\\<i\\>\\|\\<you\\>\\|\\<we\\>\\|\\<they\\>\\|\\<he\\>\\|\\<she\\>\\|\\<it\\>\\|\\<don't\\>\\|\\<do\\>\\|\\<first\\>\\)"
+                before)
+               (not (string-match-p
+                     ",[[:blank:]]*\\<i mean\\>[[:blank:]]*,"
+                     after)))
+      (push "sentence-initial-i-mean" hazards)
+      (push "deleted-comma-before-pronoun" hazards))
     (when (and (string-match-p "\\`[[:blank:]]*\\<like\\>" before)
                (not (string-match-p "\\`[[:blank:]]*\\<like\\>" after)))
       (push "quote-marker-deletion" hazards))
@@ -698,6 +787,14 @@ PASSES is the list of cleanup passes that have run so far."
                 "\\<right\\>[[:blank:]]*\\?[[:blank:]]+\\<so\\>[[:blank:]]*\\(?:…\\|\\.\\.\\.\\)"
                 before)
                (whittle--string-match-case-p ",[[:blank:]]+[[:upper:]][[:lower:]]" after))
+      (push "case-clause-fusion" hazards))
+    (when (and transcript-profile
+               (whittle--string-match-case-p
+                "\\.[[:blank:]\n]+\\(?:that\\|which\\|who\\|whose\\|whom\\|is\\|are\\|was\\|were\\)\\>"
+                before)
+               (whittle--string-match-case-p
+                "\\.[[:blank:]\n]+\\(?:That\\|Which\\|Who\\|Whose\\|Whom\\|Is\\|Are\\|Was\\|Were\\)\\>"
+                after))
       (push "case-clause-fusion" hazards))
     (seq-filter
      (lambda (hazard)
@@ -790,15 +887,36 @@ PASSES is the list of cleanup passes that have run so far."
   "Return held-back hazardous edit records from ENTRIES with context."
   (let (records)
     (dolist (entry entries)
-      (dolist (record (plist-get entry :held-back))
-        (push (append (list :entry-number (plist-get entry :number)
-                            :line (plist-get entry :line)
-                            :unit (plist-get entry :unit))
-                      record)
-              records)))
+      (let ((entry-applied
+             (whittle--transcript-report-applied-entry-p entry)))
+        (dolist (record (plist-get entry :held-back))
+          (push (append (list :entry-number (plist-get entry :number)
+                              :line (plist-get entry :line)
+                              :unit (plist-get entry :unit)
+                              :entry-applied entry-applied)
+                        record)
+                records))))
     (cl-loop for record in (nreverse records)
              for number from 1
              collect (append (list :number number) record))))
+
+(defun whittle--transcript-report-record-outcome (record)
+  "Return the user-facing protection outcome for held-back RECORD."
+  (cond
+   ((eq (plist-get record :status) 'protected-overlap)
+    "candidate skipped because protected-span replay could not be made offset-safe")
+   ((plist-get record :entry-applied)
+    "safe partial cleanup applied; hazardous span protected")
+   (t
+    "held back and untouched")))
+
+(defun whittle--transcript-report-span-text (text span)
+  "Return protected substring from TEXT using 1-based SPAN."
+  (when span
+    (let ((start (max 0 (1- (car span))))
+          (end (min (length text) (1- (cdr span)))))
+      (when (<= start end)
+        (substring text start end)))))
 
 (defun whittle--transcript-report-count-line (counts)
   "Return one org summary line for alist COUNTS."
@@ -835,19 +953,26 @@ When COMPACT is non-nil, quote only local changed-span excerpts."
          (after (plist-get record :after))
          (excerpts (when compact (whittle--change-excerpts before after)))
          (before-text (if compact (car excerpts) before))
-         (after-text (if compact (cdr excerpts) after)))
+         (after-text (if compact (cdr excerpts) after))
+         (protected-text
+          (whittle--transcript-report-span-text
+           before (plist-get record :protected-span))))
     (concat
      (format (concat "*** Held Back %d\n"
                      "- Approx line :: %d\n"
                      "- Unit :: %d\n"
                      "- Pass :: %s\n"
                      "- Hazards :: %s\n"
+                     "- Outcome :: %s\n"
                      "- Safety gate :: this candidate edit was not applied; safe edits in the same unit may have landed\n")
              (plist-get record :number)
              (plist-get record :line)
              (plist-get record :unit)
              (plist-get record :pass)
-             (string-join (plist-get record :hazards) ", "))
+             (string-join (plist-get record :hazards) ", ")
+             (whittle--transcript-report-record-outcome record))
+     (when protected-text
+       (format "- Protected span :: %s\n" (string-trim protected-text)))
      (format (concat "\nCandidate before%s:\n"
                      "#+begin_quote\n%s\n#+end_quote\n\n"
                      "Candidate after%s:\n"

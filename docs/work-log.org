@@ -2026,5 +2026,11 @@
 - Updated compact and full reports to count held-back hazardous edits separately from changed/applied units. The =Hazard-Tagged / Not Applied= section now quotes the specific held-back candidate span rather than treating the whole paragraph as skipped.
 - Added ERT regressions proving =I mean, this is is a draft.= becomes =I mean, this is a draft.= while reporting the held-back =sentence-initial-i-mean= deletion, and proving safe =um= cleanup still lands beside a held-back =like-clause-fusion= candidate.
 
+* 2026-07-05: Protect held-back Whittle spans from later transcript passes
+- Strengthened [[file+emacs:/Users/jay/emacs/emacs-settings/whittle.el][whittle.el]] so a hazardous candidate creates a protected source span for the rest of the paragraph-unit replay. Later passes that would touch that span or adjacent punctuation/case are held back instead of silently repairing across it.
+- Added hazard detection for comma-bounded =I mean= clause fusion and for case normalization that would turn clause fragments into false sentence starts such as =part. Is really= or =documents. That I've created=.
+- Updated Codex report records with explicit outcomes: =held back and untouched=, =safe partial cleanup applied; hazardous span protected=, or =candidate skipped because protected-span replay could not be made offset-safe=.
+- Added ERT coverage for the latest Narratively scar shapes: =thinking I love=, =part. Is really=, leading orphan ellipses, =documents. That I've created=, =first of all don't=, =magazines I was=, and =right? … My premise=.
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.

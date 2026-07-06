@@ -119,6 +119,7 @@ is passed through to `whittle--transcript-report-generate'."
     (should copied)
     (should (string-match-p "Held Back" copied))
     (should (string-match-p "sentence-initial-i-mean" copied))
+    (should (string-match-p "safe partial cleanup applied; hazardous span protected" copied))
     (should (string-match-p "duplicate-word collapse" copied))
     (should (string-match-p "I mean, this is is a draft" copied))
     (should (string-match-p "I mean, this is a draft" copied))))
@@ -143,8 +144,57 @@ is passed through to `whittle--transcript-report-generate'."
     (should copied)
     (should (string-match-p "Held Back" copied))
     (should (string-match-p "like-clause-fusion" copied))
+    (should (string-match-p "safe partial cleanup applied; hazardous span protected" copied))
     (should (string-match-p "conservative filler removal" copied))
     (should (string-match-p "This is useful" copied))))
+
+(ert-deftest whittle-transcript-protects-held-back-spans-from-later-scars ()
+  "Held-back discourse spans should protect adjacent punctuation and case."
+  (let ((cases
+         '(("Writing can be solitary, sitting alone, thinking, I mean, I love it, I think I'm good at it, but sharing what I know and helping other people, and having that social, interactive part. is really the part that I love even more."
+            ("thinking I love" "part\\. Is really")
+            ("sentence-initial-i-mean" "deleted-comma-before-pronoun" "case-clause-fusion"))
+           ("So… that's how I think about it."
+            ("\\`…")
+            ("orphan-ellipsis"))
+           ("This is a set of custom instructions, documents. that I've created..."
+            ("documents\\. That I've created")
+            ("case-clause-fusion"))
+           ("I mean, first of all, I mean, don't you think that people can tell when you're using AI?"
+            ("^first" "first of all don't" "I mean first")
+            ("sentence-initial-i-mean" "deleted-comma-before-pronoun"))
+           ("When I've worked for magazines, like, I was an editor at Psychology Today..."
+            ("magazines I was")
+            ("like-clause-fusion" "deleted-comma-before-pronoun"))
+           ("It's gonna get published, right? So… My premise is that AI can help."
+            ("published, My premise" "right\\? … My premise")
+            ("right-so-chain" "case-clause-fusion")))))
+    (dolist (case cases)
+      (let* ((input (nth 0 case))
+             (forbidden (nth 1 case))
+             (hazards (nth 2 case))
+             (temp-dir (make-temp-file "whittle-report-test" t))
+             (whittle/transcript-report-directory temp-dir)
+             copied
+             output)
+        (unwind-protect
+            (cl-letf (((symbol-function 'whittle--copy-string-to-pbcopy)
+                       (lambda (text)
+                         (setq copied text))))
+              (whittle-test--with-text
+               input
+               (lambda ()
+                 (let ((buffer-file-name "/tmp/whittle-test-transcript.org"))
+                   (whittle-transcript (point-min) (point-max))
+                   (setq output (buffer-string))))))
+          (delete-directory temp-dir t))
+        (should copied)
+        (let ((case-fold-search nil))
+          (dolist (pattern forbidden)
+            (should-not (string-match-p pattern output))))
+        (dolist (hazard hazards)
+          (should (string-match-p (regexp-quote hazard) copied)))
+        (should (string-match-p "Outcome ::" copied))))))
 
 (ert-deftest whittle-report-respects-unit-boundaries-and-headings ()
   "Headings are excluded and line-joining stays within paragraph units."
