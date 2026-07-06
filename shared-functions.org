@@ -1519,6 +1519,12 @@ Customization:
 By default, timestamps like [2026-02-10 Tue 15:14] are stripped.
 Set to t to preserve them.")
 
+(defvar jay/org-web-tools-request-headers
+  '(("User-Agent" . "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36")
+    ("Accept" . "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
+    ("Accept-Language" . "en-US,en;q=0.9"))
+  "HTTP headers sent by Jay's org-web-tools capture wrappers.")
+
 (defun jay/org-web-tools-cleanup-string (content)
   "Clean up CONTENT string from org-web-tools, removing cruft."
   (let ((result content))
@@ -1559,6 +1565,65 @@ Set to t to preserve them.")
     (setq result (replace-regexp-in-string "^\\(\\*+ .*?\\)\\s-+\\*+\\s-*$" "\\1" result))
     result))
 
+(defun jay/org-web-tools--plz-error-object (err)
+  "Return the `plz-error' object from condition-case ERR, when present."
+  (let ((items (cdr-safe err))
+        found)
+    (while (and items (not found))
+      (when (and (fboundp 'plz-error-p)
+                 (plz-error-p (car items)))
+        (setq found (car items)))
+      (setq items (cdr items)))
+    found))
+
+(defun jay/org-web-tools--plz-error-status (err)
+  "Return HTTP status from condition-case ERR, when present."
+  (when-let* ((plz-error (jay/org-web-tools--plz-error-object err))
+              (response (and (fboundp 'plz-error-response)
+                             (plz-error-response plz-error))))
+    (when (fboundp 'plz-response-status)
+      (plz-response-status response))))
+
+(defun jay/org-web-tools--capture-error-entry (url err)
+  "Return a minimal Org entry for URL when org-web-tools signals ERR."
+  (let* ((status (jay/org-web-tools--plz-error-status err))
+         (status-text (if status
+                          (format "HTTP %s" status)
+                        (error-message-string err)))
+         (link (org-link-make-string url status-text))
+         (open-link (org-link-make-string url "Open in browser")))
+    (format "* %s :website:\n\n** Capture failed\n\norg-web-tools could not fetch this page.\n\n- %s\n- %s\n"
+            link status-text open-link)))
+
+(defun jay/org-web-tools--url-as-readable-org (url)
+  "Return URL as readable Org using Jay's org-web-tools defaults.
+
+This mirrors `org-web-tools--url-as-readable-org' but sends
+browser-style request headers.  Some CloudFront-backed sites reject
+curl's default User-Agent with HTTP 403."
+  (let ((url (or url (org-web-tools--get-first-url))))
+    (condition-case err
+        (let* ((dom (plz 'get url
+                         :headers jay/org-web-tools-request-headers
+                         :as #'org-web-tools--sanitized-dom))
+               (readable-result (org-web-tools--eww-readable dom))
+               (title (org-web-tools--cleanup-title (or (car readable-result) "")))
+               (converted (org-web-tools--html-to-org-with-pandoc (cdr readable-result)))
+               (link (org-link-make-string url title))
+               (timestamp (format-time-string (org-time-stamp-format 'with-time 'inactive))))
+          (with-temp-buffer
+            (org-mode)
+            (insert converted)
+            (org-web-tools--demote-headings-below 2)
+            (goto-char (point-min))
+            (insert "* " link " :website:" "\n\n"
+                    timestamp "\n\n"
+                    "** Article" "\n\n")
+            (buffer-string)))
+      (plz-error
+       (message "org-web-tools fetch failed for %s: %s" url (error-message-string err))
+       (jay/org-web-tools--capture-error-entry url err)))))
+
 (defun jay/org-web-tools-cleanup-buffer ()
   "Clean up current buffer after org-web-tools insertion."
   (interactive)
@@ -1592,14 +1657,16 @@ Set to t to preserve them.")
   "Like `org-web-tools-read-url-as-org' but with cleanup.
 Gets URL from Chrome frontmost tab, or clipboard, or prompts."
   (interactive (list (jay/get-url-from-clipboard-or-chrome)))
-  (org-web-tools-read-url-as-org url)
+  (cl-letf (((symbol-function 'org-web-tools--url-as-readable-org)
+             #'jay/org-web-tools--url-as-readable-org))
+    (org-web-tools-read-url-as-org url))
   (jay/org-web-tools-cleanup-buffer))
 
 (defun jay/org-web-tools-insert-web-page-as-entry-clean (url)
   "Like `org-web-tools-insert-web-page-as-entry' but with cleanup.
 Gets URL from Chrome frontmost tab, or clipboard, or prompts."
   (interactive (list (jay/get-url-from-clipboard-or-chrome)))
-  (let ((content (org-web-tools--url-as-readable-org url)))
+  (let ((content (jay/org-web-tools--url-as-readable-org url)))
     (when content
       (setq content (jay/org-web-tools-cleanup-string content))
       (beginning-of-line)

@@ -7,6 +7,8 @@
 ;;; Code:
 
 (require 'ert)
+(require 'cl-lib)
+(require 'org)
 
 (defconst jay-capture-cleanup-test--shared-functions-file
   (expand-file-name
@@ -36,7 +38,12 @@
     (jay-capture-cleanup-test--load-definitions
      jay-capture-cleanup-test--shared-functions-file
      '(jay/org-web-tools-include-timestamp
-       jay/org-web-tools-cleanup-string))))
+       jay/org-web-tools-request-headers
+       jay/org-web-tools-cleanup-string
+       jay/org-web-tools--plz-error-object
+       jay/org-web-tools--plz-error-status
+       jay/org-web-tools--capture-error-entry
+       jay/org-web-tools--url-as-readable-org))))
 
 (jay-capture-cleanup-test--ensure-target-loaded)
 
@@ -109,10 +116,44 @@
 (ert-deftest jay-capture-cleanup-fixes-heading-body-and-whitespace-spacing ()
   "Cleanup should remove heading-body blank gaps and whitespace-only lines."
   (should
-   (equal
-    (jay/org-web-tools-cleanup-string
-     "*** Heading\n\nBody line\n   \n\t\n*** Next\n\n#+begin_src emacs-lisp\n(message \"x\")\n#+end_src\n")
-    "*** Heading\nBody line\n*** Next\n\n#+begin_src emacs-lisp\n(message \"x\")\n#+end_src\n")))
+    (equal
+     (jay/org-web-tools-cleanup-string
+      "*** Heading\n\nBody line\n   \n\t\n*** Next\n\n#+begin_src emacs-lisp\n(message \"x\")\n#+end_src\n")
+     "*** Heading\nBody line\n*** Next\n\n#+begin_src emacs-lisp\n(message \"x\")\n#+end_src\n")))
+
+(ert-deftest jay-org-web-tools-readable-fetch-sends-browser-headers ()
+  "Jay's org-web-tools wrapper should send browser-like request headers."
+  (let (seen-headers)
+    (cl-letf (((symbol-function 'plz)
+               (lambda (_method _url &rest args)
+                 (setq seen-headers (plist-get args :headers))
+                 'fake-dom))
+              ((symbol-function 'org-web-tools--eww-readable)
+               (lambda (_dom)
+                 (cons "Example Page" "<main>Article body</main>")))
+              ((symbol-function 'org-web-tools--cleanup-title)
+               #'identity)
+              ((symbol-function 'org-web-tools--html-to-org-with-pandoc)
+               (lambda (_html)
+                 "Article body\n"))
+              ((symbol-function 'org-web-tools--demote-headings-below)
+               (lambda (&rest _args)
+                 nil)))
+      (let ((output (jay/org-web-tools--url-as-readable-org "https://example.com/post")))
+        (should (string-match-p "Mozilla/5.0" (cdr (assoc "User-Agent" seen-headers))))
+        (should (string-match-p "\\* \\[\\[https://example.com/post\\]\\[Example Page\\]\\]" output))
+        (should (string-match-p "\\*\\* Article" output))))))
+
+(ert-deftest jay-org-web-tools-readable-fetch-falls-back-on-plz-error ()
+  "A blocked HTTP fetch should produce a minimal Org entry, not a debugger."
+  (unless (get 'plz-error 'error-conditions)
+    (define-error 'plz-error "plz error" 'error))
+  (cl-letf (((symbol-function 'plz)
+             (lambda (&rest _args)
+               (signal 'plz-error '("HTTP error")))))
+    (let ((output (jay/org-web-tools--url-as-readable-org "https://example.com/blocked")))
+      (should (string-match-p "Capture failed" output))
+      (should (string-match-p "\\[\\[https://example.com/blocked\\]" output)))))
 
 (provide 'capture-cleanup-tests)
 

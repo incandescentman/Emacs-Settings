@@ -1354,3 +1354,21 @@ The sentence-edge filler regex in [[file+emacs:/Users/jay/emacs/emacs-settings/w
 - Keep hazard gates profile-aware where the risk belongs specifically to aggressive transcript cleanup. Shared mechanical hazards can still protect conservative =whittle=, but transcript-only brakes should not accidentally neuter the everyday cleanup command.
 - A held-back hazard must become a real protected span for later passes, not just a report label. Otherwise punctuation cleanup or case normalization can still damage the area around the held-back discourse marker, producing scars like =thinking I love=, =part. Is really=, or =right? … My premise= after the risky deletion itself was supposedly blocked.
 - Candidate hazards and final-output scars are different safety layers. Hazards decide whether a proposed pass should be held back; scars inspect the safe applied output afterward for suspicious residue from multi-pass interactions. Keep scar scans advisory/report-only so they guide Codex review without becoming another brittle rewrite pass.
+
+* org-web-tools: CloudFront 403 Can Be Curl User-Agent Rejection
+  Date: 2026-07-06
+
+** Trigger
+=jay/org-web-tools-insert-web-page-as-entry-clean= failed on [[https://tiff.net/press/accreditation][TIFF press accreditation]] before readability extraction:
+
+=plz-http-error "HTTP error" ... :status 403 ... server "CloudFront"=
+
+** Mechanism
+The failure happened at the raw =plz= fetch inside [[file+emacs:/Users/jay/emacs/emacs-settings/org-web-tools-master/org-web-tools.el][org-web-tools-master/org-web-tools.el]], before =eww-readable= or Pandoc ran. Plain curl reproduced the =403=, while the same URL returned =200= when sent with a normal browser =User-Agent=.
+
+Jay's wrappers in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] now route through =jay/org-web-tools--url-as-readable-org=, which sends browser-style request headers. They also catch =plz-error= and insert a minimal Org fallback entry with the URL instead of dropping into the debugger if a site still blocks the request.
+
+** Actionable insight
+- For =org-web-tools= HTTP failures, first distinguish fetch failures from readability/Pandoc failures. A CloudFront =403= at =plz= time is often request-header rejection, not article parsing.
+- Test the URL with plain curl and a browser =User-Agent= before changing extraction logic.
+- Catch =plz-error= in Jay-facing wrappers so blocked pages preserve a usable Org link and do not interrupt the capture flow with a debugger.

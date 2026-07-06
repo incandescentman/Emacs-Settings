@@ -2040,5 +2040,13 @@
 - Added ERT coverage for direct scar detection, scar sections in compact/full reports, scar-driven high-risk promotion, and clean protected Narratively examples that should not produce scar entries.
 - Verified with =emacs --batch -Q -l tests/whittle-tests.el -f ert-run-tests-batch-and-exit=, =check-parens= on [[file+emacs:/Users/jay/emacs/emacs-settings/whittle.el][whittle.el]] and [[file+emacs:/Users/jay/emacs/emacs-settings/tests/whittle-tests.el][tests/whittle-tests.el]], clean byte compilation of [[file+emacs:/Users/jay/emacs/emacs-settings/whittle.el][whittle.el]], and =git diff --check=. A temp-buffer smoke test on [[file+emacs:/Users/jay/Dropbox/github/transcription/transcriptions/narratively-webinar-2026-04-22_transcript.org][the Narratively webinar transcript]] reported 78 review units, 34 applied units, 67 held-back hazardous edits, and 0 scar entries without editing the source file.
 
+* 2026-07-06: Make org-web-tools clean capture tolerate CloudFront 403s
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so Jay's clean org-web-tools wrappers use =jay/org-web-tools--url-as-readable-org= instead of the bare vendored fetch path. The new helper sends browser-style request headers, which fixes the TIFF CloudFront =403= that blocked curl's default =User-Agent=.
+- Added =plz-error= handling for Jay-facing capture wrappers. If a site still rejects the request, the command now inserts a minimal Org fallback entry with the URL and status/error text instead of opening the debugger.
+- Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]] from the literate source after deleting the stale tangled file, then verified it with =check-parens=.
+- Added regression coverage in [[file+emacs:/Users/jay/emacs/emacs-settings/tests/capture-cleanup-tests.el][tests/capture-cleanup-tests.el]] for the browser headers and fallback-on-=plz-error= behavior.
+- Documented the failure mode in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/codebase-wisdom.org][docs/codebase-wisdom.org]] so future =org-web-tools= HTTP failures check fetch headers before debugging readability or Pandoc.
+- Verified with =emacs --batch -Q -l tests/capture-cleanup-tests.el -f ert-run-tests-batch-and-exit=, the configured startup smoke test through =~/.emacs.d/init.el=, and a minimal real capture harness against [[https://tiff.net/press/accreditation][TIFF press accreditation]] that returned an 8,415-character Org entry with =failed=no=.
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.
