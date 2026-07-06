@@ -6740,6 +6740,12 @@ Note: The duplicate word removal is invoked only once to avoid redundancy."
   (remove-filler-words)
   (remove-duplicated-words))
 #+END_EXAMPLE
+
+The maintained implementation now lives in [[file+emacs:/Users/jay/emacs/emacs-settings/whittle.el][/Users/jay/emacs/emacs-settings/whittle.el]].
+#+begin_src emacs-lisp
+(load-file "/Users/jay/emacs/emacs-settings/whittle.el")
+#+end_src
+
 * remove redundant bold tags from org headings
 #+begin_src emacs-lisp
 (defun redundant-delete-redundant-asterisks-in-org-headings ()

@@ -147,8 +147,11 @@ is passed through to `whittle--transcript-report-generate'."
                (let ((buffer-file-name "/tmp/whittle-test-transcript.org"))
                  (setq result (whittle-transcript-report (point-min) (point-max)))))))
           (let ((report (plist-get result :report))
+                (clipboard-report (plist-get result :clipboard-report))
                 (temp-file (plist-get result :temp-file)))
-            (should (string= copied report))
+            (should (string= copied clipboard-report))
+            (should-not (string= copied report))
+            (should (string-match-p "Full report ::" copied))
             (should (string-prefix-p temp-dir temp-file))
             (should (file-exists-p temp-file))
             (should (string= (with-temp-buffer
@@ -156,6 +159,86 @@ is passed through to `whittle--transcript-report-generate'."
                                (buffer-string))
                              report))))
       (delete-directory temp-dir t))))
+
+(ert-deftest whittle-applies-conservative-cleanup-and-copies-report ()
+  "`whittle' should edit the buffer and copy a Codex report."
+  (let* ((temp-dir (make-temp-file "whittle-report-test" t))
+         (whittle/transcript-report-directory temp-dir)
+         copied
+         result)
+    (unwind-protect
+        (cl-letf (((symbol-function 'whittle--copy-string-to-pbcopy)
+                   (lambda (text)
+                     (setq copied text))))
+          (whittle-test--with-text
+           "I mean, this is is a draft.\n"
+           (lambda ()
+             (let ((buffer-file-name "/tmp/whittle-test-conservative.org"))
+               (setq result (whittle (point-min) (point-max)))
+               (should (string= (buffer-string) "this is a draft.\n"))))))
+      (delete-directory temp-dir t))
+    (should result)
+    (should copied)
+    (should (string-match-p "- Command :: whittle" copied))
+    (should (string-match-p "cleanup already applied; verify and repair" copied))
+    (should (string-match-p "Full report ::" copied))
+    (should (string-match-p
+             (regexp-quote (file-truename "/tmp/whittle-test-conservative.org"))
+             copied))
+    (should (string-match-p "Before excerpt:" copied))
+    (should (string-match-p "After excerpt:" copied))))
+
+(ert-deftest whittle-transcript-applies-cleanup-and-copies-report ()
+  "`whittle-transcript' should edit the buffer and copy a Codex report."
+  (let* ((temp-dir (make-temp-file "whittle-report-test" t))
+         (whittle/transcript-report-directory temp-dir)
+         copied
+         result)
+    (unwind-protect
+        (cl-letf (((symbol-function 'whittle--copy-string-to-pbcopy)
+                   (lambda (text)
+                     (setq copied text))))
+          (whittle-test--with-text
+           "I mean, this is is a draft.\n"
+           (lambda ()
+             (let ((buffer-file-name "/tmp/whittle-test-transcript.org"))
+               (setq result (whittle-transcript (point-min) (point-max)))
+               (should (string= (buffer-string) "this is a draft.\n"))))))
+      (delete-directory temp-dir t))
+    (should result)
+    (should copied)
+    (should (string-match-p "- Command :: whittle-transcript" copied))
+    (should (string-match-p "cleanup already applied; verify and repair" copied))
+    (should (string-match-p "Full report ::" copied))
+    (should (string-match-p
+             (regexp-quote (file-truename "/tmp/whittle-test-transcript.org"))
+             copied))
+    (should (string-match-p "Before excerpt:" copied))
+    (should (string-match-p "After excerpt:" copied))))
+
+(ert-deftest whittle-clipboard-report-summarizes-low-risk ()
+  "Clipboard reports should summarize low-risk changes without quotes."
+  (let* ((temp-dir (make-temp-file "whittle-report-test" t))
+         (whittle/transcript-report-directory temp-dir)
+         copied
+         result)
+    (unwind-protect
+        (cl-letf (((symbol-function 'whittle--copy-string-to-pbcopy)
+                   (lambda (text)
+                     (setq copied text))))
+          (whittle-test--with-text
+           "Um, hello\n"
+           (lambda ()
+             (let ((buffer-file-name "/tmp/whittle-test-compact.org"))
+               (setq result (whittle (point-min) (point-max)))
+               (should (string= (buffer-string) "hello\n"))))))
+      (delete-directory temp-dir t))
+    (should result)
+    (should copied)
+    (should (string-match-p "Low-Risk Summary" copied))
+    (should (string-match-p "line 1, low :: conservative filler removal" copied))
+    (should-not (string-match-p "#\\+begin_quote" copied))
+    (should (string-match-p "No high- or medium-risk changes" copied))))
 
 (ert-deftest whittle-transcript-preserves-comma-function-repeats-end-to-end ()
   "The full pipeline must not collapse comma-separated function-word repeats.
@@ -169,11 +252,14 @@ even after `whittle--remove-duplicated-words' was tightened."
                    "it, it")
                   ("So they, they decided to leave early."
                    "they, they")))
-    (whittle-test--with-text
-     (car case)
-     (lambda ()
-       (whittle-transcript (point-min) (point-max))
-       (should (string-match-p (regexp-quote (cadr case)) (buffer-string)))))))
+    (cl-letf (((symbol-function 'whittle--copy-string-to-pbcopy)
+               (lambda (_text) nil)))
+      (whittle-test--with-text
+       (car case)
+       (lambda ()
+         (let ((buffer-file-name "/tmp/whittle-test-transcript.org"))
+           (whittle-transcript (point-min) (point-max))
+           (should (string-match-p (regexp-quote (cadr case)) (buffer-string)))))))))
 
 (ert-deftest whittle-false-starts-still-collapse-genuine-restarts ()
   "Multi-word restarts and space-separated repeats must still collapse."

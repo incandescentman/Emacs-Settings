@@ -1989,5 +1989,22 @@
 - Added the reviewed implementation plan at [[file+emacs:/Users/jay/emacs/emacs-settings/docs/whittle-transcript-review-workflow-plan.org][docs/whittle-transcript-review-workflow-plan.org]].
 - Verified with =emacs --batch -Q -l tests/capture-cleanup-tests.el -l tests/org-web-tools-pandoc-tests.el -l tests/whittle-tests.el -f ert-run-tests-batch-and-exit=; 16/16 tests passed. Also smoke-tested report generation against [[file+emacs:/Users/jay/Dropbox/github/transcription/transcriptions/narratively-webinar-2026-04-22_transcript.org][the Narratively webinar transcript]], yielding 137 changed units without editing the source.
 
+* 2026-07-05: Load maintained =whittle.el= from startup-tangled shared functions
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so the startup-tangled file loads [[file+emacs:/Users/jay/emacs/emacs-settings/whittle.el][whittle.el]]. The old filler-cleanup code in that section is only an example block, so the maintained commands were not guaranteed to be loaded in normal Emacs startup.
+- Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]] locally; it is gitignored generated output. Verified that direct loading of [[file+emacs:/Users/jay/emacs/emacs-settings/whittle.el][whittle.el]] makes =whittle=, =whittle-transcript=, and =whittle-transcript-report= all interactive commands.
+- Loaded [[file+emacs:/Users/jay/emacs/emacs-settings/whittle.el][whittle.el]] into the available Emacs server via =emacsclient=; it returned =(t t t)= for those three command checks.
+
+* 2026-07-05: Make Whittle commands apply cleanup and copy Codex reports
+- Corrected the Whittle workflow in [[file+emacs:/Users/jay/emacs/emacs-settings/whittle.el][whittle.el]] so =M-x whittle= and =M-x whittle-transcript= both apply cleanup to the buffer and copy an org before/after report to the clipboard for Codex verification and repair.
+- Kept =M-x whittle-transcript-report= as the explicit dry-run/report-only command for cases where Jay wants a report without changing the buffer.
+- The copied report includes the source path, command name, applied-mode preamble, Codex instructions, pass attribution, and before/after chunks. The report tells Codex to edit the named source file directly and repair only broken cleanup.
+- Added ERT coverage in [[file+emacs:/Users/jay/emacs/emacs-settings/tests/whittle-tests.el][tests/whittle-tests.el]] proving both =whittle= and =whittle-transcript= mutate the buffer and copy a report.
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][docs/instructions.org]] and [[file+emacs:/Users/jay/emacs/emacs-settings/docs/whittle-transcript-review-workflow-plan.org][docs/whittle-transcript-review-workflow-plan.org]] to describe apply-plus-report as the primary workflow.
+
+* 2026-07-05: Compact Whittle clipboard reports
+- Reduced the default Whittle clipboard payload in [[file+emacs:/Users/jay/emacs/emacs-settings/whittle.el][whittle.el]]. The clipboard report now includes concise boilerplate, summary counts, high- and medium-risk before/after excerpts around the changed span, and a low-risk one-line summary.
+- The full exhaustive before/after report is still written to =/tmp= and linked from the clipboard report.
+- Added regression coverage in [[file+emacs:/Users/jay/emacs/emacs-settings/tests/whittle-tests.el][tests/whittle-tests.el]] so low-risk changes do not dump quoted before/after blocks into the clipboard.
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.

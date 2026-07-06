@@ -184,20 +184,22 @@ Example to enable timestamps:
 
 *** Transcript Cleanup
 
-Use =M-x whittle= for safe everyday cleanup and =M-x whittle-transcript= when you're cleaning raw spoken transcripts.
+Use =M-x whittle= for safe everyday cleanup and =M-x whittle-transcript= when you're cleaning raw spoken transcripts. Both commands change the buffer and copy a compact Codex review report to the macOS clipboard via =pbcopy=, while saving the full report to =/tmp=.
 
 | Command                | Best For                                  | What It Does |
 |------------------------+-------------------------------------------+--------------|
-| =whittle=              | Light cleanup of prose or lightly messy text | Removes safer fillers, collapses duplicated words, and fixes punctuation spacing without being too aggressive |
-| =whittle-transcript=   | Raw transcripts, dictated text, pasted captions | Joins mid-sentence line breaks, removes filler chains, strips sentence-edge fillers, collapses false starts, normalizes punctuation, and fixes capitalization |
+| =whittle=              | Light cleanup of prose or lightly messy text | Removes safer fillers, collapses duplicated words, fixes punctuation spacing, and copies a compact Codex report |
+| =whittle-transcript=   | Raw transcripts, dictated text, pasted captions | Joins mid-sentence line breaks, removes filler chains, strips sentence-edge fillers, collapses false starts, normalizes punctuation, fixes capitalization, and copies a compact Codex report |
+| =whittle-transcript-report= | Report-only transcript review | Copies the compact Codex report without changing the buffer |
 
-Both commands work on the active region if one is selected, otherwise on the whole buffer.
+All three commands work on the active region if one is selected, otherwise on the whole buffer.
 
 *Conservative =whittle=*
 - Safe defaults for ordinary prose
 - Keeps legitimate phrases like =I like cats=
 - Cleans repeated words like =hello hello=
 - Fixes spacing such as =Hello , world= to =Hello, world=
+- Changes the buffer and copies a compact report Jay can paste into Codex for verification
 
 *Aggressive =whittle-transcript=*
 - Designed for transcript junk rather than polished prose
@@ -207,6 +209,9 @@ Both commands work on the active region if one is selected, otherwise on the who
 - Joins awkward single newlines when the sentence clearly continues
 - Capitalizes sentence starts and lone =i=
 - Preserves some intentional repeats such as =go go= and =bye bye=
+- Changes the buffer and copies a compact report Jay can paste into Codex for verification and repair
+
+The clipboard report includes full before/after excerpts for high- and medium-risk changes, summarizes low-risk changes, and links to the full detailed report saved under =/tmp=.
 
 *Example*
 

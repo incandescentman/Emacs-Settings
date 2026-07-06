@@ -11,7 +11,8 @@
 ;;   `whittle-transcript' — aggressive pass for speech-to-text output.
 ;;     Adds line-joining for mid-sentence wraps, sentence-edge filler removal
 ;;     ("Like, ..." / ". So, ..."), filler-chain collapse, and false-start
-;;     detection on top of the conservative pass.
+;;     detection on top of the conservative pass. Also copies an org before/after
+;;     report to the clipboard for Codex review.
 ;;
 ;; Both accept an optional region. Empty buffer or no region falls through to
 ;; the whole buffer. Reports per-rule counts in the echo area on completion.
@@ -74,6 +75,15 @@
 
 (defvar whittle/transcript-report-directory "/tmp"
   "Directory where `whittle-transcript-report' writes review reports.")
+
+(defvar whittle/report-clipboard-detail-risks '("high" "medium")
+  "Risk levels to include as full before/after entries in clipboard reports.")
+
+(defvar whittle/report-clipboard-max-detailed-entries 25
+  "Maximum number of full before/after entries in clipboard reports.")
+
+(defvar whittle/report-clipboard-context-chars 140
+  "Characters of context to keep around the changed span in clipboard reports.")
 
 (defconst whittle/false-start-prefixes
   '("a" "an" "he" "her" "his" "i" "it" "my" "our" "she" "the" "their"
@@ -369,7 +379,7 @@ unit is not necessarily the start of the source buffer."
       (set-marker limit-marker nil))
     count))
 
-;;; Transcript review reports --------------------------------------------------
+;;; Cleanup review reports -----------------------------------------------------
 
 (defconst whittle--transcript-report-risk-order '("high" "medium" "low")
   "Display order for transcript report risk sections.")
@@ -383,35 +393,50 @@ unit is not necessarily the start of the source buffer."
     "case normalization")
   "Passes that merit medium review risk unless promoted to high.")
 
-(defun whittle--transcript-report-pass-specs ()
-  "Return transcript dry-run pass specs as (LABEL . FUNCTION)."
-  (list
-   (cons "line-joining" #'whittle--join-transcript-lines)
-   (cons "filler-chain collapse" #'whittle--remove-filler-chains)
-   (cons "conservative filler removal"
-         (lambda (beg end)
-           (whittle--remove-filler-words beg end whittle/conservative-filler-rules)))
-   (cons "sentence-edge filler removal"
-         (lambda (beg end)
-           (whittle--remove-filler-words beg end whittle/transcript-edge-filler-rules)))
-   ;; Keep this order aligned with `whittle-transcript'.
-   (cons "em-dash false-start detection" #'whittle--collapse-em-dash-false-starts)
-   (cons "false-start collapse" #'whittle--remove-false-starts)
-   (cons "duplicate-word collapse" #'whittle--remove-duplicated-words)
-   (cons "punctuation cleanup" #'whittle--cleanup-punctuation)
-   (cons "case normalization"
-         (lambda (beg end)
-           (whittle--normalize-case beg end t)))))
+(defun whittle--transcript-report-pass-specs (&optional profile)
+  "Return cleanup pass specs for PROFILE as (LABEL . FUNCTION).
+PROFILE is either `conservative' or `transcript', defaulting to
+`transcript' for compatibility with older report helpers."
+  (let ((conservative-filler
+         (cons "conservative filler removal"
+               (lambda (beg end)
+                 (whittle--remove-filler-words
+                  beg end whittle/conservative-filler-rules))))
+        (duplicate (cons "duplicate-word collapse" #'whittle--remove-duplicated-words))
+        (punctuation (cons "punctuation cleanup" #'whittle--cleanup-punctuation))
+        (case-normalization
+         (cons "case normalization"
+               (lambda (beg end)
+                 (whittle--normalize-case beg end t)))))
+    (if (eq profile 'conservative)
+        (list conservative-filler duplicate punctuation case-normalization)
+      (list
+       (cons "line-joining" #'whittle--join-transcript-lines)
+       (cons "filler-chain collapse" #'whittle--remove-filler-chains)
+       conservative-filler
+       (cons "sentence-edge filler removal"
+             (lambda (beg end)
+               (whittle--remove-filler-words
+                beg end whittle/transcript-edge-filler-rules)))
+       ;; Em-dash collapse must run before false-starts/dup-words, since
+       ;; those would otherwise strip the comma that signals the fragment
+       ;; is a stammer rather than a parenthetical.
+       (cons "em-dash false-start detection" #'whittle--collapse-em-dash-false-starts)
+       (cons "false-start collapse" #'whittle--remove-false-starts)
+       duplicate
+       punctuation
+       case-normalization))))
 
 (defun whittle--transcript-report-source-name ()
   "Return the current source path or buffer name for a report."
   (or (and buffer-file-name (file-truename buffer-file-name))
       (format "buffer:%s" (buffer-name))))
 
-(defun whittle--transcript-report-temp-file ()
-  "Return a new temp-file path for a transcript report."
+(defun whittle--transcript-report-temp-file (&optional command-name)
+  "Return a new temp-file path for a cleanup report from COMMAND-NAME."
   (expand-file-name
-   (format "whittle-transcript-review-%s.org"
+   (format "%s-review-%s.org"
+           (or command-name "whittle-transcript")
            (format-time-string "%Y%m%d-%H%M%S"))
    whittle/transcript-report-directory))
 
@@ -443,12 +468,19 @@ and are excluded from cleanup."
         ((finish-unit
           (unit-end)
           (when (and unit-start (< unit-start unit-end))
-            (let ((text (whittle--transcript-report-trim-unit
-                         (buffer-substring-no-properties unit-start unit-end))))
+            (let* ((text-end
+                    (save-excursion
+                      (goto-char unit-end)
+                      (skip-chars-backward "\n" unit-start)
+                      (point)))
+                   (text (whittle--transcript-report-trim-unit
+                          (buffer-substring-no-properties unit-start text-end))))
               (unless (string-blank-p text)
                 (setq index (1+ index))
                 (push (list :index index
                             :line (line-number-at-pos unit-start)
+                            :start unit-start
+                            :end text-end
                             :text text)
                       units))))
           (setq unit-start nil)))
@@ -467,12 +499,12 @@ and are excluded from cleanup."
         (finish-unit limit)))
     (nreverse units)))
 
-(defun whittle--transcript-report-process-unit (text)
-  "Run the transcript cleanup pipeline on TEXT and return result plist."
+(defun whittle--transcript-report-process-unit (text &optional profile)
+  "Run the PROFILE cleanup pipeline on TEXT and return result plist."
   (with-temp-buffer
     (insert text)
     (let (passes)
-      (dolist (spec (whittle--transcript-report-pass-specs))
+      (dolist (spec (whittle--transcript-report-pass-specs profile))
         (let ((before-pass (buffer-string)))
           (funcall (cdr spec) (point-min) (point-max))
           (unless (string= before-pass (buffer-string))
@@ -512,17 +544,19 @@ and are excluded from cleanup."
       "medium")
      (t "low"))))
 
-(defun whittle--transcript-report-build-entries (units)
-  "Return changed report entries for paragraph UNITS."
+(defun whittle--transcript-report-build-entries (units &optional profile)
+  "Return changed report entries for paragraph UNITS using PROFILE."
   (let (entries)
     (dolist (unit units)
       (let* ((before (plist-get unit :text))
-             (result (whittle--transcript-report-process-unit before))
+             (result (whittle--transcript-report-process-unit before profile))
              (after (plist-get result :after))
              (passes (plist-get result :passes)))
         (when (and passes (not (string= before after)))
           (push (list :unit (plist-get unit :index)
                       :line (plist-get unit :line)
+                      :start (plist-get unit :start)
+                      :end (plist-get unit :end)
                       :risk (whittle--transcript-report-risk before passes)
                       :passes passes
                       :before before
@@ -541,9 +575,9 @@ and are excluded from cleanup."
                                entries)))
           values))
 
-(defun whittle--transcript-report-pass-counts (entries)
+(defun whittle--transcript-report-pass-counts (entries &optional profile)
   "Return an alist of pass labels and counts for ENTRIES."
-  (let ((pass-labels (mapcar #'car (whittle--transcript-report-pass-specs))))
+  (let ((pass-labels (mapcar #'car (whittle--transcript-report-pass-specs profile))))
     (mapcar (lambda (label)
               (cons label
                     (cl-count-if (lambda (entry)
@@ -580,6 +614,77 @@ and are excluded from cleanup."
           (plist-get entry :before)
           (plist-get entry :after)))
 
+(defun whittle--common-prefix-length (left right)
+  "Return the common prefix length of LEFT and RIGHT."
+  (let ((limit (min (length left) (length right)))
+        (index 0))
+    (while (and (< index limit)
+                (eq (aref left index) (aref right index)))
+      (setq index (1+ index)))
+    index))
+
+(defun whittle--common-suffix-length (left right prefix-length)
+  "Return common suffix length of LEFT and RIGHT after PREFIX-LENGTH."
+  (let ((left-index (1- (length left)))
+        (right-index (1- (length right)))
+        (count 0))
+    (while (and (>= left-index prefix-length)
+                (>= right-index prefix-length)
+                (eq (aref left left-index) (aref right right-index)))
+      (setq count (1+ count)
+            left-index (1- left-index)
+            right-index (1- right-index)))
+    count))
+
+(defun whittle--snippet-around-change (text change-start change-end)
+  "Return a compact TEXT snippet around CHANGE-START to CHANGE-END."
+  (let* ((context whittle/report-clipboard-context-chars)
+         (start (max 0 (- change-start context)))
+         (end (min (length text) (+ change-end context)))
+         (prefix (if (> start 0) "... " ""))
+         (suffix (if (< end (length text)) " ..." ""))
+         (snippet (substring text start end)))
+    (string-trim (concat prefix snippet suffix))))
+
+(defun whittle--change-excerpts (before after)
+  "Return compact before/after excerpts around the changed span."
+  (let* ((prefix-length (whittle--common-prefix-length before after))
+         (suffix-length (whittle--common-suffix-length before after prefix-length))
+         (before-change-end (max prefix-length (- (length before) suffix-length)))
+         (after-change-end (max prefix-length (- (length after) suffix-length))))
+    (cons (whittle--snippet-around-change before prefix-length before-change-end)
+          (whittle--snippet-around-change after prefix-length after-change-end))))
+
+(defun whittle--transcript-report-format-compact-entry (entry)
+  "Return compact org text for a detailed clipboard ENTRY."
+  (let* ((excerpts
+          (whittle--change-excerpts
+           (plist-get entry :before)
+           (plist-get entry :after)))
+         (before-excerpt (car excerpts))
+         (after-excerpt (cdr excerpts)))
+    (format (concat "*** Change %d\n"
+                    "- Approx line :: %d\n"
+                    "- Risk :: %s\n"
+                    "- Passes :: %s\n\n"
+                    "Before excerpt:\n"
+                    "#+begin_quote\n%s\n#+end_quote\n\n"
+                    "After excerpt:\n"
+                    "#+begin_quote\n%s\n#+end_quote\n\n")
+            (plist-get entry :number)
+            (plist-get entry :line)
+            (plist-get entry :risk)
+            (string-join (plist-get entry :passes) ", ")
+            before-excerpt
+            after-excerpt)))
+
+(defun whittle--transcript-report-format-one-line-entry (entry)
+  "Return one compact summary line for ENTRY."
+  (format "- line %d, %s :: %s\n"
+          (plist-get entry :line)
+          (plist-get entry :risk)
+          (string-join (plist-get entry :passes) ", ")))
+
 (defun whittle--transcript-report-risk-title (risk)
   "Return section title for RISK."
   (pcase risk
@@ -599,24 +704,89 @@ and are excluded from cleanup."
          (mapconcat #'whittle--transcript-report-format-entry matching "")
        "No changes.\n\n"))))
 
-(defun whittle--transcript-report-format (source temp-file entries)
-  "Return the full transcript review report for SOURCE and ENTRIES."
+(defun whittle--transcript-report-entries-with-risks (entries risks)
+  "Return ENTRIES whose :risk is a member of RISKS."
+  (seq-filter (lambda (entry)
+                (member (plist-get entry :risk) risks))
+              entries))
+
+(defun whittle--transcript-report-format-compact
+    (source full-report-file entries command-name profile applied)
+  "Return a compact clipboard report for SOURCE and ENTRIES.
+FULL-REPORT-FILE is the path to the complete before/after report."
   (let* ((risk-counts
           (whittle--transcript-report-count-by
            entries :risk whittle--transcript-report-risk-order))
-         (pass-counts (whittle--transcript-report-pass-counts entries)))
+         (pass-counts (whittle--transcript-report-pass-counts entries profile))
+         (title (if (eq profile 'conservative)
+                    "Whittle Codex Review"
+                  "Whittle Transcript Codex Review"))
+         (detail-entries
+          (whittle--transcript-report-entries-with-risks
+           entries whittle/report-clipboard-detail-risks))
+         (shown-entries
+          (seq-take detail-entries whittle/report-clipboard-max-detailed-entries))
+         (omitted-detail-count (- (length detail-entries) (length shown-entries)))
+         (low-entries
+          (whittle--transcript-report-entries-with-risks entries '("low"))))
     (concat
-     "* Whittle Transcript Review Report\n"
+     (format "* %s\n" title)
+     (format "- Source :: %s\n" source)
+     (format "- Command :: %s\n" command-name)
+     (format "- Mode :: %s\n"
+             (if applied
+                 "cleanup already applied; verify and repair"
+               "dry run; source unchanged"))
+     (format "- Changed units :: %d\n" (length entries))
+     (format "- Risk counts :: %s\n"
+             (whittle--transcript-report-count-line risk-counts))
+     (format "- Pass counts :: %s\n" (whittle--transcript-report-count-line pass-counts))
+     (format "- Full report :: %s\n" full-report-file)
+     (format "- Clipboard detail :: before/after excerpts for %s-risk changes, capped at %d.\n\n"
+             (string-join whittle/report-clipboard-detail-risks ", ")
+             whittle/report-clipboard-max-detailed-entries)
+     "** Codex Instructions\n\n"
+     (if applied
+         "The source file has already been changed. Review high/medium excerpts below. If a change is wrong, edit the source file directly and repair only that mistake. Do not rewrite for style. Use the full report if needed.\n\n"
+       "Source unchanged. Review high/medium excerpts below, then edit the source file directly if needed. Use the full report if needed.\n\n")
+     "** High/Medium-Risk Changes\n\n"
+     (when (> omitted-detail-count 0)
+       (format "- Detailed entries omitted from clipboard :: %d; see full report.\n\n"
+               omitted-detail-count))
+     (if shown-entries
+         (mapconcat #'whittle--transcript-report-format-compact-entry shown-entries "")
+       "No high- or medium-risk changes. See summary/full report if needed.\n\n")
+     "** Low-Risk Summary\n\n"
+     (if low-entries
+         (mapconcat #'whittle--transcript-report-format-one-line-entry low-entries "")
+       "No low-risk changes.\n"))))
+
+(defun whittle--transcript-report-format
+    (source temp-file entries command-name profile applied)
+  "Return the full cleanup review report for SOURCE and ENTRIES."
+  (let* ((risk-counts
+          (whittle--transcript-report-count-by
+           entries :risk whittle--transcript-report-risk-order))
+         (pass-counts (whittle--transcript-report-pass-counts entries profile))
+         (title (if (eq profile 'conservative)
+                    "Whittle Review Report"
+                  "Whittle Transcript Review Report")))
+    (concat
+     (format "* %s\n" title)
      (format "- Source :: %s\n" source)
      (format "- Generated :: %s\n" (format-time-string "[%Y-%m-%d %a %H:%M]"))
-     "- Command :: whittle-transcript-report\n"
-     "- Mode :: Dry-run report only; the source buffer is unchanged.\n"
+     (format "- Command :: %s\n" command-name)
+     (if applied
+         "- Mode :: Cleanup has already been applied to the source buffer; this report is for Codex verification and repair.\n"
+       "- Mode :: Dry-run report only; the source buffer is unchanged.\n")
      "- Unit boundary :: Blank-line-delimited paragraph units; org headings are boundaries and are excluded from cleanup.\n"
      "- Source edit target :: Codex should edit the source file above directly; this report is not a replacement transcript.\n"
      "- Boundary caveat :: Unit-level dry runs intentionally prevent line-joining across paragraph or heading boundaries, so boundary-sensitive output may differ from a whole-buffer edit.\n"
      (format "- Temp file :: %s\n\n" temp-file)
      "** Instructions for Codex\n\n"
-     "Review each before/after pair, apply only the safe changes directly to the source file, and repair any broken changes instead of copying the report wholesale.\n\n"
+     (if applied
+         "The source file has already been changed by the command above. Review each before/after pair. If an after version is wrong, edit the source file directly to repair that specific mistake. Do not copy this report wholesale into the transcript.\n\n"
+       "Review each before/after pair, apply only the safe changes directly to the source file, and repair any broken changes instead of copying the report wholesale.\n\n")
      "** Summary\n\n"
      (format "- Changed units :: %d\n" (length entries))
      (format "- Risk counts :: %s\n"
@@ -628,17 +798,36 @@ and are excluded from cleanup."
                 whittle--transcript-report-risk-order
                 ""))))
 
-(defun whittle--transcript-report-generate (beg end &optional temp-file)
+(defun whittle--transcript-report-generate
+    (beg end &optional temp-file profile command-name applied)
   "Generate a transcript review report for BEG to END.
 Return a plist with :report, :temp-file, and :entries."
-  (let* ((target-temp-file (or temp-file (whittle--transcript-report-temp-file)))
+  (let* ((target-command (or command-name "whittle-transcript-report"))
+         (target-temp-file
+          (or temp-file (whittle--transcript-report-temp-file target-command)))
          (units (whittle--transcript-report-units beg end))
-         (entries (whittle--transcript-report-build-entries units))
+         (entries (whittle--transcript-report-build-entries units profile))
          (source (whittle--transcript-report-source-name))
-         (report (whittle--transcript-report-format source target-temp-file entries)))
+         (report
+          (whittle--transcript-report-format
+           source target-temp-file entries target-command profile applied)))
     (list :report report
           :temp-file target-temp-file
+          :source source
           :entries entries)))
+
+(defun whittle--transcript-report-apply-entries (entries)
+  "Apply report ENTRIES to the current buffer."
+  (save-excursion
+    (dolist (entry (sort (copy-sequence entries)
+                         (lambda (a b)
+                           (> (plist-get a :start) (plist-get b :start)))))
+      (let ((start (plist-get entry :start))
+            (end (plist-get entry :end))
+            (after (plist-get entry :after)))
+        (goto-char start)
+        (delete-region start end)
+        (insert after)))))
 
 (defun whittle--write-string-to-file (text file)
   "Write TEXT to FILE, creating the parent directory if needed."
@@ -676,8 +865,8 @@ Return a plist with :report, :temp-file, and :entries."
            (whittle--format-count-summary punctuation "punctuation fixes")))
     counts))
 
-(defun whittle (&optional beg end)
-  "Run conservative cleanup on the region or buffer."
+(defun whittle-apply (&optional beg end)
+  "Apply conservative cleanup to the region or buffer without copying a report."
   (interactive (whittle--interactive-bounds))
   (let* ((filler-counts (whittle--remove-filler-words beg end whittle/conservative-filler-rules))
          (duplicate-counts (whittle--remove-duplicated-words beg end))
@@ -690,8 +879,8 @@ Return a plist with :report, :temp-file, and :entries."
            (whittle--format-count-summary punctuation "punctuation fixes")
            (whittle--format-count-summary case-fixes "case fixes")))))
 
-(defun whittle-transcript (&optional beg end)
-  "Run aggressive transcript cleanup on the region or buffer."
+(defun whittle-transcript-apply (&optional beg end)
+  "Apply aggressive transcript cleanup to the region or buffer."
   (interactive (whittle--interactive-bounds))
   (let* ((line-joins (whittle--join-transcript-lines beg end))
          (filler-chains (whittle--remove-filler-chains beg end))
@@ -719,18 +908,66 @@ Return a plist with :report, :temp-file, and :entries."
            (whittle--format-count-summary punctuation "punctuation fixes")
            (whittle--format-count-summary case-fixes "case fixes")))))
 
-(defun whittle-transcript-report (&optional beg end)
-  "Create a dry-run review report for transcript cleanup.
+(defun whittle--run-cleanup-with-report (beg end profile command-name)
+  "Apply PROFILE cleanup from BEG to END and copy COMMAND-NAME report."
+  (let* ((result
+          (whittle--transcript-report-generate
+           beg end nil profile command-name t))
+         (entries (plist-get result :entries))
+         (full-report (plist-get result :report))
+         (temp-file (plist-get result :temp-file))
+         (source (plist-get result :source))
+         (clipboard-report
+          (whittle--transcript-report-format-compact
+           source temp-file entries command-name profile t)))
+    (whittle--transcript-report-apply-entries entries)
+    (whittle--write-string-to-file full-report temp-file)
+    (whittle--copy-string-to-pbcopy clipboard-report)
+    (message "%s changed %d units; compact Codex report copied to clipboard; full report saved to %s"
+             command-name (length entries) temp-file)
+    (append result (list :clipboard-report clipboard-report))))
+
+(defun whittle (&optional beg end)
+  "Apply conservative cleanup and copy a Codex review report.
+The buffer is changed first. The clipboard receives an org report
+with the source path, Codex instructions, and before/after pairs."
+  (interactive (whittle--interactive-bounds))
+  (whittle--run-cleanup-with-report beg end 'conservative "whittle"))
+
+(defun whittle--transcript-report-command (beg end &optional profile command-name)
+  "Create, save, and copy a dry-run review report from BEG to END.
 The source buffer is not edited. The report is copied to the
 clipboard and saved under `whittle/transcript-report-directory'."
+  (let* ((target-profile (or profile 'transcript))
+         (target-command (or command-name "whittle-transcript-report"))
+         (result
+          (whittle--transcript-report-generate
+           beg end nil target-profile target-command nil))
+         (full-report (plist-get result :report))
+         (temp-file (plist-get result :temp-file))
+         (source (plist-get result :source))
+         (clipboard-report
+          (whittle--transcript-report-format-compact
+           source temp-file (plist-get result :entries)
+           target-command target-profile nil)))
+    (whittle--write-string-to-file full-report temp-file)
+    (whittle--copy-string-to-pbcopy clipboard-report)
+    (message "Compact Whittle report copied to clipboard; full report saved to %s" temp-file)
+    (append result (list :clipboard-report clipboard-report))))
+
+(defun whittle-transcript (&optional beg end)
+  "Apply transcript cleanup and copy a Codex review report.
+The buffer is changed first. The clipboard receives an org report
+with the source path, Codex instructions, and before/after pairs."
   (interactive (whittle--interactive-bounds))
-  (let* ((result (whittle--transcript-report-generate beg end))
-         (report (plist-get result :report))
-         (temp-file (plist-get result :temp-file)))
-    (whittle--write-string-to-file report temp-file)
-    (whittle--copy-string-to-pbcopy report)
-    (message "Whittle transcript report copied to clipboard and saved to %s" temp-file)
-    result))
+  (whittle--run-cleanup-with-report beg end 'transcript "whittle-transcript"))
+
+(defun whittle-transcript-report (&optional beg end)
+  "Create a dry-run transcript cleanup report and copy it to the clipboard.
+This does not edit the source buffer. Use `whittle-transcript' for
+the normal apply-plus-report workflow."
+  (interactive (whittle--interactive-bounds))
+  (whittle--transcript-report-command beg end 'transcript "whittle-transcript-report"))
 
 (provide 'whittle)
 ;;; whittle.el ends here
