@@ -205,14 +205,14 @@ All three commands work on the active region if one is selected, otherwise on th
 - Designed for transcript junk rather than polished prose
 - Removes filler chains like =um, uh, you know,=
 - Removes safer sentence-edge fillers like =So,=, =Well,=, and =you know=
-- Preserves discourse markers such as trailing =right?= and sentence-opening =Like=
+- Preserves or safety-gates discourse markers such as trailing =right?=, =So...=, =So…=, sentence-opening =I mean,=, and sentence-opening =Like=
 - Collapses false starts like =I was I was thinking= or =we were we were ready=
 - Joins awkward single newlines when the sentence clearly continues
 - Capitalizes sentence starts and lone =i=
 - Preserves some intentional repeats such as =go go= and =bye bye=
 - Changes the buffer and copies a compact report Jay can paste into Codex for verification and repair
 
-The clipboard report includes compact before/after excerpts for high- and medium-risk changes, using a small local window around the changed span so one risky filler word does not dump a whole paragraph. Low-risk changes are summarized, mechanical hazard tags are called out, hazard-tagged candidates are not auto-applied, and the full detailed report is saved under =/tmp=.
+The clipboard report includes a =Hazard-Tagged / Not Applied= section above applied high- and medium-risk changes. High- and medium-risk excerpts use a small local window around the changed span so one risky filler word does not dump a whole paragraph. Low-risk changes are summarized, mechanical hazard tags are counted, hazard-tagged candidates are not auto-applied, and the full detailed report is saved under =/tmp=.
 
 *Example*
 

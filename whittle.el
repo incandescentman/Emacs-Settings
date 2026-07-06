@@ -395,9 +395,17 @@ unit is not necessarily the start of the source buffer."
 
 (defconst whittle--transcript-report-hazard-order
   '("orphan-leading-punctuation"
+    "orphan-ellipsis"
     "punctuation-cluster"
     "semantic-question-flip"
-    "quote-marker-deletion")
+    "sentence-initial-i-mean"
+    "quote-marker-deletion"
+    "like-clause-fusion"
+    "right-so-chain"
+    "lowercase-start-after-opener"
+    "case-clause-fusion"
+    "deleted-comma-before-pronoun"
+    "imperative-fusion")
   "Display order for transcript cleanup hazard tags.")
 
 (defun whittle--transcript-report-pass-specs (&optional profile)
@@ -523,12 +531,16 @@ and are excluded from cleanup."
                           (whittle--transcript-report-hazards
                            original
                            (buffer-string)
-                           (nreverse (copy-sequence passes))))))))
+                           (nreverse (copy-sequence passes))
+                           profile))))))
       (setq hazards
             (seq-uniq
              (append hazards
                      (whittle--transcript-report-hazards
-                      original (buffer-string) (nreverse (copy-sequence passes))))
+                      original
+                      (buffer-string)
+                      (nreverse (copy-sequence passes))
+                      profile))
              #'string=))
       (list :after (buffer-string)
             :passes (nreverse passes)
@@ -549,11 +561,47 @@ and are excluded from cleanup."
       (setq start (match-end 0)))
     found))
 
-(defun whittle--transcript-report-hazards (before after _passes)
+(defun whittle--transcript-profile-p (profile)
+  "Return non-nil when PROFILE should use transcript safety gates."
+  (not (eq profile 'conservative)))
+
+(defun whittle--string-match-case-p (regexp string)
+  "Return non-nil if REGEXP matches STRING case-sensitively."
+  (let ((case-fold-search nil))
+    (string-match-p regexp string)))
+
+(defun whittle--transcript-report-like-clause-fusion-tags (before after)
+  "Return hazard tags for risky comma-bounded `like' deletion."
+  (let ((case-fold-search t)
+        (start 0)
+        tags)
+    (when (and (string-match-p ",[[:blank:]]*like[[:blank:]]*," before)
+               (not (string-match-p ",[[:blank:]]*like[[:blank:]]*," after)))
+      (while (string-match
+              "\\<\\([[:alpha:]']+\\)\\>[[:blank:]]*,[[:blank:]]*like[[:blank:]]*,[[:blank:]]*\\<\\([[:alpha:]']+\\)\\>"
+              before start)
+        (let ((next (downcase (match-string 2 before))))
+          (when (member next
+                        '("i" "i'm" "you" "you're" "we" "we're" "they"
+                          "they're" "he" "she" "it"))
+            (push "like-clause-fusion" tags)
+            (push "deleted-comma-before-pronoun" tags))
+          (when (member next
+                        '("ask" "outline" "tell" "think" "forget" "let"
+                          "how" "what" "where" "when" "why" "who"))
+            (push "like-clause-fusion" tags)
+            (push "imperative-fusion" tags)))
+        (setq start (match-end 0))))
+    (seq-uniq tags #'string=)))
+
+(defun whittle--transcript-report-hazards (before after _passes &optional profile)
   "Return mechanical hazard tags for cleanup from BEFORE to AFTER.
 PASSES is the list of cleanup passes that have run so far."
   (let ((case-fold-search t)
+        (transcript-profile (whittle--transcript-profile-p profile))
         hazards)
+    (when (string-match-p "\\`[[:space:]]*\\(?:…\\|\\.\\.\\.\\)" after)
+      (push "orphan-ellipsis" hazards))
     (when (string-match-p "\\`[[:space:]]*[?.]" after)
       (push "orphan-leading-punctuation" hazards))
     (when (string-match-p "\\.\\?" after)
@@ -564,9 +612,38 @@ PASSES is the list of cleanup passes that have run so far."
                (string-match-p "\\?[[:blank:]]*\\'" after)
                (not (string-match-p "\\<right\\>" after)))
       (push "semantic-question-flip" hazards))
+    (when (and transcript-profile
+               (string-match-p
+                "\\(?:\\`\\|[.?!…][[:space:]]+\\)\\<i mean\\>[[:blank:]]*,[[:blank:]]*[[:alpha:]]"
+                before)
+               (not (string-match-p
+                     "\\(?:\\`\\|[.?!…][[:space:]]+\\)\\<i mean\\>[[:blank:]]*,"
+                     after)))
+      (push "sentence-initial-i-mean" hazards))
     (when (and (string-match-p "\\`[[:blank:]]*\\<like\\>" before)
                (not (string-match-p "\\`[[:blank:]]*\\<like\\>" after)))
       (push "quote-marker-deletion" hazards))
+    (setq hazards
+          (append (whittle--transcript-report-like-clause-fusion-tags before after)
+                  hazards))
+    (when (and transcript-profile
+               (string-match-p
+                "\\<right\\>[[:blank:]]*\\?[[:blank:]]+\\<so\\>[[:blank:]]*\\(?:…\\|\\.\\.\\.\\)"
+                before)
+               (not (string-match-p "\\<right\\>[[:blank:]]*\\?" after)))
+      (push "right-so-chain" hazards))
+    (when (and transcript-profile
+               (string-match-p
+                "\\`[[:blank:]]*\\(?:\\<so\\>\\|\\<well\\>\\|\\<ok\\(?:ay\\)?\\>\\)[,[:blank:]-]+"
+                before)
+               (whittle--string-match-case-p "\\`[[:blank:]]*[[:lower:]]" after))
+      (push "lowercase-start-after-opener" hazards))
+    (when (and transcript-profile
+               (string-match-p
+                "\\<right\\>[[:blank:]]*\\?[[:blank:]]+\\<so\\>[[:blank:]]*\\(?:…\\|\\.\\.\\.\\)"
+                before)
+               (whittle--string-match-case-p ",[[:blank:]]+[[:upper:]][[:lower:]]" after))
+      (push "case-clause-fusion" hazards))
     (seq-filter
      (lambda (hazard)
        (member hazard hazards))
@@ -788,6 +865,14 @@ PASSES is the list of cleanup passes that have run so far."
                 (member (plist-get entry :risk) risks))
               entries))
 
+(defun whittle--transcript-report-hazard-entries (entries)
+  "Return ENTRIES with mechanical hazard tags."
+  (seq-filter #'whittle--transcript-report-hazard-p entries))
+
+(defun whittle--transcript-report-nonhazard-entries (entries)
+  "Return ENTRIES without mechanical hazard tags."
+  (seq-remove #'whittle--transcript-report-hazard-p entries))
+
 (defun whittle--transcript-report-format-compact
     (source full-report-file entries command-name profile applied)
   "Return a compact clipboard report for SOURCE and ENTRIES.
@@ -801,14 +886,20 @@ FULL-REPORT-FILE is the path to the complete before/after report."
          (title (if (eq profile 'conservative)
                     "Whittle Codex Review"
                   "Whittle Transcript Codex Review"))
+         (hazard-entries (whittle--transcript-report-hazard-entries entries))
+         (shown-hazard-entries
+          (seq-take hazard-entries whittle/report-clipboard-max-detailed-entries))
+         (omitted-hazard-count
+          (- (length hazard-entries) (length shown-hazard-entries)))
+         (nonhazard-entries (whittle--transcript-report-nonhazard-entries entries))
          (detail-entries
           (whittle--transcript-report-entries-with-risks
-           entries whittle/report-clipboard-detail-risks))
+           nonhazard-entries whittle/report-clipboard-detail-risks))
          (shown-entries
           (seq-take detail-entries whittle/report-clipboard-max-detailed-entries))
          (omitted-detail-count (- (length detail-entries) (length shown-entries)))
          (low-entries
-          (whittle--transcript-report-entries-with-risks entries '("low"))))
+          (whittle--transcript-report-entries-with-risks nonhazard-entries '("low"))))
     (concat
      (format "* %s\n" title)
      (format "- Source :: %s\n" source)
@@ -837,13 +928,21 @@ FULL-REPORT-FILE is the path to the complete before/after report."
      (if applied
          "The source file has already been changed for non-hazardous entries. Review high/medium excerpts below. Hazard-tagged candidates were skipped and need manual review. If an applied change is wrong, edit the source file directly and repair only that mistake. Do not rewrite for style. Use the full report if needed.\n\n"
        "Source unchanged. Review high/medium excerpts below, then edit the source file directly if needed. Use the full report if needed.\n\n")
-     "** High/Medium-Risk Changes\n\n"
+     "** Hazard-Tagged / Not Applied\n\n"
+     (when (> omitted-hazard-count 0)
+       (format "- Hazard entries omitted from clipboard :: %d; see full report.\n\n"
+               omitted-hazard-count))
+     (if shown-hazard-entries
+         (mapconcat #'whittle--transcript-report-format-compact-entry
+                    shown-hazard-entries "")
+       "No hazard-tagged candidates.\n\n")
+     "** Applied High/Medium-Risk Changes\n\n"
      (when (> omitted-detail-count 0)
        (format "- Detailed entries omitted from clipboard :: %d; see full report.\n\n"
                omitted-detail-count))
      (if shown-entries
          (mapconcat #'whittle--transcript-report-format-compact-entry shown-entries "")
-       "No high- or medium-risk changes. See summary/full report if needed.\n\n")
+       "No applied high- or medium-risk changes. See summary/full report if needed.\n\n")
      "** Low-Risk Summary\n\n"
      (if low-entries
          (mapconcat #'whittle--transcript-report-format-one-line-entry low-entries "")
@@ -858,6 +957,8 @@ FULL-REPORT-FILE is the path to the complete before/after report."
          (pass-counts (whittle--transcript-report-pass-counts entries profile))
          (hazard-count (cl-count-if #'whittle--transcript-report-hazard-p entries))
          (applied-count (- (length entries) hazard-count))
+         (hazard-entries (whittle--transcript-report-hazard-entries entries))
+         (nonhazard-entries (whittle--transcript-report-nonhazard-entries entries))
          (title (if (eq profile 'conservative)
                     "Whittle Review Report"
                   "Whittle Transcript Review Report")))
@@ -891,8 +992,13 @@ FULL-REPORT-FILE is the path to the complete before/after report."
              (whittle--transcript-report-count-line pass-counts))
      (format "- Hazard counts :: %s\n\n"
              (whittle--transcript-report-hazard-summary entries))
+     "** Hazard-Tagged / Not Applied\n\n"
+     (if hazard-entries
+         (mapconcat #'whittle--transcript-report-format-entry hazard-entries "")
+       "No hazard-tagged candidates.\n\n")
      (mapconcat (lambda (risk)
-                  (whittle--transcript-report-format-risk-section risk entries))
+                  (whittle--transcript-report-format-risk-section
+                   risk nonhazard-entries))
                 whittle--transcript-report-risk-order
                 ""))))
 

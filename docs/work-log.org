@@ -2014,5 +2014,11 @@
 - Expanded report summaries to include hazard counts and applied-unit counts, and added safety-gate lines on hazardous report entries.
 - Added ERT coverage in [[file+emacs:/Users/jay/emacs/emacs-settings/tests/whittle-tests.el][tests/whittle-tests.el]] for the transcript failures: =That's how I use AI, right?=, =Right? I tell people...=, =That's the power. Right? Is...=, =Like I said...=, and =Like, forget the essay...=.
 
+* 2026-07-05: Expand Whittle transcript hazard gates from second Narratively pass
+- Added hazard gates in [[file+emacs:/Users/jay/emacs/emacs-settings/whittle.el][whittle.el]] for =So…= / =So...= orphan ellipses, sentence-initial =I mean,= deletion, comma-bounded =like= clause fusion, =right? So…= filler chains, opener deletion that leaves lowercase starts, comma-before-pronoun fusion, imperative fusion, and comma-uppercase clause fusion.
+- Split compact and full reports so hazard-tagged candidates appear under =Hazard-Tagged / Not Applied= before applied high/medium-risk entries.
+- Kept the highest-friction gates profile-aware where the risk is specific to aggressive transcript cleanup, while still allowing shared mechanical hazards to protect conservative =whittle= from obvious clause-fusion candidates.
+- Added ERT coverage in [[file+emacs:/Users/jay/emacs/emacs-settings/tests/whittle-tests.el][tests/whittle-tests.el]] for the second Narratively failure shapes including =So… that's how I think about it=, =I mean, he looks...=, =magazines, like, I was=, =Emily, like, you=, =hey, like, outline=, and =published, right? So… My premise=.
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.

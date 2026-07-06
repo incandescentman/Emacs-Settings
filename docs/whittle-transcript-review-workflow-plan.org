@@ -160,7 +160,7 @@ The report copied to the clipboard should be compact org-mode text.
 - Applied units :: 120
 - Risk counts :: high 12; medium 31; low 80
 - Pass counts :: duplicate-word collapse 4; conservative filler removal 52; punctuation cleanup 27; case normalization 19
-- Hazard counts :: semantic-question-flip 1; quote-marker-deletion 2
+- Hazard counts :: semantic-question-flip 1; quote-marker-deletion 2; orphan-ellipsis 3; like-clause-fusion 8
 - Temp file :: /tmp/whittle-transcript-review-YYYYMMDD-HHMMSS.org
 - Clipboard detail :: before/after excerpts for high, medium-risk changes, capped at 25 and clipped to a small local changed-span window.
 - Source edit target :: Codex should edit this source file directly; this report is not a replacement transcript
@@ -168,9 +168,28 @@ The report copied to the clipboard should be compact org-mode text.
 ** Instructions for Codex
 The source file has already been changed by the command above for non-hazardous entries. Review each before/after pair. Hazard-tagged candidates were not auto-applied and need manual review. If an after version is wrong, edit the source file directly to repair that specific mistake. Flag only cases where the after version changed meaning, became ungrammatical, lost useful spoken cadence, or deleted necessary words. Use minimal fixes. Do not rewrite for style.
 
-** High/Medium-Risk Changes
+** Hazard-Tagged / Not Applied
 
 *** Change 1
+- Approx line :: 191
+- Risk :: high
+- Passes :: sentence-edge filler removal
+- Hazards :: orphan-ellipsis
+- Safety gate :: not auto-applied; review manually
+
+Before excerpt:
+#+begin_quote
+So… that's how I think about it.
+#+end_quote
+
+After excerpt:
+#+begin_quote
+… that's how I think about it.
+#+end_quote
+
+** Applied High/Medium-Risk Changes
+
+*** Change 2
 - Approx line :: 191
 - Passes :: duplicate-word collapse, punctuation cleanup
 - Risk :: repeated word may be grammatically necessary
@@ -208,10 +227,11 @@ Risk categories:
 - Copy a compact org report to the clipboard via =pbcopy=.
 - Save the full org report to a timestamped recovery file under =/tmp=, using a name like =/tmp/whittle-transcript-review-YYYYMMDD-HHMMSS.org=, and include that path in the report header.
 - The compact clipboard report should include high- and medium-risk before/after excerpts, summarize or drop low-risk details, show changed spans rather than whole paragraphs, use a small local context window around those spans, and avoid long repeated boilerplate.
-- =whittle= and =whittle-transcript= should apply non-hazardous cleanup and copy the Codex report to the clipboard. Hazard-tagged candidates stay in the report but are not auto-applied. Do not make the primary commands report-only.
+- =whittle= and =whittle-transcript= should apply non-hazardous cleanup and copy the Codex report to the clipboard. Hazard-tagged candidates stay in the report but are not auto-applied. The compact report should put =Hazard-Tagged / Not Applied= above applied high/medium entries. Do not make the primary commands report-only.
 - Implement the duplicate-word fix as a small, separable checkpoint from the report command so it is easy to review or revert independently.
 - For duplicate-word collapse, preserve comma-separated repeated function words such as =is, is= and =you, you=. Continue allowing genuinely safe collapses such as obvious stammers where the rule remains valid.
 - For sentence-edge cleanup, preserve tag-question =right?= and sentence-opening =Like= because they often function as discourse or quote/example markers, not disposable filler.
+- Treat =So…= / =So...=, sentence-initial =I mean,=, comma-bounded =like= before quote/example/clause boundaries, =right? So…= filler chains, and opener deletions that leave lowercase starts as hazards rather than auto-applied cleanup. Keep gates profile-aware where the risk is specific to aggressive transcript cleanup.
 - If adding an option to =whittle--normalize-case= for report mode, default it so existing callers keep current behavior.
 
 ** Tests
@@ -232,6 +252,11 @@ Test cases:
 - =That's how I use AI, right?= must not become =That's how I use AI?=.
 - =Right? I tell people...= must not become =? I tell people...=.
 - =Like I said...= and =Like, forget the essay...= must preserve the opening =Like= marker.
+- =So… that's how I think about it=, =So... If you sign up=, and =So… Let's talk about writing= must not be auto-applied as orphan ellipses.
+- Sentence-initial =I mean, he looks...= and =I mean, you can credit...= are hazard-gated in transcript mode.
+- Comma-bounded =like= before pronouns or imperatives, such as =magazines, like, I was=, =tomorrow, like, we're=, =Emily, like, you=, =hey, like, outline=, and =feedback, like, tell=, must not be auto-applied into fused clauses.
+- =published, right? So… My premise= must not become =published, My premise=.
+- Opener deletion that leaves a lowercase first word, such as =So what do you do?= or =Okay, thanks.=, is hazard-gated.
 - Hazard-tagged candidate changes are skipped by the auto-apply path.
 - Safe =um= / =uh= cleanup appears as low risk.
 - A paragraph touched by multiple passes appears once with all passes listed in =Passes ::=.

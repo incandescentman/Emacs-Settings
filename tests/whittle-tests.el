@@ -195,15 +195,15 @@ is passed through to `whittle--transcript-report-generate'."
          copied
          result)
     (unwind-protect
-        (cl-letf (((symbol-function 'whittle--copy-string-to-pbcopy)
+          (cl-letf (((symbol-function 'whittle--copy-string-to-pbcopy)
                    (lambda (text)
                      (setq copied text))))
           (whittle-test--with-text
-           "I mean, this is is a draft.\n"
+           "This is is a draft.\n"
            (lambda ()
              (let ((buffer-file-name "/tmp/whittle-test-transcript.org"))
                (setq result (whittle-transcript (point-min) (point-max)))
-               (should (string= (buffer-string) "this is a draft.\n"))))))
+               (should (string= (buffer-string) "This is a draft.\n"))))))
       (delete-directory temp-dir t))
     (should result)
     (should copied)
@@ -238,7 +238,7 @@ is passed through to `whittle--transcript-report-generate'."
     (should (string-match-p "Low-Risk Summary" copied))
     (should (string-match-p "line 1, low :: conservative filler removal" copied))
     (should-not (string-match-p "#\\+begin_quote" copied))
-    (should (string-match-p "No high- or medium-risk changes" copied))))
+    (should (string-match-p "No applied high- or medium-risk changes" copied))))
 
 (ert-deftest whittle-clipboard-report-trims-high-risk-excerpts ()
   "High-risk clipboard entries should quote only the local changed span."
@@ -298,6 +298,98 @@ is passed through to `whittle--transcript-report-generate'."
                    (should (string= (buffer-string) input))))))
           (delete-directory temp-dir t))))))
 
+(ert-deftest whittle-transcript-gates-so-ellipsis-and-i-mean-openers ()
+  "Risky transcript openers should be reported but not auto-applied."
+  (dolist (case '(("So… that's how I think about it."
+                   "orphan-ellipsis")
+                  ("So... If you sign up for the full version."
+                   "orphan-ellipsis")
+                  ("I mean, he looks basically like how I look."
+                   "sentence-initial-i-mean")
+                  ("Okay, thanks."
+                   "lowercase-start-after-opener")
+                  ("So what do you do?"
+                   "lowercase-start-after-opener")))
+    (let* ((input (car case))
+           (hazard (cadr case))
+           (temp-dir (make-temp-file "whittle-report-test" t))
+           (whittle/transcript-report-directory temp-dir)
+           copied)
+      (unwind-protect
+          (cl-letf (((symbol-function 'whittle--copy-string-to-pbcopy)
+                     (lambda (text)
+                       (setq copied text))))
+            (whittle-test--with-text
+             input
+             (lambda ()
+               (let ((buffer-file-name "/tmp/whittle-test-transcript.org"))
+                 (whittle-transcript (point-min) (point-max))
+                 (should (string= (buffer-string) input))))))
+        (delete-directory temp-dir t))
+      (should copied)
+      (should (string-match-p "Hazard-Tagged / Not Applied" copied))
+      (should (string-match-p (regexp-quote hazard) copied)))))
+
+(ert-deftest whittle-transcript-gates-like-clause-fusions ()
+  "Comma-bounded `like' should not fuse adjacent clause-like spans."
+  (dolist (case '(("When I've worked for magazines, like, I was an editor."
+                   "like-clause-fusion")
+                  ("We need this thing tomorrow, like, we're going to press."
+                   "deleted-comma-before-pronoun")
+                  ("That's not what I was gonna say, like, you don't know."
+                   "deleted-comma-before-pronoun")
+                  ("I know that I've had really like, amazing stories, like, I'm not always thinking about them."
+                   "deleted-comma-before-pronoun")
+                  ("I, like, you defined it clearly."
+                   "deleted-comma-before-pronoun")
+                  ("Emily, like, you don't have those weekends."
+                   "deleted-comma-before-pronoun")
+                  ("Hey, like, outline a screenplay for me."
+                   "imperative-fusion")
+                  ("Ask for honest feedback, like, tell it what you want."
+                   "imperative-fusion")))
+    (let* ((input (car case))
+           (hazard (cadr case))
+           (temp-dir (make-temp-file "whittle-report-test" t))
+           (whittle/transcript-report-directory temp-dir)
+           copied)
+      (unwind-protect
+          (cl-letf (((symbol-function 'whittle--copy-string-to-pbcopy)
+                     (lambda (text)
+                       (setq copied text))))
+            (whittle-test--with-text
+             input
+             (lambda ()
+               (let ((buffer-file-name "/tmp/whittle-test-transcript.org"))
+                 (whittle-transcript (point-min) (point-max))
+                 (should (string= (buffer-string) input))))))
+        (delete-directory temp-dir t))
+      (should copied)
+      (should (string-match-p "Hazard-Tagged / Not Applied" copied))
+      (should (string-match-p "like-clause-fusion" copied))
+      (should (string-match-p (regexp-quote hazard) copied)))))
+
+(ert-deftest whittle-transcript-gates-right-so-filler-chain ()
+  "A filler-chain containing `right? So...' should not be auto-applied."
+  (let* ((input "It's gonna get published, right? So… My premise is simple.")
+         (temp-dir (make-temp-file "whittle-report-test" t))
+         (whittle/transcript-report-directory temp-dir)
+         copied)
+    (unwind-protect
+        (cl-letf (((symbol-function 'whittle--copy-string-to-pbcopy)
+                   (lambda (text)
+                     (setq copied text))))
+          (whittle-test--with-text
+           input
+           (lambda ()
+             (let ((buffer-file-name "/tmp/whittle-test-transcript.org"))
+               (whittle-transcript (point-min) (point-max))
+               (should (string= (buffer-string) input))))))
+      (delete-directory temp-dir t))
+    (should copied)
+    (should (string-match-p "right-so-chain" copied))
+    (should (string-match-p "case-clause-fusion" copied))))
+
 (ert-deftest whittle-report-flags-and-skips-mechanical-hazards ()
   "Mechanical damage should be high risk and skipped by auto-apply."
   (let* ((before "That's how I use AI, right?")
@@ -333,22 +425,29 @@ is passed through to `whittle--transcript-report-generate'."
   "The full pipeline must not collapse comma-separated function-word repeats.
 Regression guard: `whittle--remove-false-starts' used to eat \"you, you\"
 even after `whittle--remove-duplicated-words' was tightened."
-  (dolist (case '(("It wants to just write it for you, you have to stop that behavior."
-                   "you, you")
-                  ("What that is, is an automation step."
-                   "is, is")
-                  ("And then it, it worked out fine."
-                   "it, it")
-                  ("So they, they decided to leave early."
-                   "they, they")))
-    (cl-letf (((symbol-function 'whittle--copy-string-to-pbcopy)
-               (lambda (_text) nil)))
-      (whittle-test--with-text
-       (car case)
-       (lambda ()
-         (let ((buffer-file-name "/tmp/whittle-test-transcript.org"))
-           (whittle-transcript (point-min) (point-max))
-           (should (string-match-p (regexp-quote (cadr case)) (buffer-string)))))))))
+  (let* ((temp-dir (make-temp-file "whittle-report-test" t))
+         (whittle/transcript-report-directory temp-dir))
+    (unwind-protect
+        (dolist (case '(("It wants to just write it for you, you have to stop that behavior."
+                         "you, you")
+                        ("What that is, is an automation step."
+                         "is, is")
+                        ("And then it, it worked out fine."
+                         "it, it")
+                        ("So they, they decided to leave early."
+                         "they, they")))
+          (cl-letf (((symbol-function 'whittle--copy-string-to-pbcopy)
+                     (lambda (_text) nil)))
+            (whittle-test--with-text
+             (car case)
+             (lambda ()
+               (let ((buffer-file-name "/tmp/whittle-test-transcript.org"))
+                 (whittle-transcript (point-min) (point-max))
+                 (should
+                  (string-match-p
+                   (regexp-quote (cadr case))
+                   (buffer-string))))))))
+      (delete-directory temp-dir t))))
 
 (ert-deftest whittle-false-starts-still-collapse-genuine-restarts ()
   "Multi-word restarts and space-separated repeats must still collapse."
