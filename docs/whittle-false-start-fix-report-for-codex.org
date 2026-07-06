@@ -1,0 +1,98 @@
+#+TITLE: Whittle False-Start Fix — Report for Codex
+
+* Whittle False-Start Fix — Report for Codex
+
+Follow-up to your implementation in commit =b68f039d= ("Add whittle transcript
+review report"). Your work was clean and all your checks were green, but an
+end-to-end run surfaced one real bug: the Issue-2 duplicate-word fix was only
+half-complete. This documents what I changed and why so you have full context.
+
+Files touched:
+- [[file+emacs:/Users/jay/emacs/emacs-settings/whittle.el][/Users/jay/emacs/emacs-settings/whittle.el]]
+- [[file+emacs:/Users/jay/emacs/emacs-settings/tests/whittle-tests.el][/Users/jay/emacs/emacs-settings/tests/whittle-tests.el]]
+
+** The bug
+
+The plan (Issue 2) called for =is, is= and =you, you= to be /prevented, not
+merely reported/. Your fix to =whittle--remove-duplicated-words= was correct in
+isolation, but the /identical/ breakage is independently produced by a second
+pass, =whittle--remove-false-starts=, which you did not touch. Because =you=,
+=it=, =they=, =we=, =this=, etc. are all in =whittle/false-start-prefixes= and
+that pass treats a comma as a restart separator, any comma-separated pronoun
+repeat still collapsed.
+
+Evidence, run through the full =whittle-transcript= pipeline before the fix:
+
+#+begin_example
+"...write it for you, you have to stop."   -> "...for you have to stop."     BROKEN
+"What that is, is an automation step."     -> unchanged                       (ok, luck)
+"it, it worked. they, they left."          -> "it worked. they left."         BROKEN
+#+end_example
+
+=is, is= survived only because =is= is not a false-start prefix — not because
+the fix worked.
+
+** Why the tests missed it
+
+=whittle-duplicate-words-preserves-comma-function-repeats= calls
+=whittle--remove-duplicated-words= /in isolation/. It never exercises the
+false-start pass or the full pipeline, so it stayed green while the pipeline it
+was meant to protect still ate =you, you=. There was no end-to-end assertion
+that =whittle-transcript= preserves =you, you=.
+
+** What I changed
+
+*** 1. Mirror the comma-function-word guard into the false-start pass
+In =whittle--remove-false-starts= I added the same guard you used in
+=whittle--remove-duplicated-words=: skip the collapse when the repeat is a
+single function word (member of =whittle/duplicate-word-comma-exclusions=)
+separated by a comma. Because that exclusion list is all single words,
+multi-word restarts like =I was, I was= are unaffected and still collapse.
+
+Implementation detail worth noting: the skip branch must /not/ run
+=(goto-char match-beg)= — that re-anchor is only needed after an actual
+=replace-match= (to catch triple repeats). On skip, point is already past the
+match, so the loop advances normally. Re-anchoring on skip would infinite-loop.
+
+*** 2. Add end-to-end regression tests
+In [[file+emacs:/Users/jay/emacs/emacs-settings/tests/whittle-tests.el][tests/whittle-tests.el]]:
+- =whittle-transcript-preserves-comma-function-repeats-end-to-end= — drives the
+  /full/ =whittle-transcript= pipeline (not the isolated helper) and asserts
+  =you, you=, =is, is=, =it, it=, =they, they= all survive. This is the test
+  that would have caught the original bug.
+- =whittle-false-starts-still-collapse-genuine-restarts= — proves the fix did
+  not weaken the feature: multi-word restart =I was, I was= still collapses,
+  and space-separated stammers (=you you=, no comma) still collapse.
+- =whittle-report-ranks-comma-function-repeat-high= — locks in the risk-heuristic
+  change below.
+
+*** 3. Broaden the report risk heuristic
+In =whittle--transcript-report-risk=, the comma-function-repeat check previously
+fired only when =duplicate-word collapse= was among the passes. It now also
+fires for =false-start collapse=. Rationale: if either pass touches a unit that
+still contains a comma function-word repeat, that unit deserves high risk, not
+medium. Defense-in-depth — with fix #1 in place these units usually no longer
+change at all, but the heuristic is now correct if any comma repeat slips
+through.
+
+** Verification (all green)
+
+- =emacs -Q --batch -L . -l tests/whittle-tests.el -f ert-run-tests-batch-and-exit= — 10/10 pass.
+- =check-parens= on =whittle.el= — OK.
+- =batch-byte-compile whittle.el= — clean, no warnings.
+- =git diff --check= — clean.
+- Live full-pipeline run: =you, you=, =is, is=, =it, it= preserved; =I was, I was= collapses to =I was going to say something.=
+
+** What I did not change
+
+- No change to segment-first attribution, the =skip-initial= case-normalization
+  fix, unit/heading boundaries, report format, pbcopy, or temp-file handling —
+  those were all correct.
+- Existing =whittle= / =whittle-transcript= user-facing behavior is otherwise
+  unchanged; the only behavioral delta is that comma-separated single
+  function-word repeats now survive both the duplicate-word /and/ false-start
+  passes.
+
+** Not committed
+These edits are unstaged in the working tree. I did not commit or push (per
+Jay's git rules). Jay will review before committing.

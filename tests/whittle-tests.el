@@ -157,6 +157,56 @@ is passed through to `whittle--transcript-report-generate'."
                              report))))
       (delete-directory temp-dir t))))
 
+(ert-deftest whittle-transcript-preserves-comma-function-repeats-end-to-end ()
+  "The full pipeline must not collapse comma-separated function-word repeats.
+Regression guard: `whittle--remove-false-starts' used to eat \"you, you\"
+even after `whittle--remove-duplicated-words' was tightened."
+  (dolist (case '(("It wants to just write it for you, you have to stop that behavior."
+                   "you, you")
+                  ("What that is, is an automation step."
+                   "is, is")
+                  ("And then it, it worked out fine."
+                   "it, it")
+                  ("So they, they decided to leave early."
+                   "they, they")))
+    (whittle-test--with-text
+     (car case)
+     (lambda ()
+       (whittle-transcript (point-min) (point-max))
+       (should (string-match-p (regexp-quote (cadr case)) (buffer-string)))))))
+
+(ert-deftest whittle-false-starts-still-collapse-genuine-restarts ()
+  "Multi-word restarts and space-separated repeats must still collapse."
+  ;; Multi-word restart across a comma: not a single function word.
+  (whittle-test--with-text
+   "I was, I was going to say something."
+   (lambda ()
+     (whittle--remove-false-starts (point-min) (point-max))
+     (should (string-match-p "I was going to say something" (buffer-string)))
+     (should-not (string-match-p "I was, I was" (buffer-string)))))
+  ;; Space-separated function-word repeat (no comma) is still a stammer.
+  (whittle-test--with-text
+   "and you you have to stop."
+   (lambda ()
+     (whittle--remove-false-starts (point-min) (point-max))
+     (should (string-match-p "and you have to stop" (buffer-string)))
+     (should-not (string-match-p "you you" (buffer-string))))))
+
+(ert-deftest whittle-report-ranks-comma-function-repeat-high ()
+  "A unit with a comma function-word repeat and a false-start collapse ranks high.
+The multi-word restart \"I was, I was\" fires false-start collapse; the
+surviving \"you, you\" should push the entry to high, not medium."
+  (let* ((result (whittle-test--generate-report
+                  "I was, I was saying that you, you know the answer.\n"
+                  "/tmp/whittle-test-transcript.org"
+                  "/tmp/whittle-test-report.org"))
+         (entries (plist-get result :entries))
+         (entry (car entries)))
+    (should entry)
+    (should (member "false-start collapse" (plist-get entry :passes)))
+    (should (string-match-p "you, you" (plist-get entry :after)))
+    (should (equal (plist-get entry :risk) "high"))))
+
 (provide 'whittle-tests)
 
 ;;; whittle-tests.el ends here

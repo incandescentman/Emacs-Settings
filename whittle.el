@@ -210,11 +210,19 @@
             (goto-char start)
             (while (re-search-forward regexp limit-marker t)
               (let ((phrase (downcase (match-string 1)))
+                    (match-text (match-string 0))
                     (match-beg (match-beginning 0))
                     (replacement (match-string 1)))
-                (whittle--increment removed phrase)
-                (replace-match replacement t t)
-                (goto-char match-beg))))
+                ;; A comma-separated repeat of a single function word
+                ;; (e.g. "you, you have to stop") is usually grammar, not
+                ;; a restart. The comma-exclusion list is all single
+                ;; words, so multi-word restarts like "I was, I was"
+                ;; still collapse.
+                (unless (and (string-match-p "," match-text)
+                             (member phrase whittle/duplicate-word-comma-exclusions))
+                  (whittle--increment removed phrase)
+                  (replace-match replacement t t)
+                  (goto-char match-beg)))))
         (set-marker limit-marker nil))
       removed)))
 
@@ -492,7 +500,8 @@ and are excluded from cleanup."
   (let ((case-fold-search t))
     (cond
      ((or (string-match-p "\\<\\(like\\|i mean\\|kind of like\\)\\>" before)
-          (and (member "duplicate-word collapse" passes)
+          (and (or (member "duplicate-word collapse" passes)
+                   (member "false-start collapse" passes))
                (whittle--transcript-report-comma-function-repeat-p before))
           (and (member "case normalization" passes)
                (> (length passes) 1)))
