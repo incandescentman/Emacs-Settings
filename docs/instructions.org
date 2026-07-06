@@ -189,7 +189,7 @@ Use =M-x whittle= for safe everyday cleanup and =M-x whittle-transcript= when yo
 | Command                | Best For                                  | What It Does |
 |------------------------+-------------------------------------------+--------------|
 | =whittle=              | Light cleanup of prose or lightly messy text | Removes safer fillers, collapses duplicated words, fixes punctuation spacing, and copies a compact Codex report |
-| =whittle-transcript=   | Raw transcripts, dictated text, pasted captions | Joins mid-sentence line breaks, removes filler chains, strips sentence-edge fillers, collapses false starts, normalizes punctuation, fixes capitalization, and copies a compact Codex report |
+| =whittle-transcript=   | Raw transcripts, dictated text, pasted captions | Joins mid-sentence line breaks, removes filler chains, strips safer sentence-edge fillers, collapses false starts, normalizes punctuation, fixes capitalization, and copies a compact Codex report |
 | =whittle-transcript-report= | Report-only transcript review | Copies the compact Codex report without changing the buffer |
 
 All three commands work on the active region if one is selected, otherwise on the whole buffer.
@@ -204,14 +204,15 @@ All three commands work on the active region if one is selected, otherwise on th
 *Aggressive =whittle-transcript=*
 - Designed for transcript junk rather than polished prose
 - Removes filler chains like =um, uh, you know,=
-- Removes sentence-edge fillers like =Like,= at the start of a sentence
+- Removes safer sentence-edge fillers like =So,=, =Well,=, and =you know=
+- Preserves discourse markers such as trailing =right?= and sentence-opening =Like=
 - Collapses false starts like =I was I was thinking= or =we were we were ready=
 - Joins awkward single newlines when the sentence clearly continues
 - Capitalizes sentence starts and lone =i=
 - Preserves some intentional repeats such as =go go= and =bye bye=
 - Changes the buffer and copies a compact report Jay can paste into Codex for verification and repair
 
-The clipboard report includes compact before/after excerpts for high- and medium-risk changes, using a small local window around the changed span so one risky filler word does not dump a whole paragraph. Low-risk changes are summarized, and the full detailed report is saved under =/tmp=.
+The clipboard report includes compact before/after excerpts for high- and medium-risk changes, using a small local window around the changed span so one risky filler word does not dump a whole paragraph. Low-risk changes are summarized, mechanical hazard tags are called out, hazard-tagged candidates are not auto-applied, and the full detailed report is saved under =/tmp=.
 
 *Example*
 

@@ -2008,5 +2008,11 @@
 - Added regression coverage in [[file+emacs:/Users/jay/emacs/emacs-settings/tests/whittle-tests.el][tests/whittle-tests.el]] so low-risk changes do not dump quoted before/after blocks into the clipboard.
 - Added regression coverage proving high-risk entries are clipped to a local excerpt with ellipses instead of dumping the full surrounding paragraph.
 
+* 2026-07-05: Protect Whittle transcript discourse markers
+- Removed =right= and sentence-opening =like= from the aggressive sentence-edge filler rules in [[file+emacs:/Users/jay/emacs/emacs-settings/whittle.el][whittle.el]]. Tag-question =right?= and opening =Like= often carry discourse, quote, or example-marker meaning, so they are no longer auto-deleted.
+- Added mechanical hazard tags for orphan leading punctuation, punctuation clusters, semantic question flips, and quote-marker deletion. Hazard-tagged candidate edits are still shown in the Codex report but are skipped by the auto-apply path.
+- Expanded report summaries to include hazard counts and applied-unit counts, and added safety-gate lines on hazardous report entries.
+- Added ERT coverage in [[file+emacs:/Users/jay/emacs/emacs-settings/tests/whittle-tests.el][tests/whittle-tests.el]] for the transcript failures: =That's how I use AI, right?=, =Right? I tell people...=, =That's the power. Right? Is...=, =Like I said...=, and =Like, forget the essay...=.
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.

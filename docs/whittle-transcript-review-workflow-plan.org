@@ -157,14 +157,16 @@ The report copied to the clipboard should be compact org-mode text.
 - Command :: whittle-transcript
 - Mode :: Cleanup has already been applied to the source buffer; this report is for Codex verification and repair.
 - Changed units :: 123
+- Applied units :: 120
 - Risk counts :: high 12; medium 31; low 80
 - Pass counts :: duplicate-word collapse 4; conservative filler removal 52; punctuation cleanup 27; case normalization 19
+- Hazard counts :: semantic-question-flip 1; quote-marker-deletion 2
 - Temp file :: /tmp/whittle-transcript-review-YYYYMMDD-HHMMSS.org
 - Clipboard detail :: before/after excerpts for high, medium-risk changes, capped at 25 and clipped to a small local changed-span window.
 - Source edit target :: Codex should edit this source file directly; this report is not a replacement transcript
 
 ** Instructions for Codex
-The source file has already been changed by the command above. Review each before/after pair. If an after version is wrong, edit the source file directly to repair that specific mistake. Flag only cases where the after version changed meaning, became ungrammatical, lost useful spoken cadence, or deleted necessary words. Use minimal fixes. Do not rewrite for style.
+The source file has already been changed by the command above for non-hazardous entries. Review each before/after pair. Hazard-tagged candidates were not auto-applied and need manual review. If an after version is wrong, edit the source file directly to repair that specific mistake. Flag only cases where the after version changed meaning, became ungrammatical, lost useful spoken cadence, or deleted necessary words. Use minimal fixes. Do not rewrite for style.
 
 ** High/Medium-Risk Changes
 
@@ -202,12 +204,14 @@ Risk categories:
 - Keep line-joining confined to the current unit.
 - Include approximate line numbers from the original unit's starting location.
 - Include summary counts at the top of the report by risk tier and by cleanup pass.
+- Include summary counts for mechanical hazard tags.
 - Copy a compact org report to the clipboard via =pbcopy=.
 - Save the full org report to a timestamped recovery file under =/tmp=, using a name like =/tmp/whittle-transcript-review-YYYYMMDD-HHMMSS.org=, and include that path in the report header.
 - The compact clipboard report should include high- and medium-risk before/after excerpts, summarize or drop low-risk details, show changed spans rather than whole paragraphs, use a small local context window around those spans, and avoid long repeated boilerplate.
-- =whittle= and =whittle-transcript= should apply cleanup and copy the Codex report to the clipboard. Do not make the primary commands report-only.
+- =whittle= and =whittle-transcript= should apply non-hazardous cleanup and copy the Codex report to the clipboard. Hazard-tagged candidates stay in the report but are not auto-applied. Do not make the primary commands report-only.
 - Implement the duplicate-word fix as a small, separable checkpoint from the report command so it is easy to review or revert independently.
 - For duplicate-word collapse, preserve comma-separated repeated function words such as =is, is= and =you, you=. Continue allowing genuinely safe collapses such as obvious stammers where the rule remains valid.
+- For sentence-edge cleanup, preserve tag-question =right?= and sentence-opening =Like= because they often function as discourse or quote/example markers, not disposable filler.
 - If adding an option to =whittle--normalize-case= for report mode, default it so existing callers keep current behavior.
 
 ** Tests
@@ -222,8 +226,13 @@ Test cases:
 - Each report entry includes =Passes ::=.
 - Org heading lines are not cleaned as transcript prose, and line-joining does not cross blank-line or heading boundaries.
 - The report includes summary counts by risk tier and cleanup pass.
+- The report includes hazard counts when mechanical hazards are detected.
 - The report is copied to the clipboard and written to a timestamped =/tmp/whittle-transcript-review-YYYYMMDD-HHMMSS.org= file.
 - The broken Narratively examples above are included and classified high risk.
+- =That's how I use AI, right?= must not become =That's how I use AI?=.
+- =Right? I tell people...= must not become =? I tell people...=.
+- =Like I said...= and =Like, forget the essay...= must preserve the opening =Like= marker.
+- Hazard-tagged candidate changes are skipped by the auto-apply path.
 - Safe =um= / =uh= cleanup appears as low risk.
 - A paragraph touched by multiple passes appears once with all passes listed in =Passes ::=.
 - After the duplicate-word rule fix, =What that is, is an automation step= and =write it for you, you have to stop= survive unchanged.

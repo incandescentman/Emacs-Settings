@@ -1328,3 +1328,25 @@ The robust fix was to stop polling and probe synchronously: try =--wrap=none= fi
 - When a dependency probe claims "timeout" or "slow startup," run the exact external command yourself before tuning sleep knobs.
 - For Pandoc wrapping in this codebase, prefer a direct feature probe of =--wrap=none= and only fall back to =--no-wrap= for older versions.
 - If a vendored third-party helper drifts against a system dependency, patch the vendored copy in-repo and record the failure mode here so future sessions do not keep chasing the misleading message.
+
+* Transcript Cleanup: Discourse Markers Are Not Disposable Filler
+  Date: 2026-07-05
+
+** Trigger
+While reviewing =whittle-transcript= output for a real webinar transcript, several aggressive filler rules changed meaning instead of merely removing speech noise. The clearest failure was deleting =right= from a tag question:
+
+=That's how I use AI, right?= became =That's how I use AI?=
+
+Sentence-opening markers had the same problem:
+
+=Right? I tell people...= could become =? I tell people...=
+
+=Like, forget the essay...= could lose the opening quote/example cue.
+
+** Mechanism
+The sentence-edge filler regex in [[file+emacs:/Users/jay/emacs/emacs-settings/whittle.el][whittle.el]] treated =right= and opening =like= as mechanically disposable, but in transcripts those words often carry discourse function: tag question, turn-taking cue, quotation setup, example setup, or emphasis. Preserving the punctuation after deleting the word is especially dangerous for =right?= because it can transform a declarative tag question into a direct question.
+
+** Actionable insight
+- Do not broaden transcript filler regexes just because a word is often filler. Check whether it can function as a quote marker, tag question, discourse cue, or example marker.
+- If a cleanup can create orphan punctuation, punctuation clusters, semantic question flips, or deleted quote markers, tag it as a mechanical hazard and skip auto-apply.
+- Add regression fixtures from real transcript failures before tightening or loosening =whittle= rules. The small examples are more valuable than abstract heuristics because they preserve the exact discourse function that got damaged.

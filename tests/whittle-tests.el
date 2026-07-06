@@ -277,6 +277,58 @@ is passed through to `whittle--transcript-report-generate'."
      (string-match-p "additional context that should be trimmed away"
                      copied))))
 
+(ert-deftest whittle-transcript-preserves-discourse-markers ()
+  "Transcript cleanup should not delete meaning-bearing discourse markers."
+  (let ((cases '("That's how I use AI, right?"
+                 "Right? I tell people this all the time."
+                 "That's the power. Right? Is that the right way to put it?"
+                 "Like I said, this is useful."
+                 "Like, forget the essay for a second.")))
+    (dolist (input cases)
+      (let* ((temp-dir (make-temp-file "whittle-report-test" t))
+             (whittle/transcript-report-directory temp-dir))
+        (unwind-protect
+            (cl-letf (((symbol-function 'whittle--copy-string-to-pbcopy)
+                       (lambda (_text) nil)))
+              (whittle-test--with-text
+               input
+               (lambda ()
+                 (let ((buffer-file-name "/tmp/whittle-test-discourse.org"))
+                   (whittle-transcript (point-min) (point-max))
+                   (should (string= (buffer-string) input))))))
+          (delete-directory temp-dir t))))))
+
+(ert-deftest whittle-report-flags-and-skips-mechanical-hazards ()
+  "Mechanical damage should be high risk and skipped by auto-apply."
+  (let* ((before "That's how I use AI, right?")
+         (after "That's how I use AI?")
+         (passes '("sentence-edge filler removal"))
+         (hazards (whittle--transcript-report-hazards before after passes)))
+    (should (member "semantic-question-flip" hazards))
+    (should (equal (whittle--transcript-report-risk before after passes hazards)
+                   "high"))
+    (should (member
+             "orphan-leading-punctuation"
+             (whittle--transcript-report-hazards
+              "Right? I tell people this."
+              "? I tell people this."
+              passes)))
+    (should (member
+             "quote-marker-deletion"
+             (whittle--transcript-report-hazards
+              "Like, forget the essay for a second."
+              "forget the essay for a second."
+              passes)))
+    (whittle-test--with-text
+     before
+     (lambda ()
+       (whittle--transcript-report-apply-entries
+        (list (list :start (point-min)
+                    :end (point-max)
+                    :after after
+                    :hazards hazards)))
+       (should (string= (buffer-string) before))))))
+
 (ert-deftest whittle-transcript-preserves-comma-function-repeats-end-to-end ()
   "The full pipeline must not collapse comma-separated function-word repeats.
 Regression guard: `whittle--remove-false-starts' used to eat \"you, you\"
