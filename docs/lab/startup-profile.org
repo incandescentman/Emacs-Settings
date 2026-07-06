@@ -5295,3 +5295,34 @@
 | load prelude-key-chord.el | 0.0006 |
 | load xah-replace-pairs.el | 0.0006 |
 | load jay-osx.el | 0.0005 |
+* 2026-07-05 21:04:07
+- Emacs: 29.4
+- Org: 9.8.6
+- Total init time: 2.232s
+- Measured module loads:
+| Step | Seconds |
+|------+---------|
+| org-babel-load shared-functions.org | 0.4869 |
+| org-babel-load search-commands.org | 0.2040 |
+| require jay-org-roam-core | 0.1630 |
+| org-babel-load gnu-emacs-startup.org | 0.0736 |
+| load frame-cmds.el | 0.0344 |
+| org-babel-load org-export.org | 0.0282 |
+| load keys.el | 0.0212 |
+| org-babel-load goals-agenda.org | 0.0125 |
+| load skeletons.el | 0.0104 |
+| load poetry_JD.el | 0.0103 |
+| org-babel-load spacecraft-mode.org | 0.0094 |
+| load prelude-core.el | 0.0060 |
+| load pasteboard-copy-and-paste-functions.el | 0.0029 |
+| load auto-capitalize.el | 0.0021 |
+| org-babel-load spellcheck.org | 0.0019 |
+| load jay-org-roam-extras.el | 0.0013 |
+| org-babel-load fonts-and-themes.org | 0.0010 |
+| load jay-goals-system.el | 0.0010 |
+| org-babel-load org-authoring.org | 0.0009 |
+| load jay-osx.el | 0.0009 |
+| load prelude-key-chord.el | 0.0009 |
+| load buffer-stack.el | 0.0008 |
+| load xah-replace-pairs.el | 0.0008 |
+| load chatgpt2org.el | 0.0007 |
