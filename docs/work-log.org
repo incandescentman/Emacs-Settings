@@ -2058,5 +2058,12 @@
 - Added ERT coverage in [[file+emacs:/Users/jay/emacs/emacs-settings/tests/whittle-tests.el][tests/whittle-tests.el]] for org protection across =whittle=, =whittle-apply=, =whittle-transcript-apply=, =whittle/remove-filler-words=, and =whittle/remove-duplicated-words=; source-block delimiter preservation; discourse-marker preservation; abbreviation/ellipsis case guards; post-heading capitalization; final-word emphasis repeats; and generalized residue holdback.
 - Verified with =emacs --batch -Q -L /Users/jay/emacs/emacs-settings -l /Users/jay/emacs/emacs-settings/tests/whittle-tests.el -f ert-run-tests-batch-and-exit=, =check-parens= on [[file+emacs:/Users/jay/emacs/emacs-settings/whittle.el][whittle.el]] and [[file+emacs:/Users/jay/emacs/emacs-settings/tests/whittle-tests.el][tests/whittle-tests.el]], and clean byte compilation of [[file+emacs:/Users/jay/emacs/emacs-settings/whittle.el][whittle.el]].
 
+* 2026-07-07: Cache =whittle= org protection in raw apply paths
+- Fixed the performance regression from the first org-protection pass in [[file+emacs:/Users/jay/emacs/emacs-settings/whittle.el][whittle.el]]. =whittle--org-protected-match-p= was recomputing =whittle--org-protected-regions= on every regex match, making raw whole-buffer commands quadratic on long transcripts.
+- Added marker-backed per-pass caching via =whittle--with-org-protected-regions= so protected spans still move correctly when earlier edits shift later org structural lines.
+- Added an explicit cache-active flag so a file with no org structural lines still uses the cached empty protection list instead of falling back to per-match rescans.
+- Added ERT coverage in [[file+emacs:/Users/jay/emacs/emacs-settings/tests/whittle-tests.el][tests/whittle-tests.el]] that counts structural-protection scans during a raw =whittle-transcript-apply= run and fails if it regresses to per-match scanning.
+- Verified the raw-path timing smoke after the fix: 100 lines =0.0183s=, 200 lines =0.0256s=, 400 lines =0.0550s=, 3000 lines =0.4043s= for =whittle-transcript-apply= in a clean batch Emacs process.
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.

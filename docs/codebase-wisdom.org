@@ -1375,6 +1375,7 @@ The report unit splitter excluded org headings, but several public commands bypa
 - Keep org structural protection separate from transcript held-back spans. In [[file+emacs:/Users/jay/emacs/emacs-settings/whittle.el][whittle.el]], =whittle--org-protected-regions= protects source syntax, while =whittle--transcript-report-expand-protected-span= and friends protect hazardous edit replay.
 - Test both the report/apply workflow and raw bypass commands whenever adding a cleanup safety rule. If only =whittle-transcript= is tested, =whittle-apply= can quietly keep the same bug.
 - For transcript discourse markers, default to preserving openers such as =So=, =Well=, =OK=, and =you know=. If Jay wants those removed later, make it an explicit customization rather than the default cleanup behavior.
+- Do not recompute whole-region protection inside an inner regex match loop. Cache protected spans once per pass, and distinguish an empty cached list from no cache at all; long plain transcripts often have zero org structural lines, which is exactly where a nil-cache fallback can silently become quadratic.
 
 * org-web-tools: CloudFront 403 Can Be Curl User-Agent Rejection
   Date: 2026-07-06

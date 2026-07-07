@@ -442,6 +442,21 @@ is passed through to `whittle--transcript-report-generate'."
         (should-not (string-match-p "#\\+FILETAGS::socratic:" output))
         (should-not (string-match-p "- Links::" output))))))
 
+(ert-deftest whittle-raw-apply-caches-org-protection-per-pass ()
+  "Raw whole-buffer cleanup should not rescan org protection per regex match."
+  (let* ((line "Um, this is is a draft with punctuation , and i should change.")
+         (input (mapconcat #'identity (make-list 80 line) "\n"))
+         (scan-count 0)
+         (original (symbol-function 'whittle--org-protected-regions)))
+    (cl-letf (((symbol-function 'whittle--org-protected-regions)
+               (lambda (beg end)
+                 (setq scan-count (1+ scan-count))
+                 (funcall original beg end))))
+      (whittle-test--command-output input #'whittle-transcript-apply))
+    ;; `whittle-transcript-apply' has several passes, but protection should be
+    ;; computed once per pass, not once per match or line.
+    (should (< scan-count 20))))
+
 (ert-deftest whittle-transcript-apply-preserves-src-delimiters ()
   "Line joining should not fuse org source delimiters with quoted prose."
   (let* ((input "#+begin_src user\ngreat. so give me a detailed assignment\n#+end_src\n")

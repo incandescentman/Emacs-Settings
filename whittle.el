@@ -174,12 +174,56 @@ separate from transcript-report held-back spans."
           (forward-line 1))))
     (nreverse regions)))
 
+(defvar whittle--org-protected-regions-cache nil
+  "Marker-backed org structural regions cached for the current cleanup pass.")
+
+(defvar whittle--org-protected-regions-cache-active nil
+  "Non-nil when org structural protection has been computed for this pass.")
+
+(defun whittle--org-protected-region-markers (beg end)
+  "Return marker-backed org structural regions between BEG and END."
+  (mapcar (lambda (region)
+            (cons (copy-marker (car region))
+                  (copy-marker (cdr region) t)))
+          (whittle--org-protected-regions beg end)))
+
+(defun whittle--org-protected-clear-regions (regions)
+  "Clear marker-backed org structural REGIONS."
+  (dolist (region regions)
+    (when (markerp (car region))
+      (set-marker (car region) nil))
+    (when (markerp (cdr region))
+      (set-marker (cdr region) nil))))
+
+(defmacro whittle--with-org-protected-regions (beg end &rest body)
+  "Run BODY with org structural regions cached between BEG and END."
+  (declare (indent 2))
+  `(let ((whittle--org-protected-regions-cache
+          (whittle--org-protected-region-markers ,beg ,end))
+         (whittle--org-protected-regions-cache-active t))
+     (unwind-protect
+         (progn ,@body)
+       (whittle--org-protected-clear-regions
+        whittle--org-protected-regions-cache))))
+
+(defun whittle--org-protected-bound-position (bound)
+  "Return numeric position for protected-region BOUND."
+  (if (markerp bound)
+      (marker-position bound)
+    bound))
+
 (defun whittle--org-protected-region-overlap-p
     (span-start span-end protected-regions)
   "Return non-nil when SPAN-START..SPAN-END overlaps PROTECTED-REGIONS."
   (cl-some (lambda (region)
-             (and (< span-start (cdr region))
-                  (< (car region) span-end)))
+             (let ((region-start
+                    (whittle--org-protected-bound-position (car region)))
+                   (region-end
+                    (whittle--org-protected-bound-position (cdr region))))
+               (and region-start
+                    region-end
+                    (< span-start region-end)
+                    (< region-start span-end))))
            protected-regions))
 
 (defun whittle--org-protected-match-p (match-start match-end scan-start scan-end)
@@ -188,7 +232,9 @@ separate from transcript-report held-back spans."
        match-end
        (whittle--org-protected-region-overlap-p
         match-start match-end
-        (whittle--org-protected-regions scan-start scan-end))))
+        (if whittle--org-protected-regions-cache-active
+            whittle--org-protected-regions-cache
+          (whittle--org-protected-regions scan-start scan-end)))))
 
 (defun whittle--duplicate-final-emphasis-p (match-end)
   "Return non-nil when duplicated word ending at MATCH-END is emphatic."
@@ -234,16 +280,18 @@ separate from transcript-report held-back spans."
                (case-fold-search t)
                (counts (make-hash-table :test #'equal)))
     (unwind-protect
-        (save-excursion
-          (dolist (rule rules)
-	    (pcase-let ((`(,label ,regexp ,replacement) rule))
-	      (goto-char start)
-	      (while (re-search-forward regexp limit-marker t)
-	        (unless (whittle--org-protected-match-p
-	                 (match-beginning 0) (match-end 0)
-	                 start (marker-position limit-marker))
-	          (replace-match replacement t nil)
-	          (whittle--increment counts label))))))
+        (whittle--with-org-protected-regions
+            start (marker-position limit-marker)
+          (save-excursion
+            (dolist (rule rules)
+              (pcase-let ((`(,label ,regexp ,replacement) rule))
+                (goto-char start)
+                (while (re-search-forward regexp limit-marker t)
+                  (unless (whittle--org-protected-match-p
+                           (match-beginning 0) (match-end 0)
+                           start (marker-position limit-marker))
+                    (replace-match replacement t nil)
+                    (whittle--increment counts label)))))))
       (set-marker limit-marker nil))
     counts))
 
@@ -282,14 +330,16 @@ separate from transcript-report held-back spans."
                (case-fold-search t)
                (count 0))
     (unwind-protect
-	(save-excursion
-	  (goto-char start)
-	  (while (re-search-forward whittle/transcript-filler-chain-regexp limit-marker t)
-	    (unless (whittle--org-protected-match-p
-	             (match-beginning 0) (match-end 0)
-	             start (marker-position limit-marker))
-	      (replace-match "" t t)
-	      (setq count (1+ count)))))
+        (whittle--with-org-protected-regions
+            start (marker-position limit-marker)
+          (save-excursion
+            (goto-char start)
+            (while (re-search-forward whittle/transcript-filler-chain-regexp limit-marker t)
+              (unless (whittle--org-protected-match-p
+                       (match-beginning 0) (match-end 0)
+                       start (marker-position limit-marker))
+                (replace-match "" t t)
+                (setq count (1+ count))))))
       (set-marker limit-marker nil))
     count))
 
@@ -303,30 +353,32 @@ separate from transcript-report held-back spans."
                (dup-regexp "\\<\\([[:alpha:]']+\\)\\>\\(?:[[:space:]\n,–—]+\\1\\>\\)+")
                (removed (make-hash-table :test #'equal)))
     (unwind-protect
-        (save-excursion
-          (goto-char start)
-          (while (re-search-forward dup-regexp limit-marker t)
-            (let ((word (downcase (match-string 1)))
-                  (match-text (match-string 0))
-                  (preceding (char-before (match-beginning 0))))
-              ;; Skip if the first occurrence is part of a hyphenated
-              ;; compound (e.g. "goings-on on the ship" must stay), or
-              ;; if the word is in the exclusion list. Comma-separated
-              ;; function-word repeats like "is, is" are usually grammar,
-              ;; not stammers.
-	      (unless (or (eq preceding ?-)
-	                  (member word whittle/duplicate-word-exclusions)
-	                  (and (string-match-p "," match-text)
-	                       (member word whittle/duplicate-word-comma-exclusions))
-	                  (whittle--duplicate-final-emphasis-p (match-end 0))
-	                  (whittle--org-protected-match-p
-	                   (match-beginning 0) (match-end 0)
-	                   start (marker-position limit-marker)))
-	        (let ((match-beg (match-beginning 0))
-	              (replacement (match-string 1)))
-	          (whittle--increment removed word)
-                  (replace-match replacement t t)
-                  (goto-char match-beg))))))
+        (whittle--with-org-protected-regions
+            start (marker-position limit-marker)
+          (save-excursion
+            (goto-char start)
+            (while (re-search-forward dup-regexp limit-marker t)
+              (let ((word (downcase (match-string 1)))
+                    (match-text (match-string 0))
+                    (preceding (char-before (match-beginning 0))))
+                ;; Skip if the first occurrence is part of a hyphenated
+                ;; compound (e.g. "goings-on on the ship" must stay), or
+                ;; if the word is in the exclusion list. Comma-separated
+                ;; function-word repeats like "is, is" are usually grammar,
+                ;; not stammers.
+                (unless (or (eq preceding ?-)
+                            (member word whittle/duplicate-word-exclusions)
+                            (and (string-match-p "," match-text)
+                                 (member word whittle/duplicate-word-comma-exclusions))
+                            (whittle--duplicate-final-emphasis-p (match-end 0))
+                            (whittle--org-protected-match-p
+                             (match-beginning 0) (match-end 0)
+                             start (marker-position limit-marker)))
+                  (let ((match-beg (match-beginning 0))
+                        (replacement (match-string 1)))
+                    (whittle--increment removed word)
+                    (replace-match replacement t t)
+                    (goto-char match-beg)))))))
       (set-marker limit-marker nil))
     removed))
 
@@ -341,26 +393,28 @@ separate from transcript-report held-back spans."
                  (case-fold-search t)
                  (removed (make-hash-table :test #'equal)))
       (unwind-protect
-          (save-excursion
-            (goto-char start)
-            (while (re-search-forward regexp limit-marker t)
-              (let ((phrase (downcase (match-string 1)))
-                    (match-text (match-string 0))
-                    (match-beg (match-beginning 0))
-                    (replacement (match-string 1)))
-                ;; A comma-separated repeat of a single function word
-                ;; (e.g. "you, you have to stop") is usually grammar, not
-                ;; a restart. The comma-exclusion list is all single
-                ;; words, so multi-word restarts like "I was, I was"
-                ;; still collapse.
-                (unless (or (and (string-match-p "," match-text)
-                                 (member phrase whittle/duplicate-word-comma-exclusions))
-                            (whittle--org-protected-match-p
-                             (match-beginning 0) (match-end 0)
-                             start (marker-position limit-marker)))
-                  (whittle--increment removed phrase)
-                  (replace-match replacement t t)
-                  (goto-char match-beg)))))
+          (whittle--with-org-protected-regions
+              start (marker-position limit-marker)
+            (save-excursion
+              (goto-char start)
+              (while (re-search-forward regexp limit-marker t)
+                (let ((phrase (downcase (match-string 1)))
+                      (match-text (match-string 0))
+                      (match-beg (match-beginning 0))
+                      (replacement (match-string 1)))
+                  ;; A comma-separated repeat of a single function word
+                  ;; (e.g. "you, you have to stop") is usually grammar, not
+                  ;; a restart. The comma-exclusion list is all single
+                  ;; words, so multi-word restarts like "I was, I was"
+                  ;; still collapse.
+                  (unless (or (and (string-match-p "," match-text)
+                                   (member phrase whittle/duplicate-word-comma-exclusions))
+                              (whittle--org-protected-match-p
+                               (match-beginning 0) (match-end 0)
+                               start (marker-position limit-marker)))
+                    (whittle--increment removed phrase)
+                    (replace-match replacement t t)
+                    (goto-char match-beg))))))
         (set-marker limit-marker nil))
       removed)))
 
@@ -375,27 +429,29 @@ and is 10 words or fewer. Leading-comma-less em-dash uses like \"The cat
                (limit-marker (copy-marker limit))
                (count 0))
     (unwind-protect
-        (save-excursion
-          (goto-char start)
-          (while (re-search-forward "—[[:space:]]+" limit-marker t)
-            (let* ((em-start (match-beginning 0))
-                   (em-end (match-end 0))
-                   (frag-start
-                    (save-excursion
-                      (goto-char em-start)
-                      (if (re-search-backward "[.!?\n]" start t)
-                          (progn (forward-char 1)
-                                 (skip-chars-forward " \t" em-start)
-                                 (point))
-                        start)))
-	           (fragment (buffer-substring-no-properties frag-start em-start)))
-	      (when (and (string-match-p "," fragment)
-	                 (<= (length (split-string fragment "[[:space:]]+" t)) 10)
-	                 (not (whittle--org-protected-match-p
-	                       frag-start em-end
-	                       start (marker-position limit-marker))))
-	        (delete-region frag-start em-end)
-	        (setq count (1+ count))))))
+        (whittle--with-org-protected-regions
+            start (marker-position limit-marker)
+          (save-excursion
+            (goto-char start)
+            (while (re-search-forward "—[[:space:]]+" limit-marker t)
+              (let* ((em-start (match-beginning 0))
+                     (em-end (match-end 0))
+                     (frag-start
+                      (save-excursion
+                        (goto-char em-start)
+                        (if (re-search-backward "[.!?\n]" start t)
+                            (progn (forward-char 1)
+                                   (skip-chars-forward " \t" em-start)
+                                   (point))
+                          start)))
+                     (fragment (buffer-substring-no-properties frag-start em-start)))
+                (when (and (string-match-p "," fragment)
+                           (<= (length (split-string fragment "[[:space:]]+" t)) 10)
+                           (not (whittle--org-protected-match-p
+                                 frag-start em-end
+                                 start (marker-position limit-marker))))
+                  (delete-region frag-start em-end)
+                  (setq count (1+ count)))))))
       (set-marker limit-marker nil))
     count))
 
@@ -405,18 +461,20 @@ and is 10 words or fewer. Leading-comma-less em-dash uses like \"The cat
                (limit-marker (copy-marker limit))
                (count 0))
     (unwind-protect
-        (save-excursion
-          (goto-char start)
-	  (while (re-search-forward
-	          "\\([[:alnum:])\"']\\)\n\\([[:space:]]*[[:lower:][:digit:]\"'([]\\)"
-	          limit-marker t)
-	    (unless (or (whittle--org-protected-match-p
-	                 (match-beginning 0) (match-end 0)
-	                 start (marker-position limit-marker))
-	                (whittle--org-list-item-line-p (match-beginning 0))
-	                (whittle--org-list-item-line-p (match-end 0)))
-	      (replace-match "\\1 \\2" t)
-	      (setq count (1+ count)))))
+        (whittle--with-org-protected-regions
+            start (marker-position limit-marker)
+          (save-excursion
+            (goto-char start)
+            (while (re-search-forward
+                    "\\([[:alnum:])\"']\\)\n\\([[:space:]]*[[:lower:][:digit:]\"'([]\\)"
+                    limit-marker t)
+              (unless (or (whittle--org-protected-match-p
+                           (match-beginning 0) (match-end 0)
+                           start (marker-position limit-marker))
+                          (whittle--org-list-item-line-p (match-beginning 0))
+                          (whittle--org-list-item-line-p (match-end 0)))
+                (replace-match "\\1 \\2" t)
+                (setq count (1+ count))))))
       (set-marker limit-marker nil))
     count))
 
@@ -437,60 +495,62 @@ and is 10 words or fewer. Leading-comma-less em-dash uses like \"The cat
                (limit-marker (copy-marker limit))
                (count 0))
     (unwind-protect
-	(save-excursion
-	  (goto-char start)
-	  (while (re-search-forward "^[[:space:]]*,+[[:space:]]*" limit-marker t)
-	    (unless (whittle--org-protected-match-p
-	             (match-beginning 0) (match-end 0)
-	             start (marker-position limit-marker))
-	      (replace-match "" t t)
-	      (setq count (1+ count))))
-	  (goto-char start)
-	  (while (re-search-forward "\\([.!?\n]\\)[[:space:]]*,+[[:space:]]*" limit-marker t)
-	    (unless (whittle--org-protected-match-p
-	             (match-beginning 0) (match-end 0)
-	             start (marker-position limit-marker))
-	      (replace-match
-	       (if (string= (match-string 1) "\n")
-	           "\n"
-	         (concat (match-string 1) " "))
-	       t t)
-	      (setq count (1+ count))))
-	  (goto-char start)
-	  (while (re-search-forward "[[:blank:]]+\\([,.;:?!]\\)" limit-marker t)
-	    (unless (whittle--org-protected-match-p
-	             (match-beginning 0) (match-end 0)
-	             start (marker-position limit-marker))
-	      (replace-match "\\1" t)
-	      (setq count (1+ count))))
-	  (goto-char start)
-	  (while (re-search-forward "\\.\\(?:[[:space:]]*\\.\\)\\{2,\\}" limit-marker t)
-	    (unless (whittle--org-protected-match-p
-	             (match-beginning 0) (match-end 0)
-	             start (marker-position limit-marker))
-	      (replace-match "..." t t)
-	      (setq count (1+ count))))
-	  (goto-char start)
-	  (while (re-search-forward "[,.]\\(?:[[:space:]]*[,.]\\)+" limit-marker t)
-	    (unless (whittle--org-protected-match-p
-	             (match-beginning 0) (match-end 0)
-	             start (marker-position limit-marker))
-	      (replace-match (whittle--replace-punctuation-cluster) t t)
-	      (setq count (1+ count))))
-	  (goto-char start)
-	  (while (re-search-forward "\\([?!]\\)\\(?:[[:space:]]*\\1\\)+" limit-marker t)
-	    (unless (whittle--org-protected-match-p
-	             (match-beginning 0) (match-end 0)
-	             start (marker-position limit-marker))
-	      (replace-match "\\1" t)
-	      (setq count (1+ count))))
-	  (goto-char start)
-	  (while (re-search-forward "[[:blank:]]\\{2,\\}" limit-marker t)
-	    (unless (whittle--org-protected-match-p
-	             (match-beginning 0) (match-end 0)
-	             start (marker-position limit-marker))
-	      (replace-match " " t t)
-	      (setq count (1+ count)))))
+        (whittle--with-org-protected-regions
+            start (marker-position limit-marker)
+          (save-excursion
+            (goto-char start)
+            (while (re-search-forward "^[[:space:]]*,+[[:space:]]*" limit-marker t)
+              (unless (whittle--org-protected-match-p
+                       (match-beginning 0) (match-end 0)
+                       start (marker-position limit-marker))
+                (replace-match "" t t)
+                (setq count (1+ count))))
+            (goto-char start)
+            (while (re-search-forward "\\([.!?\n]\\)[[:space:]]*,+[[:space:]]*" limit-marker t)
+              (unless (whittle--org-protected-match-p
+                       (match-beginning 0) (match-end 0)
+                       start (marker-position limit-marker))
+                (replace-match
+                 (if (string= (match-string 1) "\n")
+                     "\n"
+                   (concat (match-string 1) " "))
+                 t t)
+                (setq count (1+ count))))
+            (goto-char start)
+            (while (re-search-forward "[[:blank:]]+\\([,.;:?!]\\)" limit-marker t)
+              (unless (whittle--org-protected-match-p
+                       (match-beginning 0) (match-end 0)
+                       start (marker-position limit-marker))
+                (replace-match "\\1" t)
+                (setq count (1+ count))))
+            (goto-char start)
+            (while (re-search-forward "\\.\\(?:[[:space:]]*\\.\\)\\{2,\\}" limit-marker t)
+              (unless (whittle--org-protected-match-p
+                       (match-beginning 0) (match-end 0)
+                       start (marker-position limit-marker))
+                (replace-match "..." t t)
+                (setq count (1+ count))))
+            (goto-char start)
+            (while (re-search-forward "[,.]\\(?:[[:space:]]*[,.]\\)+" limit-marker t)
+              (unless (whittle--org-protected-match-p
+                       (match-beginning 0) (match-end 0)
+                       start (marker-position limit-marker))
+                (replace-match (whittle--replace-punctuation-cluster) t t)
+                (setq count (1+ count))))
+            (goto-char start)
+            (while (re-search-forward "\\([?!]\\)\\(?:[[:space:]]*\\1\\)+" limit-marker t)
+              (unless (whittle--org-protected-match-p
+                       (match-beginning 0) (match-end 0)
+                       start (marker-position limit-marker))
+                (replace-match "\\1" t)
+                (setq count (1+ count))))
+            (goto-char start)
+            (while (re-search-forward "[[:blank:]]\\{2,\\}" limit-marker t)
+              (unless (whittle--org-protected-match-p
+                       (match-beginning 0) (match-end 0)
+                       start (marker-position limit-marker))
+                (replace-match " " t t)
+                (setq count (1+ count))))))
       (set-marker limit-marker nil))
     count))
 
@@ -505,48 +565,50 @@ unit is not necessarily the start of the source buffer."
                (case-fold-search nil)
                (count 0))
     (unwind-protect
-	(save-excursion
-	  (goto-char start)
-	  (while (re-search-forward "\\_<i\\_>" limit-marker t)
-	    (unless (whittle--org-protected-match-p
-	             (match-beginning 0) (match-end 0)
-	             start (marker-position limit-marker))
-	      (replace-match "I" t t)
-	      (setq count (1+ count))))
-	  (unless skip-initial
-	    (goto-char start)
-	    (skip-chars-forward " \t\n\"'([{" limit-marker)
-	    (when (and (looking-at "[[:lower:]]")
-	               (not (whittle--org-protected-match-p
-	                     (point) (1+ (point))
-	                     start (marker-position limit-marker))))
-	      (replace-match (upcase (match-string 0)) t t)
-	      (setq count (1+ count))))
-	  (goto-char start)
-	  (while (re-search-forward "[.?!][[:space:]\n]+" limit-marker t)
-	    (let ((punct-pos (match-beginning 0)))
-	      (when (and (whittle--case-boundary-p punct-pos)
-	                 (not (whittle--org-protected-match-p
-	                       (match-beginning 0) (match-end 0)
-	                       start (marker-position limit-marker))))
-	        (save-excursion
-	          (skip-chars-forward " \t\n\"'([{" limit-marker)
-	          (when (and (looking-at "[[:lower:]]")
-	                     (not (whittle--org-protected-match-p
-	                           (point) (1+ (point))
-	                           start (marker-position limit-marker))))
-	            (replace-match (upcase (match-string 0)) t t)
-	            (setq count (1+ count)))))))
-	  ;; Capitalize after org headings (e.g. *** Speaker:\ntext)
-	  (goto-char start)
-	  (while (re-search-forward "^\\*+[^\n]*\n" limit-marker t)
-	    (skip-chars-forward " \t\n\"'([{" limit-marker)
-	    (when (and (looking-at "[[:lower:]]")
-	               (not (whittle--org-protected-match-p
-	                     (point) (1+ (point))
-	                     start (marker-position limit-marker))))
-	      (replace-match (upcase (match-string 0)) t t)
-	      (setq count (1+ count)))))
+        (whittle--with-org-protected-regions
+            start (marker-position limit-marker)
+          (save-excursion
+            (goto-char start)
+            (while (re-search-forward "\\_<i\\_>" limit-marker t)
+              (unless (whittle--org-protected-match-p
+                       (match-beginning 0) (match-end 0)
+                       start (marker-position limit-marker))
+                (replace-match "I" t t)
+                (setq count (1+ count))))
+            (unless skip-initial
+              (goto-char start)
+              (skip-chars-forward " \t\n\"'([{" limit-marker)
+              (when (and (looking-at "[[:lower:]]")
+                         (not (whittle--org-protected-match-p
+                               (point) (1+ (point))
+                               start (marker-position limit-marker))))
+                (replace-match (upcase (match-string 0)) t t)
+                (setq count (1+ count))))
+            (goto-char start)
+            (while (re-search-forward "[.?!][[:space:]\n]+" limit-marker t)
+              (let ((punct-pos (match-beginning 0)))
+                (when (and (whittle--case-boundary-p punct-pos)
+                           (not (whittle--org-protected-match-p
+                                 (match-beginning 0) (match-end 0)
+                                 start (marker-position limit-marker))))
+                  (save-excursion
+                    (skip-chars-forward " \t\n\"'([{" limit-marker)
+                    (when (and (looking-at "[[:lower:]]")
+                               (not (whittle--org-protected-match-p
+                                     (point) (1+ (point))
+                                     start (marker-position limit-marker))))
+                      (replace-match (upcase (match-string 0)) t t)
+                      (setq count (1+ count)))))))
+            ;; Capitalize after org headings (e.g. *** Speaker:\ntext)
+            (goto-char start)
+            (while (re-search-forward "^\\*+[^\n]*\n" limit-marker t)
+              (skip-chars-forward " \t\n\"'([{" limit-marker)
+              (when (and (looking-at "[[:lower:]]")
+                         (not (whittle--org-protected-match-p
+                               (point) (1+ (point))
+                               start (marker-position limit-marker))))
+                (replace-match (upcase (match-string 0)) t t)
+                (setq count (1+ count))))))
       (set-marker limit-marker nil))
     count))
 
