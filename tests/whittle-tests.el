@@ -47,6 +47,34 @@ is passed through to `whittle--transcript-report-generate'."
   (mapcar (lambda (scar) (plist-get scar :tag))
           (whittle--transcript-report-scars before after 'transcript)))
 
+(defun whittle-test--command-output (text command)
+  "Run COMMAND on TEXT in a temp buffer and return the buffer string."
+  (whittle-test--with-text
+   text
+   (lambda ()
+     (funcall command (point-min) (point-max))
+     (buffer-string))))
+
+(defun whittle-test--reported-command-output (text command &optional source-path)
+  "Run report-copying COMMAND on TEXT and return (OUTPUT . CLIPBOARD)."
+  (let* ((temp-dir (make-temp-file "whittle-report-test" t))
+         (whittle/transcript-report-directory temp-dir)
+         copied
+         output)
+    (unwind-protect
+        (cl-letf (((symbol-function 'whittle--copy-string-to-pbcopy)
+                   (lambda (text)
+                     (setq copied text))))
+          (whittle-test--with-text
+           text
+           (lambda ()
+             (let ((buffer-file-name
+                    (or source-path "/tmp/whittle-test-transcript.org")))
+               (funcall command (point-min) (point-max))
+               (setq output (buffer-string))))))
+      (delete-directory temp-dir t))
+    (cons output copied)))
+
 (ert-deftest whittle-duplicate-words-preserves-comma-function-repeats ()
   "Comma-separated function-word repeats should not be collapsed."
   (whittle-test--with-text
@@ -63,6 +91,21 @@ is passed through to `whittle--transcript-report-generate'."
        (should (string-match-p "write it for you, you have to stop" output))
        (should (string-match-p "The easy repeat should still collapse" output))
        (should-not (string-match-p "The the easy repeat" output))))))
+
+(ert-deftest whittle-duplicate-words-preserves-final-emphasis ()
+  "Identity/emphasis repeats at sentence end should survive duplicate cleanup."
+  (whittle-test--with-text
+   (mapconcat
+    #'identity
+    '("Use AI for everything except the thing that makes you you."
+      "But you you have to go.")
+    "\n")
+   (lambda ()
+     (whittle--remove-duplicated-words (point-min) (point-max))
+     (let ((output (buffer-string)))
+       (should (string-match-p "makes you you\\." output))
+       (should (string-match-p "But you have to go\\." output))
+       (should-not (string-match-p "But you you have to go" output))))))
 
 (ert-deftest whittle-report-does-not-capitalize-unit-starts ()
   "Report mode should not create spurious first-character case entries."
@@ -129,6 +172,34 @@ is passed through to `whittle--transcript-report-generate'."
                    "right-so-chain")))
     (should (member (nth 2 case)
                     (whittle-test--scar-tags (nth 0 case) (nth 1 case))))))
+
+(ert-deftest whittle-residue-detectors-are-generalized ()
+  "Residue detectors should flag shapes, not exact transcript strings."
+  (let ((pronoun-hazards
+         (whittle--transcript-report-hazards
+          "However, I uh it takes a while."
+          "However, I it takes a while."
+          '("conservative filler removal")
+          'transcript))
+        (comma-hazards
+         (whittle--transcript-report-hazards
+          "They were, you know, um totally novices."
+          "They were, totally novices."
+          '("filler-chain collapse")
+          'transcript))
+        (legit-parenthetical
+         (whittle--transcript-report-hazards
+          "They were, honestly, exhausted."
+          "They were, honestly, exhausted."
+          nil
+          'transcript)))
+    (should (member "subject-pronoun-fusion" pronoun-hazards))
+    (should (member "stranded-comma-after-copula" comma-hazards))
+    (should-not (member "stranded-comma-after-copula" legit-parenthetical))
+    (should (member "subject-pronoun-fusion"
+                    (whittle-test--scar-tags
+                     "However, I uh it takes a while."
+                     "However, I it takes a while.")))))
 
 (ert-deftest whittle-scar-scan-renders-in-compact-and-full-reports ()
   "Reports should surface advisory scars before normal change review."
@@ -227,9 +298,6 @@ is passed through to `whittle--transcript-report-generate'."
          '(("Writing can be solitary, sitting alone, thinking, I mean, I love it, I think I'm good at it, but sharing what I know and helping other people, and having that social, interactive part. is really the part that I love even more."
             ("thinking I love" "part\\. Is really")
             ("sentence-initial-i-mean" "deleted-comma-before-pronoun" "case-clause-fusion"))
-           ("So… that's how I think about it."
-            ("\\`…")
-            ("orphan-ellipsis"))
            ("This is a set of custom instructions, documents. that I've created..."
             ("documents\\. That I've created")
             ("case-clause-fusion"))
@@ -238,10 +306,7 @@ is passed through to `whittle--transcript-report-generate'."
             ("sentence-initial-i-mean" "deleted-comma-before-pronoun"))
            ("When I've worked for magazines, like, I was an editor at Psychology Today..."
             ("magazines I was")
-            ("like-clause-fusion" "deleted-comma-before-pronoun"))
-           ("It's gonna get published, right? So… My premise is that AI can help."
-            ("published, My premise" "right\\? … My premise")
-            ("right-so-chain" "case-clause-fusion")))))
+            ("like-clause-fusion" "deleted-comma-before-pronoun")))))
     (dolist (case cases)
       (let* ((input (nth 0 case))
              (forbidden (nth 1 case))
@@ -302,6 +367,121 @@ is passed through to `whittle--transcript-report-generate'."
     (should-not (string-match-p "#\\+begin_quote\n\\* Heading" report))
     (should-not (string-match-p "no punctuation the next paragraph" report))
     (should (string-match-p "the next paragraph continues here" report))))
+
+(ert-deftest whittle-report-excludes-org-structural-lines ()
+  "Report units should skip org syntax while cleaning surrounding prose."
+  (let* ((text (mapconcat
+                #'identity
+                '(":PROPERTIES:"
+                  ":ID:       20260706T233409.419166"
+                  ":END:"
+                  "#+TITLE: Fable: Thought Leadership Strategy"
+                  "#+FILETAGS: :socratic:"
+                  "- Links ::"
+                  "- Source ::"
+                  "Um, this is is a draft."
+                  "#+begin_src user"
+                  "great. so give me a detailed assignment"
+                  "#+end_src")
+                "\n"))
+         (units
+          (whittle-test--with-text
+           text
+           (lambda ()
+             (whittle--transcript-report-units (point-min) (point-max))))))
+    (should (equal (mapcar (lambda (unit) (plist-get unit :text)) units)
+                   '("Um, this is is a draft."
+                     "great. so give me a detailed assignment")))))
+
+(ert-deftest whittle-report-apply-preserves-org-syntax ()
+  "`whittle' should not clobber org metadata while applying safe cleanup."
+  (let* ((input (mapconcat
+                 #'identity
+                 '(":PROPERTIES:"
+                   ":ID:       20260706T233409.419166"
+                   ":END:"
+                   "#+TITLE: Fable: Thought Leadership Strategy"
+                   "#+FILETAGS: :socratic:"
+                   "- Links ::"
+                   "- Source ::"
+                   "Um, this is is a draft.")
+                 "\n"))
+         (output
+          (car (whittle-test--reported-command-output
+                input #'whittle "/tmp/whittle-test-conservative.org"))))
+    (should (string-match-p ":ID:       20260706T233409\\.419166" output))
+    (should (string-match-p "#\\+FILETAGS: :socratic:" output))
+    (should (string-match-p "- Links ::" output))
+    (should (string-match-p "- Source ::" output))
+    (should-not (string-match-p "#\\+FILETAGS::socratic:" output))
+    (should-not (string-match-p "- Links::" output))
+    (should (string-match-p "this is a draft\\." output))))
+
+(ert-deftest whittle-raw-commands-preserve-org-syntax ()
+  "Raw apply commands should share the org structural protection layer."
+  (let ((input (mapconcat
+                #'identity
+                '(":PROPERTIES:"
+                  ":ID:       20260706T233409.419166"
+                  ":END:"
+                  "#+TITLE: Fable: Thought Leadership Strategy"
+                  "#+FILETAGS: :socratic:"
+                  "- Links ::"
+                  "- Source ::"
+                  "Um, this is is a draft.")
+                "\n")))
+    (dolist (command '(whittle-apply
+                       whittle-transcript-apply
+                       whittle/remove-filler-words
+                       whittle/remove-duplicated-words))
+      (let ((output (whittle-test--command-output input command)))
+        (should (string-match-p ":ID:       20260706T233409\\.419166" output))
+        (should (string-match-p "#\\+FILETAGS: :socratic:" output))
+        (should (string-match-p "- Links ::" output))
+        (should (string-match-p "- Source ::" output))
+        (should-not (string-match-p "#\\+FILETAGS::socratic:" output))
+        (should-not (string-match-p "- Links::" output))))))
+
+(ert-deftest whittle-transcript-apply-preserves-src-delimiters ()
+  "Line joining should not fuse org source delimiters with quoted prose."
+  (let* ((input "#+begin_src user\ngreat. so give me a detailed assignment\n#+end_src\n")
+         (output (whittle-test--command-output input #'whittle-transcript-apply)))
+    (should (string-match-p "#\\+begin_src user\ngreat\\. So give me" output))
+    (should-not (string-match-p "#\\+begin_src user great" output))
+    (should (string-match-p "\n#\\+end_src\n" output))))
+
+(ert-deftest whittle-case-normalization-respects-abbreviations-and-ellipses ()
+  "Case normalization should not capitalize after abbreviations or ellipses."
+  (let ((input (mapconcat
+                #'identity
+                '("That distinction... idea vs. brand is useful."
+                  "Now, what \"creed vs. argument\" means."
+                  "e.g. right now, i could post."
+                  "Line break e.g."
+                  "right now stays lower."
+                  "The P.P.S. (\"please go\") is bad."
+                  "Pause... and then continue."
+                  "Pause… and then continue.")
+                "\n")))
+    (whittle-test--with-text
+     input
+     (lambda ()
+       (whittle--normalize-case (point-min) (point-max) t)
+       (let ((output (buffer-string)))
+         (should (string-match-p "distinction\\.\\.\\. idea vs\\. brand" output))
+         (should (string-match-p "creed vs\\. argument" output))
+         (should (string-match-p "e\\.g\\. right now, I could post" output))
+         (should (string-match-p "Line break e\\.g\\.\nright now stays lower" output))
+         (should (string-match-p "P\\.P\\.S\\. (\"please go\")" output))
+         (should (string-match-p "Pause\\.\\.\\. and then continue" output))
+         (should (string-match-p "Pause… and then continue" output)))))))
+
+(ert-deftest whittle-case-normalization-still-capitalizes-after-headings ()
+  "Protecting org headings should not disable post-heading capitalization."
+  (let ((output (whittle-test--command-output
+                 "* Heading\nthis should cap.\n"
+                 #'whittle-apply)))
+    (should (string-match-p "\\* Heading\nThis should cap\\." output))))
 
 (ert-deftest whittle-report-includes-source-and-codex-target ()
   "The report should tell Codex which source file to edit directly."
@@ -462,13 +642,18 @@ is passed through to `whittle--transcript-report-generate'."
      (string-match-p "additional context that should be trimmed away"
                      copied))))
 
-(ert-deftest whittle-transcript-preserves-discourse-markers ()
-  "Transcript cleanup should not delete meaning-bearing discourse markers."
-  (let ((cases '("That's how I use AI, right?"
-                 "Right? I tell people this all the time."
-                 "That's the power. Right? Is that the right way to put it?"
-                 "Like I said, this is useful."
-                 "Like, forget the essay for a second.")))
+	(ert-deftest whittle-transcript-preserves-discourse-markers ()
+	  "Transcript cleanup should not delete meaning-bearing discourse markers."
+	  (let ((cases '("That's how I use AI, right?"
+	                 "Right? I tell people this all the time."
+	                 "That's the power. Right? Is that the right way to put it?"
+	                 "Like I said, this is useful."
+	                 "Like, forget the essay for a second."
+	                 "So I think the best next move is clear."
+	                 "So the same moment, reframed:"
+	                 "Well, this is the point."
+	                 "OK, the shape is coming into focus."
+	                 "You know, this might be useful.")))
     (dolist (input cases)
       (let* ((temp-dir (make-temp-file "whittle-report-test" t))
              (whittle/transcript-report-directory temp-dir))
@@ -483,18 +668,10 @@ is passed through to `whittle--transcript-report-generate'."
                    (should (string= (buffer-string) input))))))
           (delete-directory temp-dir t))))))
 
-(ert-deftest whittle-transcript-gates-so-ellipsis-and-i-mean-openers ()
-  "Risky transcript openers should be reported and held back."
-  (dolist (case '(("So… that's how I think about it."
-                   "orphan-ellipsis")
-                  ("So... If you sign up for the full version."
-                   "orphan-ellipsis")
-                  ("I mean, he looks basically like how I look."
-                   "sentence-initial-i-mean")
-                  ("Okay, thanks."
-                   "lowercase-start-after-opener")
-                  ("So what do you do?"
-                   "lowercase-start-after-opener")))
+(ert-deftest whittle-transcript-gates-i-mean-openers ()
+  "Risky sentence-initial `I mean,' cleanup should be reported and held back."
+  (dolist (case '(("I mean, he looks basically like how I look."
+                   "sentence-initial-i-mean")))
     (let* ((input (car case))
            (hazard (cadr case))
            (temp-dir (make-temp-file "whittle-report-test" t))
@@ -514,6 +691,18 @@ is passed through to `whittle--transcript-report-generate'."
       (should copied)
       (should (string-match-p "Hazard-Tagged / Not Applied" copied))
       (should (string-match-p (regexp-quote hazard) copied)))))
+
+(ert-deftest whittle-transcript-holds-back-subject-pronoun-residue ()
+  "Filler removal that would leave adjacent subject pronouns should be held."
+  (let* ((input "However, I uh it takes a while.\n")
+         (result (whittle-test--reported-command-output
+                  input #'whittle-transcript "/tmp/whittle-test-transcript.org"))
+         (output (car result))
+         (copied (cdr result)))
+    (should (string= output input))
+    (should (string-match-p "subject-pronoun-fusion" copied))
+    (should (string-match-p "Hazard-Tagged / Not Applied" copied))
+    (should (string-match-p "However, I it takes a while" copied))))
 
 (ert-deftest whittle-transcript-gates-like-clause-fusions ()
   "Comma-bounded `like' should not fuse adjacent clause-like spans."
@@ -554,8 +743,8 @@ is passed through to `whittle--transcript-report-generate'."
       (should (string-match-p "like-clause-fusion" copied))
       (should (string-match-p (regexp-quote hazard) copied)))))
 
-(ert-deftest whittle-transcript-gates-right-so-filler-chain ()
-  "A filler-chain containing `right? So...' should not be auto-applied."
+(ert-deftest whittle-transcript-preserves-right-so-filler-chain ()
+  "A `right? So...' transition should be preserved by default."
   (let* ((input "It's gonna get published, right? So… My premise is simple.")
          (temp-dir (make-temp-file "whittle-report-test" t))
          (whittle/transcript-report-directory temp-dir)
@@ -567,13 +756,11 @@ is passed through to `whittle--transcript-report-generate'."
           (whittle-test--with-text
            input
            (lambda ()
-             (let ((buffer-file-name "/tmp/whittle-test-transcript.org"))
-               (whittle-transcript (point-min) (point-max))
-               (should (string= (buffer-string) input))))))
-      (delete-directory temp-dir t))
-    (should copied)
-    (should (string-match-p "right-so-chain" copied))
-    (should (string-match-p "case-clause-fusion" copied))))
+	             (let ((buffer-file-name "/tmp/whittle-test-transcript.org"))
+	               (whittle-transcript (point-min) (point-max))
+	               (should (string= (buffer-string) input))))))
+	      (delete-directory temp-dir t))
+	    (should copied)))
 
 (ert-deftest whittle-report-flags-and-applies-partial-hazard-entries ()
   "Hazards are recorded, while apply writes the entry's safe partial result."

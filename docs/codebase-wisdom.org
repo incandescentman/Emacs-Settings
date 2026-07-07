@@ -1355,6 +1355,27 @@ The sentence-edge filler regex in [[file+emacs:/Users/jay/emacs/emacs-settings/w
 - A held-back hazard must become a real protected span for later passes, not just a report label. Otherwise punctuation cleanup or case normalization can still damage the area around the held-back discourse marker, producing scars like =thinking I love=, =part. Is really=, or =right? … My premise= after the risky deletion itself was supposedly blocked.
 - Candidate hazards and final-output scars are different safety layers. Hazards decide whether a proposed pass should be held back; scars inspect the safe applied output afterward for suspicious residue from multi-pass interactions. Keep scar scans advisory/report-only so they guide Codex review without becoming another brittle rewrite pass.
 
+* Whittle Org Protection: Splitters Are Not Safety Gates
+  Date: 2026-07-07
+
+** Trigger
+A real =whittle-transcript= cleanup on [[file+emacs:/Users/jay/Dropbox/roam/socratic-ideas/20260706233411-fable_thought_leadership_strategy.org][Fable: Thought Leadership Strategy]] damaged org syntax:
+
+=#+FILETAGS: :socratic:= became =#+FILETAGS::socratic:=
+
+=- Links ::= became =- Links::=
+
+It also joined =#+begin_src user= with the quoted user text and over-capitalized abbreviation/ellipsis contexts such as =idea vs. brand=.
+
+** Mechanism
+The report unit splitter excluded org headings, but several public commands bypassed that splitter entirely: =whittle-apply=, =whittle-transcript-apply=, =whittle/remove-filler-words=, and =whittle/remove-duplicated-words=. The punctuation and case passes were raw buffer regex passes, so a splitter-only fix would still let conservative cleanup clobber org metadata.
+
+** Actionable insight
+- Put structural protections inside every mutating pass, not only around report generation.
+- Keep org structural protection separate from transcript held-back spans. In [[file+emacs:/Users/jay/emacs/emacs-settings/whittle.el][whittle.el]], =whittle--org-protected-regions= protects source syntax, while =whittle--transcript-report-expand-protected-span= and friends protect hazardous edit replay.
+- Test both the report/apply workflow and raw bypass commands whenever adding a cleanup safety rule. If only =whittle-transcript= is tested, =whittle-apply= can quietly keep the same bug.
+- For transcript discourse markers, default to preserving openers such as =So=, =Well=, =OK=, and =you know=. If Jay wants those removed later, make it an explicit customization rather than the default cleanup behavior.
+
 * org-web-tools: CloudFront 403 Can Be Curl User-Agent Rejection
   Date: 2026-07-06
 
