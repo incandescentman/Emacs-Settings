@@ -142,6 +142,33 @@ The active profile is saved to =~/.cache/org-roam-current-profile= and restored 
 
 The system closes the old database before opening the next one.
 
+** Excluded archive folder
+
+The default vault has a cold-storage folder at [[file+emacs:/Users/jay/Dropbox/roam/archive-excluded/][/Users/jay/Dropbox/roam/archive-excluded/]]. It is for files Jay wants to keep but hide from normal Org-roam node find commands, including =jay/org-roam-node-find-recent=.
+
+The effective Emacs exclusion is in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-suite/jay-org-roam-core.el]]:
+
+#+begin_src emacs-lisp
+(setq org-roam-file-exclude-regexp
+      "\\.git/\\|attachments/\\|archive-excluded/\\|\\.org~$\\|#.*#$")
+#+end_src
+
+In this installed org-roam build, =org-roam-list-files= honors =org-roam-file-exclude-regexp=. =org-roam-directory-exclude-regexp= alone is not enough to keep files out of the node picker.
+
+After changing exclusions:
+
+1. Update the live Emacs variable if the current session is already running.
+2. Run =M-x org-roam-db-sync=.
+3. Verify that this returns =nil=:
+
+#+begin_src emacs-lisp
+(seq-filter
+ (lambda (f) (string-match-p "archive-excluded" f))
+ (org-roam-list-files))
+#+end_src
+
+4. Verify [[file+emacs:/Users/jay/.cache/org-roam.db][/Users/jay/.cache/org-roam.db]] has no rows for =archive-excluded= before telling Jay the picker is clean.
+
 ** Independence
 
 Profiles do not share databases or note directories. Cross-profile references should use full file paths rather than assuming Org-roam links will span graphs.

@@ -1394,3 +1394,17 @@ Jay's wrappers in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.
 - For =org-web-tools= HTTP failures, first distinguish fetch failures from readability/Pandoc failures. A CloudFront =403= at =plz= time is often request-header rejection, not article parsing.
 - Test the URL with plain curl and a browser =User-Agent= before changing extraction logic.
 - Catch =plz-error= in Jay-facing wrappers so blocked pages preserve a usable Org link and do not interrupt the capture flow with a debugger.
+
+* Org-roam Exclusions: File Exclude Beats Directory Exclude
+  Date: 2026-07-08
+
+** Trigger
+Jay wanted a vault folder for files he did not want to delete but also did not want to see in =jay/org-roam-node-find-recent=. Setting only =org-roam-directory-exclude-regexp= to include =archive-excluded/= looked plausible, but =org-roam-list-files= still returned files under [[file+emacs:/Users/jay/Dropbox/roam/archive-excluded/][/Users/jay/Dropbox/roam/archive-excluded/]] and =org-roam-db-sync= reinserted them into [[file+emacs:/Users/jay/.cache/org-roam.db][/Users/jay/.cache/org-roam.db]].
+
+** Mechanism
+The installed org-roam build on this machine documents and honors =org-roam-file-exclude-regexp= for file discovery. =org-roam-directory-exclude-regexp= is present in Jay's old config history, but in the live build it was not enough to filter =org-roam-list-files=.
+
+** Actionable insight
+- For vault cold storage, keep [[file+emacs:/Users/jay/Dropbox/roam/archive-excluded/][/Users/jay/Dropbox/roam/archive-excluded/]] in =org-roam-file-exclude-regexp= inside [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-suite/jay-org-roam-core.el]].
+- After changing org-roam exclusions, test the live function, not just the variable: =(seq-filter (lambda (f) (string-match-p "archive-excluded" f)) (org-roam-list-files))= should return =nil=.
+- Run =org-roam-db-sync= and verify [[file+emacs:/Users/jay/.cache/org-roam.db][/Users/jay/.cache/org-roam.db]] has no rows for the excluded path before declaring =jay/org-roam-node-find-recent= clean.

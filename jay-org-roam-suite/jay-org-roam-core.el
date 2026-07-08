@@ -119,10 +119,10 @@ If FILENAME starts with /Users/jay/Dropbox, return it as-is without resolution."
         ;; Use direct path to avoid resolving Dropbox symlink to CloudStorage
         org-roam-directory "/Users/jay/Dropbox/roam"
         org-roam-database-connector 'sqlite-builtin
-        org-roam-directory-exclude-regexp "^documents/"
+        org-roam-directory-exclude-regexp "^\\(archive-excluded\\|documents\\)/"
         org-roam-node-display-template (concat "${title:*} " (propertize "${tags:15}" 'face 'org-tag))
         org-roam-dailies-directory "journal/"
-        org-roam-file-exclude-regexp "\\.git/\\|attachments/\\|\\.org~$\\|#.*#$"
+        org-roam-file-exclude-regexp "\\.git/\\|attachments/\\|archive-excluded/\\|\\.org~$\\|#.*#$"
         org-roam-db-location (expand-file-name "org-roam.db" (xdg-cache-home))
         org-roam-db-update-method 'idle)
   (when jay/org-roam-debug

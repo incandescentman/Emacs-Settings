@@ -2065,5 +2065,10 @@
 - Added ERT coverage in [[file+emacs:/Users/jay/emacs/emacs-settings/tests/whittle-tests.el][tests/whittle-tests.el]] that counts structural-protection scans during a raw =whittle-transcript-apply= run and fails if it regresses to per-match scanning.
 - Verified the raw-path timing smoke after the fix: 100 lines =0.0183s=, 200 lines =0.0256s=, 400 lines =0.0550s=, 3000 lines =0.4043s= for =whittle-transcript-apply= in a clean batch Emacs process.
 
+* 2026-07-08: Document org-roam excluded archive behavior
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/docs/org-roam-profiles.org][docs/org-roam-profiles.org]] to explain that [[file+emacs:/Users/jay/Dropbox/roam/archive-excluded/][/Users/jay/Dropbox/roam/archive-excluded/]] is hidden from =jay/org-roam-node-find-recent= through =org-roam-file-exclude-regexp= in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-suite/jay-org-roam-core.el]].
+- Captured the trap that =org-roam-directory-exclude-regexp= alone does not keep files out of =org-roam-list-files= in this installed org-roam build.
+- Added the durable debugging lesson to [[file+emacs:/Users/jay/emacs/emacs-settings/docs/codebase-wisdom.org][docs/codebase-wisdom.org]].
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.
