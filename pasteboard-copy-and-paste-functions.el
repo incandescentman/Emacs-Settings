@@ -14,7 +14,6 @@
 
 (setq smart-quote-regexp-replacements
       '(
-        ("\\(\\w\\)- " . "\\1")
         ("\\(\\w\\)\\(  [-—] \\|—\\)" . "\\1---")))
 
 
@@ -27,7 +26,7 @@
        (goto-char beg)
        (let ((end-marker (copy-marker (min end (point-max)))))
          (while (re-search-forward (car r) end-marker t)
-           (replace-match (cdr r) t t))
+           (replace-match (cdr r) t nil))
          (set-marker end-marker nil))))
    smart-quote-regexp-replacements))
 

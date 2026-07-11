@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-07-11: Preserve suspended hyphens during adaptive paste
+- Removed the overly broad =\\(\\w\\)- = cleanup rule from [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][pasteboard-copy-and-paste-functions.el]] because it treated valid suspended hyphens such as =innovation- and demand-oriented= and =90th- and 10th-percentile= as unwanted line-wrap hyphenation.
+- Corrected =replace-smart-quotes-regexp= so =replace-match= expands capture references such as =\\1= instead of inserting them literally. This keeps the remaining dash-normalization rule working without producing pasted =\\1= artifacts.
+- Repaired the two source-confirmed corruptions in [[file+emacs:/Users/jay/Dropbox/roam/business-socratic/enterprise-ai-productivity-gap/20260711175513-why_individual_ai_gains_don_t_become_durable_organizational_gains_an_evidence_map_claude_deep_research.org][Why Individual AI Gains Don't Become Durable Organizational Gains]] from the clean original at [[file+emacs:/Users/jay/Downloads/original text.txt][original text.txt]].
+- Verified =pasteboard-copy-and-paste-functions.el= with =check-parens=, passed the full real original through =pasteboard--clean-string= while asserting both suspended hyphens remain and no literal =\\1= survives, ran =git diff --check=, and completed the configured startup smoke test with =shift nil=.
+
 * 2026-06-30: Normalize form feeds during paste cleanup
 - Added form-feed/page-break cleanup to =smart-quotes-replacement-pairs= in [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][pasteboard-copy-and-paste-functions.el]] so =replace-smart-quotes= replaces OCR/PDF =\f= characters with a plain space before they can make Org redisplay choke.
 - The replacement intentionally uses a space, not an empty string, so text on either side of a form feed cannot be joined into a single word. It does not remove OCR page-number lines after the page break; that would need a separate regex cleanup.
