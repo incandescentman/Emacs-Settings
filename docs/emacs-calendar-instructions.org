@@ -112,6 +112,9 @@ Entries are grouped by year and month with Markdown headings, then a bare
 - New entries are inserted into the correct year/month section in date order,
   creating missing headings as needed.
 
+** Multi-Day Events
+The canonical shared-data protocol lives in [[file+emacs:/Users/jay/Dropbox/github/timeless/docs/instructions.org][Timeless Instructions]]. Record the full description and complete date range on the first day, add ~Last day of [event]~ on the final day, and do not repeat the event on intervening days. Do not use ~%%(diary-block ...)~ because Timeless and the custom agenda do not parse it.
+
 * Configuration Reference
 Set in [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-calendar.el][timeline-calendar.el]]:
 

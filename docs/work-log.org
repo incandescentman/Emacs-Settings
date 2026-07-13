@@ -2097,5 +2097,9 @@
 - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/docs/emacs-calendar-instructions.org][docs/emacs-calendar-instructions.org]] to distinguish the loader in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] from the implementation under [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/][timeline/]].
 - Replaced the obsolete line-number reference with full links to the module entry point, diary data, and theme integration.
 
+* 2026-07-13: Document the shared multi-day event protocol
+- Added a cross-reference in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/emacs-calendar-instructions.org][docs/emacs-calendar-instructions.org]] to the canonical protocol in [[file+emacs:/Users/jay/Dropbox/github/timeless/docs/instructions.org][Timeless instructions]].
+- Multi-day events use the full range on the first day and ~Last day of [event]~ on the final day; intervening days stay empty, and unsupported ~%%(diary-block ...)~ entries are excluded.
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.
