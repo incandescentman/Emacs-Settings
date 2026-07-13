@@ -25,9 +25,9 @@ In this way, Timeline functions as a text-first event database — a human-reada
 - ✍️ *Markdown Diary Format*: Keeps entries organized hierarchically by year and month using Markdown headings:
   #+begin_example
   # 2025
-  ** January 2025
+  ## January 2025
   1/2/2025
-   - Meet with Claire
+    - Meet with Claire
   #+end_example
 - 🪶 *Automatic Chronological Sorting*: New entries are inserted in the correct year/month section in date order.
 - 🧭 *Smart Navigation & Focus Control*:
@@ -60,9 +60,9 @@ In this way, Timeline functions as a text-first event database — a human-reada
 - Markdown layout is excellent:
   #+begin_example
   # 2025
-  ** January 2025
+  ## January 2025
   1/5/2025
-   - Task
+    - Task
   #+end_example
 - Consistent spacing, blank lines, and indentation.
 - ~my-calendar--ensure-blank-line~ ensures visual separation between entries.
@@ -89,7 +89,7 @@ In this way, Timeline functions as a text-first event database — a human-reada
 | ~?~ | =my-calendar-help= | Show cheat sheet popup (press `q` to close) |
 
 * Diary Buffer Extras
-- ~C-SPC~ or ~C-c C-c~ inside ~timeline.md~ run =my-diary-return-to-calendar= so you can hop back to the originating calendar date even after editing elsewhere.
+- ~C-c C-c~ inside ~timeline.md~ runs =my-diary-return-to-calendar= so you can hop back to the originating calendar date even after editing elsewhere.
 - ~C-c C-k~ runs =my-calendar-cancel-current-entry= to delete the current date block (with confirmation if it has content) and pop back to Calendar.
 - ~/~ or ~s~ trigger =my-diary-search= for instant diary-wide searching.
 - ~my-diary-mode~ activates automatically in the diary file, showing a 📅 + date in the mode line for context.
@@ -99,7 +99,7 @@ In this way, Timeline functions as a text-first event database — a human-reada
 - The diary file is manipulated using helper functions prefixed with =my-calendar--=.
 - The insertion logic ensures each entry is correctly placed within a valid month region, creating missing sections as needed.
 - Blank-line normalization ensures every date and section is surrounded by readable spacing.
-- Compatible with modern Emacs (≥ 29), including builds where =calendar-month-alist= isn't automatically provided.
+- Compatible with modern Emacs (28+), including newer builds (some Emacs 29+) where =calendar-month-alist= isn't automatically provided.
 - Optional which-key integration labels every custom Calendar binding when which-key-mode is active, the calendar move hook echoes the active date for quick context, and `my-calendar-test-date-format` provides an ERT regression test for the diary date formatter.
 
 * Module Layout

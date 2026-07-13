@@ -32,7 +32,7 @@
               (lambda ()
                 (interactive)
                 (calendar-goto-today)
-                (my-calendar-jump-to-diary-entry)))
+                (my-calendar-edit-diary-entry)))
   (define-key calendar-mode-map (kbd "M-t") #'my-calendar-toggle-last-date)
   (define-key calendar-mode-map (kbd "?")   #'my-calendar-help)
 
@@ -76,7 +76,7 @@
         "o" "View diary entry"
         "SPC" "View diary entry"
         "O" "Fancy diary listing"
-        "t" "Jump to today + view entry"
+        "t" "Jump to today + edit entry"
         "M-t" "Toggle today/last date"
         "n" "Next month"
         "M-<right>" "Next month"

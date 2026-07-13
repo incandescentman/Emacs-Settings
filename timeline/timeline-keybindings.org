@@ -26,7 +26,7 @@ These bindings live in ~calendar-mode-map~.
      - Pop up an in-buffer cheat sheet of these custom bindings; press `q` to close.
 
 ~t~   today + diary
-     - Move to today and immediately display today’s diary entry.
+     - Move to today and open today’s entry for editing (creating it if needed), landing at the end of the last bullet.
 
 ~n~, ~M-<right>~   month forward
      - Advance one month.
@@ -64,8 +64,9 @@ The timeline lives in ~~/Dropbox/github/timeless/data/timeline.md~ and is displa
 ~s-.~ (Command-.)   ~my-calendar-focus-calendar-window~
      - Refocus the Calendar window from within the diary buffer and close any diary listing panes so the view stays diary + calendar.
 
-~C-SPC~, ~C-c C-c~   ~my-diary-return-to-calendar~
+~C-c C-c~   ~my-diary-return-to-calendar~
      - From within the diary buffer, jump back to Calendar at the date you originally opened.
+       (~C-SPC~ is intentionally left as the stock ~set-mark-command~ so region selection works normally in the diary.)
 
 ~/~, ~s~   ~my-diary-search~
      - Search all diary entries from inside the diary buffer via consult-ripgrep.

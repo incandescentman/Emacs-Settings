@@ -42,7 +42,7 @@ Otherwise, save the current date and jump to today."
           "| RET, e      | Edit diary entry at point                  |\n"
           "| v, o, SPC   | View diary entry at point                  |\n"
           "| O           | Show fancy diary listing for date          |\n"
-          "| t           | Jump to today and view diary entry         |\n"
+          "| t           | Jump to today and edit diary entry         |\n"
           "| M-t         | Toggle between today and previous date     |\n"
           "| n, M-→      | Next month                                 |\n"
           "| p, M-←      | Previous month                             |\n"
@@ -86,7 +86,7 @@ Otherwise, save the current date and jump to today."
                         :background nil
                         :weight 'normal)))
 
-(defun my-calendar--disable-diary-highlighting ()
+(defun my-calendar--style-diary-face ()
   "Render diary dates with a mint-green foreground."
   (when (facep 'diary)
     (set-face-attribute 'diary nil
@@ -98,8 +98,8 @@ Otherwise, save the current date and jump to today."
 ;; Apply immediately and after theme changes.
 (my-calendar--disable-holiday-highlighting)
 (add-hook 'after-load-theme-hook #'my-calendar--disable-holiday-highlighting)
-(my-calendar--disable-diary-highlighting)
-(add-hook 'after-load-theme-hook #'my-calendar--disable-diary-highlighting)
+(my-calendar--style-diary-face)
+(add-hook 'after-load-theme-hook #'my-calendar--style-diary-face)
 
 (setq calendar-month-header
       '(propertize
@@ -147,8 +147,9 @@ Also set buffer-local `my-diary--origin-date` in the diary buffer."
       (setq-local my-diary--origin-date date))
     (setq entry-pos
           (with-current-buffer diary-buf
-            (when (progn (goto-char (point-min))
-                         (search-forward date-str nil t))
+            (goto-char (point-min))
+            (when (re-search-forward
+                   (concat "^" (regexp-quote date-str) "$") nil t)
               (beginning-of-line)
               (point))))
     (unless entry-pos
@@ -204,7 +205,6 @@ After showing the listing, jump to the Markdown diary entry for that date."
              (string= (expand-file-name buffer-file-name)
                       (expand-file-name diary-file)))
     (local-set-key (kbd "s-.") #'my-calendar-focus-calendar-window)
-    (local-set-key (kbd "C-SPC") #'my-diary-return-to-calendar)
     (local-set-key (kbd "C-c C-c") #'my-diary-return-to-calendar)))
 
 (add-hook 'markdown-mode-hook #'my-calendar--setup-diary-shortcuts)
