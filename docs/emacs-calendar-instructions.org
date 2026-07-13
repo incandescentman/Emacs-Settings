@@ -248,9 +248,10 @@ Ensure ~calendar-mode-map~ customizations are loaded:
 * Related Files
 
 Configuration sources:
-- ~shared-functions.org:8479-8525~ - Calendar and diary configuration code
-- =/Users/jay/Dropbox/github/timeless/data/timeline.md= - Diary content (Markdown format)
-- ~jay-custom-color-themes/leuven-jay.el~ - Theme faces affecting calendar colors
+- [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][📄 shared-functions.org]] - Adds the timeline directory to ~load-path~ and loads the module with ~(require 'timeline)~
+- [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/][📁 timeline/]] - Calendar and diary implementation; [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline.el][📄 timeline.el]] is the entry point that loads the focused modules
+- [[file+emacs:/Users/jay/Dropbox/github/timeless/data/timeline.md][📄 timeline.md]] - Diary content (Markdown format)
+- [[file+emacs:/Users/jay/emacs/emacs-settings/jay-custom-color-themes/leuven-jay.el][📄 leuven-jay.el]] - Theme faces affecting calendar colors
 
 * Appendix: Diary Entry Types
 

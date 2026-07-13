@@ -2076,5 +2076,9 @@
 - Captured the trap that =org-roam-directory-exclude-regexp= alone does not keep files out of =org-roam-list-files= in this installed org-roam build.
 - Added the durable debugging lesson to [[file+emacs:/Users/jay/emacs/emacs-settings/docs/codebase-wisdom.org][docs/codebase-wisdom.org]].
 
+* 2026-07-13: Correct the documented Timeline load path
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/docs/emacs-calendar-instructions.org][docs/emacs-calendar-instructions.org]] to distinguish the loader in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] from the implementation under [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/][timeline/]].
+- Replaced the obsolete line-number reference with full links to the module entry point, diary data, and theme integration.
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.
