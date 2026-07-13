@@ -41,6 +41,7 @@ In this way, Timeline functions as a text-first event database — a human-reada
  - ~t~ --- Jump to today and open the diary entry.
 - 🪟 *Focus Persistence*: Calendar windows and diary buffers remember their layout---no more window chaos when switching between them.
 - 🧹 *Auto-Cleanup on Save*: Empty date stubs (headings with only a blank bullet) are removed automatically so the timeline stays tidy.
+- 🔭 *Upcoming Events View*: ~a~ opens =my-timeline-upcoming=, a read-only "what's next" buffer listing future-dated entries in chronological order with weekday and days-until; ~RET~/~o~ jumps from any line back to that date in the Calendar.
 - 🪄 *Graceful Layout Management*: Automatically closes "Fancy Diary" display windows to preserve your layout.
 
 * ✅ Overall Strengths
@@ -82,6 +83,7 @@ In this way, Timeline functions as a text-first event database — a human-reada
 | ~O~ | =my-calendar-show-fancy-diary-listing= | Show fancy diary listing for date |
 | ~C-c C-k~ | =my-calendar-cancel-current-entry= | Delete current date block (asks if populated) |
 | ~M-t~ | =my-calendar-toggle-last-date= | Toggle between today and last visited date |
+| ~a~ | =my-timeline-upcoming= | List upcoming events (chronological "what's next") |
 | ~/~, ~s~ | =my-diary-search= | Run consult-ripgrep across the diary |
 | ~i~, ~c~ | =my-calendar-insert-diary-entry= | Insert a new diary entry |
 | ~C~ | =my-calendar-insert-diary-entry-and-autopopulate= | Insert entry prefilled with last input |
@@ -108,6 +110,7 @@ In this way, Timeline functions as a text-first event database — a human-reada
 - ~timeline-diary.el~ — diary insertion/edit commands and the lightweight `my-diary-mode`.
 - ~timeline-cleanup.el~ — the before-save cleanup pass and the `C-c C-k` cancel workflow.
 - ~timeline-search.el~ — consult-ripgrep integration and search bindings for both calendar and diary buffers.
+- ~timeline-agenda.el~ — the =my-timeline-upcoming= "what's next" view over future-dated entries.
 - ~timeline-tests.el~ — ERT coverage that exercises insertion, editing, cleanup, and cancel behaviour.
 - ~timeline.el~ — entry point that stitches the modules together and installs the shared keybindings.
 

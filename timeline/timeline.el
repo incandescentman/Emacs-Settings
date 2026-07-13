@@ -12,6 +12,7 @@
 (require 'timeline-diary)
 (require 'timeline-cleanup)
 (require 'timeline-search)
+(require 'timeline-agenda)
 (require 'timeline-tests)
 
 (with-eval-after-load 'calendar
@@ -27,13 +28,14 @@
   (define-key calendar-mode-map (kbd "i") #'my-calendar-insert-diary-entry)
   (define-key calendar-mode-map (kbd "c") #'my-calendar-insert-diary-entry)
   (define-key calendar-mode-map (kbd "C") #'my-calendar-insert-diary-entry-and-autopopulate)
-  (define-key calendar-mode-map (kbd "I") #'calendar-insert-diary-entry)
+  (define-key calendar-mode-map (kbd "I") #'diary-insert-entry)
   (define-key calendar-mode-map (kbd "t")
               (lambda ()
                 (interactive)
                 (calendar-goto-today)
                 (my-calendar-edit-diary-entry)))
   (define-key calendar-mode-map (kbd "M-t") #'my-calendar-toggle-last-date)
+  (define-key calendar-mode-map (kbd "a")   #'my-timeline-upcoming)
   (define-key calendar-mode-map (kbd "?")   #'my-calendar-help)
 
   ;; Month / year navigation helpers bound alongside standard keys.
@@ -69,7 +71,7 @@
         "i" "Insert diary entry"
         "c" "Insert diary entry"
         "C" "Insert diary (with default)"
-        "I" "Original insert diary"
+        "I" "Stock diary-insert-entry"
         "RET" "Edit diary entry"
         "e" "Edit diary entry"
         "v" "View diary entry"
@@ -78,6 +80,7 @@
         "O" "Fancy diary listing"
         "t" "Jump to today + edit entry"
         "M-t" "Toggle today/last date"
+        "a" "Upcoming events"
         "n" "Next month"
         "M-<right>" "Next month"
         "p" "Prev month"

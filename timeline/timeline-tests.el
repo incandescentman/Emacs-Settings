@@ -11,6 +11,7 @@
 (require 'timeline-cleanup)
 (require 'timeline-search)
 (require 'timeline-calendar)
+(require 'timeline-agenda)
 
 (ert-deftest my-calendar-test-date-format ()
   "Ensure `my-calendar--diary-format-date` emits M/D/YYYY strings."
@@ -152,6 +153,58 @@
                      (lambda (&rest _) nil)))
             (my-calendar-cancel-current-entry))
           (should (string-match-p "10/22/2025\n  - Keep me" (buffer-string))))
+      (when (get-buffer diary-buffer-name)
+        (kill-buffer diary-buffer-name))
+      (when (file-exists-p diary-temp)
+        (delete-file diary-temp)))))
+
+(ert-deftest my-timeline-test-upcoming-filters-and-sorts ()
+  "Upcoming returns only entries on/after today, sorted ascending."
+  (let* ((diary-temp (make-temp-file "timeline-test" nil ".md"))
+         (diary-file diary-temp)
+         (diary-buffer-name (file-name-nondirectory diary-temp)))
+    (unwind-protect
+        (progn
+          (with-temp-buffer
+            ;; Deliberately out of file order to exercise the sort.
+            (insert "# 2026\n\n## October 2026\n\n"
+                    "10/5/2026\n  - Later thing\n\n"
+                    "10/2/2026\n  - Rumpus reunion\n\n"
+                    "## September 2026\n\n"
+                    "9/1/2026\n  - Past thing\n\n")
+            (write-region (point-min) (point-max) diary-temp nil 'silent))
+          (let ((up (my-timeline--upcoming
+                     (calendar-absolute-from-gregorian '(10 3 2026)))))
+            (should (equal (mapcar (lambda (e) (plist-get e :string)) up)
+                           '("10/5/2026"))))
+          (let ((up (my-timeline--upcoming
+                     (calendar-absolute-from-gregorian '(9 1 2026)))))
+            (should (equal (mapcar (lambda (e) (plist-get e :string)) up)
+                           '("9/1/2026" "10/2/2026" "10/5/2026")))
+            (should (equal (plist-get (car up) :bullets) '("Past thing")))))
+      (when (get-buffer diary-buffer-name)
+        (kill-buffer diary-buffer-name))
+      (when (file-exists-p diary-temp)
+        (delete-file diary-temp)))))
+
+(ert-deftest my-timeline-test-upcoming-count-limits ()
+  "A COUNT argument caps the number of upcoming entries returned."
+  (let* ((diary-temp (make-temp-file "timeline-test" nil ".md"))
+         (diary-file diary-temp)
+         (diary-buffer-name (file-name-nondirectory diary-temp)))
+    (unwind-protect
+        (progn
+          (with-temp-buffer
+            (insert "# 2026\n\n## October 2026\n\n"
+                    "10/2/2026\n  - a\n\n"
+                    "10/5/2026\n  - b\n\n"
+                    "10/9/2026\n  - c\n\n")
+            (write-region (point-min) (point-max) diary-temp nil 'silent))
+          (let ((up (my-timeline--upcoming
+                     (calendar-absolute-from-gregorian '(1 1 2026)) 2)))
+            (should (= (length up) 2))
+            (should (equal (plist-get (car up) :string) "10/2/2026"))
+            (should (equal (plist-get (cadr up) :string) "10/5/2026"))))
       (when (get-buffer diary-buffer-name)
         (kill-buffer diary-buffer-name))
       (when (file-exists-p diary-temp)

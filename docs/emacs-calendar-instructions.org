@@ -38,6 +38,10 @@ Standard Emacs calendar motion still works (~C-f~/~f~/~→~ day forward,
   needed, landing at the end of the last bullet.
 - ~M-t~ --- Toggle between today and the previously visited date (like a
   one-slot mark ring).
+- ~a~ --- =my-timeline-upcoming=. Open the read-only *Timeline Upcoming* buffer:
+  future-dated entries in chronological order with weekday and days-until. A
+  numeric prefix caps the count (default 15); ~C-u a~ shows all. In that buffer,
+  ~RET~/~o~ jumps to the date in the Calendar, ~g~ refreshes, ~q~ quits.
 - ~?~ --- Pop up the custom cheat-sheet (press ~q~ to close).
 
 The Monday-first week (~calendar-week-start-day 1~) treats the weekend as a unit.
@@ -59,8 +63,8 @@ These custom bindings replace several stock calendar keys:
   stays in the diary buffer afterward.
 - ~C~ --- =my-calendar-insert-diary-entry-and-autopopulate=. Same, but seeds the
   minibuffer with your most recent entry text for quick reuse.
-- ~I~ --- =calendar-insert-diary-entry=. The stock Emacs single-day inserter,
-  kept as a Markdown-agnostic fallback.
+- ~I~ --- =diary-insert-entry=. The stock Emacs single-day inserter, kept as a
+  Markdown-agnostic fallback.
 - ~/~, ~s~ --- =my-diary-search=. Search the whole diary via ~consult-ripgrep~.
 
 Note: because ~i~ is remapped to the custom inserter, the stock ~i d~ / ~i w~ /
@@ -127,6 +131,7 @@ Set in [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-calendar.e
 - [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-diary.el][timeline-diary.el]] --- diary insert/edit commands and ~my-diary-mode~.
 - [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-cleanup.el][timeline-cleanup.el]] --- before-save cleanup and the ~C-c C-k~ cancel flow.
 - [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-search.el][timeline-search.el]] --- consult-ripgrep search bindings.
+- [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-agenda.el][timeline-agenda.el]] --- the =my-timeline-upcoming= "what's next" view.
 - [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-tests.el][timeline-tests.el]] --- ERT coverage for insertion, editing, cleanup, cancel.
 - [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline.el][timeline.el]] --- entry point that requires the modules and installs bindings.
 

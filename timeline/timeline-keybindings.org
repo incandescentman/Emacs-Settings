@@ -22,6 +22,12 @@ These bindings live in ~calendar-mode-map~.
 ~/~, ~s~   ~my-diary-search~
      - Run a consult-ripgrep search across the diary from within the calendar.
 
+~a~   ~my-timeline-upcoming~
+     - Open the read-only *Timeline Upcoming* buffer listing future-dated
+       entries in chronological order (weekday + days-until). A numeric prefix
+       caps the count; ~C-u a~ shows all. Inside that buffer, ~RET~/~o~ jumps to
+       the date in the Calendar, ~g~ refreshes, ~q~ quits.
+
 ~?~   ~my-calendar-help~
      - Pop up an in-buffer cheat sheet of these custom bindings; press `q` to close.
 
@@ -55,7 +61,7 @@ These bindings live in ~calendar-mode-map~.
 ~C-u C~   ~my-calendar-insert-diary-entry-and-autopopulate~
      - Autopopulate with history and keep focus in the diary buffer.
 
-~I~   ~calendar-insert-diary-entry~
+~I~   ~diary-insert-entry~
      - Stock Emacs inserter kept as a fallback, Markdown-agnostic.
 
 * Markdown Diary Helpers
