@@ -38,10 +38,12 @@ Standard Emacs calendar motion still works (~C-f~/~f~/~→~ day forward,
   needed, landing at the end of the last bullet.
 - ~M-t~ --- Toggle between today and the previously visited date (like a
   one-slot mark ring).
-- ~a~ --- =my-timeline-upcoming=. Open the read-only *Timeline Upcoming* buffer:
-  future-dated entries in chronological order with weekday and days-until. A
-  numeric prefix caps the count (default 15); ~C-u a~ shows all. In that buffer,
-  ~RET~/~o~ jumps to the date in the Calendar, ~g~ refreshes, ~q~ quits.
+- ~a~ --- =my-timeline-upcoming=. Open the read-only *Timeline Upcoming* buffer,
+  grouped into Today, This week, and Later. Paired multi-day boundaries collapse
+  into one range with status such as ~Starts today~, ~Ongoing · ends tomorrow~,
+  or ~Last day today~. A numeric prefix caps the count (default 15); ~C-u a~
+  shows all. In that buffer, ~RET~/~o~ jumps to the entry or range start in the
+  Calendar, ~g~ refreshes, and ~q~ quits.
 - ~?~ --- Pop up the custom cheat-sheet (press ~q~ to close).
 
 The Monday-first week (~calendar-week-start-day 1~) treats the weekend as a unit.
@@ -113,12 +115,12 @@ Entries are grouped by year and month with Markdown headings, then a bare
   creating missing headings as needed.
 
 ** Multi-Day Events
-The canonical shared-data protocol lives in [[file+emacs:/Users/jay/Dropbox/github/timeless/docs/instructions.org][Timeless Instructions]]. Record the full description and complete date range on the first day, add ~Last day of [event]~ on the final day, and do not repeat the event on intervening days. Do not use ~%%(diary-block ...)~ because Timeless and the custom agenda do not parse it.
+The canonical shared-data protocol lives in [[file+emacs:/Users/jay/Dropbox/github/timeless/docs/instructions.org][Timeless Instructions]]. Record the full description and complete date range on the first day, add ~Last day of [event]~ on the final day, and do not repeat the event on intervening days. The upcoming view pairs those two boundaries for display, keeps active ranges visible after their start date, and leaves the Markdown representation unchanged. Do not use ~%%(diary-block ...)~ because Timeless and the custom agenda do not parse it.
 
 * Configuration Reference
-Set in [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-calendar.el][timeline-calendar.el]]:
+Defined in [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-core.el][timeline-core.el]] and applied by [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-calendar.el][timeline-calendar.el]]:
 
-- ~diary-file~ = =/Users/jay/Dropbox/github/timeless/data/timeline.md=
+- ~my-timeline-diary-file~ defaults to [[file+emacs:/Users/jay/Dropbox/github/timeless/data/timeline.md][/Users/jay/Dropbox/github/timeless/data/timeline.md]] and keeps Emacs' stock ~diary-file~ synchronized. Change it with ~M-x customize-option RET my-timeline-diary-file~ or set it before ~(require 'timeline)~.
 - ~calendar-week-start-day~ = 1 (Monday)
 - ~calendar-mark-holidays-flag~ = nil, ~calendar-holidays~ = nil (holidays off)
 - ~calendar-mark-diary-entries-flag~ = t (diary dates highlighted)
@@ -134,7 +136,7 @@ Set in [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-calendar.e
 - [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-diary.el][timeline-diary.el]] --- diary insert/edit commands and ~my-diary-mode~.
 - [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-cleanup.el][timeline-cleanup.el]] --- before-save cleanup and the ~C-c C-k~ cancel flow.
 - [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-search.el][timeline-search.el]] --- consult-ripgrep search bindings.
-- [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-agenda.el][timeline-agenda.el]] --- the =my-timeline-upcoming= "what's next" view.
+- [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-agenda.el][timeline-agenda.el]] --- the range-aware =my-timeline-upcoming= view and its Today/This week/Later sections.
 - [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-tests.el][timeline-tests.el]] --- ERT coverage for insertion, editing, cleanup, cancel.
 - [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline.el][timeline.el]] --- entry point that requires the modules and installs bindings.
 

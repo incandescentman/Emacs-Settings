@@ -2101,5 +2101,12 @@
 - Added a cross-reference in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/emacs-calendar-instructions.org][docs/emacs-calendar-instructions.org]] to the canonical protocol in [[file+emacs:/Users/jay/Dropbox/github/timeless/docs/instructions.org][Timeless instructions]].
 - Multi-day events use the full range on the first day and ~Last day of [event]~ on the final day; intervening days stay empty, and unsupported ~%%(diary-block ...)~ entries are excluded.
 
+* 2026-07-13: Add a range-aware upcoming view and configurable diary path
+- Enhanced [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-agenda.el][timeline-agenda.el]] so paired first/last-day boundaries render as one multi-day event, active ranges remain visible with start/ongoing/last-day status, and entries are grouped into Today, This week, and Later.
+- Preserved the plain Markdown boundary protocol and kept unpaired ~Last day of ...~ markers visible as normal entries.
+- Added customizable ~my-timeline-diary-file~ in [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-core.el][timeline-core.el]] and synchronized it with Emacs' stock ~diary-file~ in [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-calendar.el][timeline-calendar.el]].
+- Expanded [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-tests.el][timeline-tests.el]] from 10 to 14 passing ERT tests, covering active-range collapsing, unpaired final markers, Monday-first agenda sections, and diary-path customization.
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/README.org][timeline/README.org]], [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-keybindings.org][timeline/timeline-keybindings.org]], and [[file+emacs:/Users/jay/emacs/emacs-settings/docs/emacs-calendar-instructions.org][the Emacs Calendar guide]].
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.

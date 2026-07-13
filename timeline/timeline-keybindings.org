@@ -23,10 +23,12 @@ These bindings live in ~calendar-mode-map~.
      - Run a consult-ripgrep search across the diary from within the calendar.
 
 ~a~   ~my-timeline-upcoming~
-     - Open the read-only *Timeline Upcoming* buffer listing future-dated
-       entries in chronological order (weekday + days-until). A numeric prefix
-       caps the count; ~C-u a~ shows all. Inside that buffer, ~RET~/~o~ jumps to
-       the date in the Calendar, ~g~ refreshes, ~q~ quits.
+     - Open the read-only *Timeline Upcoming* buffer grouped into Today, This week,
+       and Later. Paired first/last-day boundaries collapse into one range with
+       status such as ~Starts today~, ~Ongoing · ends tomorrow~, or ~Last day
+       today~. A numeric prefix caps the count; ~C-u a~ shows all. Inside that
+       buffer, ~RET~/~o~ jumps to the entry or range start in the Calendar, ~g~
+       refreshes, and ~q~ quits.
 
 ~?~   ~my-calendar-help~
      - Pop up an in-buffer cheat sheet of these custom bindings; press `q` to close.
@@ -78,4 +80,4 @@ The timeline lives in ~~/Dropbox/github/timeless/data/timeline.md~ and is displa
      - Search all diary entries from inside the diary buffer via consult-ripgrep.
 
 * Behaviour Notes
-Entry insertion ensures headings for the correct year and month, maintains chronological day ordering, and enforces a blank line before each ~M/D/YYYY~ block. Newly inserted text retains Markdown bullets (no Org conversion) and appends additional bullets to existing dates without duplication. All helpers are defined in ~timeline.el~ and loaded via ~shared-functions.org~.
+Entry insertion ensures headings for the correct year and month, maintains chronological day ordering, and enforces a blank line before each ~M/D/YYYY~ block. Newly inserted text retains Markdown bullets (no Org conversion) and appends additional bullets to existing dates without duplication. The Markdown path is controlled by ~my-timeline-diary-file~, which keeps Emacs' stock ~diary-file~ synchronized. The modular helpers are loaded through [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline.el][timeline.el]] via [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]].

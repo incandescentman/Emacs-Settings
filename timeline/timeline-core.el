@@ -11,6 +11,24 @@
 (require 'cal-move)
 (require 'rx)
 
+(defgroup my-timeline nil
+  "Markdown timeline integration for Emacs Calendar and Diary."
+  :group 'calendar
+  :prefix "my-timeline-")
+
+(defun my-timeline--set-diary-file (symbol value)
+  "Set SYMBOL to VALUE and keep `diary-file' synchronized."
+  (let ((expanded (expand-file-name value)))
+    (set-default symbol expanded)
+    (setq diary-file expanded)))
+
+(defcustom my-timeline-diary-file
+  "/Users/jay/Dropbox/github/timeless/data/timeline.md"
+  "Markdown diary file shared by Timeline and Timeless."
+  :type 'file
+  :group 'my-timeline
+  :set #'my-timeline--set-diary-file)
+
 (defvar my-diary--origin-date nil
   "Buffer-local variable storing the calendar date from which the diary buffer was opened.")
 
@@ -18,7 +36,7 @@
   "String describing the currently highlighted date in the calendar.")
 
 (defvar my-calendar--last-date nil
-  "Stack of the last visited calendar date for toggling with today.")
+  "Last visited calendar date for toggling with today.")
 
 (defvar my-timeline--suspend-cleanup nil
   "When non-nil, skip auto-cleanup of empty diary entries.")

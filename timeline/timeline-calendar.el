@@ -70,7 +70,7 @@ Otherwise, save the current date and jump to today."
 (setq calendar-mark-holidays-flag nil
       calendar-holiday-marker 'default
       calendar-holidays nil
-      diary-file "/Users/jay/Dropbox/github/timeless/data/timeline.md"
+      diary-file (expand-file-name my-timeline-diary-file)
       calendar-mark-diary-entries-flag t
       calendar-view-diary-initially-flag nil
       diary-display-function 'diary-fancy-display

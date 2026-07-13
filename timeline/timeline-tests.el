@@ -18,6 +18,19 @@
   (should (equal (my-calendar--diary-format-date 4 5 2024) "4/5/2024"))
   (should (equal (my-calendar--diary-format-date 12 31 1999) "12/31/1999")))
 
+(ert-deftest my-timeline-test-custom-diary-file-updates-diary-file ()
+  "Customizing `my-timeline-diary-file` should update `diary-file`."
+  (let ((original-option (default-value 'my-timeline-diary-file))
+        (original-diary diary-file)
+        (target (expand-file-name "custom-timeline.md" temporary-file-directory)))
+    (unwind-protect
+        (progn
+          (my-timeline--set-diary-file 'my-timeline-diary-file target)
+          (should (equal my-timeline-diary-file target))
+          (should (equal diary-file target)))
+      (set-default 'my-timeline-diary-file original-option)
+      (setq diary-file original-diary))))
+
 (ert-deftest my-calendar-test-ensure-blank-line-before ()
   "Ensure the blank-line helper inserts a clean separator."
   (with-temp-buffer
@@ -209,6 +222,87 @@
         (kill-buffer diary-buffer-name))
       (when (file-exists-p diary-temp)
         (delete-file diary-temp)))))
+
+(ert-deftest my-timeline-test-agenda-collapses-active-range ()
+  "A paired multi-day event should appear once with an ongoing status."
+  (let* ((diary-temp (make-temp-file "timeline-test" nil ".md"))
+         (diary-file diary-temp)
+         (diary-buffer-name (file-name-nondirectory diary-temp))
+         (today-abs (calendar-absolute-from-gregorian '(10 3 2026))))
+    (unwind-protect
+        (progn
+          (with-temp-buffer
+            (insert "# 2026\n\n## October 2026\n\n"
+                    "10/2/2026\n"
+                    "  - FRIDAY - SUN, OCT 2-4. Rumpus 50th anniversary reunion. new haven\n\n"
+                    "10/4/2026\n"
+                    "  - Last day of Rumpus 50th anniversary reunion\n\n"
+                    "10/5/2026\n"
+                    "  - Dentist\n\n")
+            (write-region (point-min) (point-max) diary-temp nil 'silent))
+          (let* ((items (my-timeline--agenda-items today-abs))
+                 (range (seq-find (lambda (item)
+                                    (eq (plist-get item :kind) 'range))
+                                  items)))
+            (should (= (length items) 2))
+            (should (equal (plist-get range :title)
+                           "Rumpus 50th anniversary reunion"))
+            (should (= (plist-get range :sort-abs) today-abs))
+            (should (equal (plist-get range :date) '(10 2 2026)))
+            (should (equal (my-timeline--range-status range today-abs)
+                           "Ongoing · ends tomorrow"))
+            (should-not
+             (seq-some
+              (lambda (item)
+                (member "Last day of Rumpus 50th anniversary reunion"
+                        (plist-get item :bullets)))
+              items))))
+      (when (get-buffer diary-buffer-name)
+        (kill-buffer diary-buffer-name))
+      (when (file-exists-p diary-temp)
+        (delete-file diary-temp)))))
+
+(ert-deftest my-timeline-test-agenda-keeps-unpaired-last-day-marker ()
+  "An unpaired final-boundary marker should remain a normal agenda entry."
+  (let* ((diary-temp (make-temp-file "timeline-test" nil ".md"))
+         (diary-file diary-temp)
+         (diary-buffer-name (file-name-nondirectory diary-temp))
+         (today-abs (calendar-absolute-from-gregorian '(10 3 2026))))
+    (unwind-protect
+        (progn
+          (with-temp-buffer
+            (insert "# 2026\n\n## October 2026\n\n"
+                    "10/4/2026\n"
+                    "  - Last day of Mystery Festival\n\n")
+            (write-region (point-min) (point-max) diary-temp nil 'silent))
+          (let ((items (my-timeline--agenda-items today-abs)))
+            (should (= (length items) 1))
+            (should (eq (plist-get (car items) :kind) 'entry))
+            (should (equal (plist-get (car items) :bullets)
+                           '("Last day of Mystery Festival")))))
+      (when (get-buffer diary-buffer-name)
+        (kill-buffer diary-buffer-name))
+      (when (file-exists-p diary-temp)
+        (delete-file diary-temp)))))
+
+(ert-deftest my-timeline-test-agenda-sections-use-monday-first-week ()
+  "Agenda items should split into Today, This week, and Later."
+  (let* ((today-abs (calendar-absolute-from-gregorian '(10 5 2026)))
+         (week-end-abs (my-timeline--week-end-absolute today-abs))
+         (today-item (list :sort-abs today-abs))
+         (week-item (list :sort-abs (+ today-abs 3)))
+         (later-item (list :sort-abs (+ today-abs 8))))
+    (should (equal (calendar-gregorian-from-absolute week-end-abs)
+                   '(10 11 2026)))
+    (should (eq (my-timeline--agenda-section
+                 today-item today-abs week-end-abs)
+                'today))
+    (should (eq (my-timeline--agenda-section
+                 week-item today-abs week-end-abs)
+                'this-week))
+    (should (eq (my-timeline--agenda-section
+                 later-item today-abs week-end-abs)
+                'later))))
 
 (provide 'timeline-tests)
 
