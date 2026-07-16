@@ -945,6 +945,8 @@ process the whole buffer."
         (files '("elegant-helvetica.el"
                  "beautiful-racket.el"
                  "elegant-garamond.el"
+                 "thought-leadership-playbook.el"
+                 "thought-leadership-playbook-warm.el"
                  "transcript-garamond.el"
                  "new-yorker.el"
                  "new-yorker-caslon.el"
@@ -970,6 +972,8 @@ process the whole buffer."
   '(("elegant-helvetica" . "/Users/jay/emacs/emacs-settings/latex-templates/elegant-helvetica.el")
     ("beautiful-racket" . "/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el")
     ("elegant-garamond" . "/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el")
+    ("thought-leadership-playbook" . "/Users/jay/emacs/emacs-settings/latex-templates/thought-leadership-playbook.el")
+    ("thought-leadership-playbook-warm" . "/Users/jay/emacs/emacs-settings/latex-templates/thought-leadership-playbook-warm.el")
     ("new-yorker" . "/Users/jay/emacs/emacs-settings/latex-templates/new-yorker.el")
     ("new-yorker-caslon" . "/Users/jay/emacs/emacs-settings/latex-templates/new-yorker-caslon.el")
     ("blue-invoice" . "/Users/jay/emacs/emacs-settings/latex-templates/blue-invoice.el")

@@ -83,6 +83,22 @@ The main invoice snippet uses the default Storytelling.NYC letterhead class; add
 - =elegant= → =elegant.yasnippet=
 - =elegantgaramond= → =elegantgaramond.yasnippet=
 
+* Thought Leadership Playbook Templates
+
+The thought-leadership countdown has two independent classes built on the Garamond export system:
+
+- =thought-leadership-playbook= ([[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/thought-leadership-playbook.el][📄 thought-leadership-playbook.el]]) is the blue, poster-like version with a dedicated cover page and one major phase per page.
+- =thought-leadership-playbook-warm= ([[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/thought-leadership-playbook-warm.el][📄 thought-leadership-playbook-warm.el]]) is the warm editorial version derived from the Claude Design reference: margin checkboxes beside filled date chips, atomic left-bar milestone callouts, a six-stat August floor ledger, an oxblood-accented booktabs recurring-week grid, compact phase chronology, a seven-page print sequence, and side-by-side slip/deferred columns.
+
+Both classes understand the same semantic layout commands, so one Org source can switch designs by changing only its =#+LaTeX_CLASS:= line. The source may use =\PlaybookPhaseBreak=, =\PlaybookContinuationBreak=, =\PlaybookMonthBreak=, =\PlaybookEngineBreak=, =\PlaybookTableHead=, and the three =\PlaybookBackmatter...= commands without embedding a palette or hard-coded page layout.
+
+The warm class also accepts a separate title that does not affect the blue cover:
+
+#+begin_example
+#+LATEX_HEADER: \PlaybookCoverTitle{Thought Leadership Countdown}
+#+LATEX_HEADER: \PlaybookWarmTitle{Thought Leadership Countdown \& Launch Plan}
+#+end_example
+
 * TODOs
 - [ ] Increase spacing between paragraphs
 - [ ] Increase spacing between numbered list items

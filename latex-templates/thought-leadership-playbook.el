@@ -1,15 +1,15 @@
-;;; elegant-garamond.el --- Org LaTeX class -*- lexical-binding: t; -*-
+;;; thought-leadership-playbook.el --- Org LaTeX class -*- lexical-binding: t; -*-
 
-(provide 'elegant-garamond)
+(provide 'thought-leadership-playbook)
 
 (add-to-list 'org-latex-classes
-             '("elegant-garamond"
+             '("thought-leadership-playbook"
                "
 \\providecommand{\\DocumentMetadata}[1]{}
 \\DocumentMetadata{lang=en-US}
-\\documentclass[12pt]{article}
-\\usepackage[includeheadfoot, margin=1in]{geometry} % Standard proposal/document margins
-\\setlength{\\footskip}{0.95in}
+\\documentclass[10pt]{article}
+\\usepackage[includeheadfoot, top=0.72in, bottom=0.62in, left=0.72in, right=0.72in, headsep=0.18in]{geometry}
+\\setlength{\\footskip}{0.32in}
 
 % Package Inclusions
 \\usepackage{wrapfig}
@@ -28,7 +28,7 @@
 \\usepackage{calc}
 \\usepackage{eso-pic}
 \\usepackage{etoolbox}
-\\usepackage{xcolor}
+\\usepackage[table]{xcolor}
 \\usepackage{microtype} % Improve typography
 \\usepackage{booktabs} % Professional-looking tables
 \\usepackage{array} % Column helpers for wrapping tables
@@ -48,6 +48,7 @@
 \\usepackage{enumitem}
 \\usepackage{csquotes}
 \\usepackage{titlesec}
+\\usepackage{needspace}
 \\usepackage{lipsum}
 \\usepackage[breaklinks=true, linktocpage, xetex]{hyperref}
 \\usepackage{bookmark}
@@ -69,7 +70,7 @@
 \\newcounter{level} % Define the custom counter
 \\usepackage{forloop}
 
-\\setlength{\\headheight}{14.49998pt}
+\\setlength{\\headheight}{16pt}
 
 % Table configuration for automatic text wrapping
 \\newcolumntype{Y}{>{\\RaggedRight\\arraybackslash}X}
@@ -77,10 +78,11 @@
 \\newcolumntype{W}{>{\\RaggedLeft\\arraybackslash}X}
 \\renewcommand{\\tabularxcolumn}[1]{m{#1}}
 \\newcommand{\\jaytableformat}{%
-  \\setlength{\\tabcolsep}{6pt}%
-  \\renewcommand{\\arraystretch}{1.05}%
-  \\fontsize{10}{12}\\selectfont}
-\\AtBeginEnvironment{tabularx}{\\jaytableformat}
+  \\setlength{\\tabcolsep}{5pt}%
+  \\renewcommand{\\arraystretch}{1.32}%
+  \\arrayrulecolor{playbookline}%
+  \\fontsize{9.2}{11}\\selectfont}
+\\AtBeginEnvironment{tabularx}{\\jaytableformat\\rowcolors{1}{playbookwash}{white}}
 \\AtBeginEnvironment{tabular}{\\jaytableformat}
 \\AtBeginEnvironment{longtable}{\\jaytableformat}
 \\setlength{\\LTpre}{0pt}
@@ -90,7 +92,30 @@
 \\ifxetex
   \\usepackage{fontspec}
   \\defaultfontfeatures{Mapping=tex-text, Scale=MatchLowercase}
-  \\setsansfont{TeX Gyre Pagella}
+  \\setsansfont[
+    Path = /Users/jay/Library/Fonts/,
+    UprightFont = HelveticaNeueLTPro-MdCn,
+    ItalicFont = HelveticaNeueLTPro-MdCnO,
+    BoldFont = HelveticaNeueLTPro-BdCn,
+    BoldItalicFont = HelveticaNeueLTPro-BdCnO,
+    Extension = .otf
+  ]{Helvetica Neue LT Pro}
+  \\newfontfamily\\playbooksans[
+    Path = /Users/jay/Library/Fonts/,
+    UprightFont = HelveticaNeueLTPro-MdCn,
+    ItalicFont = HelveticaNeueLTPro-MdCnO,
+    BoldFont = HelveticaNeueLTPro-BdCn,
+    BoldItalicFont = HelveticaNeueLTPro-BdCnO,
+    Extension = .otf
+  ]{Helvetica Neue LT Pro}
+  \\newfontfamily\\playbookdisplay[
+    Path = /Users/jay/Library/Fonts/,
+    UprightFont = GaramondPremrPro-Disp,
+    ItalicFont = GaramondPremrPro-ItDisp,
+    BoldFont = GaramondPremrPro-BdDisp,
+    BoldItalicFont = GaramondPremrPro-BdItDisp,
+    Extension = .otf
+  ]{Garamond Premier Pro Display}
   \\newfontfamily\\jayfooterbrandfont[
     Path = /Users/jay/Library/Fonts/,
     UprightFont = HelveticaNeueLTPro-BdCn,
@@ -144,6 +169,14 @@
 \\definecolor{spacegrey}{HTML}{434346}
 \\definecolor{azure}{HTML}{f2feff}
 \\definecolor{jayfooterbrandgrey}{HTML}{4F4F4F}
+\\definecolor{playbookink}{HTML}{17181B}
+\\definecolor{playbookblue}{HTML}{123D87}
+\\definecolor{playbookbluebright}{HTML}{1559B5}
+\\definecolor{playbookpowder}{HTML}{EAF1FA}
+\\definecolor{playbookwash}{HTML}{F5F8FC}
+\\definecolor{playbookline}{HTML}{AAB8CC}
+\\definecolor{playbookred}{HTML}{D84A3A}
+\\definecolor{playbookmuted}{HTML}{596477}
 
 \\newcommand{\\labelitemv}{\\textbullet}
 \\newcommand{\\labelitemvi}{\\textbullet}
@@ -163,6 +196,9 @@
 \\newcommand{\\footerlogo}[1]{\\def\\jayfooterlogo{#1}\\jayapplyfooter}
 \\def\\jayfooterbrand{}
 \\newcommand{\\footerbrand}[1]{\\def\\jayfooterbrand{#1}\\jayapplyfooter}
+\\newcommand{\\playbookperiod}{JULY--DECEMBER 2026}
+\\newcommand{\\playbookstrap}{COUNTDOWN. EXECUTE. COMPOUND.}
+\\newcommand{\\PlaybookPeriod}[1]{\\renewcommand{\\playbookperiod}{#1}}
 \\renewcommand{\\sectionmark}[1]{\\markboth{#1}{}}
 \\makeatletter
 \\def\\jay@leftheader@split#1\\\\#2\\jay@leftheader@end{\\def\\jayresolvedleftheader{#1}}
@@ -171,11 +207,11 @@
     {\\expandafter\\jay@leftheader@split\\@title\\\\\\jay@leftheader@end}
     {\\def\\jayresolvedleftheader{\\the\\leftheader}}%
   \\expandafter\\ifstrempty\\expandafter{\\the\\leftheaderurl}
-    {\\lhead{\\scshape\\jayresolvedleftheader}}
-    {\\lhead{\\scshape\\href{\\the\\leftheaderurl}{\\jayresolvedleftheader}}}%
+    {\\lhead{{\\playbooksans\\bfseries\\fontsize{8}{9}\\selectfont\\addfontfeatures{LetterSpace=55}\\MakeUppercase{\\jayresolvedleftheader}}}}
+    {\\lhead{{\\playbooksans\\bfseries\\fontsize{8}{9}\\selectfont\\addfontfeatures{LetterSpace=55}\\href{\\the\\leftheaderurl}{\\MakeUppercase{\\jayresolvedleftheader}}}}}%
 }
 \\makeatother
-\\rhead{\\scshape{\\nouppercase{\\rightmark}}}
+\\rhead{{\\playbooksans\\bfseries\\fontsize{8}{9}\\selectfont\\addfontfeatures{LetterSpace=55}\\playbookperiod}}
 \\AtBeginDocument{\\jayapplyleftheader}
 
 % Footer configuration (controlled from org file)
@@ -209,7 +245,9 @@
       {\\fancyfoot[C]{\\jayfooterunlesslast{\\jayfooterlogoonly}}}%
       {\\fancyfoot[C]{\\jayfooterunlesslast{\\jayfooterlogowithbrand}}}%
   \\else
-    \\cfoot{\\jayfooterunlesslast{\\thepage}}%
+    \\fancyfoot[L]{{\\playbooksans\\bfseries\\fontsize{7}{8}\\selectfont\\addfontfeatures{LetterSpace=45}PLAYBOOK}}%
+    \\fancyfoot[C]{{\\playbooksans\\bfseries\\color{playbookblue}\\fontsize{7}{8}\\selectfont\\addfontfeatures{LetterSpace=50}\\playbookstrap}}%
+    \\fancyfoot[R]{{\\playbooksans\\bfseries\\fontsize{7}{8}\\selectfont PAGE \\thepage}}%
   \\fi\\fi
 }
 \\newcommand{\\EnableLogoFooter}{\\jaynofooterfalse\\jaylogofootertrue\\jayapplyfooter}
@@ -218,8 +256,9 @@
 
 % Paragraph and Indentation Settings
 \\setlength{\\parindent}{0pt}
-\\setlength{\\parskip}{6.5pt plus 1pt minus 1pt} % Space between paragraphs
-\\setstretch{1.16}
+\\setlength{\\parskip}{3.5pt plus 1pt minus 1pt}
+\\setstretch{1.04}
+\\color{playbookink}
 
 % Table of Contents Customization
 \\renewcommand{\\contentsname}{Table of Contents}
@@ -231,14 +270,14 @@
 \\setlist[description]{style=nextline, before=\\vspace{\\baselineskip}}
 
 % List Environment Customization
-\\setlist{noitemsep, topsep=-8pt} % Keep nested lists tight; no forced post-list gap
-\\setlist[enumerate,1]{after=\\vspace{20pt}} % Net 12pt after the global -8pt topsep; nested lists stay tight
-\\setlist[description,1]{after=\\vspace{20pt}} % Net 12pt after the global -8pt topsep; nested lists stay tight
+\\setlist{itemsep=2pt, parsep=0pt, partopsep=0pt, topsep=3pt}
+\\setlist[enumerate,1]{leftmargin=3.4em, labelsep=0.7em, itemsep=8pt, topsep=8pt, after=\\vspace{8pt}, label=\\protect\\colorbox{playbookblue}{\\protect\\makebox[1.25em][c]{\\color{white}\\playbooksans\\bfseries\\arabic*}}}
+\\setlist[description,1]{after=\\vspace{10pt}}
 \\setlistdepth{10}
 \\newenvironment{resumeenum}{\\begin{enumerate}[resume*]}{\\end{enumerate}}
 
 % Define a Custom Raised Bullet Command
-\\newcommand{\\raisedtinybullet}{\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+\\newcommand{\\raisedtinybullet}{\\raisebox{0.25ex}{\\color{playbookblue}\\tiny$\\bullet$}}
 
 % Redefine Itemize Labels Using the Custom Bullet
 \\renewcommand{\\labelitemi}{\\raisedtinybullet}
@@ -256,10 +295,12 @@
 \\forloop{level}{1}{\\value{level} < 11}{%
   \\setlist[itemize,\\arabic{level}]{label=\\raisedtinybullet}
 }
-\\setlist[itemize,1]{label=\\raisedtinybullet, after=\\vspace{20pt}} % Must follow the loop; otherwise its level-1 reset removes the post-list gap
+\\setlist[itemize,1]{label=\\raisedtinybullet, leftmargin=1.65em, labelsep=0.65em, itemsep=2pt, after=\\vspace{7pt}}
+\\let\\playbookoldsquare\\square
+\\renewcommand{\\square}{\\color{playbookblue}\\playbookoldsquare}
 
 % Define custom colors for quote environment
-\\definecolor{powderblue}{HTML}{f5f7ff}
+\\definecolor{powderblue}{HTML}{EAF1FA}
 \\definecolor{stormybluegrey}{HTML}{708090}
 \\definecolor{moonrockgrey}{HTML}{5D5D5D}
 
@@ -280,6 +321,23 @@
     breakable,
     pad at break*=1em,
     vfill before first
+  }
+}
+\\tcbset{
+  playbooknotes/.style={
+    enhanced,
+    breakable,
+    colback=playbookwash,
+    colframe=playbookblue,
+    boxrule=0pt,
+    borderline west={3pt}{0pt}{playbookblue},
+    sharp corners,
+    left=14pt,
+    right=14pt,
+    top=14pt,
+    bottom=14pt,
+    before skip=4pt,
+    after skip=10pt
   }
 }
 
@@ -322,28 +380,45 @@
 }
 
 % Titlesec Configuration
-\\titlespacing*{\\section}{0pt}{48pt}{0pt}
-\\titlespacing*{\\subsection}{0pt}{6pt}{0pt}
-\\titlespacing*{\\subsubsection}{0pt}{0pt}{0pt}
+\\titlespacing*{\\section}{0pt}{24pt}{10pt}
+\\titlespacing*{\\subsection}{0pt}{24pt}{10pt}
+\\titlespacing*{\\subsubsection}{0pt}{10pt}{5pt}
 \\titlespacing{\\paragraph}{0pt}{0pt}{.5em}[]
 
 \\newcommand{\\mysectiontitle}[1]{%
   \\markboth{#1}{#1}%
   \\markright{#1}%
-  \\raggedright\\fontsize{40}{26}\\selectfont #1
+  \\Needspace{6\\baselineskip}%
+  \\raggedright\\playbookdisplay\\color{playbookblue}\\fontsize{35}{36}\\selectfont\\MakeUppercase{#1}%
+  \\par\\vspace{3pt}{\\color{playbookblue}\\rule{\\linewidth}{1.4pt}}
 }
 
 \\newcommand{\\mysubsectiontitle}[1]{%
   \\markright{#1}%
-  \\sffamily\\setstretch{0.1}\\fontsize{24}{36}\\raggedright\\sffamily #1
+  \\Needspace{5\\baselineskip}%
+  \\playbookdisplay\\color{playbookblue}\\fontsize{25}{27}\\selectfont\\raggedright\\MakeUppercase{#1}
 }
 
 \\newcommand{\\mysubsubsectiontitle}[1]{%
-  \\ttfamily\\bfseries\\scshape\\fontsize{18}{16}\\raggedright\\ttfamily\\color{spacegrey} #1
+  \\Needspace{4\\baselineskip}%
+  \\noindent\\colorbox{playbookpowder}{\\parbox{\\dimexpr\\linewidth-2\\fboxsep\\relax}{\\strut\\playbooksans\\bfseries\\color{playbookink}\\fontsize{14}{17}\\selectfont\\MakeUppercase{#1}}}
 }
 
+\\newcommand{\\PlaybookContinued}[1]{%
+  \\noindent{\\playbooksans\\bfseries\\color{playbookblue}\\fontsize{10}{12}\\selectfont\\addfontfeatures{LetterSpace=60}\\MakeUppercase{#1 --- CONTINUED}}\\par
+  \\vspace{5pt}{\\color{playbookblue}\\rule{\\linewidth}{1pt}}\\vspace{8pt}
+}
+\\newcommand{\\PlaybookPhaseBreak}[1]{\\clearpage}
+\\newcommand{\\PlaybookContinuationBreak}{\\clearpage}
+\\newcommand{\\PlaybookMonthBreak}[1]{}
+\\newcommand{\\PlaybookEngineBreak}{\\clearpage}
+\\newcommand{\\PlaybookTableHead}[1]{\\cellcolor{playbookblue}\\color{white}\\textbf{#1}}
+\\newcommand{\\PlaybookBackmatterStart}{}
+\\newcommand{\\PlaybookBackmatterMiddle}{}
+\\newcommand{\\PlaybookBackmatterEnd}{}
+
 \\titleformat{\\section}
-  {\\normalfont\\ttfamily\\scshape\\color{spacegrey}}
+  {\\normalfont}
   {}
   {0em}
   {\\mysectiontitle}
@@ -358,20 +433,50 @@
   {}
   {0em}
   {\\mysubsubsectiontitle}
-\\titleformat*{\\paragraph}{\\ttfamily\\bfseries\\fontsize{19}{12}\\raggedright}
-\\titleformat*{\\subparagraph}{\\sffamily\\fontsize{16}{12}\\raggedright\\ttfamily\\bfseries}
+\\titleformat*{\\paragraph}{\\playbooksans\\bfseries\\color{playbookblue}\\fontsize{15}{17}\\raggedright}
+\\titleformat*{\\subparagraph}{\\playbooksans\\bfseries\\color{playbookmuted}\\fontsize{12}{14}\\raggedright}
 
 % Hyperref Configuration
 \\hypersetup{
   colorlinks,
   citecolor = elegantblue,
   filecolor = elegantblue,
-  linkcolor = elegantblue,
-  urlcolor  = elegantblue
+  linkcolor = playbookblue,
+  urlcolor  = playbookblue
 }
 
-% Disable Default Title
-\\renewcommand\\maketitle{}
+% Playbook cover
+\\makeatletter
+\\newcommand{\\playbookcovertitle}{\\@title}
+\\newcommand{\\PlaybookCoverTitle}[1]{\\renewcommand{\\playbookcovertitle}{#1}}
+\\newcommand{\\PlaybookWarmTitle}[1]{}
+\\renewcommand\\maketitle{%
+  \\begin{titlepage}
+    \\thispagestyle{empty}
+    \\vspace*{0.08in}
+    {\\playbooksans\\bfseries\\fontsize{8}{9}\\selectfont\\addfontfeatures{LetterSpace=55}THOUGHT LEADERSHIP COUNTDOWN\\hfill\\playbookperiod\\par}
+    \\vspace{7pt}{\\color{playbookink}\\rule{\\linewidth}{0.7pt}}
+    \\vfill
+    {\\centering\\playbookdisplay\\color{playbookink}\\fontsize{49}{48}\\selectfont\\MakeUppercase{\\playbookcovertitle}\\par}
+    \\vspace{16pt}
+    {\\centering\\color{playbookblue}\\rule{0.76\\linewidth}{1.5pt}\\par}
+    \\vspace{13pt}
+    {\\centering\\playbooksans\\bfseries\\color{playbookblue}\\fontsize{15}{17}\\selectfont\\addfontfeatures{LetterSpace=150}\\playbookperiod\\par}
+    \\vfill
+    \\begin{tcolorbox}[colback=white,colframe=playbookline,boxrule=0.7pt,arc=2pt,left=10pt,right=10pt,top=10pt,bottom=10pt]
+      \\begin{tabularx}{\\linewidth}{*{4}{>{\\centering\\arraybackslash}X}}
+        {\\playbooksans\\bfseries\\color{playbookblue}\\shortstack{0\\\\COUNTDOWN}} &
+        {\\playbooksans\\bfseries\\color{playbookblue}\\shortstack{1\\\\LAUNCH}} &
+        {\\playbooksans\\bfseries\\color{playbookblue}\\shortstack{2\\\\COMPOUND}} &
+        {\\playbooksans\\bfseries\\color{playbookblue}\\shortstack{3\\\\HARVEST}}
+      \\end{tabularx}
+    \\end{tcolorbox}
+    \\vspace{12pt}
+    {\\centering\\playbooksans\\bfseries\\color{playbookmuted}\\fontsize{8}{9}\\selectfont\\addfontfeatures{LetterSpace=55}PRINTED. VISIBLE. USED.\\par}
+  \\end{titlepage}
+  \\setcounter{page}{1}%
+}
+\\makeatother
 
 [NO-DEFAULT-PACKAGES]
 [NO-PACKAGES]"
@@ -403,7 +508,7 @@
     (load prose-helper nil 'nomessage)))
 
 (when (fboundp 'jay/latex-apply-prose-defaults)
-  (jay/latex-apply-prose-defaults "elegant-garamond"))
+  (jay/latex-apply-prose-defaults "thought-leadership-playbook"))
 
 (when (fboundp 'jay/latex-register-wrap-class)
-  (jay/latex-register-wrap-class "elegant-garamond"))
+  (jay/latex-register-wrap-class "thought-leadership-playbook"))
