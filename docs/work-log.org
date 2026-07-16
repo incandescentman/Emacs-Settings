@@ -1,6 +1,10 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-07-16: Preserve literal backslashes during adaptive paste heading cleanup
+- Fixed ~redundant-delete-redundant-asterisks-in-org-headings~ in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so its dynamically constructed ~replace-match~ text is inserted literally. Adaptive paste no longer treats LaTeX commands such as ~\EnableLogoFooter~ as replacement backreferences and aborts with “Invalid use of ‘\’ in replacement text.”
+- Regenerated [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]] from the literate source and verified the fix against the current 10,750-byte clipboard through the full ~pasteboard-paste-clean~ path, including the commented LaTeX headers that Markdown cleanup converts to temporary Org headings.
+
 * 2026-07-15: Restore breathing room after top-level lists in Elegant Garamond
 - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][elegant-garamond.el]] so top-level bullet/check, numbered, and description lists get a net 12pt gap before following prose while nested lists retain the compact global spacing.
 - Reloaded the cached LaTeX classes in the live Emacs session with ~jay-load-latex~.

@@ -121,6 +121,7 @@ Verified against the repro text under =emacs --batch=: analyser now reports =sty
 - *Rule for adding belt-and-suspenders cleanup*: the belt and the suspenders must agree on what they are holding up. If the primary converter consults =pasteboard--should-convert-asterisk-line=, every later sweep that touches the same lines must consult it as well.
 - *Detection-vs-action separation*: when a detector (=pasteboard--analyse-clipboard-text=) feeds an action (=pasteboard--clean-string=), be skeptical of action-level fallbacks that operate on signals the detector classified ambiguously. They re-introduce the very ambiguity the detector tried to resolve.
 - *Debugging path that would have found this faster*: when an unwanted transformation happens, =M-x trace-function= the primary converter — if it shows the line being *skipped*, the corruption is happening somewhere downstream of it, not inside it. The bug is in whatever runs after.
+- *Dynamic replacement rule*: if =replace-match= receives text assembled from clipboard or buffer content, pass non-nil =FIXEDCASE= and =LITERAL= arguments unless backreference expansion is intentionally required. Otherwise an ordinary user backslash such as =\EnableLogoFooter= is parsed as replacement syntax and raises =Invalid use of ‘\’ in replacement text=.
   Date: 2026-05-15
 
 ** Trigger

@@ -6825,7 +6825,8 @@ The maintained implementation now lives in [[file+emacs:/Users/jay/emacs/emacs-s
       (while (re-search-forward "^\\(*+\\) \\(.*?\\)\\(*+\\)?\\s-*$" end t)
         (let ((stars (match-string 1))
               (heading (match-string 2)))
-          (replace-match (concat stars " " (replace-regexp-in-string "\\*+" "" heading))))))))
+          (replace-match (concat stars " " (replace-regexp-in-string "\\*+" "" heading))
+                         t t))))))
 #+end_src
 
 * weeklies
