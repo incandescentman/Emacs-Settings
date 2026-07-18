@@ -1,0 +1,242 @@
+#+TITLE: Pasteboard Corrections Plan
+#+DATE: 2026-07-18
+#+STARTUP: showall
+
+* Purpose
+This document turns the July 2026 audit of the adaptive, clean, verbatim, and adjusted-subtree paste paths into an implementation plan. The earlier literal-backslash crash is fixed in commit ~20088c08~. The remaining priority is preventing silent text corruption while preserving intentional Markdown-to-Org conversion.
+
+The authoritative paste implementation is [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][📄 /Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el]]. The legacy heading cleanup called by the paste pipeline is maintained in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][📄 /Users/jay/emacs/emacs-settings/shared-functions.org]] and tangled to [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][📄 /Users/jay/emacs/emacs-settings/shared-functions.el]].
+
+* Current status
+- Commit ~20088c08~ prevents ~replace-match~ from interpreting literal clipboard backslashes such as ~\EnableLogoFooter~ as replacement syntax.
+- Commit ~6b15c173~ restricts adaptive heading demotion to real Org headings and preserves bold metadata lines such as ~*User:* Anonymous~.
+- Commit ~982da542~ stops standalone Markdown bold lines from being promoted to headings and preserves blockquotes as colon-prefixed Org quote lines.
+- Those later two fixes are adjacent work, not substitutes for the seven corrections below. All seven audited behaviors remain present as of 2026-07-18.
+- The smaller Markdown-link limitation involving balanced parentheses also remains.
+
+* Guardrails
+- Preserve literal source text unless a documented conversion rule applies.
+- Keep programming modes and forced-verbatim paste paths verbatim.
+- Do not reintroduce standalone-bold-to-heading inference.
+- Preserve the recently fixed blockquote behavior: every ~> text~ line becomes an Org ~: text~ line, and a bare ~>~ becomes ~:~.
+- Keep changes in narrow checkpoints. At each checkpoint, update [[file+emacs:/Users/jay/emacs/emacs-settings/docs/work-log.org][📄 /Users/jay/emacs/emacs-settings/docs/work-log.org]], create a local commit, and wait for a clean live Emacs launch before continuing.
+- When a checkpoint changes [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][📄 /Users/jay/emacs/emacs-settings/shared-functions.org]], delete the stale tangled ~shared-functions.el~, retangle immediately, and run ~check-parens~ on the regenerated file.
+
+* Corrections
+** TODO 1. Convert Markdown headings only when the detected style is Markdown
+*** Confirmed failure
+~pasteboard--clean-string~ calls ~convert-markdown-headings-to-org~ unconditionally. An Org comment containing a disabled LaTeX directive is silently converted into a heading:
+
+#+begin_example
+# #+LATEX_HEADER: \EnableLogoFooter
+#+end_example
+
+becomes:
+
+#+begin_example
+,* #+LATEX_HEADER: \EnableLogoFooter
+#+end_example
+
+*** Correction
+- Call ~convert-markdown-headings-to-org~ only when ~pasteboard--analyse-clipboard-text~ resolved the input style as ~markdown~.
+- Preserve Org comment lines such as ~# #+LATEX_HEADER: ...~ and other single-hash Org comments when the input is Org.
+- Keep explicit Markdown ~# Heading~ through ~###### Heading~ conversion working when the input is Markdown.
+- Keep fenced code excluded from heading conversion.
+
+*** Acceptance checks
+- An Org document containing properties, Org headings, and ~# #+LATEX_HEADER: \EnableLogoFooter~ preserves the comment byte-for-byte.
+- A Markdown document containing ~# H1~ and ~## H2~ converts them to ~* H1~ and ~** H2~.
+- Markdown-looking lines inside fenced code remain code.
+
+** TODO 2. Stop the legacy heading cleanup from deleting embedded emphasis
+*** Confirmed failure
+~pasteboard-paste-clean~ calls ~redundant-delete-redundant-asterisks-in-org-headings~ after ~pasteboard--clean-string~ has already run the narrower ~pasteboard--remove-redundant-heading-asterisks~ pass. The legacy function removes every asterisk inside the heading text:
+
+#+begin_example
+,* Heading with *bold* and /italic/
+#+end_example
+
+becomes:
+
+#+begin_example
+,* Heading with bold and /italic/
+#+end_example
+
+*** Correction
+- Remove the redundant legacy cleanup call from ~pasteboard-paste-clean~ and rely on ~pasteboard--remove-redundant-heading-asterisks~, which targets whitespace-separated closing asterisks.
+- If the legacy interactive command must remain for other callers, narrow it separately so it removes only redundant trailing wrapper asterisks and preserves embedded Org emphasis.
+
+*** Acceptance checks
+- ~* Heading with *bold*~ preserves ~*bold*~.
+- ~** Heading **~ becomes ~** Heading~.
+- Literal backslashes in headings remain preserved.
+
+** TODO 3. Preserve ZWJ and ZWNJ
+*** Confirmed failure
+~smart-quotes-replacement-pairs~ deletes U+200D ZERO WIDTH JOINER and U+200C ZERO WIDTH NON-JOINER even though ~replace-weird-spaces~ explicitly documents that they must be preserved. Confirmed examples:
+
+#+begin_example
+👩‍💻       -> 👩💻
+👨‍👩‍👧‍👦 -> 👨👩👧👦
+#+end_example
+
+Deleting these characters can also change meaning or typography in languages that use ZWNJ.
+
+*** Correction
+- Remove every ZWJ and ZWNJ deletion pair from ~smart-quotes-replacement-pairs~.
+- Continue removing U+200B ZERO WIDTH SPACE if that behavior remains desired; it is a separate character.
+- Preserve joiners through every clean-paste path.
+
+*** Acceptance checks
+- Count U+200D characters before and after cleaning; the count must not change.
+- Preserve ~👩‍💻~ and ~👨‍👩‍👧‍👦~ exactly.
+- Add a ZWNJ-containing text sample and assert byte-for-byte preservation.
+
+** TODO 4. Make prose cleanup fence-aware
+*** Confirmed failure
+Only the Markdown-heading converter tracks fenced code. Other passes rewrite fenced contents before the fence delimiters become Org source blocks. A real batch repro changed all of the following inside one fence:
+
+#+begin_example
+,* alpha                         -> - alpha
+[link](https://example.com)     -> [[https://example.com][link]]
+“quoted” — exact                -> "quoted" --- exact
+#+end_example
+
+*** Correction
+- Identify Markdown fenced regions before applying prose transformations.
+- Apply smart-quote normalization, link conversion, citation removal, bullet conversion, dash normalization, whitespace cleanup, and other prose-only passes only outside fenced content.
+- Convert the fence delimiters themselves to Org ~#+begin_src~ and ~#+end_src~ after the protected contents are established.
+- Preserve indentation and language identifiers.
+- Cover both labeled and unlabeled backtick fences. Decide separately whether tilde fences belong in scope before implementation.
+
+*** Acceptance checks
+- Fenced source content is byte-for-byte identical except for the fence delimiters.
+- Prose immediately before and after a fence still receives normal clean-paste transformations.
+- Multiple fences in one clipboard payload remain independent.
+- An unclosed fence fails conservatively: do not rewrite its apparent code contents as prose.
+
+** TODO 5. Restrict URL-over-selection to one complete URL in Org mode
+*** Confirmed failure
+The URL-over-selection branch runs before programming-mode routing and only checks whether the clipboard contains a URL-like substring. Selecting ~label~ in Emacs Lisp mode with this clipboard text:
+
+#+begin_example
+Read https://example.com now
+#+end_example
+
+produces:
+
+#+begin_example
+[[Read https://example.com now][label]]
+#+end_example
+
+The entire sentence is treated as the link target, and Org markup is inserted into a programming buffer.
+
+*** Correction
+- Run bracket-link insertion only in Org buffers where ~org-config-files-local-mode~ is not active.
+- Require the trimmed clipboard to be exactly one valid ~http://~, ~https://~, or deliberately supported ~www.~ URL, with no surrounding prose or additional lines.
+- Route programming modes to verbatim paste before considering Org link insertion.
+- Preserve the selected region as the link description.
+
+*** Acceptance checks
+- Org region plus ~https://example.com~ becomes an Org bracket link.
+- Org region plus ~Read https://example.com now~ follows the normal clean-paste path rather than becoming a malformed target.
+- The same URL-over-region operation in Emacs Lisp, shell, Markdown, web, and other programming buffers pastes verbatim.
+- Multiline clipboard text containing a URL is never treated as one URL.
+
+** TODO 6. Replace the contradictory global replacement list with explicit literal and contextual rules
+*** Confirmed failures
+The current list mixes Unicode normalization with context-sensitive editorial conversions and contains duplicates or conflicting outcomes. Confirmed behavior includes:
+
+#+begin_example
+Tokay okay smokay  -> TOK OK smOK
+anchor ## fragment -> anchor ** fragment
+A⸻B                -> AB
+- ** TODO task     -> - * TODO task
+#+end_example
+
+There are three conflicting mappings for U+2E3B THREE-EM DASH: deletion, ~-----~, and ~——~. The deletion runs first, so the later mappings never see the character. The ~- \*\* TODO~ entry is stored in a literal-replacement table and therefore does not match ordinary Markdown TODO text.
+
+*** Correction
+- Separate literal Unicode character normalization from regex- or context-driven transformations.
+- Make ~okay -> OK~ a whole-word rule if the conversion is retained.
+- Remove global ~## -> **~ and related hash replacements; anchored Markdown-heading conversion already owns that concern.
+- Remove or correctly reimplement the ineffective Markdown TODO rule in the subsystem that owns list and heading syntax.
+- Deduplicate repeated smart-quote, apostrophe, space, dash, and ligature mappings.
+- Choose one intended THREE-EM DASH output before editing; do not guess between deletion, ~-----~, and ~——~.
+
+*** Acceptance checks
+- ~Tokay~ and ~smokay~ remain unchanged while standalone ~okay~ follows the chosen rule.
+- Hash sequences outside Markdown heading position remain unchanged.
+- Every literal input character has one deterministic output.
+- Reapplying ~pasteboard--clean-string~ is idempotent.
+
+** TODO 7. Track the actual inserted range in adjusted-subtree paste
+*** Confirmed failure
+~pasteboard-paste-adjusted-subtrees-adaptive~ records the original point before calling adaptive paste. When an active region is replaced, that point is not necessarily the beginning of the inserted text. The wrapper can scan the wrong range and leave a pasted child heading at top level.
+
+The adjusted-subtree command can also misread three consecutive single-star Org sibling headings as Markdown bullet items before it gets a chance to adjust their levels.
+
+*** Correction
+- Make the low-level paste operation expose the exact inserted beginning and end, preferably as markers that survive text growth and shrinkage.
+- Base the inserted beginning on ~region-beginning~ when replacing an active region, not the pre-paste point.
+- Adjust headings only inside the returned inserted range.
+- Give the adjusted-subtree command an explicit Org-subtree path so valid consecutive ~* Heading~ siblings are not routed through the ambiguous bullet heuristic.
+- Keep the ordinary adaptive paste heuristic unchanged unless a separate repro justifies changing it globally.
+
+*** Acceptance checks
+- Replacing an active region beneath a level-one parent demotes a pasted level-one child to level two.
+- Point-before-mark and point-after-mark selections behave identically.
+- Multiple pasted sibling headings all shift by the same amount.
+- Three consecutive single-star Org headings remain headings in the adjusted-subtree command.
+- Text outside the inserted range is untouched.
+
+* Smaller follow-up: Markdown links with balanced parentheses
+The converter at ~convert-markdown-links-to-org-mode~ does not recognize common links whose targets contain parentheses, including:
+
+#+begin_example
+[Emacs](https://en.wikipedia.org/wiki/Emacs_(software))
+#+end_example
+
+Do this after the seven corruption fixes. Replace the flat ~[^()]+~ target match with a parser or deliberately bounded balanced-parenthesis handling. Do not broaden the regex until nested-parenthesis and adjacent-punctuation cases have explicit acceptance examples.
+
+* Checkpoint order
+** Checkpoint 1: Org/Markdown semantic boundaries
+- Correction 1: conditional Markdown-heading conversion.
+- Correction 2: remove the destructive legacy heading cleanup from clean paste.
+- Revalidate commits ~6b15c173~ and ~982da542~ so bold metadata, standalone bold lines, and blockquotes retain their current behavior.
+
+** Checkpoint 2: Unicode and deterministic replacements
+- Correction 3: preserve ZWJ and ZWNJ.
+- Correction 6: split and deduplicate the replacement rules.
+- Resolve the intended THREE-EM DASH output before changing that mapping.
+
+** Checkpoint 3: Fence-aware transformation
+- Correction 4 only. This is the largest behavioral change and should remain isolated for review and rollback.
+
+** Checkpoint 4: Context routing and insertion ranges
+- Correction 5: Org-only exact-URL link insertion.
+- Correction 7: exact inserted-range bookkeeping for adjusted subtrees.
+
+** Checkpoint 5: Balanced-parenthesis Markdown links
+- Implement and validate the smaller link-conversion follow-up after the corruption fixes are stable.
+
+* Validation protocol for every checkpoint
+- Reproduce the relevant confirmed failure before editing and show that the checkpoint changes only the intended output.
+- Use realistic clipboard strings from this document rather than hypothetical placeholder files.
+- Run ~emacs --batch pasteboard-copy-and-paste-functions.el --eval '(check-parens)'~.
+- If [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][📄 /Users/jay/emacs/emacs-settings/shared-functions.org]] changes, retangle [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][📄 /Users/jay/emacs/emacs-settings/shared-functions.el]] and run ~check-parens~ on it too.
+- Run ~git diff --check~.
+- Run the configured startup smoke test through [[file+emacs:/Users/jay/.emacs.d/init.el][📄 /Users/jay/.emacs.d/init.el]] and confirm ~shift nil~.
+- Update [[file+emacs:/Users/jay/emacs/emacs-settings/docs/work-log.org][📄 /Users/jay/emacs/emacs-settings/docs/work-log.org]] with the exact behavior changed, the real repro, and the validation result.
+- Commit only the checkpoint files. Do not fold unrelated work into a pasteboard checkpoint.
+- Do not push unless explicitly requested.
+- Relaunch Emacs and confirm startup and the exact changed paste behavior before beginning the next checkpoint.
+
+* Completion criteria
+- None of the seven confirmed corruption repros survive.
+- Verbatim and programming-mode paths remain verbatim.
+- Org comments, heading emphasis, joiners, and fenced code are preserved.
+- Contextual conversions occur only in their documented syntactic context.
+- The clean transformation is deterministic and idempotent.
+- The current heading-demotion, standalone-bold, and blockquote fixes remain intact.
+- The work log and pasteboard architecture documentation describe the final behavior.

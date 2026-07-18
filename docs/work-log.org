@@ -1,6 +1,10 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-07-18: Record the pasteboard corrections plan
+- Added [[file+emacs:/Users/jay/emacs/emacs-settings/docs/pasteboard-corrections-plan.org][📄 /Users/jay/emacs/emacs-settings/docs/pasteboard-corrections-plan.org]] with the seven confirmed corruption fixes, the balanced-parenthesis Markdown-link follow-up, checkpoint order, real repros, acceptance checks, and validation protocol.
+- Reconciled the plan with commits ~6b15c173~ and ~982da542~ so the recently fixed heading-demotion, standalone-bold, and blockquote behavior is preserved rather than mistakenly listed as unfinished work.
+
 * 2026-07-18: Stop promoting standalone bold lines to Org headings
 - Removed the broad bold-to-heading inference from all three Markdown-to-Org paths: ~pasteboard-paste-adaptive~, ~chatgpt2org~, and the Org web-tools cleaners. Standalone bold text now remains bold; only explicit Markdown heading syntax creates Org headings.
 - Restored visible Org quote structure in adaptive paste: each Markdown ~> text~ line becomes ~: text~, and a bare ~>~ becomes ~:~ so multiline and multi-paragraph quotes retain their boundaries. The reported Socratic AI blockquote now becomes ~: *Socratic AI is...*~ instead of a level-three heading.
