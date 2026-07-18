@@ -609,9 +609,12 @@ ARG zero or negative       → force replacement."
   (save-excursion
     (let ((end-marker (copy-marker end)))
       (goto-char beg)
-      (while (re-search-forward "^\\(\\*+\\)" end-marker t)
+      ;; An Org heading requires a space after its leading stars.  Without
+      ;; that delimiter, bold metadata such as "*User:* Anonymous" was
+      ;; mistaken for a heading and changed to "**User:* Anonymous".
+      (while (re-search-forward "^\\(\\*+\\) " end-marker t)
         (let ((stars (match-string 1)))
-          (replace-match (concat "*" stars) t t)))
+          (replace-match (concat "*" stars " ") t t)))
       (set-marker end-marker nil))))
 
 (defun demote-org-headings-adaptive ()
