@@ -12,7 +12,7 @@ The authoritative paste implementation is [[file+emacs:/Users/jay/emacs/emacs-se
 - Commit ~6b15c173~ restricts adaptive heading demotion to real Org headings and preserves bold metadata lines such as ~*User:* Anonymous~.
 - Commit ~982da542~ stops standalone Markdown bold lines from being promoted to headings and preserves blockquotes as colon-prefixed Org quote lines.
 - The replacement-table checkpoint consolidates literal and contextual rules, keeps ~okay -> OK~ only for whole words, preserves U+2E3B THREE-EM DASH unchanged, removes the dead Markdown TODO mapping, and removes the temporary startup binding that would otherwise block ~defcustom~ initialization.
-- Those later two fixes are adjacent work, not substitutes for this plan. Corrections 1, 2, 4, and 6 are complete; corrections 5 and 7 remain; correction 3 is explicitly skipped.
+- Those later two fixes are adjacent work, not substitutes for this plan. Corrections 1, 2, 4, 5, 6, and 7 are complete; correction 3 is explicitly skipped. Only the balanced-parenthesis Markdown-link follow-up remains.
 - The smaller Markdown-link limitation involving balanced parentheses also remains.
 
 * Guardrails
@@ -116,7 +116,7 @@ Only the Markdown-heading converter tracks fenced code. Other passes rewrite fen
 - Multiple fences in one clipboard payload remain independent.
 - An unclosed fence fails conservatively: do not rewrite its apparent code contents as prose.
 
-** TODO 5. Restrict URL-over-selection to one complete URL in Org mode
+** DONE 5. Restrict URL-over-selection to one complete URL in Org mode
 *** Confirmed failure
 The URL-over-selection branch runs before programming-mode routing and only checks whether the clipboard contains a URL-like substring. Selecting ~label~ in Emacs Lisp mode with this clipboard text:
 
@@ -171,7 +171,7 @@ There are three conflicting mappings for U+2E3B THREE-EM DASH: deletion, ~-----~
 - Every literal input character has one deterministic output.
 - Reapplying ~pasteboard--clean-string~ is idempotent.
 
-** TODO 7. Track the actual inserted range in adjusted-subtree paste
+** DONE 7. Track the actual inserted range in adjusted-subtree paste
 *** Confirmed failure
 ~pasteboard-paste-adjusted-subtrees-adaptive~ records the original point before calling adaptive paste. When an active region is replaced, that point is not necessarily the beginning of the inserted text. The wrapper can scan the wrong range and leave a pasted child heading at top level.
 
@@ -215,8 +215,8 @@ Do this after the seven corruption fixes. Replace the flat ~[^()]+~ target match
 - Correction 4 is complete in an isolated checkpoint. Backtick and tilde fences are protected before prose cleanup, closed fences become Org source blocks, existing Org source blocks remain protected on repeat cleaning, and unclosed fences are restored unchanged.
 
 ** Checkpoint 4: Context routing and insertion ranges
-- Correction 5: Org-only exact-URL link insertion.
-- Correction 7: exact inserted-range bookkeeping for adjusted subtrees.
+- Correction 5 is complete: programming and verbatim modes route first, bracket-link insertion is Org-only, and the clipboard must parse as one whitespace-free HTTP(S) URL with a host. Leading =www.= targets are normalized to HTTPS.
+- Correction 7 is complete: low-level paste functions return exact inserted markers, active-region replacement begins at =region-beginning= regardless of selection direction, and adjusted-subtree paste uses an explicit Org syntax path before shifting only headings inside the returned range.
 
 ** Checkpoint 5: Balanced-parenthesis Markdown links
 - Implement and validate the smaller link-conversion follow-up after the corruption fixes are stable.

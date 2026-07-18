@@ -1,6 +1,7 @@
 ;; -*- lexical-binding: t; -*-
 ;; NOTE: This .el file is the source of truth. Do not recreate or tangle from a .org version.
 (require 'subr-x)
+(require 'url-parse)
 
 (defgroup pasteboard nil
   "Adaptive pasteboard options."
@@ -497,10 +498,37 @@ ARG zero or negative       → force replacement."
 
   (let* ((url (string-trim (or url (pasteboard--clipboard-string))))
          (region-text (buffer-substring-no-properties beg end))
-         (bracket-link (format "[[%s][%s]]" url region-text)))
+         (bracket-link (format "[[%s][%s]]" url region-text))
+         (insert-beg (copy-marker (min beg end)))
+         insert-end)
     ;;  (message "DEBUG: In `org-insert-link-from-clipboard`. region-text='%s', url='%s'" region-text url)
     (delete-region beg end)
-    (insert bracket-link)))
+    (goto-char insert-beg)
+    (insert bracket-link)
+    (setq insert-end (copy-marker (point) t))
+    (cons insert-beg insert-end)))
+
+(defun pasteboard--normalise-single-http-url (text)
+  "Return one validated HTTP(S) URL from TEXT, or nil.
+Whitespace and surrounding prose are rejected.  A leading `www.' is
+deliberately supported and normalized to an explicit HTTPS URL."
+  (when (and (stringp text)
+             (not (string-empty-p text))
+             (not (string-match-p "[ \t\n\r]" text)))
+    (let* ((case-fold-search t)
+           (candidate
+            (cond
+             ((string-match-p "\\`https?://" text) text)
+             ((string-match-p "\\`www\\." text) (concat "https://" text))))
+           (parsed (and candidate (url-generic-parse-url candidate)))
+           (scheme (and parsed (url-type parsed)))
+           (host (and parsed (url-host parsed))))
+      (when (and (member (downcase (or scheme "")) '("http" "https"))
+                 (stringp host)
+                 (string-match-p
+                  "^\\(?:\\[[0-9A-Fa-f:.]+\\]\\|[[:alnum:]][[:alnum:].-]*\\)$"
+                  host))
+        candidate))))
 
 (defun is-org-roam-buffer-p ()
   "Check if the current buffer is an org-roam buffer by looking for ID property at the beginning."
@@ -838,9 +866,11 @@ Transforms lines like \"| --- | --- |\" into \"|---|---|\" while leaving data ro
         (forward-line 1)
         (setq end (point-max))))))
 
-(defun pasteboard--clean-string (text)
+(defun pasteboard--clean-string (text &optional style-override)
   "Return cleaned TEXT for Org/text pastes.
-This function is pure text transformation and does not insert into buffers."
+This function is pure text transformation and does not insert into buffers.
+When STYLE-OVERRIDE is `org' or `markdown', use that syntax path instead of
+the clipboard analyser's result."
   (let* ((protected-org-blocks (pasteboard--protect-org-source-blocks text))
          (protected-fences
           (pasteboard--protect-markdown-fences
@@ -850,7 +880,7 @@ This function is pure text transformation and does not insert into buffers."
           (append (plist-get protected-org-blocks :replacements)
                   (plist-get protected-fences :replacements)))
          (analysis (pasteboard--analyse-clipboard-text protected-text))
-         (style (plist-get analysis :style))
+         (style (or style-override (plist-get analysis :style)))
          (heading-line-numbers (plist-get analysis :markdown-heading-lines)))
     (with-temp-buffer
       (insert protected-text)
@@ -938,19 +968,17 @@ is one obvious clean pipeline."
   ;; If prefix arg, force verbatim
   (if current-prefix-arg
       (progn
-        (pasteboard-paste-verbatim (pasteboard--clipboard-string))
-        (message "Pasted: verbatim (forced)"))
+        (prog1 (pasteboard-paste-verbatim (pasteboard--clipboard-string))
+          (message "Pasted: verbatim (forced)")))
       ;; Otherwise, smart paste
       (let* ((clipboard-raw (pasteboard--clipboard-string))
              (trimmed (string-trim clipboard-raw))
-             (clipboard-text (downcase trimmed))
-             choice)
+             (exact-url (pasteboard--normalise-single-http-url trimmed))
+             choice
+             inserted-range)
         (cond
-         ((and (use-region-p)
-               (not (string-empty-p trimmed))
-               (string-match-p "\\(https?://\\|www\\.\\)" clipboard-text))
-          (setq choice "bracket-link")
-          (org-insert-link-from-clipboard (region-beginning) (region-end) trimmed))
+         ;; Programming and verbatim modes route before link insertion.  An
+         ;; exact URL over a selection must never inject Org syntax into code.
          ((or (eq major-mode 'sh-mode)
               (eq major-mode 'python-mode)
               (eq major-mode 'emacs-lisp-mode)
@@ -961,13 +989,21 @@ is one obvious clean pipeline."
               (eq major-mode 'web-mode)
               (eq major-mode 'fundamental-mode))
           (setq choice "verbatim")
-          (pasteboard-paste-verbatim clipboard-raw))
+          (setq inserted-range (pasteboard-paste-verbatim clipboard-raw)))
+         ((and (use-region-p)
+               (eq major-mode 'org-mode)
+               (not (bound-and-true-p org-config-files-local-mode))
+               exact-url)
+          (setq choice "bracket-link")
+          (setq inserted-range
+                (org-insert-link-from-clipboard
+                 (region-beginning) (region-end) exact-url)))
          ((or (and (eq major-mode 'org-mode)
                    (not (bound-and-true-p org-config-files-local-mode)))
               (derived-mode-p 'text-mode))
           (setq choice "clean")
           ;; One obvious clean path: adaptive clean inserts go through pasteboard-paste-clean.
-          (pasteboard-paste-clean nil clipboard-raw))
+          (setq inserted-range (pasteboard-paste-clean nil clipboard-raw)))
          (t
           (let* ((prev-char (char-before))
                  (next-char (char-after))
@@ -977,49 +1013,61 @@ is one obvious clean pipeline."
             (if use-no-spaces
                 (progn
                   (setq choice "paste-raw")
-                  (pasteboard-paste-verbatim clipboard-raw))
-                (setq choice "paste-clean")
-                ;; Keep fallback clean behavior aligned with pasteboard-paste-clean.
-                (pasteboard-paste-clean nil clipboard-raw)))))
+                  (setq inserted-range (pasteboard-paste-verbatim clipboard-raw)))
+              (setq choice "paste-clean")
+              ;; Keep fallback clean behavior aligned with pasteboard-paste-clean.
+              (setq inserted-range (pasteboard-paste-clean nil clipboard-raw))))))
         (when choice
-          (message "Pasted: %s" choice)))))
+          (message "Pasted: %s" choice))
+        inserted-range)))
 
 (defun pasteboard-paste (&optional text)
   "Paste TEXT (or the current clipboard) at point, normalising whitespace."
   (interactive)
-  (let* ((start (point))
-         (end (if mark-active (mark) (point)))
-         (ins-text (or text (pasteboard--clipboard-string))))
+  (let* ((start (if (use-region-p) (region-beginning) (point)))
+         (end (if (use-region-p) (region-end) (point)))
+         (ins-text (or text (pasteboard--clipboard-string)))
+         (insert-beg (copy-marker start))
+         insert-end)
     (combine-after-change-calls
       (atomic-change-group
         (delete-region start end)
+        (goto-char insert-beg)
         (insert ins-text)
-        (let ((paste-end (point)))
+        (setq insert-end (copy-marker (point) t))
+        (let ((paste-end insert-end))
           (my/fix-space)
           (save-excursion
-            (goto-char start)
+            (goto-char insert-beg)
             (my/fix-space))
-          (goto-char paste-end))))))
+          (goto-char paste-end))))
+    (cons insert-beg insert-end)))
 
-(defun pasteboard-paste-clean (&optional raw text)
+(defun pasteboard-paste-clean (&optional raw text style-override)
   "Canonical clean paste path for clipboard text.
 When RAW is non-nil, bypass cleaning.  Otherwise run the clean-string pipeline,
-then insert in a single edit."
+then insert in a single edit.  STYLE-OVERRIDE is passed to the clean pipeline."
   (interactive "P")
   (let* ((source (or text (pasteboard--clipboard-string)))
-         (insert-text (if raw source (pasteboard--clean-string source))))
+         (insert-text (if raw source
+                        (pasteboard--clean-string source style-override))))
     (pasteboard-paste insert-text)))
 
 (defun pasteboard-paste-verbatim (&optional text)
   "Paste verbatim text at point, bypassing smart cleanup."
   (interactive)
-  (let* ((start (point))
-         (end (if mark-active (mark) (point)))
-         (ins-text (or text (pasteboard--clipboard-string))))
+  (let* ((start (if (use-region-p) (region-beginning) (point)))
+         (end (if (use-region-p) (region-end) (point)))
+         (ins-text (or text (pasteboard--clipboard-string)))
+         (insert-beg (copy-marker start))
+         insert-end)
     (combine-after-change-calls
       (atomic-change-group
         (delete-region start end)
-        (insert ins-text)))))
+        (goto-char insert-beg)
+        (insert ins-text)
+        (setq insert-end (copy-marker (point) t))))
+    (cons insert-beg insert-end)))
 
 (defun pasteboard-paste-adjusted-subtrees ()
   "Paste text from the system pasteboard, adjusting Org headings to be subheadings.
@@ -1064,47 +1112,48 @@ are adjusted so they become subheadings under the current Org heading."
     (insert text)))
 
 (defun pasteboard-paste-adjusted-subtrees-adaptive ()
-  "Paste from pasteboard using adaptive paste logic, then adjust Org heading levels
-to be subheadings under the current heading."
+  "Clean and paste an Org subtree, then adjust only its inserted headings.
+The explicit Org syntax path preserves consecutive single-star sibling headings
+instead of routing them through the ambiguous Markdown bullet heuristic."
   (interactive)
-  (let* ((current-level (save-excursion
-                          (if (org-before-first-heading-p)
-                              0
-                              (or (org-current-level)
-                                  (progn
-                                    (org-back-to-heading t)
-                                    (org-current-level))
-                                  0))))
-         (paste-start-pos (point)))
-
-    ;; First, use pasteboard-paste-adaptive to get all its smart features
-    ;; (markdown conversion, smart quotes, link conversion, etc.)
-    (pasteboard-paste-adaptive)
-
-    ;; Now adjust the heading levels of what was just pasted
-    (let ((paste-end-pos (point)))
-      (when (> paste-end-pos paste-start-pos)
-        (save-excursion
-          (goto-char paste-start-pos)
-          ;; Find the minimum heading level in the pasted text
-          (let ((min-level nil))
-            (while (re-search-forward "^\\(\\*+\\) " paste-end-pos t)
-              (let ((level (length (match-string 1))))
-                (when (or (not min-level) (< level min-level))
-                  (setq min-level level))))
-
-            ;; If we found headings, adjust them to be under current heading
-            (when min-level
-              (let ((shift (- (+ current-level 1) min-level)))
-                ;; Only shift if necessary
-                (when (not (zerop shift))
-                  (goto-char paste-start-pos)
-                  (while (re-search-forward "^\\(\\*+\\)" paste-end-pos t)
-                    (let* ((stars (match-string 1))
-                           (level (length stars))
-                           (new-level (max 1 (+ level shift))))
-                      (replace-match (make-string new-level ?*) t t))))))))))
-    (message "Pasted with adjusted heading levels")))
+  (unless (derived-mode-p 'org-mode)
+    (user-error "Adjusted subtree paste requires an Org buffer"))
+  (let* ((insertion-point (if (use-region-p) (region-beginning) (point)))
+         (current-level
+          (save-excursion
+            (goto-char insertion-point)
+            (if (org-before-first-heading-p)
+                0
+              (or (org-current-level)
+                  (progn
+                    (org-back-to-heading t)
+                    (org-current-level))
+                  0))))
+         ;; This command explicitly expects Org subtree syntax.  It still gets
+         ;; punctuation, link, quote, and whitespace cleanup, but never the
+         ;; Markdown single-asterisk bullet conversion.
+         (inserted-range
+          (pasteboard-paste-clean nil (pasteboard--clipboard-string) 'org))
+         (paste-beg (car inserted-range))
+         (paste-end (cdr inserted-range)))
+    (save-excursion
+      (goto-char paste-beg)
+      (let (min-level)
+        (while (re-search-forward "^\\(\\*+\\) " paste-end t)
+          (let ((level (length (match-string 1))))
+            (when (or (null min-level) (< level min-level))
+              (setq min-level level))))
+        (when min-level
+          (let ((shift (- (1+ current-level) min-level)))
+            (unless (zerop shift)
+              (goto-char paste-beg)
+              (while (re-search-forward "^\\(\\*+\\) " paste-end t)
+                (let* ((level (length (match-string 1)))
+                       (new-level (max 1 (+ level shift))))
+                  (replace-match (concat (make-string new-level ?*) " ")
+                                 t t))))))))
+    (message "Pasted with adjusted heading levels")
+    inserted-range))
 
 (defun pasteboard-cut ()
   "Cut region and put on OS X system pasteboard."

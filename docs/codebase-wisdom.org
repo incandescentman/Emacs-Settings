@@ -1453,3 +1453,18 @@ Fence awareness is a pipeline invariant, not a property of one Markdown converte
 - Store fenced contents separately, use deterministic collision-checked placeholders, and restore with literal replacement semantics.
 - Test the full cleaner twice. A first-pass success does not prove fence protection is idempotent after delimiter conversion.
 - Treat unclosed fences conservatively by protecting through end of input and restoring the entire unmatched block unchanged.
+
+* Paste Wrappers Need Returned Markers, Not Pre-Paste Point Arithmetic
+  Date: 2026-07-18
+
+** Trigger
+~pasteboard-paste-adjusted-subtrees-adaptive~ recorded point before adaptive paste and assumed it was the start of the inserted text. With an active region, point can be either end of the selection, so the wrapper could scan the wrong range and miss pasted headings.
+
+** Mechanism
+The low-level insertion operation is the only layer that knows the actual replacement start and final inserted end. Markers survive later text growth when heading levels add stars; integer positions captured by a wrapper do not. The replacement start must come from ~region-beginning~, independent of whether point is before or after mark.
+
+** Actionable insight
+- Have insertion primitives return a cons of beginning and end markers.
+- Derive active-region bounds from ~region-beginning~ / ~region-end~, never raw point and mark orientation.
+- Make syntax-specific wrappers choose their syntax path explicitly; adjusted Org subtrees should not inherit an ambiguous Markdown bullet heuristic.
+- Test both selection directions and assert that text immediately outside the returned markers is unchanged.
