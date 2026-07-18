@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-07-18: Parse balanced parentheses in Markdown links
+- Replaced the flat Markdown-link destination regex in [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][📄 /Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el]] with a depth-aware scanner. Common targets such as =https://en.wikipedia.org/wiki/Emacs_(software)= now become complete Org bracket links.
+- Added nested-parenthesis and backslash-escape handling, kept adjacent punctuation outside the converted link, rejected unescaped whitespace, and left unbalanced candidates unchanged. Fenced links remain protected as literal code.
+- Made the conversion's end marker advance with inserted text. This prevents a longer first Org link from collapsing the remaining scan range and allows multiple links in one region to convert independently.
+- Verified simple, balanced, nested, escaped, multiple, adjacent-punctuation, whitespace, unbalanced, and fenced-code cases; reran the full semantic, fence, replacement, URL-routing, adjusted-subtree, and idempotence suite; passed ~check-parens~, ~git diff --check~, and the configured startup smoke test with ~shift nil~.
+
 * 2026-07-18: Restrict URL links and track exact adjusted-subtree insertions
 - Moved programming/verbatim routing ahead of URL-over-selection in [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][📄 /Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el]]. Org bracket links now require an ordinary Org buffer plus one whitespace-free HTTP(S) URL whose host is accepted by Emacs's built-in URL parser. URL-containing prose, multiline input, malformed hosts, unsupported schemes, programming buffers, and Org-local config no longer enter the bracket-link branch; =www.= targets normalize to HTTPS.
 - Updated the low-level clean, verbatim, and link insertion paths to return markers around the actual inserted range. Active-region replacement now starts at ~region-beginning~ regardless of point/mark orientation.

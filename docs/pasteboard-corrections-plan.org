@@ -12,8 +12,8 @@ The authoritative paste implementation is [[file+emacs:/Users/jay/emacs/emacs-se
 - Commit ~6b15c173~ restricts adaptive heading demotion to real Org headings and preserves bold metadata lines such as ~*User:* Anonymous~.
 - Commit ~982da542~ stops standalone Markdown bold lines from being promoted to headings and preserves blockquotes as colon-prefixed Org quote lines.
 - The replacement-table checkpoint consolidates literal and contextual rules, keeps ~okay -> OK~ only for whole words, preserves U+2E3B THREE-EM DASH unchanged, removes the dead Markdown TODO mapping, and removes the temporary startup binding that would otherwise block ~defcustom~ initialization.
-- Those later two fixes are adjacent work, not substitutes for this plan. Corrections 1, 2, 4, 5, 6, and 7 are complete; correction 3 is explicitly skipped. Only the balanced-parenthesis Markdown-link follow-up remains.
-- The smaller Markdown-link limitation involving balanced parentheses also remains.
+- Those later two fixes are adjacent work, not substitutes for this plan. Corrections 1, 2, 4, 5, 6, and 7 are complete; correction 3 is explicitly skipped.
+- The balanced-parenthesis Markdown-link follow-up is also complete. All active work in this plan is implemented.
 
 * Guardrails
 - Preserve literal source text unless a documented conversion rule applies.
@@ -191,14 +191,14 @@ The adjusted-subtree command can also misread three consecutive single-star Org 
 - Three consecutive single-star Org headings remain headings in the adjusted-subtree command.
 - Text outside the inserted range is untouched.
 
-* Smaller follow-up: Markdown links with balanced parentheses
-The converter at ~convert-markdown-links-to-org-mode~ does not recognize common links whose targets contain parentheses, including:
+* DONE Smaller follow-up: Markdown links with balanced parentheses
+The previous flat-regex converter at ~convert-markdown-links-to-org-mode~ did not recognize common links whose targets contain parentheses, including:
 
 #+begin_example
 [Emacs](https://en.wikipedia.org/wiki/Emacs_(software))
 #+end_example
 
-Do this after the seven corruption fixes. Replace the flat ~[^()]+~ target match with a parser or deliberately bounded balanced-parenthesis handling. Do not broaden the regex until nested-parenthesis and adjacent-punctuation cases have explicit acceptance examples.
+The completed implementation replaces the flat ~[^()]+~ target match with a depth-aware parser. Explicit acceptance checks cover nested parentheses, backslash escapes, multiple links, adjacent punctuation, whitespace rejection, unbalanced input, and fenced-code protection.
 
 * Checkpoint order
 ** Checkpoint 1: Org/Markdown semantic boundaries
@@ -219,7 +219,7 @@ Do this after the seven corruption fixes. Replace the flat ~[^()]+~ target match
 - Correction 7 is complete: low-level paste functions return exact inserted markers, active-region replacement begins at =region-beginning= regardless of selection direction, and adjusted-subtree paste uses an explicit Org syntax path before shifting only headings inside the returned range.
 
 ** Checkpoint 5: Balanced-parenthesis Markdown links
-- Implement and validate the smaller link-conversion follow-up after the corruption fixes are stable.
+- Complete: a depth-aware destination scanner supports balanced and nested parentheses, preserves adjacent punctuation, respects backslash escapes, rejects whitespace, and leaves unbalanced candidates unchanged.
 
 * Validation protocol for every checkpoint
 - Reproduce the relevant confirmed failure before editing and show that the checkpoint changes only the intended output.

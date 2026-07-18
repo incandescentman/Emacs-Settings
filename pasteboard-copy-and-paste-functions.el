@@ -565,14 +565,59 @@ Otherwise, demote from point to the end of the buffer."
   "Return the current macOS clipboard as a normalised string."
   (shell-command-to-string "pbpaste | perl -p -e 's/\\r$//' | tr '\\r' '\\n'"))
 
+(defun pasteboard--markdown-link-end (destination-beg limit)
+  "Return the end of a balanced Markdown link destination, or nil.
+DESTINATION-BEG is immediately after the opening parenthesis.  LIMIT bounds
+the scan.  Backslash-escaped characters do not affect parenthesis depth, and
+unescaped whitespace invalidates the destination."
+  (save-excursion
+    (goto-char destination-beg)
+    (let ((depth 1)
+          result
+          invalid)
+      (while (and (< (point) limit) (> depth 0) (not invalid))
+        (let ((char (char-after)))
+          (cond
+           ((eq char ?\\)
+            (forward-char 1)
+            (when (< (point) limit)
+              (forward-char 1)))
+           ((memq char '(?\s ?\t ?\n ?\r))
+            (setq invalid t))
+           ((eq char ?\()
+            (setq depth (1+ depth))
+            (forward-char 1))
+           ((eq char ?\))
+            (setq depth (1- depth))
+            (forward-char 1)
+            (when (zerop depth)
+              (setq result (point))))
+           (t
+            (forward-char 1)))))
+      (unless invalid result))))
+
 (defun convert-markdown-links-to-org-mode (beg end)
-  "Convert [label](url) style links in region to Org [[url][label]] links."
+  "Convert Markdown inline links between BEG and END to Org bracket links.
+Balanced and nested parentheses are supported in destinations."
   (interactive "r")
   (save-excursion
-    (let ((end-marker (copy-marker end)))
+    (let ((end-marker (copy-marker end t)))
       (goto-char beg)
-      (while (re-search-forward "\\[\\([^][]+\\)\\](\\([^()]+\\))" end-marker t)
-        (replace-match "[[\\2][\\1]]" t))
+      (while (re-search-forward "\\[\\([^][\n]+\\)\\](" end-marker t)
+        (let* ((match-beg (match-beginning 0))
+               (label (match-string-no-properties 1))
+               (destination-beg (point))
+               (link-end
+                (pasteboard--markdown-link-end destination-beg end-marker)))
+          (if (and link-end (> link-end (1+ destination-beg)))
+              (let ((destination
+                     (buffer-substring-no-properties destination-beg (1- link-end))))
+                (delete-region match-beg link-end)
+                (goto-char match-beg)
+                (insert "[[" destination "][" label "]]"))
+            ;; Resume after the opening bracket so malformed or unbalanced
+            ;; input cannot trap the scanner on the same candidate.
+            (goto-char (min end-marker (1+ match-beg))))))
       (set-marker end-marker nil))))
 
 (defun pasteboard--next-fence-placeholder (text counter)
