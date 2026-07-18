@@ -920,14 +920,6 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
         dotspacemacs-check-for-update nil     ; Spacemacs: skip version ping
         dotspacemacs-enable-package-cleanup nil ; don't touch packages
         dotspacemacs-enable-package-quickstart nil)
-
-
-
-
-  ;; Temporary band‑aid so Emacs launches even if smart‑quotes isn't ready
-  (defvar smart-quotes-replacement-pairs nil
-    "Alist of smart‑quote glyphs and their ASCII replacements.")
-
   ;; --- tell Flyspell / Ispell to use Hunspell --------------------
   (setq-default ispell-program-name "/opt/homebrew/bin/hunspell"
                 ispell-really-hunspell t

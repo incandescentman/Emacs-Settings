@@ -1424,3 +1424,17 @@ The ~fontspec~ package defines ~LetterSpace~ as a percentage of the font size: ~
 - For restrained all-caps labels, start around ~LetterSpace=4~ to ~12~, render the actual font at print size, and judge the PDF rather than the source number.
 - Use ~\RaggedRight~ for short prose in narrow checklist, card, and ledger columns so TeX does not create conspicuous rivers of stretched word spacing.
 - After a tracking change, inspect both a dense checklist page and the smallest all-caps labels; a contact sheet alone can hide spacing defects at wall-print scale.
+
+* Early Defvar Band-Aids Can Block Later Defcustom Defaults
+  Date: 2026-07-18
+
+** Trigger
+Consolidating ~smart-quotes-replacement-pairs~ into one authoritative ~defcustom~ looked self-contained, but a fresh Spacemacs launch would have left the variable ~nil~. [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][📄 /Users/jay/emacs/emacs-settings/spacemacs.d/init.el]] still bound it to ~nil~ early as a temporary startup band-aid.
+
+** Mechanism
+Both ~defvar~ and ~defcustom~ install their default value only when a variable is unbound. The early ~defvar ... nil~ therefore won the initialization race. The later duplicate ~add-to-list~ block had masked that dependency by mutating the already-bound empty value until it resembled the intended table.
+
+** Actionable insight
+- Before replacing incremental ~add-to-list~ initialization with one ~defcustom~, search the entire startup path for earlier ~defvar~, ~setq~, or Customize bindings of the same variable.
+- Remove obsolete early band-aids when the owning module now defines the variable before use.
+- Validate initialization in a fresh Emacs process. Re-evaluating a ~defcustom~ in an existing session does not prove its default will initialize correctly at startup.

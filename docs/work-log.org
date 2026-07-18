@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-07-18: Consolidate deterministic paste replacement rules
+- Replaced the duplicated ~smart-quotes-replacement-pairs~ definition-plus-mutation block in [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][📄 /Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el]] with one authoritative literal ~defcustom~ and a separate contextual-regexp ~defcustom~.
+- Kept ~okay -> OK~ only as a whole-word rule; preserved U+2E3B THREE-EM DASH unchanged; removed the dead ~- \*\* TODO~ entry and global hash substitutions; deduplicated literal mappings; and retained the existing ZWJ/ZWNJ behavior because correction 3 is explicitly marked ~SKIP THIS ONE~.
+- Removed the temporary early ~defvar smart-quotes-replacement-pairs nil~ band-aid from [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][📄 /Users/jay/emacs/emacs-settings/spacemacs.d/init.el]]. Because ~defvar~ and ~defcustom~ initialize only unbound variables, leaving the band-aid would make the consolidated literal table stay ~nil~ during a fresh startup.
+- Verified unique literal keys, contextual whole-word behavior, THREE-EM DASH preservation, global-hash preservation, form-feed spacing, ~SCHEDULED~ / ~DEADLINE~ spacing, skipped joiner-rule retention, idempotence, ~check-parens~ on both changed Elisp files, and the configured fresh-startup smoke test through [[file+emacs:/Users/jay/.emacs.d/init.el][📄 /Users/jay/.emacs.d/init.el]].
+
 * 2026-07-18: Record the pasteboard corrections plan
 - Added [[file+emacs:/Users/jay/emacs/emacs-settings/docs/pasteboard-corrections-plan.org][📄 /Users/jay/emacs/emacs-settings/docs/pasteboard-corrections-plan.org]] with the seven confirmed corruption fixes, the balanced-parenthesis Markdown-link follow-up, checkpoint order, real repros, acceptance checks, and validation protocol.
 - Reconciled the plan with commits ~6b15c173~ and ~982da542~ so the recently fixed heading-demotion, standalone-bold, and blockquote behavior is preserved rather than mistakenly listed as unfinished work.
