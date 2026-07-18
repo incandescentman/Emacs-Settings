@@ -547,35 +547,132 @@ Otherwise, demote from point to the end of the buffer."
         (replace-match "[[\\2][\\1]]" t))
       (set-marker end-marker nil))))
 
+(defun pasteboard--next-fence-placeholder (text counter)
+  "Return a deterministic fence placeholder absent from TEXT, starting at COUNTER."
+  (let (placeholder)
+    (while (or (null placeholder) (string-match-p (regexp-quote placeholder) text))
+      (setq placeholder (format "PASTEBOARDFENCEPROTECTED%06d" counter)
+            counter (1+ counter)))
+    (cons placeholder counter)))
+
+(defun pasteboard--protect-org-source-blocks (text)
+  "Replace Org source blocks in TEXT with inert placeholders.
+Both closed and unclosed blocks are restored byte-for-byte after prose cleanup."
+  (with-temp-buffer
+    (insert text)
+    (goto-char (point-min))
+    (let ((case-fold-search t)
+          (counter 0)
+          replacements)
+      (while (re-search-forward "^[ 	]*#\\+begin_src\\b.*$" nil t)
+        (let* ((block-beg (match-beginning 0))
+               (_ (forward-line 1))
+               (closed (re-search-forward "^[ 	]*#\\+end_src[ 	]*$" nil t))
+               (block-end
+                (if closed
+                    (progn (forward-line 1) (point))
+                  (point-max)))
+               (original (buffer-substring-no-properties block-beg block-end))
+               (ends-in-newline (string-suffix-p "\n" original))
+               (placeholder-data
+                (pasteboard--next-fence-placeholder (buffer-string) counter))
+               (placeholder (car placeholder-data))
+               (final-text (if ends-in-newline
+                               (substring original 0 -1)
+                             original)))
+          (setq counter (cdr placeholder-data))
+          (push (cons placeholder final-text) replacements)
+          (delete-region block-beg block-end)
+          (goto-char block-beg)
+          (insert placeholder (if ends-in-newline "\n" ""))))
+      (list :text (buffer-string)
+            :replacements (nreverse replacements)))))
+
+(defun pasteboard--protect-markdown-fences (text)
+  "Replace Markdown fenced blocks in TEXT with inert placeholders.
+
+Return a plist containing the protected text and a placeholder-to-final-text
+alist.  Closed backtick and tilde fences are converted to Org source-block
+delimiters in their final text; their contents are preserved byte-for-byte.
+An unclosed fence is protected during cleaning but restored entirely unchanged."
+  (with-temp-buffer
+    (insert text)
+    (goto-char (point-min))
+    (let ((counter 0)
+          replacements)
+      (while (re-search-forward
+              "^\\([ \t]*\\)\\(`\\{3,\\}\\|~\\{3,\\}\\)\\(.*\\)$" nil t)
+        (let* ((block-beg (match-beginning 0))
+               (open-indent (match-string-no-properties 1))
+               (fence (match-string-no-properties 2))
+               (fence-char (aref fence 0))
+               (fence-length (length fence))
+               (info (string-trim (match-string-no-properties 3))))
+          ;; A backtick info string containing a backtick is not a CommonMark
+          ;; opening fence.  Continue on the next line instead of protecting it.
+          (if (and (= fence-char ?`) (string-match-p "`" info))
+              (forward-line 1)
+            (let* ((open-line-end (line-end-position))
+                   (_ (forward-line 1))
+                   (content-beg (point))
+                   (closing-regexp
+                    (format "^\\([ \t]*\\)%s\\{%d,\\}[ \t]*$"
+                            (regexp-quote (char-to-string fence-char))
+                            fence-length))
+                   (closed (re-search-forward closing-regexp nil t))
+                   (close-beg (and closed (match-beginning 0)))
+                   (close-indent (and closed (match-string-no-properties 1)))
+                   (close-line-end (and closed (line-end-position)))
+                   (block-end
+                    (if closed
+                        (progn (forward-line 1) (point))
+                      (point-max)))
+                   (original
+                    (buffer-substring-no-properties block-beg block-end))
+                   (language (car (split-string info "[ \t]+" t)))
+                   (converted
+                    (if closed
+                        (concat open-indent "#+begin_src"
+                                (if language (concat " " language) "")
+                                (buffer-substring-no-properties open-line-end content-beg)
+                                (buffer-substring-no-properties content-beg close-beg)
+                                close-indent "#+end_src"
+                                (buffer-substring-no-properties close-line-end block-end))
+                      original))
+                   (ends-in-newline (string-suffix-p "\n" original))
+                   (placeholder-data
+                    (pasteboard--next-fence-placeholder (buffer-string) counter))
+                   (placeholder (car placeholder-data))
+                   (final-text (if ends-in-newline
+                                   (substring converted 0 -1)
+                                 converted)))
+              (setq counter (cdr placeholder-data))
+              (push (cons placeholder final-text) replacements)
+              (delete-region block-beg block-end)
+              (goto-char block-beg)
+              (insert placeholder (if ends-in-newline "\n" ""))))))
+      (list :text (buffer-string)
+            :replacements (nreverse replacements)))))
+
+(defun pasteboard--restore-markdown-fences (replacements)
+  "Restore protected Markdown fence REPLACEMENTS in the current buffer."
+  (dolist (replacement replacements)
+    (goto-char (point-min))
+    (unless (search-forward (car replacement) nil t)
+      (error "Missing protected fence placeholder: %s" (car replacement)))
+    (replace-match (cdr replacement) t t)))
+
 (defun convert-markdown-to-org-code-blocks-simple ()
-  "Statefully convert Markdown fences to Org src blocks, even when unlabeled.
-Adds blank line before #+begin_src and after #+end_src for readability."
+  "Convert closed Markdown fences to Org source blocks without changing code.
+Both backtick and tilde fences are supported.  Unclosed fences remain unchanged."
   (interactive)
-  (let ((inhibit-read-only t)
-        (inside-block nil))
-    (save-excursion
-      (goto-char (point-min))
-      (while (re-search-forward "^\\([[:space:]]*\\)```+\\([[:space:]]*\\([[:alnum:]._+-]*\\)?\\)[[:space:]]*$" nil t)
-        (let* ((indent (match-string 1))
-               (lang   (match-string 3))
-               (has-lang (and lang (> (length lang) 0))))
-          (cond
-           ;; Opening fence with language
-           ((and (not inside-block) has-lang)
-            (setq inside-block t)
-            (replace-match (format "\n%s#+begin_src %s" indent lang) t))
-           ;; Closing fence
-           (inside-block
-            (setq inside-block nil)
-            (replace-match (format "%s#+end_src\n" indent) t))
-           ;; Opening fence without language
-           (t
-            (setq inside-block t)
-            (replace-match (format "\n%s#+begin_src" indent) t)))))
-      ;; Handle accidental backticks in language specification
-      (goto-char (point-min))
-      (while (re-search-forward "^\\([[:space:]]*\\)#\\+begin_src[[:space:]]+`\\([^[:space:]]+\\)" nil t)
-        (replace-match "\\1#+begin_src \\2" t)))))
+  (let* ((protected (pasteboard--protect-markdown-fences
+                     (buffer-substring-no-properties (point-min) (point-max))))
+         (protected-text (plist-get protected :text))
+         (replacements (plist-get protected :replacements)))
+    (erase-buffer)
+    (insert protected-text)
+    (pasteboard--restore-markdown-fences replacements)))
 
 (defun pasteboard--analyse-clipboard-text (text)
   "Return a plist describing TEXT, detecting whether it looks like Markdown or Org."
@@ -744,11 +841,19 @@ Transforms lines like \"| --- | --- |\" into \"|---|---|\" while leaving data ro
 (defun pasteboard--clean-string (text)
   "Return cleaned TEXT for Org/text pastes.
 This function is pure text transformation and does not insert into buffers."
-  (let* ((analysis (pasteboard--analyse-clipboard-text text))
+  (let* ((protected-org-blocks (pasteboard--protect-org-source-blocks text))
+         (protected-fences
+          (pasteboard--protect-markdown-fences
+           (plist-get protected-org-blocks :text)))
+         (protected-text (plist-get protected-fences :text))
+         (fence-replacements
+          (append (plist-get protected-org-blocks :replacements)
+                  (plist-get protected-fences :replacements)))
+         (analysis (pasteboard--analyse-clipboard-text protected-text))
          (style (plist-get analysis :style))
          (heading-line-numbers (plist-get analysis :markdown-heading-lines)))
     (with-temp-buffer
-      (insert text)
+      (insert protected-text)
       (let* ((beg (point-min))
              (end (point-max))
              (heading-markers
@@ -799,9 +904,7 @@ This function is pure text transformation and does not insert into buffers."
                           (replace-match "\\1- \\2" t))))
                     (pasteboard--tighten-markdown-table-separators region-beg region-end)
                     (when (fboundp 'normalize-dashes)
-                      (normalize-dashes))
-                    (when (fboundp 'convert-markdown-to-org-code-blocks-simple)
-                      (convert-markdown-to-org-code-blocks-simple)))))
+                      (normalize-dashes)))))
               ;; Strip trailing whitespace last (after all content transforms) to
               ;; clean up fixed-width padding from terminal UI copies.
               (pasteboard--strip-trailing-whitespace (point-min) (point-max))
@@ -810,6 +913,8 @@ This function is pure text transformation and does not insert into buffers."
               (pasteboard--remove-blank-line-after-headings (point-min) (point-max))
               ;; Remove redundant asterisks from headings (e.g., "** Heading **" -> "** Heading")
               (pasteboard--remove-redundant-heading-asterisks (point-min) (point-max))
+              ;; Restore fenced contents only after every prose transformation.
+              (pasteboard--restore-markdown-fences fence-replacements)
               (buffer-string))
           (when heading-markers
             (mapc (lambda (marker) (set-marker marker nil)) heading-markers)))))))

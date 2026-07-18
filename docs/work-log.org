@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-07-18: Make adaptive paste prose cleanup fence-aware
+- Added deterministic protect–clean–restore handling in [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][📄 /Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el]]. Fenced code is replaced with collision-checked placeholders before any prose transformation and restored only after punctuation, citation, link, whitespace, heading, bullet, table, and dash cleanup finishes.
+- Closed backtick and tilde fences now become Org source-block delimiters while preserving code contents byte-for-byte, including tabs and trailing spaces. Multiple, unlabeled, labeled, indented, and longer-closing fences are supported; prose before, between, and after fences still cleans normally.
+- Existing Org =#+begin_src= blocks receive the same protection so a second clean pass is idempotent. Unclosed Markdown fences and Org source blocks are protected through end of input and restored entirely unchanged.
+- Verified the real fenced corruption repro, multiple fences, tilde fences, indentation, language identifiers, longer closers, surrounding prose, unclosed fences, existing Org source blocks, interactive fence conversion, second-pass idempotence, ~check-parens~, and ~git diff --check~.
+
 * 2026-07-18: Preserve Org comments and heading emphasis during clean paste
 - Gated Markdown-heading conversion in [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][📄 /Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el]] on the clipboard analyser resolving the payload as Markdown. Org input now preserves =# #+LATEX_HEADER: \EnableLogoFooter= byte-for-byte while real =# H1= / =## H2= Markdown headings still become Org headings and fenced headings remain code.
 - Removed the redundant call to ~redundant-delete-redundant-asterisks-in-org-headings~ from ~pasteboard-paste-clean~. The clean-string pipeline's narrow trailing-wrapper pass remains authoritative and preserves embedded ~*bold*~ markup.

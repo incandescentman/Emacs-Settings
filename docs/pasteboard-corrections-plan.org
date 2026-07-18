@@ -12,7 +12,7 @@ The authoritative paste implementation is [[file+emacs:/Users/jay/emacs/emacs-se
 - Commit ~6b15c173~ restricts adaptive heading demotion to real Org headings and preserves bold metadata lines such as ~*User:* Anonymous~.
 - Commit ~982da542~ stops standalone Markdown bold lines from being promoted to headings and preserves blockquotes as colon-prefixed Org quote lines.
 - The replacement-table checkpoint consolidates literal and contextual rules, keeps ~okay -> OK~ only for whole words, preserves U+2E3B THREE-EM DASH unchanged, removes the dead Markdown TODO mapping, and removes the temporary startup binding that would otherwise block ~defcustom~ initialization.
-- Those later two fixes are adjacent work, not substitutes for this plan. Corrections 1, 2, and 6 are complete; corrections 4, 5, and 7 remain; correction 3 is explicitly skipped.
+- Those later two fixes are adjacent work, not substitutes for this plan. Corrections 1, 2, 4, and 6 are complete; corrections 5 and 7 remain; correction 3 is explicitly skipped.
 - The smaller Markdown-link limitation involving balanced parentheses also remains.
 
 * Guardrails
@@ -93,7 +93,7 @@ Deleting these characters can also change meaning or typography in languages tha
 - Preserve ~👩‍💻~ and ~👨‍👩‍👧‍👦~ exactly.
 - Add a ZWNJ-containing text sample and assert byte-for-byte preservation.
 
-** TODO 4. Make prose cleanup fence-aware
+** DONE 4. Make prose cleanup fence-aware
 *** Confirmed failure
 Only the Markdown-heading converter tracks fenced code. Other passes rewrite fenced contents before the fence delimiters become Org source blocks. A real batch repro changed all of the following inside one fence:
 
@@ -212,7 +212,7 @@ Do this after the seven corruption fixes. Replace the flat ~[^()]+~ target match
 - The resolved THREE-EM DASH behavior is preservation without conversion.
 
 ** Checkpoint 3: Fence-aware transformation
-- Correction 4 only. This is the largest behavioral change and should remain isolated for review and rollback.
+- Correction 4 is complete in an isolated checkpoint. Backtick and tilde fences are protected before prose cleanup, closed fences become Org source blocks, existing Org source blocks remain protected on repeat cleaning, and unclosed fences are restored unchanged.
 
 ** Checkpoint 4: Context routing and insertion ranges
 - Correction 5: Org-only exact-URL link insertion.

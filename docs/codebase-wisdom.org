@@ -1438,3 +1438,18 @@ Both ~defvar~ and ~defcustom~ install their default value only when a variable i
 - Before replacing incremental ~add-to-list~ initialization with one ~defcustom~, search the entire startup path for earlier ~defvar~, ~setq~, or Customize bindings of the same variable.
 - Remove obsolete early band-aids when the owning module now defines the variable before use.
 - Validate initialization in a fresh Emacs process. Re-evaluating a ~defcustom~ in an existing session does not prove its default will initialize correctly at startup.
+
+* Fence Protection Must Survive the Second Clean Pass
+  Date: 2026-07-18
+
+** Trigger
+Protecting Markdown fence contents before prose cleanup fixed the first adaptive paste, but the first pass also converted the delimiters to Org =#+begin_src= / =#+end_src=. A second clean pass no longer saw a Markdown fence and could therefore rewrite the formerly protected code.
+
+** Mechanism
+Fence awareness is a pipeline invariant, not a property of one Markdown converter. Every prose-only transformation must see inert placeholders in place of both incoming Markdown fences and already-converted Org source blocks. Restoration must happen only after heading, punctuation, link, citation, whitespace, bullet, and dash passes are finished.
+
+** Actionable insight
+- Protect both source syntax states: incoming Markdown fences and existing Org source blocks.
+- Store fenced contents separately, use deterministic collision-checked placeholders, and restore with literal replacement semantics.
+- Test the full cleaner twice. A first-pass success does not prove fence protection is idempotent after delimiter conversion.
+- Treat unclosed fences conservatively by protecting through end of input and restoring the entire unmatched block unchanged.
