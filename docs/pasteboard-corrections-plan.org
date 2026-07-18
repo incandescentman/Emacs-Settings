@@ -2,6 +2,18 @@
 #+DATE: 2026-07-18
 #+STARTUP: showall
 
+* Completion note (2026-07-18)
+All seven corrections are implemented. Corrections 1, 2, 4, 5, 6, and 7 are committed locally and live-tested. Correction 3 now preserves ZWJ/ZWNJ during clean paste; it is batch-validated and awaits the checkpoint relaunch and live-paste confirmation. Nothing was pushed.
+
+Commit map:
+- ~05bb7444~ Consolidate paste replacement rules — Correction 6.
+- ~3d49768f~ Preserve Org paste semantics — Corrections 1 and 2.
+- ~0ecc9f0c~ Protect fenced code during adaptive paste — Correction 4.
+- ~792218cc~ Restrict adaptive URL links and track paste ranges — Corrections 5 and 7.
+- ~91ebd202~ Parse balanced Markdown link destinations — smaller follow-up.
+
+Open decisions resolved during implementation are recorded in /Current status/ below: THREE-EM DASH (U+2E3B) is removed from every list and passes through unchanged, and ~okay -> OK~ is now the whole-word regexp ~("\\_<okay\\_>" . "OK")~.
+
 * Purpose
 This document turns the July 2026 audit of the adaptive, clean, verbatim, and adjusted-subtree paste paths into an implementation plan. The earlier literal-backslash crash is fixed in commit ~20088c08~. The remaining priority is preventing silent text corruption while preserving intentional Markdown-to-Org conversion.
 
@@ -12,7 +24,7 @@ The authoritative paste implementation is [[file+emacs:/Users/jay/emacs/emacs-se
 - Commit ~6b15c173~ restricts adaptive heading demotion to real Org headings and preserves bold metadata lines such as ~*User:* Anonymous~.
 - Commit ~982da542~ stops standalone Markdown bold lines from being promoted to headings and preserves blockquotes as colon-prefixed Org quote lines.
 - The replacement-table checkpoint consolidates literal and contextual rules, keeps ~okay -> OK~ only for whole words, preserves U+2E3B THREE-EM DASH unchanged, removes the dead Markdown TODO mapping, and removes the temporary startup binding that would otherwise block ~defcustom~ initialization.
-- Those later two fixes are adjacent work, not substitutes for this plan. Corrections 1, 2, 4, 5, 6, and 7 are complete; correction 3 is explicitly skipped.
+- Those later two fixes are adjacent work, not substitutes for this plan. Corrections 1 through 7 are complete.
 - The balanced-parenthesis Markdown-link follow-up is also complete. All active work in this plan is implemented.
 
 * Guardrails
@@ -72,7 +84,7 @@ becomes:
 - ~** Heading **~ becomes ~** Heading~.
 - Literal backslashes in headings remain preserved.
 
-** SKIP THIS ONE 3. Preserve ZWJ and ZWNJ
+** DONE 3. Preserve ZWJ and ZWNJ
 *** Confirmed failure
 ~smart-quotes-replacement-pairs~ deletes U+200D ZERO WIDTH JOINER and U+200C ZERO WIDTH NON-JOINER even though ~replace-weird-spaces~ explicitly documents that they must be preserved. Confirmed examples:
 
@@ -207,7 +219,7 @@ The completed implementation replaces the flat ~[^()]+~ target match with a dept
 - Commits ~6b15c173~ and ~982da542~ remain validated: bold metadata, standalone bold lines, and blockquotes retain their current behavior.
 
 ** Checkpoint 2: Unicode and deterministic replacements
-- Correction 3 is explicitly skipped; retain the existing ZWJ and ZWNJ behavior.
+- Correction 3 is complete: ZWJ and ZWNJ survive clean paste while U+200B ZERO WIDTH SPACE remains removable.
 - Correction 6 is complete: literal and contextual rules are split and deduplicated.
 - The resolved THREE-EM DASH behavior is preservation without conversion.
 
@@ -234,9 +246,9 @@ The completed implementation replaces the flat ~[^()]+~ target match with a dept
 - Relaunch Emacs and confirm startup and the exact changed paste behavior before beginning the next checkpoint.
 
 * Completion criteria
-- None of the active confirmed corruption repros survive; the explicitly skipped correction 3 is outside the completion gate.
+- None of the confirmed corruption repros survive.
 - Verbatim and programming-mode paths remain verbatim.
-- Org comments, heading emphasis, and fenced code are preserved; the existing joiner behavior remains unchanged under the correction 3 skip directive.
+- Org comments, heading emphasis, fenced code, ZWJ emoji sequences, and ZWNJ-containing text are preserved.
 - Contextual conversions occur only in their documented syntactic context.
 - The clean transformation is deterministic and idempotent.
 - The current heading-demotion, standalone-bold, and blockquote fixes remain intact.

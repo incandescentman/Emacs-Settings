@@ -85,8 +85,6 @@
     ("‾" . "-")
     (" " . " ")       ; Non-breaking space
     ("\u200B" . "")   ; Zero-width space
-    ("\u200C" . "")   ; Zero-width non-joiner
-    ("\u200D" . "")   ; Zero-width joiner
     ("\f" . " ")      ; Form feed/page break from OCR/PDF text
     ("\t" . " ")      ; Tab character replaced with a space
     ("\u02BC" . "'")  ; Modifier letter apostrophe

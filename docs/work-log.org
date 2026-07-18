@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-07-18: Preserve emoji and script joiners during clean paste
+- Removed the U+200D ZERO WIDTH JOINER and U+200C ZERO WIDTH NON-JOINER deletion pairs from ~smart-quotes-replacement-pairs~ in [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][📄 /Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el]]. Clean paste now preserves combined emoji such as ~👩‍💻~ and ~👨‍👩‍👧‍👦~ and ZWNJ-containing script text such as ~می‌خواهم~.
+- Kept U+200B ZERO WIDTH SPACE as a separate cleanup target. This changes only the two joiner characters that were contradicting ~replace-weird-spaces~ and the codebase's documented emoji-preservation intent.
+- Batch validation confirmed byte-for-byte preservation, unchanged joiner counts, U+200B removal, and idempotence. Also passed ~check-parens~, ~git diff --check~, and the configured startup smoke test with ~shift nil~. Live confirmation follows after a full Emacs relaunch.
+
 * 2026-07-18: Parse balanced parentheses in Markdown links
 - Replaced the flat Markdown-link destination regex in [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][📄 /Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el]] with a depth-aware scanner. Common targets such as =https://en.wikipedia.org/wiki/Emacs_(software)= now become complete Org bracket links.
 - Added nested-parenthesis and backslash-escape handling, kept adjacent punctuation outside the converted link, rejected unescaped whitespace, and left unbalanced candidates unchanged. Fenced links remain protected as literal code.
