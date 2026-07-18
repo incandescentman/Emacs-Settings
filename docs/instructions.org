@@ -159,9 +159,14 @@ Both tools automatically strip:
 - Capture timestamps (by default)
 - =:website:= tags
 
-All paste methods (including =pasteboard-paste-adaptive=) convert bold lines that look like headings into actual org headings:
-- =*1. Classic Unalome:*= → =*** 1. Classic Unalome:=
-- =*Heading*= → =*** Heading=
+All paste and capture methods preserve standalone bold lines as bold text. They do not infer Org headings from visual emphasis:
+- =*1. Classic Unalome:*= remains =*1. Classic Unalome:*=
+- =*Heading*= remains =*Heading*=
+- Only explicit Markdown headings such as =### Heading= become Org headings.
+
+Adaptive paste converts Markdown blockquotes to Org quote lines while preserving inline formatting. => **Bold quote**= becomes =: *Bold quote*=, and a bare =>= between quoted paragraphs becomes a bare =:=.
+
+The previous bold-to-heading inference and its exact rollback procedure are documented in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/pasteboard-architecture.org][pasteboard-architecture.org]].
 
 *** Customization
 

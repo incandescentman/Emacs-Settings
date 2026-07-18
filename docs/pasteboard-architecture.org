@@ -17,6 +17,7 @@
 - 2025-11-02 improvement: added dedicated Markdown table separator tightening and defaulted `fundamental-mode` pastes to verbatim.
 - 2026-05-19 critical fix: `pasteboard-paste-adaptive` was rewriting top-level `* Heading` lines to `- Heading` whenever the clipboard text also contained any `-` bullets. Two compounding bugs: (a) `pasteboard--analyse-clipboard-text` only scored `\\*\\{2,\\}` (two-or-more-star) lines as Org, so single-star Org headings contributed nothing to `org-score`, letting `md-score` win on any text that mixed `*` headings with `-` bullets; (b) the "fallback" coercion loop in `pasteboard--clean-string` unconditionally rewrote every `^\\* ` line to `- ` once the style was `markdown`, ignoring the neighbor-aware `pasteboard--should-convert-asterisk-line` heuristic that the primary converter respects. Fix: the analyser now classifies each top-level single-`*` line by its non-blank neighbors (paragraph-text neighbors → Org signal; list neighbors → bullet count), and the fallback loop now calls `pasteboard--should-convert-asterisk-line` per match so heading-like single-`*` lines are protected even when scoring still picks `markdown`.
 - 2026-06-30 improvement: `replace-smart-quotes` now normalizes OCR/PDF form-feed page breaks (`\f`) to a plain space through =smart-quotes-replacement-pairs=. Use a space rather than deleting the character so pasted prose cannot accidentally join adjacent words.
+- 2026-07-18 correction: Markdown blockquotes again retain visible Org quote structure. Each => text= line becomes =: text=, and a bare =>= becomes =:=. The previous unwrapping behavior discarded the fact that the text was quoted and allowed later cleaners to reinterpret a fully bold quote as a heading.
 
 * Current Implementation Details
 
@@ -27,14 +28,13 @@
   3. `replace-smart-quotes-regexp`
   4. `replace-weird-spaces`
   5. `pasteboard--strip-cite-markers`
-  6. `convert-markdown-blockquotes-to-org` (strips `>` markers from single- and multi-line blockquotes, preserving blank lines)
+  6. `convert-markdown-blockquotes-to-org` (converts each `> text` line to `: text` and each bare `>` to `:`)
   7. `convert-markdown-links-to-org-mode`
   8. Markdown-only cleanup (when detected as Markdown): convert inline emphasis if enabled, convert asterisk bullets to dashes while skipping heading markers, fallback bullet conversion, tighten markdown table separators, run `normalize-dashes` if available, convert Markdown fences to org src blocks if available
   9. `pasteboard--strip-trailing-whitespace`
   10. `pasteboard--ensure-blank-line-before-headings`
-  11. `pasteboard--convert-bold-to-headings`
-  12. `pasteboard--remove-blank-line-after-headings` (preserves blank lines before headings and `#` directives)
-  13. `pasteboard--remove-redundant-heading-asterisks` (removes trailing whitespace-separated `*` from headings)
+  11. `pasteboard--remove-blank-line-after-headings` (preserves blank lines before headings and `#` directives)
+  12. `pasteboard--remove-redundant-heading-asterisks` (removes trailing whitespace-separated `*` from headings)
 
 ** One Obvious Clean Path
 - Principle: keep exactly one clean insertion path for predictability and ease of maintenance.
@@ -162,6 +162,53 @@ The pasteboard system must handle these correctly:
 | `## **Bold Heading**`     | `** *Bold Heading*`       | Heading + Bold |
 | `**Bold at line start**`  | `*Bold at line start*`    | Bold only      |
 | `Regular **bold** text`   | `Regular *bold* text`     | Inline bold    |
+
+** Standalone Bold Lines Stay Bold
+
+As of 2026-07-18, all three Markdown-to-Org paths preserve standalone bold lines instead of guessing that visual emphasis represents a heading:
+- ~pasteboard-paste-adaptive~ through ~pasteboard--clean-string~
+- ~chatgpt2org~ through ~chatgpt2org--cleanup-org-string~
+- the Org web-tools wrappers through ~jay/org-web-tools-cleanup-string~
+
+This fixes cases such as a Markdown blockquote containing ~**Socratic AI is...**~. Markdown bold becomes Org bold and the blockquote marker becomes an Org quote prefix, producing ~: *Socratic AI is...*~ rather than a level-three heading. Explicit Markdown headings such as ~### Heading~ still convert normally.
+
+*** Rollback: Restore Bold-Only Lines as Level-Three Headings
+
+The quickest full rollback is to find this checkpoint with ~git log --grep="Stop promoting bold lines to headings" --oneline~ and revert that commit. For a surgical restoration, restore the following three code paths.
+
+1. In [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][pasteboard-copy-and-paste-functions.el]], restore ~pasteboard--convert-bold-to-headings~ and call it in ~pasteboard--clean-string~ immediately after ~pasteboard--ensure-blank-line-before-headings~:
+
+#+begin_src emacs-lisp
+(defun pasteboard--convert-bold-to-headings (beg end)
+  "Convert bold lines that look like headings to level-three Org headings."
+  (save-excursion
+    (let ((end-marker (copy-marker end t)))
+      (unwind-protect
+          (progn
+            (goto-char beg)
+            (while (re-search-forward "^\\*\\([0-9]+\\. [^*]+\\):\\*$" end-marker t)
+              (replace-match "*** \\1:" t))
+            (goto-char beg)
+            (while (re-search-forward "^\\*\\([A-Z][^*]+\\)\\*$" end-marker t)
+              (replace-match "*** \\1" t)))
+        (set-marker end-marker nil)))))
+
+(pasteboard--convert-bold-to-headings (point-min) (point-max))
+#+end_src
+
+2. In [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]], restore these lines inside ~jay/org-web-tools-cleanup-string~ after the capture-timestamp cleanup, then delete the stale [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]], retangle, and validate it:
+
+#+begin_src emacs-lisp
+(setq result (replace-regexp-in-string "^\\*\\([0-9]+\\. [^*]+\\):\\*$" "*** \\1:" result))
+(setq result (replace-regexp-in-string "^\\*\\([A-Z][^*]+\\)\\*$" "*** \\1" result))
+#+end_src
+
+3. In [[file+emacs:/Users/jay/emacs/emacs-settings/elpa-supplement/chatgpt2org.el][chatgpt2org.el]], restore the equivalent lines inside ~chatgpt2org--cleanup-org-string~ after the source-block cleanup:
+
+#+begin_src emacs-lisp
+(setq org-content (replace-regexp-in-string "^\\*\\([0-9]+\\. [^*]+\\):\\*$" "*** \\1:" org-content))
+(setq org-content (replace-regexp-in-string "^\\*\\([A-Z][^*]+\\)\\*$" "*** \\1" org-content))
+#+end_src
 
 * Markdown Detection Heuristics
 

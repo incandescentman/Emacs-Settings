@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-07-18: Stop promoting standalone bold lines to Org headings
+- Removed the broad bold-to-heading inference from all three Markdown-to-Org paths: ~pasteboard-paste-adaptive~, ~chatgpt2org~, and the Org web-tools cleaners. Standalone bold text now remains bold; only explicit Markdown heading syntax creates Org headings.
+- Restored visible Org quote structure in adaptive paste: each Markdown ~> text~ line becomes ~: text~, and a bare ~>~ becomes ~:~ so multiline and multi-paragraph quotes retain their boundaries. The reported Socratic AI blockquote now becomes ~: *Socratic AI is...*~ instead of a level-three heading.
+- Verified focused regressions for the reported blockquote, consecutive quote lines, a bare quoted paragraph separator, numbered bold lines, capitalized bold lines, and explicit Markdown headings across adaptive paste, ~chatgpt2org~, and Org web-tools cleanup. Regenerated [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]], passed ~check-parens~ on all three Elisp files, and completed the configured startup smoke test with ~shift nil~.
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][instructions.org]] and [[file+emacs:/Users/jay/emacs/emacs-settings/docs/pasteboard-architecture.org][pasteboard-architecture.org]]. The architecture guide preserves the old implementation, all three restoration points, the retangle requirement, and a commit-search command so the behavior can be restored without reconstructing it from memory.
+
 * 2026-07-18: Restrict adaptive heading demotion to actual Org headings
 - Fixed ~demote-org-headings-in-region~ in [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][pasteboard-copy-and-paste-functions.el]] so it requires Org's heading delimiter: a space after the leading stars. Bold metadata such as ~*User:* Anonymous~, ~*Created:*~, ~*Updated:*~, ~*Exported:*~, and ~*Link:*~ now remains unchanged while real headings such as ~* Heading~ still gain one level.
 - Verified the change with ~check-parens~ and a batch regression using the reported ChatGPT-export metadata plus real one-, two-, and three-star Org headings. The configured startup smoke test also completed with ~shift nil~.

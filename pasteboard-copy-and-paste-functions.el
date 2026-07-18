@@ -289,11 +289,11 @@ non‑ASCII (code‑point > 127) and there’s no space already, insert one."
             (goto-char limit)))))))
 
 (defun convert-markdown-blockquotes-to-org (beg end)
-  "Strip Markdown/email blockquote markers between BEG and END, unwrapping quotes.
+  "Convert Markdown/email blockquote markers between BEG and END to Org quote lines.
 
 Handles consecutive lines that start with optional indentation and \">\" (or
-just \">\" alone), removing the marker while preserving blank lines. Single-line
-quotes are unwrapped the same way."
+just \">\" alone).  Text lines receive an Org \": \" prefix; bare markers become
+bare \":\" lines so paragraph breaks inside a quote remain visible."
   (save-excursion
     (goto-char beg)
     (let ((limit (copy-marker end)))
@@ -308,7 +308,11 @@ quotes are unwrapped the same way."
                   (goto-char block-start)
                   (while (< (point) block-end)
                     (when (looking-at "^[ \t]*>\\(?:[ \t]\\)?\\(.*\\)$")
-                      (replace-match "\\1" t nil))
+                      (let ((content (match-string 1)))
+                        (replace-match (if (string-empty-p content)
+                                           ":"
+                                         (concat ": " content))
+                                       t t)))
                     (forward-line 1)))
                 (set-marker block-end nil))))
         (forward-line 1))
@@ -384,24 +388,6 @@ Converts '** Heading **' to '** Heading', but preserves embedded emphasis."
     (goto-char beg)
     (while (re-search-forward "^\\(\\*+\\) \\(.*?\\)\\s-+\\*+\\s-*$" end t)
       (replace-match (concat (match-string 1) " " (match-string 2)) t t))))
-
-(defun pasteboard--convert-bold-to-headings (beg end)
-  "Convert bold lines that look like headings to actual org headings between BEG and END.
-For example, \"*1. Classic Unalome:*\" becomes \"*** 1. Classic Unalome:\""
-  (save-excursion
-    ;; Use a marker so replacement growth never invalidates the search bound.
-    (let ((end-marker (copy-marker end t)))
-      (unwind-protect
-          (progn
-            (goto-char beg)
-            ;; Convert numbered bold headings: *1. Title:* -> *** 1. Title:
-            (while (re-search-forward "^\\*\\([0-9]+\\. [^*]+\\):\\*$" end-marker t)
-              (replace-match "*** \\1:" t))
-            (goto-char beg)
-            ;; Convert capitalized bold headings: *Heading* -> *** Heading
-            (while (re-search-forward "^\\*\\([A-Z][^*]+\\)\\*$" end-marker t)
-              (replace-match "*** \\1" t)))
-        (set-marker end-marker nil)))))
 
 (defun pasteboard--convert-markdown-inline-emphasis (beg end)
   "Convert inline Markdown emphasis between BEG and END to Org markup.
@@ -908,9 +894,6 @@ This function is pure text transformation and does not insert into buffers."
               ;; clean up fixed-width padding from terminal UI copies.
               (pasteboard--strip-trailing-whitespace (point-min) (point-max))
               (pasteboard--ensure-blank-line-before-headings (point-min) (point-max))
-              ;; Convert bold lines that look like headings to actual org headings
-              ;; e.g., "*1. Classic Unalome:*" -> "*** 1. Classic Unalome:"
-              (pasteboard--convert-bold-to-headings (point-min) (point-max))
               ;; Remove blank lines between headings and body text
               (pasteboard--remove-blank-line-after-headings (point-min) (point-max))
               ;; Remove redundant asterisks from headings (e.g., "** Heading **" -> "** Heading")
