@@ -8,7 +8,7 @@
 \\providecommand{\\DocumentMetadata}[1]{}
 \\DocumentMetadata{lang=en-US}
 \\documentclass[10pt]{article}
-\\usepackage[includeheadfoot, top=0.68in, bottom=0.58in, left=0.68in, right=0.68in, headsep=0.16in]{geometry}
+\\usepackage[includeheadfoot, top=0.68in, bottom=0.58in, left=1in, right=1in, headsep=0.16in]{geometry}
 \\setlength{\\footskip}{0.28in}
 
 % Package Inclusions
@@ -112,6 +112,7 @@
   ]{Helvetica Neue LT Pro}
   \\newfontfamily\\playbookdisplay[
     Path = /Users/jay/Library/Fonts/,
+    Numbers = Lining,
     UprightFont = GaramondPremrPro-Disp,
     ItalicFont = GaramondPremrPro-ItDisp,
     BoldFont = GaramondPremrPro-BdDisp,
@@ -172,16 +173,18 @@
 \\definecolor{azure}{HTML}{f2feff}
 \\definecolor{jayfooterbrandgrey}{HTML}{4F4F4F}
 % Warm editorial palette derived from the Claude Design reference.
-\\definecolor{playbookink}{HTML}{292522}
-\\definecolor{playbookblue}{HTML}{984B43}
-\\definecolor{playbookbluebright}{HTML}{A35449}
-\\definecolor{playbookpowder}{HTML}{F3EBDD}
-\\definecolor{playbookwash}{HTML}{F7F1E7}
-\\definecolor{playbookline}{HTML}{D9CFC1}
-\\definecolor{playbookred}{HTML}{984B43}
-\\definecolor{playbookmuted}{HTML}{83786F}
-\\definecolor{playbookgold}{HTML}{C4A15C}
-\\definecolor{playbookblack}{HTML}{211E1B}
+\\definecolor{playbookpaper}{HTML}{FFFFFF}
+\\definecolor{playbookink}{HTML}{2A2520}
+\\definecolor{playbookblue}{HTML}{7C2E2E}
+\\definecolor{playbookbluebright}{HTML}{7C2E2E}
+\\definecolor{playbookpowder}{HTML}{F1EADC}
+\\definecolor{playbookwash}{HTML}{F6F0E4}
+\\definecolor{playbookline}{HTML}{E7DFCF}
+\\definecolor{playbookred}{HTML}{7C2E2E}
+\\definecolor{playbookmuted}{HTML}{8A8073}
+\\definecolor{playbookgold}{HTML}{C9AF7E}
+\\definecolor{playbookblack}{HTML}{23201C}
+\\definecolor{playbookledlabel}{HTML}{C9AF7E}
 
 \\newcommand{\\labelitemv}{\\textbullet}
 \\newcommand{\\labelitemvi}{\\textbullet}
@@ -201,8 +204,8 @@
 \\newcommand{\\footerlogo}[1]{\\def\\jayfooterlogo{#1}\\jayapplyfooter}
 \\def\\jayfooterbrand{}
 \\newcommand{\\footerbrand}[1]{\\def\\jayfooterbrand{#1}\\jayapplyfooter}
-\\newcommand{\\playbookperiod}{JULY--DECEMBER 2026}
-\\newcommand{\\playbookstrap}{PRINTED \\& ON THE WALL \\textperiodcentered{} JULY--DECEMBER 2026}
+\\newcommand{\\playbookperiod}{JULY—DECEMBER 2026}
+\\newcommand{\\playbookstrap}{PRINTED \\& ON THE WALL \\textperiodcentered{} JULY—DECEMBER 2026}
 \\newcommand{\\PlaybookPeriod}[1]{\\renewcommand{\\playbookperiod}{#1}}
 \\renewcommand{\\sectionmark}[1]{\\markboth{#1}{}}
 \\makeatletter
@@ -212,11 +215,11 @@
     {\\expandafter\\jay@leftheader@split\\@title\\\\\\jay@leftheader@end}
     {\\def\\jayresolvedleftheader{\\the\\leftheader}}%
   \\expandafter\\ifstrempty\\expandafter{\\the\\leftheaderurl}
-    {\\lhead{{\\playbooksans\\color{playbookmuted}\\fontsize{6.7}{8}\\selectfont\\addfontfeatures{LetterSpace=55}\\MakeUppercase{\\jayresolvedleftheader \\textperiodcentered{} Fable}}}}
-    {\\lhead{{\\playbooksans\\color{playbookmuted}\\fontsize{6.7}{8}\\selectfont\\addfontfeatures{LetterSpace=55}\\href{\\the\\leftheaderurl}{\\MakeUppercase{\\jayresolvedleftheader \\textperiodcentered{} Fable}}}}}%
+    {\\lhead{{\\playbooksans\\color{playbookmuted}\\fontsize{6.7}{8}\\selectfont\\addfontfeatures{LetterSpace=5.5}\\MakeUppercase{\\jayresolvedleftheader \\textperiodcentered{} Fable}}}}
+    {\\lhead{{\\playbooksans\\color{playbookmuted}\\fontsize{6.7}{8}\\selectfont\\addfontfeatures{LetterSpace=5.5}\\href{\\the\\leftheaderurl}{\\MakeUppercase{\\jayresolvedleftheader \\textperiodcentered{} Fable}}}}}%
 }
 \\makeatother
-\\rhead{{\\playbooksans\\color{playbookmuted}\\fontsize{6.7}{8}\\selectfont\\addfontfeatures{LetterSpace=55}STORYTELLING.NYC}}
+\\rhead{{\\playbooksans\\color{playbookmuted}\\fontsize{6.7}{8}\\selectfont\\addfontfeatures{LetterSpace=5.5}SOCRATIC AI}}
 \\AtBeginDocument{\\jayapplyleftheader}
 
 % Footer configuration (controlled from org file)
@@ -250,7 +253,7 @@
       {\\fancyfoot[C]{\\jayfooterunlesslast{\\jayfooterlogoonly}}}%
       {\\fancyfoot[C]{\\jayfooterunlesslast{\\jayfooterlogowithbrand}}}%
   \\else
-    \\fancyfoot[C]{{\\playbooksans\\color{playbookmuted}\\fontsize{6.4}{7.5}\\selectfont\\addfontfeatures{LetterSpace=45}\\playbookstrap}}%
+    \\fancyfoot[C]{{\\playbooksans\\color{playbookmuted}\\fontsize{6.4}{7.5}\\selectfont\\addfontfeatures{LetterSpace=4.5}\\playbookstrap}}%
   \\fi\\fi
 }
 \\newcommand{\\EnableLogoFooter}{\\jaynofooterfalse\\jaylogofootertrue\\jayapplyfooter}
@@ -260,12 +263,13 @@
 % Paragraph and Indentation Settings
 \\setlength{\\parindent}{0pt}
 \\setlength{\\parskip}{3.2pt plus 0.8pt minus 0.8pt}
-\\setstretch{1.02}
+\\setstretch{1.15}
 \\clubpenalty=10000
 \\widowpenalty=10000
 \\displaywidowpenalty=10000
 \\color{playbookink}
-\\AtBeginDocument{\\fontsize{9.15}{11.25}\\selectfont}
+\\pagecolor{playbookpaper}
+\\AtBeginDocument{\\RaggedRight\\fontsize{9.15}{11.25}\\selectfont}
 
 % Table of Contents Customization
 \\renewcommand{\\contentsname}{Table of Contents}
@@ -281,10 +285,10 @@
     {\\hspace{\\labelsep}\\colorbox{playbookred}{%
       \\playbookchiptrue\\strut\\playbooksans\\bfseries\\color{white}%
       \\fontsize{7.15}{8.5}\\selectfont\\hspace{1.5pt}#1\\hspace{1.5pt}}}}\\fi}
-\\setlist[description]{style=sameline, leftmargin=0pt, labelindent=0pt,
-  labelwidth=0pt, labelsep=0.42em,
-  itemsep=2.6pt, topsep=3pt, parsep=0pt,
-  before=\\vspace{1pt}, after=\\vspace{5pt}}
+\\setlist[description]{style=standard, leftmargin=0pt, labelindent=0pt,
+  labelwidth=0pt, labelsep=0pt,
+  itemsep=0pt, topsep=3pt, parsep=0pt,
+  before=\\vspace{1pt}, after=\\vspace{7pt}}
 
 % List Environment Customization
 \\setlist{itemsep=2pt, parsep=0pt, partopsep=0pt, topsep=3pt}
@@ -356,55 +360,63 @@
     top=14pt,
     bottom=14pt,
     before skip=4pt,
-    after skip=10pt
+    after skip=10pt,
+    before upper=\\RaggedRight
   }
 }
 \\tcbset{
   playbookmilestone/.style={
     enhanced,
     breakable=false,
-    width=\\dimexpr\\linewidth-9pt\\relax,
-    colback=playbookpowder,
-    colframe=playbookred,
+    width=\\linewidth,
+    colback=playbookwash,
+    colframe=playbookwash,
     boxrule=0pt,
-    borderline west={2.5pt}{0pt}{playbookred},
-    sharp corners,
-    left=9pt,
-    right=9pt,
-    top=7pt,
-    bottom=7pt,
-    before skip=4pt,
-    after skip=5pt
+    borderline west={4pt}{0pt}{playbookred},
+    arc=2pt,
+    outer arc=2pt,
+    left=16pt,
+    right=16pt,
+    top=12pt,
+    bottom=12pt,
+    before skip=14pt,
+    after skip=10pt,
+    before upper=\\RaggedRight
   },
   playbookfloor/.style={
     enhanced,
-    width=\\dimexpr\\linewidth-9pt\\relax,
+    breakable=false,
+    width=\\linewidth,
     colback=playbookblack,
     colframe=playbookblack,
     boxrule=0pt,
     sharp corners,
-    left=10pt,
-    right=10pt,
-    top=8pt,
-    bottom=9pt,
-    before skip=6pt,
-    after skip=7pt
+    left=18pt,
+    right=18pt,
+    top=14pt,
+    bottom=14pt,
+    before skip=12pt,
+    after skip=10pt
   }
 }
-\\newcommand{\\PlaybookDateChip}[1]{%
-  \\colorbox{playbookred}{%
-    \\strut\\playbooksans\\bfseries\\color{white}%
-    \\fontsize{7.15}{8.5}\\selectfont\\hspace{1.5pt}#1\\hspace{1.5pt}}}
 \\newcommand{\\PlaybookCheckbox}{%
-  \\makebox[1.35em][l]{\\raisebox{0.08ex}{\\color{playbookred}$\\square$}}}
+  \\raisebox{0.08ex}{\\color{playbookred}$\\square$}}
 \\newcommand{\\PlaybookTask}[2]{%
-  \\noindent\\PlaybookCheckbox\\PlaybookDateChip{#1}\\hspace{0.42em}#2}
+  \\par\\noindent{\\color{playbookline}\\rule{\\linewidth}{0.4pt}}\\vspace{5pt}\\par
+  \\begingroup
+    \\RaggedRight\\fontsize{9.15}{9.8}\\selectfont
+    \\hangindent=1.5em\\hangafter=1
+    \\noindent\\PlaybookCheckbox\\hspace{4pt}%
+    {\\bfseries\\color{playbookred}#1}~---~#2\\par
+  \\endgroup
+  \\vspace{5pt}}
 \\newcommand{\\PlaybookMilestoneLabel}[1]{%
-  \\noindent\\PlaybookCheckbox\\PlaybookDateChip{#1}\\par\\vspace{3pt}}
+  \\noindent\\RaggedRight\\PlaybookCheckbox\\hspace{4pt}%
+  {\\bfseries\\color{playbookred}#1}\\par\\vspace{4pt}}
 \\newcommand{\\PlaybookFloorCheck}{%
   \\begin{tcolorbox}[playbookfloor]
-    {\\playbooksans\\bfseries\\color{playbookgold}\\fontsize{7}{8.5}\\selectfont\\addfontfeatures{LetterSpace=95}AUGUST FLOOR CHECK}\\par
-    \\vspace{5pt}
+    {\\playbooksans\\bfseries\\color{playbookledlabel}\\fontsize{7}{8.5}\\selectfont\\addfontfeatures{LetterSpace=9.5}AUGUST FLOOR CHECK}\\par
+    \\vspace{7pt}
     \\begingroup
     \\renewcommand{\\arraystretch}{1.05}
     \\setlength{\\tabcolsep}{2pt}
@@ -415,12 +427,12 @@
       {\\playbookdisplay\\bfseries\\color{white}\\fontsize{18}{19}\\selectfont \\textasciitilde{}20} &
       {\\playbookdisplay\\bfseries\\color{white}\\fontsize{18}{19}\\selectfont 12} &
       {\\playbookdisplay\\bfseries\\color{white}\\fontsize{18}{19}\\selectfont 2} \\\\
-      {\\playbooksans\\color{playbookline}\\fontsize{5.8}{7}\\selectfont LONG VIDEOS} &
-      {\\playbooksans\\color{playbookline}\\fontsize{5.8}{7}\\selectfont SHORTS} &
-      {\\playbooksans\\color{playbookline}\\fontsize{5.8}{7}\\selectfont ESSAYS} &
-      {\\playbooksans\\color{playbookline}\\fontsize{5.8}{7}\\selectfont NOTES} &
-      {\\playbooksans\\color{playbookline}\\fontsize{5.8}{7}\\selectfont LINKEDIN} &
-      {\\playbooksans\\color{playbookline}\\fontsize{5.8}{7}\\selectfont POD PITCHES}
+      {\\playbooksans\\color{playbookledlabel}\\fontsize{5.8}{7}\\selectfont LONG VIDEOS} &
+      {\\playbooksans\\color{playbookledlabel}\\fontsize{5.8}{7}\\selectfont SHORTS} &
+      {\\playbooksans\\color{playbookledlabel}\\fontsize{5.8}{7}\\selectfont ESSAYS} &
+      {\\playbooksans\\color{playbookledlabel}\\fontsize{5.8}{7}\\selectfont NOTES} &
+      {\\playbooksans\\color{playbookledlabel}\\fontsize{5.8}{7}\\selectfont LINKEDIN} &
+      {\\playbooksans\\color{playbookledlabel}\\fontsize{5.8}{7}\\selectfont POD PITCHES}
     \\end{tabularx}
     \\endgroup
   \\end{tcolorbox}}
@@ -468,8 +480,25 @@
 \\newcommand{\\playbookrootsection}[1]{}
 \\newcommand{\\playbookphaseprefix}{}
 \\newcommand{\\playbookphasetitle}{}
+\\newcommand{\\playbookphasemain}{}
+\\newcommand{\\playbookphasedate}{}
+\\newcommand{\\playbookdisplaytitle}{}
+\\newcommand{\\playbookdisplaydate}{}
 \\newcommand{\\playbookweeklabel}{}
 \\newcommand{\\playbookweektitle}{}
+\\newcommand{\\PlaybookResolvePhase}[1]{%
+  \\StrBefore{#1}{ (}[\\playbookphasemain]%
+  \\StrBetween{#1}{(}{)}[\\playbookphasedate]%
+  \\def\\playbookdisplaytitle{\\playbookphasemain}%
+  \\def\\playbookdisplaydate{\\playbookphasedate}%
+  \\IfStrEq{\\playbookphasemain}{LAUNCH COUNTDOWN}{\\def\\playbookdisplaytitle{Launch Countdown}}{}%
+  \\IfStrEq{\\playbookphasemain}{LAUNCH}{\\def\\playbookdisplaytitle{Launch}}{}%
+  \\IfStrEq{\\playbookphasemain}{CADENCE \\& COMPOUNDING}{\\def\\playbookdisplaytitle{Cadence \\& Compounding}}{}%
+  \\IfStrEq{\\playbookphasemain}{HARVEST}{\\def\\playbookdisplaytitle{Harvest}}{}%
+  \\IfStrEq{\\playbookphasedate}{July 15-August 3}{\\def\\playbookdisplaydate{Jul 15--Aug 3}}{}%
+  \\IfStrEq{\\playbookphasedate}{September-October}{\\def\\playbookdisplaydate{September--October}}{}%
+  \\IfStrEq{\\playbookphasedate}{November-December}{\\def\\playbookdisplaydate{November--December}}{}%
+}
 
 \\newcommand{\\playbooksection}[1]{%
   \\IfStrEq{#1}{How to use this document}{}{%
@@ -477,21 +506,23 @@
       \\Needspace{7\\baselineskip}%
       \\StrBefore{#1}{:}[\\playbookphaseprefix]%
       \\StrBehind{#1}{: }[\\playbookphasetitle]%
+      \\PlaybookResolvePhase{\\playbookphasetitle}%
       \\par\\vspace{8pt}%
-      \\noindent\\raisebox{0.45ex}{{\\playbooksans\\bfseries\\color{playbookred}\\fontsize{7.4}{9}\\selectfont\\addfontfeatures{LetterSpace=85}\\playbookphaseprefix}}%
-      \\hspace{0.75em}{\\playbookdisplay\\bfseries\\color{playbookink}\\fontsize{20}{22}\\selectfont\\playbookphasetitle}\\par
+      \\noindent\\raisebox{0.45ex}{{\\playbooksans\\bfseries\\color{playbookred}\\fontsize{7.4}{9}\\selectfont\\addfontfeatures{LetterSpace=8.5}\\playbookphaseprefix}}%
+      \\hspace{0.75em}{\\playbookdisplay\\bfseries\\color{playbookink}\\fontsize{20}{22}\\selectfont\\playbookdisplaytitle}%
+      \\hfill{\\playbookdisplay\\itshape\\color{playbookmuted}\\fontsize{10}{11.5}\\selectfont\\playbookdisplaydate}\\par
       \\vspace{5pt}{\\color{playbookink}\\rule{\\linewidth}{0.7pt}}\\vspace{6pt}%
     }{%
       \\IfSubStr{#1}{THE RECURRING WEEK}{%
         \\Needspace{7\\baselineskip}%
         \\par\\vspace{10pt}%
-        \\noindent{\\playbooksans\\color{playbookgold}\\fontsize{7.2}{9}\\selectfont\\addfontfeatures{LetterSpace=85}ENGINE}%
+        \\noindent{\\playbooksans\\color{playbookgold}\\fontsize{7.2}{9}\\selectfont\\addfontfeatures{LetterSpace=8.5}ENGINE}%
         \\hspace{0.8em}{\\playbookdisplay\\bfseries\\color{playbookink}\\fontsize{19}{21}\\selectfont The Recurring Week}\\par
         \\vspace{5pt}{\\color{playbookink}\\rule{\\linewidth}{0.7pt}}\\vspace{6pt}%
       }{%
         \\Needspace{4\\baselineskip}%
         \\par\\vspace{7pt}%
-        \\noindent{\\playbooksans\\bfseries\\color{playbookred}\\fontsize{7.4}{9}\\selectfont\\addfontfeatures{LetterSpace=90}\\MakeUppercase{#1}}\\par
+        \\noindent{\\playbooksans\\bfseries\\color{playbookred}\\fontsize{7.4}{9}\\selectfont\\addfontfeatures{LetterSpace=9}\\MakeUppercase{#1}}\\par
         \\vspace{4pt}{\\color{playbookline}\\rule{\\linewidth}{0.55pt}}\\vspace{4pt}%
       }%
     }%
@@ -499,21 +530,21 @@
 }
 
 \\newcommand{\\playbooksubsection}[1]{%
-  \\Needspace{4\\baselineskip}%
+  \\Needspace{9\\baselineskip}%
   \\par\\vspace{4pt}%
   \\IfSubStr{#1}{:}{%
     \\StrBefore{#1}{:}[\\playbookweeklabel]%
     \\StrBehind{#1}{: }[\\playbookweektitle]%
-    \\noindent{\\playbooksans\\bfseries\\color{playbookred}\\fontsize{7.2}{9}\\selectfont\\addfontfeatures{LetterSpace=75}\\MakeUppercase{\\playbookweeklabel}}\\par
+    \\noindent{\\playbooksans\\bfseries\\color{playbookred}\\fontsize{7.2}{9}\\selectfont\\addfontfeatures{LetterSpace=7.5}\\MakeUppercase{\\playbookweeklabel}}\\par
     \\vspace{2pt}{\\itshape\\color{playbookmuted}\\playbookweektitle}\\par
   }{%
-    \\noindent{\\playbooksans\\bfseries\\color{playbookred}\\fontsize{7.2}{9}\\selectfont\\addfontfeatures{LetterSpace=75}\\MakeUppercase{#1}}\\par
+    \\noindent{\\playbooksans\\bfseries\\color{playbookred}\\fontsize{7.2}{9}\\selectfont\\addfontfeatures{LetterSpace=7.5}\\MakeUppercase{#1}}\\par
   }%
   \\vspace{3pt}{\\color{playbookline}\\rule{\\linewidth}{0.45pt}}\\vspace{3pt}%
 }
 
 \\newcommand{\\PlaybookContinued}[1]{%
-  \\noindent{\\playbooksans\\bfseries\\color{playbookred}\\fontsize{7.3}{9}\\selectfont\\addfontfeatures{LetterSpace=75}\\MakeUppercase{#1 --- CONTINUED}}\\par
+  \\noindent{\\playbooksans\\bfseries\\color{playbookred}\\fontsize{7.3}{9}\\selectfont\\addfontfeatures{LetterSpace=7.5}\\MakeUppercase{#1 --- CONTINUED}}\\par
   \\vspace{4pt}{\\color{playbookink}\\rule{\\linewidth}{0.7pt}}\\vspace{6pt}
 }
 \\newcommand{\\PlaybookPhaseBreak}[1]{%
@@ -521,10 +552,10 @@
     \\IfStrEq{#1}{1}{\\clearpage}{}%
   }%
 }
-\\newcommand{\\PlaybookContinuationBreak}{\\clearpage}
-\\newcommand{\\PlaybookMonthBreak}[1]{\\IfStrEq{#1}{October}{\\clearpage}{}}
-\\newcommand{\\PlaybookEngineBreak}{\\clearpage}
-\\newcommand{\\PlaybookTableHead}[1]{{\\playbooksans\\bfseries\\color{playbookred}\\fontsize{7.2}{8.7}\\selectfont\\addfontfeatures{LetterSpace=45}\\MakeUppercase{#1}}}
+\\newcommand{\\PlaybookContinuationBreak}{\\Needspace{8\\baselineskip}}
+\\newcommand{\\PlaybookMonthBreak}[1]{}
+\\newcommand{\\PlaybookEngineBreak}{\\Needspace{18\\baselineskip}}
+\\newcommand{\\PlaybookTableHead}[1]{{\\playbooksans\\bfseries\\color{playbookred}\\fontsize{7.2}{8.7}\\selectfont\\addfontfeatures{LetterSpace=4.5}\\MakeUppercase{#1}}}
 \\newcommand{\\PlaybookDeliverable}[1]{{\\bfseries\\color{playbookred}#1}}
 \\newcommand{\\PlaybookBackmatterStart}{\\clearpage\\noindent\\begin{minipage}[t]{0.47\\textwidth}}
 \\newcommand{\\PlaybookBackmatterMiddle}{\\end{minipage}\\hfill\\begin{minipage}[t]{0.47\\textwidth}}
@@ -551,13 +582,13 @@
 \\renewcommand\\maketitle{%
   \\thispagestyle{fancy}%
   \\vspace*{0.18in}%
-  {\\playbooksans\\bfseries\\color{playbookred}\\fontsize{7.4}{9}\\selectfont\\addfontfeatures{LetterSpace=125}A SOCRATIC PLAYBOOK\\par}
+  {\\playbooksans\\bfseries\\color{playbookred}\\fontsize{7.4}{9}\\selectfont\\addfontfeatures{LetterSpace=12.5}A SOCRATIC PLAYBOOK\\par}
   \\vspace{13pt}%
   {\\playbookdisplay\\bfseries\\color{playbookink}\\fontsize{31}{32}\\selectfont\\playbookwarmtitle\\par}
   \\vspace{7pt}%
   {\\playbookdisplay\\itshape\\color{playbookmuted}\\fontsize{11.2}{13.2}\\selectfont July--December 2026 --- printed and on the wall.\\par}
   \\vspace{13pt}%
-  {\\playbooksans\\color{playbookmuted}\\fontsize{6.8}{8}\\selectfont\\addfontfeatures{LetterSpace=80}JAY DIXIT \\hspace{1.7em}/\\hspace{1.7em} FABLE \\hspace{1.7em}/\\hspace{1.7em} SOCRATIC PLAYBOOK\\par}
+  {\\playbooksans\\color{playbookmuted}\\fontsize{6.8}{8}\\selectfont\\addfontfeatures{LetterSpace=8}JAY DIXIT \\hspace{1.7em}/\\hspace{1.7em} FABLE \\hspace{1.7em}/\\hspace{1.7em} SOCRATIC PLAYBOOK\\par}
   \\vspace{13pt}{\\color{playbookink}\\rule{\\linewidth}{0.8pt}}\\vspace{7pt}%
 }
 \\makeatother
@@ -597,6 +628,21 @@
 (when (fboundp 'jay/latex-register-wrap-class)
   (jay/latex-register-wrap-class "thought-leadership-playbook-warm"))
 
+(defun jay/playbook-warm--style-task-lead-ins (text)
+  "Turn selected shouting task leads in TEXT into sentence-case bold leads."
+  (dolist (replacement
+           '(("START THE DAILY LAYER." . "\\textbf{Start the daily layer.}")
+             ("MANIFESTO SHIPS." . "\\textbf{Manifesto ships.}")
+             ("GROUP M EMAIL SENDS" . "\\textbf{Group M email sends}")
+             ("YOUTUBE LAUNCHES." . "\\textbf{YouTube launches.}")
+             ("ESSAY \\#1" . "\\textbf{Essay \\#1}")))
+    (setq text
+          (replace-regexp-in-string
+           (regexp-quote (car replacement))
+           (cdr replacement)
+           text t t)))
+  text)
+
 (defun jay/playbook-warm-item-filter (text backend info)
   "Render milestone and floor-check list items as warm playbook set-pieces."
   (if (and (org-export-derived-backend-p backend 'latex)
@@ -610,7 +656,7 @@
                         "\\Needspace{5\\baselineskip}\n"
                         "\\begin{tcolorbox}[playbookmilestone]\n"
                         "\\PlaybookMilestoneLabel{%s}%%\n"
-                        "{\\fontsize{8.85}{10.6}\\selectfont %s}"
+                        "{\\fontsize{8.85}{9.4}\\selectfont %s}"
                         "\\end{tcolorbox}\n")
                 (match-string 1 text)
                 (match-string 2 text)))
@@ -622,7 +668,8 @@
         (format (concat "\\playbookblanklabeltrue\\item[]\\playbookblanklabelfalse\n"
                         "\\PlaybookTask{%s}{%s}\n")
                 (match-string 1 text)
-                (match-string 2 text)))
+                (jay/playbook-warm--style-task-lead-ins
+                 (match-string 2 text))))
        (t text))
     text))
 
@@ -643,8 +690,22 @@
         result)
     text))
 
+(defun jay/playbook-warm-table-filter (text backend info)
+  "Make the recurring-week prose columns ragged right in the warm playbook."
+  (if (and (org-export-derived-backend-p backend 'latex)
+           (string= (plist-get info :latex-class)
+                    "thought-leadership-playbook-warm"))
+      (replace-regexp-in-string
+       (regexp-quote "\\begin{tabularx}{\\textwidth}{lXXr}")
+       "\\begin{tabularx}{\\textwidth}{lYYr}"
+       text t t)
+    text))
+
 (add-to-list 'org-export-filter-item-functions
              #'jay/playbook-warm-item-filter)
 
 (add-to-list 'org-export-filter-table-cell-functions
              #'jay/playbook-warm-table-cell-filter)
+
+(add-to-list 'org-export-filter-table-functions
+             #'jay/playbook-warm-table-filter)

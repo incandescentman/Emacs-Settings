@@ -1409,3 +1409,18 @@ The installed org-roam build on this machine documents and honors =org-roam-file
 - For vault cold storage, keep [[file+emacs:/Users/jay/Dropbox/roam/archive-excluded/][/Users/jay/Dropbox/roam/archive-excluded/]] in =org-roam-file-exclude-regexp= inside [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-suite/jay-org-roam-core.el]].
 - After changing org-roam exclusions, test the live function, not just the variable: =(seq-filter (lambda (f) (string-match-p "archive-excluded" f)) (org-roam-list-files))= should return =nil=.
 - Run =org-roam-db-sync= and verify [[file+emacs:/Users/jay/.cache/org-roam.db][/Users/jay/.cache/org-roam.db]] has no rows for the excluded path before declaring =jay/org-roam-node-find-recent= clean.
+
+* Fontspec LetterSpace Uses Percent, Not DTP Tracking Units
+  Date: 2026-07-16
+
+** Trigger
+The Warm Editorial playbook rendered all-caps headers, week labels, and date chips with visibly bizarre gaps even though the numeric tracking values looked plausible in the template. Values such as ~LetterSpace=75~ and ~LetterSpace=125~ had been carried over as if they were thousandths-of-an-em tracking values.
+
+** Mechanism
+The ~fontspec~ package defines ~LetterSpace~ as a percentage of the font size: ~LetterSpace=1.0~ adds 1% of the font size between letters. Therefore ~75~ adds 0.75 em and ~125~ adds 1.25 em, far beyond restrained editorial tracking. A separate spacing defect came from fully justified prose inside the narrow checklist-description minipage, where TeX stretched interword spaces to fill each line.
+
+** Actionable insight
+- Convert DTP-style tracking deliberately when using ~fontspec~; do not paste tracking numbers across unit systems.
+- For restrained all-caps labels, start around ~LetterSpace=4~ to ~12~, render the actual font at print size, and judge the PDF rather than the source number.
+- Use ~\RaggedRight~ for short prose in narrow checklist, card, and ledger columns so TeX does not create conspicuous rivers of stretched word spacing.
+- After a tracking change, inspect both a dense checklist page and the smallest all-caps labels; a contact sheet alone can hide spacing defects at wall-print scale.
