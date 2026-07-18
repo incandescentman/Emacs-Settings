@@ -12,7 +12,7 @@ The authoritative paste implementation is [[file+emacs:/Users/jay/emacs/emacs-se
 - Commit ~6b15c173~ restricts adaptive heading demotion to real Org headings and preserves bold metadata lines such as ~*User:* Anonymous~.
 - Commit ~982da542~ stops standalone Markdown bold lines from being promoted to headings and preserves blockquotes as colon-prefixed Org quote lines.
 - The replacement-table checkpoint consolidates literal and contextual rules, keeps ~okay -> OK~ only for whole words, preserves U+2E3B THREE-EM DASH unchanged, removes the dead Markdown TODO mapping, and removes the temporary startup binding that would otherwise block ~defcustom~ initialization.
-- Those later two fixes are adjacent work, not substitutes for this plan. Correction 6 is now complete; corrections 1, 2, 4, 5, and 7 remain; correction 3 is explicitly skipped.
+- Those later two fixes are adjacent work, not substitutes for this plan. Corrections 1, 2, and 6 are complete; corrections 4, 5, and 7 remain; correction 3 is explicitly skipped.
 - The smaller Markdown-link limitation involving balanced parentheses also remains.
 
 * Guardrails
@@ -24,7 +24,7 @@ The authoritative paste implementation is [[file+emacs:/Users/jay/emacs/emacs-se
 - When a checkpoint changes [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][📄 /Users/jay/emacs/emacs-settings/shared-functions.org]], delete the stale tangled ~shared-functions.el~, retangle immediately, and run ~check-parens~ on the regenerated file.
 
 * Corrections
-** TODO 1. Convert Markdown headings only when the detected style is Markdown
+** DONE 1. Convert Markdown headings only when the detected style is Markdown
 *** Confirmed failure
 ~pasteboard--clean-string~ calls ~convert-markdown-headings-to-org~ unconditionally. An Org comment containing a disabled LaTeX directive is silently converted into a heading:
 
@@ -49,7 +49,7 @@ becomes:
 - A Markdown document containing ~# H1~ and ~## H2~ converts them to ~* H1~ and ~** H2~.
 - Markdown-looking lines inside fenced code remain code.
 
-** TODO 2. Stop the legacy heading cleanup from deleting embedded emphasis
+** DONE 2. Stop the legacy heading cleanup from deleting embedded emphasis
 *** Confirmed failure
 ~pasteboard-paste-clean~ calls ~redundant-delete-redundant-asterisks-in-org-headings~ after ~pasteboard--clean-string~ has already run the narrower ~pasteboard--remove-redundant-heading-asterisks~ pass. The legacy function removes every asterisk inside the heading text:
 
@@ -202,9 +202,9 @@ Do this after the seven corruption fixes. Replace the flat ~[^()]+~ target match
 
 * Checkpoint order
 ** Checkpoint 1: Org/Markdown semantic boundaries
-- Correction 1: conditional Markdown-heading conversion.
-- Correction 2: remove the destructive legacy heading cleanup from clean paste.
-- Revalidate commits ~6b15c173~ and ~982da542~ so bold metadata, standalone bold lines, and blockquotes retain their current behavior.
+- Correction 1 is complete: Markdown headings convert only when style analysis resolves the payload as Markdown.
+- Correction 2 is complete: clean paste no longer invokes the legacy cleanup, and the interactive legacy command now removes only whitespace-separated trailing wrapper stars.
+- Commits ~6b15c173~ and ~982da542~ remain validated: bold metadata, standalone bold lines, and blockquotes retain their current behavior.
 
 ** Checkpoint 2: Unicode and deterministic replacements
 - Correction 3 is explicitly skipped; retain the existing ZWJ and ZWNJ behavior.

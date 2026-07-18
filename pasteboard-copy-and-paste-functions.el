@@ -305,7 +305,7 @@ Preserves blank lines before headings and # directives (code blocks, properties)
 Converts '** Heading **' to '** Heading', but preserves embedded emphasis."
   (save-excursion
     (goto-char beg)
-    (while (re-search-forward "^\\(\\*+\\) \\(.*?\\)\\s-+\\*+\\s-*$" end t)
+    (while (re-search-forward "^\\(\\*+\\) \\(.*?\\)[ \\t]+\\*+[ \\t]*$" end t)
       (replace-match (concat (match-string 1) " " (match-string 2)) t t))))
 
 (defun pasteboard--convert-markdown-inline-emphasis (beg end)
@@ -577,13 +577,6 @@ Adds blank line before #+begin_src and after #+end_src for readability."
       (while (re-search-forward "^\\([[:space:]]*\\)#\\+begin_src[[:space:]]+`\\([^[:space:]]+\\)" nil t)
         (replace-match "\\1#+begin_src \\2" t)))))
 
-(defun pasteboard--text-contains-markdown-headings-p (text)
-  "Return non-nil if TEXT includes Markdown heading markers (##, ###, etc.)."
-  (with-temp-buffer
-    (insert text)
-    (goto-char (point-min))
-    (re-search-forward "^[ \t]*#\\{2,6\\}[ \t]+" nil t)))
-
 (defun pasteboard--analyse-clipboard-text (text)
   "Return a plist describing TEXT, detecting whether it looks like Markdown or Org."
   (with-temp-buffer
@@ -751,12 +744,9 @@ Transforms lines like \"| --- | --- |\" into \"|---|---|\" while leaving data ro
 (defun pasteboard--clean-string (text)
   "Return cleaned TEXT for Org/text pastes.
 This function is pure text transformation and does not insert into buffers."
-  (let* ((markdown-headings-present (pasteboard--text-contains-markdown-headings-p text))
-         (analysis (pasteboard--analyse-clipboard-text text))
+  (let* ((analysis (pasteboard--analyse-clipboard-text text))
          (style (plist-get analysis :style))
          (heading-line-numbers (plist-get analysis :markdown-heading-lines)))
-    (when markdown-headings-present
-      (setq style 'markdown))
     (with-temp-buffer
       (insert text)
       (let* ((beg (point-min))
@@ -774,8 +764,11 @@ This function is pure text transformation and does not insert into buffers."
                     (nreverse markers))))))
         (unwind-protect
             (progn
-              ;; Convert markdown headings FIRST before processing asterisks
-              (convert-markdown-headings-to-org beg end)
+              ;; Convert Markdown headings first, but only when the style
+              ;; analyser resolved the payload as Markdown.  In Org input,
+              ;; a line such as "# #+LATEX_HEADER: ..." is a comment.
+              (when (eq style 'markdown)
+                (convert-markdown-headings-to-org beg end))
               (replace-smart-quotes beg end)
               (replace-smart-quotes-regexp beg end)
               (replace-weird-spaces beg end)
@@ -905,20 +898,11 @@ is one obvious clean pipeline."
 
 (defun pasteboard-paste-clean (&optional raw text)
   "Canonical clean paste path for clipboard text.
-When RAW is non-nil, bypass cleaning.  Otherwise this runs the clean-string
-pipeline and org-heading cleanup, then inserts in a single edit."
+When RAW is non-nil, bypass cleaning.  Otherwise run the clean-string pipeline,
+then insert in a single edit."
   (interactive "P")
   (let* ((source (or text (pasteboard--clipboard-string)))
-         (cleaned-text (if raw source (pasteboard--clean-string source)))
-         (insert-text
-          (if (and (not raw)
-                   (derived-mode-p 'org-mode)
-                   (fboundp 'redundant-delete-redundant-asterisks-in-org-headings))
-              (with-temp-buffer
-                (insert cleaned-text)
-                (redundant-delete-redundant-asterisks-in-org-headings)
-                (buffer-string))
-            cleaned-text)))
+         (insert-text (if raw source (pasteboard--clean-string source))))
     (pasteboard-paste insert-text)))
 
 (defun pasteboard-paste-verbatim (&optional text)

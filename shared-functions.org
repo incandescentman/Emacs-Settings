@@ -6809,16 +6809,17 @@ The maintained implementation now lives in [[file+emacs:/Users/jay/emacs/emacs-s
 * remove redundant bold tags from org headings
 #+begin_src emacs-lisp
 (defun redundant-delete-redundant-asterisks-in-org-headings ()
-  "Remove redundant asterisks in Org-mode headings within the current buffer or selected region."
+  "Remove trailing wrapper asterisks from Org headings.
+Preserve asterisks used for emphasis inside the heading text."
   (interactive)
   (let ((start (if (use-region-p) (region-beginning) (point-min)))
         (end (if (use-region-p) (region-end) (point-max))))
     (save-excursion
       (goto-char start)
-      (while (re-search-forward "^\\(*+\\) \\(.*?\\)\\(*+\\)?\\s-*$" end t)
+      (while (re-search-forward "^\\(*+\\) \\(.*?\\)[ \\t]+\\*+[ \\t]*$" end t)
         (let ((stars (match-string 1))
               (heading (match-string 2)))
-          (replace-match (concat stars " " (replace-regexp-in-string "\\*+" "" heading))
+          (replace-match (concat stars " " heading)
                          t t))))))
 #+end_src
 

@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-07-18: Preserve Org comments and heading emphasis during clean paste
+- Gated Markdown-heading conversion in [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][📄 /Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el]] on the clipboard analyser resolving the payload as Markdown. Org input now preserves =# #+LATEX_HEADER: \EnableLogoFooter= byte-for-byte while real =# H1= / =## H2= Markdown headings still become Org headings and fenced headings remain code.
+- Removed the redundant call to ~redundant-delete-redundant-asterisks-in-org-headings~ from ~pasteboard-paste-clean~. The clean-string pipeline's narrow trailing-wrapper pass remains authoritative and preserves embedded ~*bold*~ markup.
+- Narrowed the interactive legacy command in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][📄 /Users/jay/emacs/emacs-settings/shared-functions.org]], retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][📄 /Users/jay/emacs/emacs-settings/shared-functions.el]], and restricted trailing whitespace matching to spaces and tabs so the command cannot consume a heading's final newline.
+- Verified the real Org-comment and embedded-emphasis repros, Markdown headings, fenced headings, trailing wrapper stars, literal backslashes, bold metadata, standalone bold lines, blockquotes, both changed Elisp files with ~check-parens~, and ~git diff --check~.
+
 * 2026-07-18: Consolidate deterministic paste replacement rules
 - Replaced the duplicated ~smart-quotes-replacement-pairs~ definition-plus-mutation block in [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][📄 /Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el]] with one authoritative literal ~defcustom~ and a separate contextual-regexp ~defcustom~.
 - Kept ~okay -> OK~ only as a whole-word rule; preserved U+2E3B THREE-EM DASH unchanged; removed the dead ~- \*\* TODO~ entry and global hash substitutions; deduplicated literal mappings; and retained the existing ZWJ/ZWNJ behavior because correction 3 is explicitly marked ~SKIP THIS ONE~.
