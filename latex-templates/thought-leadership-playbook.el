@@ -258,7 +258,6 @@
 \\setlength{\\parskip}{3.5pt plus 1pt minus 1pt}
 \\setstretch{1.04}
 \\color{playbookbody}
-\\pagecolor{white}
 \\AtBeginDocument{\\fontsize{9.2}{11}\\selectfont}
 
 % Table of Contents Customization

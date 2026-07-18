@@ -173,7 +173,6 @@
 \\definecolor{azure}{HTML}{f2feff}
 \\definecolor{jayfooterbrandgrey}{HTML}{4F4F4F}
 % Warm editorial palette derived from the Claude Design reference.
-\\definecolor{playbookpaper}{HTML}{FFFFFF}
 \\definecolor{playbookink}{HTML}{2A2520}
 \\definecolor{playbookblue}{HTML}{7C2E2E}
 \\definecolor{playbookbluebright}{HTML}{7C2E2E}
@@ -268,7 +267,6 @@
 \\widowpenalty=10000
 \\displaywidowpenalty=10000
 \\color{playbookink}
-\\pagecolor{playbookpaper}
 \\AtBeginDocument{\\RaggedRight\\fontsize{9.15}{11.25}\\selectfont}
 
 % Table of Contents Customization
