@@ -804,6 +804,19 @@ configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
+  ;; Consult made its source variables public and later removed the old
+  ;; `consult--source-*' aliases.  Older Spacemacs compleseus layers still
+  ;; use those private names, so provide cross-version aliases before package
+  ;; configuration runs.  This can be removed once every machine's Spacemacs
+  ;; includes upstream commit f445770f24cfff8622356dc5f90067145be98d79.
+  (dolist (aliases '((consult--source-buffer . consult-source-buffer)
+		     (consult--source-hidden-buffer . consult-source-hidden-buffer)
+		     (consult--source-recent-file . consult-source-recent-file)
+		     (consult--source-bookmark . consult-source-bookmark)
+		     (consult--source-project-recent-file-hidden
+		      . consult-source-project-recent-file-hidden)))
+    (defvaralias (car aliases) (cdr aliases)))
+
 
   (setq org-babel-use-quick-and-dirty-noweb-expansion t)
 

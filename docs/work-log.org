@@ -1,6 +1,14 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-07-21: Repair Consult, Org, and optional-package startup
+- Added early cross-version aliases in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]] for the public =consult-source-*= variables. This keeps older Spacemacs =compleseus= code working with current Consult releases that removed the private =consult--source-*= aliases; the shim can be removed after every machine has Spacemacs commit =f445770f24cfff8622356dc5f90067145be98d79= or newer.
+- Made the =ox-astro= checkout discovery in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] portable across the classic Dropbox path, the macOS CloudStorage Dropbox path, and a machine-local =~/emacs/local-packages/ox-astro= fallback. Missing optional source no longer produces a startup load error, and =ox-astro-reload= now reports a direct user error when no checkout exists.
+- Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]] and validated it with =check-parens=.
+- Reinstalled the silver Mac's missing =org-mindmap= VC checkout at =~/.emacs.d/elpa/org-mindmap= and cloned =incandescentman/ox-astro= locally at =~/emacs/local-packages/ox-astro=, outside Dropbox.
+- Moved the malformed Org installation to the recoverable backup =~/.emacs.d/package-repair-backups/org-9.8.7-miscompiled-20260721=, then reinstalled Org 9.8.7 under =emacs -Q=. All 127 new Org bytecode files compile without embedded Org 9.6.15 version markers.
+- Verified direct loading of Org 9.8.7, =org-mindmap=, =ox-astro=, and current Consult. A startup-hook harness then confirmed all four together with the silver =TMPDIR= and the Consult aliases active. The documented silver-only =TMPDIR= and =local-config.el= Org-roam override were left unchanged.
+
 * 2026-07-18: Preserve emoji and script joiners during clean paste
 - Removed the U+200D ZERO WIDTH JOINER and U+200C ZERO WIDTH NON-JOINER deletion pairs from ~smart-quotes-replacement-pairs~ in [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][📄 /Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el]]. Clean paste now preserves combined emoji such as ~👩‍💻~ and ~👨‍👩‍👧‍👦~ and ZWNJ-containing script text such as ~می‌خواهم~.
 - Kept U+200B ZERO WIDTH SPACE as a separate cleanup target. This changes only the two joiner characters that were contradicting ~replace-weird-spaces~ and the codebase's documented emoji-preservation intent.
@@ -92,7 +100,6 @@
 - Corrected =replace-smart-quotes-regexp= so =replace-match= expands capture references such as =\\1= instead of inserting them literally. This keeps the remaining dash-normalization rule working without producing pasted =\\1= artifacts.
 - Repaired the two source-confirmed corruptions in [[file+emacs:/Users/jay/Dropbox/roam/business-socratic/enterprise-ai-productivity-gap/20260711175513-why_individual_ai_gains_don_t_become_durable_organizational_gains_an_evidence_map_claude_deep_research.org][Why Individual AI Gains Don't Become Durable Organizational Gains]] from the clean original at [[file+emacs:/Users/jay/Downloads/original text.txt][original text.txt]].
 - Verified =pasteboard-copy-and-paste-functions.el= with =check-parens=, passed the full real original through =pasteboard--clean-string= while asserting both suspended hyphens remain and no literal =\\1= survives, ran =git diff --check=, and completed the configured startup smoke test with =shift nil=.
-
 * 2026-06-30: Normalize form feeds during paste cleanup
 - Added form-feed/page-break cleanup to =smart-quotes-replacement-pairs= in [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][pasteboard-copy-and-paste-functions.el]] so =replace-smart-quotes= replaces OCR/PDF =\f= characters with a plain space before they can make Org redisplay choke.
 - The replacement intentionally uses a space, not an empty string, so text on either side of a form feed cannot be joined into a single word. It does not remove OCR page-number lines after the page break; that would need a separate regex cleanup.

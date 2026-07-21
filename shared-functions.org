@@ -8207,11 +8207,26 @@ After evaluating your init-file you can use links analog to the example:
 
 * org astro
 #+begin_src emacs-lisp
-(defconst jay/ox-astro-repo "/Users/jay/Dropbox/github/ox-astro")
+(defconst jay/ox-astro-repo-candidates
+  (list (expand-file-name "~/Dropbox/github/ox-astro")
+	(expand-file-name "~/Library/CloudStorage/Dropbox/github/ox-astro")
+	(expand-file-name "~/emacs/local-packages/ox-astro"))
+  "Possible ox-astro checkouts, in preferred order.")
+
+(defun jay/find-ox-astro-repo ()
+  "Return the first checkout in `jay/ox-astro-repo-candidates'."
+  (catch 'found
+    (dolist (directory jay/ox-astro-repo-candidates)
+      (when (file-regular-p (expand-file-name "ox-astro.el" directory))
+	(throw 'found directory)))))
+
+(defconst jay/ox-astro-repo (jay/find-ox-astro-repo)
+  "Active ox-astro checkout, or nil when the package is unavailable.")
 
 (defun jay/ox-astro-delete-bytecode ()
   "Delete repo-local ox-astro bytecode so Emacs loads source files."
-  (when (file-directory-p jay/ox-astro-repo)
+  (when (and jay/ox-astro-repo
+	     (file-directory-p jay/ox-astro-repo))
     (let ((deleted 0))
       (dolist (file (directory-files-recursively jay/ox-astro-repo "\\.elc\\'"))
         (when (file-regular-p file)
@@ -8221,12 +8236,12 @@ After evaluating your init-file you can use links analog to the example:
         (message "Deleted %d ox-astro bytecode file(s)" deleted)))))
 
 (setq load-prefer-newer t)
-(add-to-list 'load-path jay/ox-astro-repo)
-(jay/ox-astro-delete-bytecode)
-(use-package ox-astro
-  :load-path "/Users/jay/Dropbox/github/ox-astro/"
-  :after ox
-  :ensure nil)
+(when jay/ox-astro-repo
+  (add-to-list 'load-path jay/ox-astro-repo)
+  (jay/ox-astro-delete-bytecode)
+  (use-package ox-astro
+    :after ox
+    :ensure nil))
 (setq org-astro-debug-images t)
 ;; Configure source root folder for ox-astro
 (setq org-astro-source-root-folder
@@ -8253,8 +8268,9 @@ After evaluating your init-file you can use links analog to the example:
  ("my-mind" . (:path "/Users/jay/Dropbox/github/me/my-mind/src/content"
  :preserve-folder-structure t)))) 
 
-(setq org-astro-debug-log-file (expand-file-name 
- "~/Library/CloudStorage/Dropbox/github/ox-astro/ox-astro-debug.log"))
+(when jay/ox-astro-repo
+  (setq org-astro-debug-log-file
+	(expand-file-name "ox-astro-debug.log" jay/ox-astro-repo)))
 
 
 (setq org-astro-copy-to-clipboard t) 
@@ -8267,6 +8283,8 @@ After evaluating your init-file you can use links analog to the example:
       "Fully reload ox-astro and its modules without restarting Emacs."
       (interactive)
       (let ((repo jay/ox-astro-repo))
+	(unless repo
+	  (user-error "No ox-astro checkout found in jay/ox-astro-repo-candidates"))
         (add-to-list 'load-path repo)
         (setq load-prefer-newer t)
         (jay/ox-astro-delete-bytecode)

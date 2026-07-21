@@ -692,6 +692,42 @@ Replace the anonymous hook with a named function that edits the buffer directly 
 - If an export crash looks like an exporter bug but the stack mentions =replace-regexp=, inspect global export hooks first.
 - Gate hook behavior by backend when appropriate; global export hooks leak into every exporter, including custom ones like =ox-astro=.
 
+* Current Consult With Older Compleseus: Public Source Variables Need Early Aliases
+  Date: 2026-07-21
+
+** The Bug
+After updating Consult, commands that require it failed with =void-variable consult--source-buffer=. The installed Spacemacs =compleseus= layer still expanded private =consult--source-*= variables that current Consult had removed.
+
+** The Truth
+- Consult made these source variables public as =consult-source-*= and later removed the obsolete private aliases.
+- Spacemacs fixed all affected =compleseus= names in upstream commit =f445770f24cfff8622356dc5f90067145be98d79=.
+- A compatibility alias must exist before package configuration runs; a late =with-eval-after-load= form can lose the race to the layer's own failing after-load form.
+
+** The Fix
+Define old-to-new =defvaralias= mappings in =dotspacemacs/user-init=, which runs before layer configuration. Remove the shim after every machine's Spacemacs includes the upstream fix.
+
+** Lessons Learned / Prevention Checklist
+- When a package update breaks a Spacemacs layer, compare the local layer with current upstream before patching personal commands.
+- For renamed variables used by package configuration, establish compatibility during =dotspacemacs/user-init= rather than after the package loads.
+
+* Org Bytecode Can Be Miscompiled Even When Every File Says 9.8.7
+  Date: 2026-07-21
+
+** The Bug
+Org 9.8.7 emitted repeated version-mismatch warnings even under =emacs -Q= with only its own package directory added to =load-path=.
+
+** The Truth
+- The package sources and runtime release both reported 9.8.7, but 115 of 118 compiled files embedded the built-in Org 9.6.15 release used during compilation.
+- Reproducing the warning with =emacs -Q -L /path/to/org-9.8.7 -l org= proves the installed bytecode itself is inconsistent; further startup-order speculation is unnecessary.
+
+** The Fix
+Move the installed Org directory to a recoverable backup, then force-install the archive package from =emacs -Q= by passing its package descriptor to =package-install=. The clean reinstall produced 127 bytecode files with zero embedded 9.6.15 markers.
+
+** Lessons Learned / Prevention Checklist
+- Test the installed Org package in isolation before changing startup order.
+- Keep the malformed package directory until the clean install and live restart are verified.
+- If =(package-install 'org)= reports that Org is already installed because Emacs bundles it, pass the Org descriptor from =package-archive-contents= instead.
+
 * Org 9.8 Preview Migration: Guard For Mixed Runtime Versions
   Date: 2026-02-24
 
