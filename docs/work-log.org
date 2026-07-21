@@ -1,6 +1,14 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-07-21: Isolate and repair the legacy Aquamacs configuration
+- Audited the installed Aquamacs 3.6 application and its real startup chain. The nine-line =~/Library/Preferences/Aquamacs Emacs/Preferences.el= loader delegates to [[file+emacs:/Users/jay/emacs/aquamacs-jay/Preferences.el][~/emacs/aquamacs-jay/Preferences.el]], a 1,702-line legacy configuration; the other delegated research-assistant file is empty.
+- Kept Aquamacs 3.6 rather than replacing it with Aquamacs 4 alpha 2. Version 3.6 is still the current stable release, while the April 2026 alpha has documented menu, preference, printing, tab, and crash problems.
+- Reworked Aquamacs package startup so its Emacs 25.3 runtime uses the native =~/Library/Preferences/Aquamacs Emacs/Packages/elpa= tree and never recursively adds Spacemacs's Emacs 29 =~/.emacs.d/elpa= tree. Package initialization now occurs once, package archives are reduced to current HTTPS GNU ELPA and MELPA endpoints, and four missing legacy packages use narrow fallbacks from the tracked =aquamacs-jay/Packages/elpa= tree.
+- Removed missing old Org load paths, a stale advice-disable call that aborted clean startup, repeated package initialization, seven duplicate =edit-server-start= calls, redundant fullscreen toggles, and an override of Emacs's internal debugger implementation. Migrated the small active Common Lisp helper usage from obsolete =cl= names to =cl-lib= and updated the personal dictionary path.
+- Validated the complete configuration with Aquamacs's own Emacs 25.3 runtime: =check-parens= passed, the full file loaded with exit status 0, Org 8.2.10 and the expected legacy packages resolved from Aquamacs-only paths, and =~/.emacs.d/elpa= was absent from =load-path=. Browser-server and fullscreen side effects are suppressed in batch mode.
+- Sanitized the old Aquamacs Preferences repository's Bitbucket remote by removing the credential embedded in its URL. The repository's large pre-existing dirty state was otherwise left untouched; any still-valid exposed credential must be rotated separately.
+
 * 2026-07-21: Make =emacsclient= target the single GUI Emacs server
 - Diagnosed the five apparent Emacs instances after the silver-laptop repair: one was the intended GUI session, three were fallback daemons silently created when =emacsclient= could not find the GUI's custom socket, and one was an Affe search worker.
 - Removed the silver Mac's redundant custom =server-auth-dir= / =server-socket-dir= / =server-start= block from =~/emacs/local-emacs-config/local-config.el=. Spacemacs already enables its own persistent server, so the next launch will use Emacs's standard per-login socket that plain =emacsclient= expects.
