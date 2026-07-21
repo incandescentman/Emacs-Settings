@@ -1,6 +1,13 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-07-21: Make =emacsclient= target the single GUI Emacs server
+- Diagnosed the five apparent Emacs instances after the silver-laptop repair: one was the intended GUI session, three were fallback daemons silently created when =emacsclient= could not find the GUI's custom socket, and one was an Affe search worker.
+- Removed the silver Mac's redundant custom =server-auth-dir= / =server-socket-dir= / =server-start= block from =~/emacs/local-emacs-config/local-config.el=. Spacemacs already enables its own persistent server, so the next launch will use Emacs's standard per-login socket that plain =emacsclient= expects.
+- Changed the shared shell profile's =ALTERNATE_EDITOR= from an empty string to =false=. A failed client connection will now report the failure instead of silently starting another daemon; this safety behavior is appropriate on both laptops.
+- Disabled the local =org.emacs.daemon= LaunchAgent. It duplicated the GUI-server architecture and had been retrying a broken launch command with invalid literal =$HOME= log paths.
+- Preserved the active GUI Emacs process; Jay's relaunch had already cleared the accidental background daemons/workers. The definitive client test is after the next GUI restart: plain =emacsclient --alternate-editor=false --eval '(emacs-pid)'= must return the GUI process ID.
+
 * 2026-07-21: Repair Consult, Org, and optional-package startup
 - Added early cross-version aliases in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]] for the public =consult-source-*= variables. This keeps older Spacemacs =compleseus= code working with current Consult releases that removed the private =consult--source-*= aliases; the shim can be removed after every machine has Spacemacs commit =f445770f24cfff8622356dc5f90067145be98d79= or newer.
 - Made the =ox-astro= checkout discovery in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] portable across the classic Dropbox path, the macOS CloudStorage Dropbox path, and a machine-local =~/emacs/local-packages/ox-astro= fallback. Missing optional source no longer produces a startup load error, and =ox-astro-reload= now reports a direct user error when no checkout exists.
