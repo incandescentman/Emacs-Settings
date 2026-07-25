@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-07-24: Reconcile silver-period Emacs repairs onto the black configuration
+- Ported the nine silver-period commits from verified recovery bundle HEAD ~b3da4bfbff3b86757d70c5b8e1e33bc0ff243392~ onto the black-based ~main~ history, preserving both sides of the initially overlapping work-log entries.
+- Retained the functional Consult compatibility aliases, portable ~ox-astro~ discovery, Org repair guidance, and Aquamacs repair history. Excluded the silver machine-specific ~spacemacs.d/.spacemacs.env~ and generated ~docs/lab/startup-profile.org~.
+- Reviewed the verified ~search-commands-selective.patch~ without integrating it. Its Elisp edits only add leading whitespace, while its Org edit turns a correct two-column keybinding table into a malformed three-column table. The patch remains preserved in the checksum-verified recovery repository as evidence.
+- Retangled ~shared-functions.org~ twice with identical output, then parsed the tangled file and ~spacemacs.d/init.el~ successfully. Final live startup and repository-status checks follow after the candidate advances the black checkout.
+
 * 2026-07-21: Isolate and repair the legacy Aquamacs configuration
 - Audited the installed Aquamacs 3.6 application and its real startup chain. The nine-line =~/Library/Preferences/Aquamacs Emacs/Preferences.el= loader delegates to [[file+emacs:/Users/jay/emacs/aquamacs-jay/Preferences.el][~/emacs/aquamacs-jay/Preferences.el]], a 1,702-line legacy configuration; the other delegated research-assistant file is empty.
 - Kept Aquamacs 3.6 rather than replacing it with Aquamacs 4 alpha 2. Version 3.6 is still the current stable release, while the April 2026 alpha has documented menu, preference, printing, tab, and crash problems.
