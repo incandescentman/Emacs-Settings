@@ -1770,16 +1770,6 @@ Gets URL from Chrome frontmost tab, or clipboard, or prompts."
  (insert "*** TODO pomodoro sprint\n")
  (pomodoro-start))
 
-(defun jd-clock-in ()
- "Insert a new heading with current time and clock in."
- (interactive)
- (org-insert-heading)
- (org-insert-time-stamp (current-time))
- (org-clock-in)
- (next-line 2))
-
-
-
 #+END_SRC
 
 * Prose editing settings
@@ -3210,27 +3200,6 @@ Source: [[http://emacs.stackexchange.com/questions/20344/how-to-query-delete-dup
 #+END_SRC
 
 
-* org-clock
-#+BEGIN_SRC emacs-lisp
-(setq org-clock-auto-clock-resolution t)
- (setq org-clock-idle-time 30)
- (setq org-clock-in-resume t)
- (setq org-clock-persist-query-resume nil)
- (setq org-clock-report-include-clocking-task t)
-(setq org-clock-persist 'history)
-(org-clock-persistence-insinuate)
-(setq org-clock-persist t)
-(setq org-clock-into-drawer nil)
-(setq org-clocktable-defaults
- (quote
- (:maxlevel 3 :lang "en" :scope file :block nil :wstart 1 :mstart 1 :tstart nil :tend nil :step nil :stepskip0 nil :fileskip0 nil :tags nil :emphasize nil :link nil :narrow 40! :indent t :formula nil :timestamp nil :level nil :tcolumns nil :formatter nil)))
-
-(setq org-duration-format
- (quote
- (:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t)))
-#+END_SRC
-
-
 * sensible defaults
 Source: [[https://github.com/hrs/sensible-defaults.el/blob/master/sensible-defaults.el][sensible-defaults.el/sensible-defaults.el at master · hrs/sensible-defaults.el 🔊]]
 
@@ -4599,23 +4568,6 @@ want to use in the modeline *in lieu of* the original.")
 (setq gcmh-mode-line nil)
 
 #+end_src
-
-* org-timesheet
-Source: [[https://emacs.stackexchange.com/questions/30280/how-to-conveniently-insert-a-clock-entry][org mode - How to conveniently insert a clock entry? - Emacs Stack Exchange]]
-
-#+begin_src emacs-lisp
-(defun timesheet_insert-custom-clock-entry ()
- (interactive)
- (insert "CLOCK: ")
- (org-time-stamp-inactive)
- (insert "--")
- ;; Inserts the current time by default.
- (let ((current-prefix-arg '(4))) (call-interactively 'org-time-stamp-inactive))
- (org-ctrl-c-ctrl-c))
-
-#+end_src
-
-
 
 * allow file local custom code
 #+begin_src emacs-lisp

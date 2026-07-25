@@ -1,6 +1,8 @@
 ** The Agenda Configuration
 
 #+begin_src emacs-lisp
+;; -*- lexical-binding: t; -*-
+
 ;; ============================================================================
 ;; JAY'S DAILY ACTION MENU — What To Do Next (At a Glance)
 ;; ============================================================================
@@ -135,6 +137,56 @@ If today's journal does not exist, return the latest 4 existing files."
 ;; Hide tags in agenda to reduce clutter
 (setq org-agenda-remove-tags t)
 
+#+end_src
+
+** Clocking
+
+*** Clock settings
+
+#+begin_src emacs-lisp
+(setq org-clock-auto-clock-resolution t)
+ (setq org-clock-idle-time 30)
+ (setq org-clock-in-resume t)
+ (setq org-clock-persist-query-resume nil)
+ (setq org-clock-report-include-clocking-task t)
+(setq org-clock-persist 'history)
+(org-clock-persistence-insinuate)
+(setq org-clock-persist t)
+(setq org-clock-into-drawer nil)
+(setq org-clocktable-defaults
+ (quote
+ (:maxlevel 3 :lang "en" :scope file :block nil :wstart 1 :mstart 1 :tstart nil :tend nil :step nil :stepskip0 nil :fileskip0 nil :tags nil :emphasize nil :link nil :narrow 40! :indent t :formula nil :timestamp nil :level nil :tcolumns nil :formatter nil)))
+
+(setq org-duration-format
+ (quote
+ (:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t)))
+#+end_src
+
+*** Quick clock-in helper
+
+#+begin_src emacs-lisp
+(defun jd-clock-in ()
+ "Insert a new heading with current time and clock in."
+ (interactive)
+ (org-insert-heading)
+ (org-insert-time-stamp (current-time))
+ (org-clock-in)
+ (next-line 2))
+#+end_src
+
+*** Insert a custom timesheet entry
+
+Source: [[https://emacs.stackexchange.com/questions/30280/how-to-conveniently-insert-a-clock-entry][org mode - How to conveniently insert a clock entry? - Emacs Stack Exchange]]
+
+#+begin_src emacs-lisp
+(defun timesheet_insert-custom-clock-entry ()
+ (interactive)
+ (insert "CLOCK: ")
+ (org-time-stamp-inactive)
+ (insert "--")
+ ;; Inserts the current time by default.
+ (let ((current-prefix-arg '(4))) (call-interactively 'org-time-stamp-inactive))
+ (org-ctrl-c-ctrl-c))
 #+end_src
 
 ** How to Use It

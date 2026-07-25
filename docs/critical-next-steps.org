@@ -39,9 +39,10 @@ Status indicators:
 - Verified that =s-'= still points at =choose-refile-method-and-refile= after the move.
 - Net: ~210 lines removed from the monolith, one reliability helper correctly relocated, startup time halved (2.038s → 1.003s) though most of that gain came from earlier work.
 
-** [PLANNED] Consolidate agenda/workflow residue into existing agenda modules
-- Audit agenda, clocking, timeblocking, attach, and related workflow sections in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] for moves into [[file+emacs:/Users/jay/emacs/emacs-settings/goals-agenda.org][goals-agenda.org]] and related existing agenda/goals modules.
-- Candidate sections in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]]: =* org-clock=, =* org-timesheet=, =* Eisenhower Matrix=, =* org-agenda=, =* org-attach=, =* archive tasks based on date=, =* org-timeblocking=.
+** [ACTIVE] Consolidate agenda/workflow residue into existing agenda modules
+- *Checkpoint 2026-07-25:* Moved the coherent clocking cluster into [[file+emacs:/Users/jay/emacs/emacs-settings/goals-agenda.org][goals-agenda.org]]: the =org-clock= settings, =jd-clock-in=, and =timesheet_insert-custom-clock-entry=.
+- Continue auditing related task-management sections in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] for moves into [[file+emacs:/Users/jay/emacs/emacs-settings/goals-agenda.org][goals-agenda.org]] and related existing agenda/goals modules.
+- Remaining candidate sections to audit: =* Eisenhower Matrix=, =* org-agenda=, and =* archive tasks based on date=. Keep =* org-attach= in place unless a dedicated attachment owner emerges; no live =* org-timeblocking= heading remains.
 - Reason: this is the right way to reduce workflow residue without creating a vague dumping-ground file like =org-workflow.org=.
 
 ** [COMPLETED] 2026-04-19: Create org-export.org after the consolidation pass
@@ -485,7 +486,7 @@ Identify top 5 slowest items, estimate potential gains, decide if worth optimizi
 | Extract spellcheck.org                | Modular      | ***                  | DONE        |
 | Consolidate Org-roam (core plumbing)  | ~210         | ***                  | PARTIAL     |
 | Create jay-org-roam-extras.el sidecar | Modular      | **                   | Pending     |
-| Consolidate agenda into goals-agenda  | Modular      | ***                  | Pending     |
+| Consolidate agenda into goals-agenda  | Modular      | ***                  | PARTIAL     |
 | Create org-export.org                 | Modular      | ****                 | DONE        |
 | Remove GNU Emacs dual boot            | ~1,400       | *****                | Pending     |
 | Consolidate config loads              | ~200         | ***                  | Pending     |

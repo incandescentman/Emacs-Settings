@@ -1,6 +1,13 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-07-25: Move the clocking subsystem into the goals agenda module
+- Moved the complete clocking cluster from [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] into the existing owner at [[file+emacs:/Users/jay/emacs/emacs-settings/goals-agenda.org][goals-agenda.org]]: the ~org-clock~ settings, ~jd-clock-in~, and ~timesheet_insert-custom-clock-entry~.
+- Preserved the command names and load order, so the existing ~s-k c i~ binding in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] still resolves after startup without a keybinding change.
+- Left archiving, attachments, and Eisenhower tags in place. They are separate concerns and moving them in the same checkpoint would turn the agenda module into a generic workflow bin.
+- Added the module's missing ~lexical-binding: t~ header so its tracked tangled Elisp satisfies the repository's installed pre-commit guard.
+- Deleted and regenerated the stale tangled outputs, then passed ~check-parens~ on both generated Elisp files. A targeted batch load verified the clock settings and both moved commands; the configured startup smoke test completed with ~shift nil~.
+
 * 2026-07-24: Reconcile silver-period Emacs repairs onto the black configuration
 - Ported the nine silver-period commits from verified recovery bundle HEAD ~b3da4bfbff3b86757d70c5b8e1e33bc0ff243392~ onto the black-based ~main~ history, preserving both sides of the initially overlapping work-log entries.
 - Retained the functional Consult compatibility aliases, portable ~ox-astro~ discovery, Org repair guidance, and Aquamacs repair history. Excluded the silver machine-specific ~spacemacs.d/.spacemacs.env~ and generated ~docs/lab/startup-profile.org~.
