@@ -2233,5 +2233,9 @@
 - Corrected the same ~fontspec~ tracking-unit bug in the Blue template, reducing tracked header, footer, phase, week, date, ledger, table, and cover values to the proper scale. Also made Blue task, callout, table, protocol, back-matter, and design-note prose ragged right so narrow measures do not create stretched word spaces. The regenerated Blue PDF remains eight pages with no LaTeX errors or overfull boxes.
 - Changed both playbook classes to white page backgrounds and one-inch left/right margins. Re-exported the real countdown: Warm remains seven letter-size pages; Blue becomes nine pages as its recurring-week and design-notes back matter reflow into the narrower measure. Both compile without LaTeX errors or overfull boxes, and both full contact sheets were visually inspected.
 
+* 2026-07-28: Preserve Org structure in =double-line-breaks-in-region=
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so =double-line-breaks-in-region= only changes newline runs bordered by ordinary Org paragraphs. Property drawers, Org-roam metadata, headings, keywords, tables, fixed-width text, and source/example/quote/verse/other special-block contents remain unchanged.
+- Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]] from the literate source and ran =check-parens= on the generated file.
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.

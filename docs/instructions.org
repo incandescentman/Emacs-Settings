@@ -185,7 +185,7 @@ Example to enable timestamps:
 |-------------+--------------------------------+-------------------------------------------------|
 | =Cmd-k d l= | =double-line-breaks-in-region= | Double all single line breaks in selected region |
 
-=double-line-breaks-in-region= is useful for converting single-spaced text to double-spaced paragraphs. It normalizes line endings, collapses 3+ newlines to exactly 2, and only doubles single newlines (leaving existing paragraph breaks unchanged).
+=double-line-breaks-in-region= is useful for converting single-spaced text to double-spaced paragraphs. It normalizes line endings, collapses 3+ newlines to exactly 2, and only doubles single newlines (leaving existing paragraph breaks unchanged). In Org buffers, it changes only ordinary paragraphs, preserving property drawers (including Org-roam metadata), headings, keywords, tables, and the contents of source, example, quote, verse, and other special blocks.
 
 *** Transcript Cleanup
 

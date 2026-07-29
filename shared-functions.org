@@ -2393,10 +2393,33 @@ Handy way of getting back to previous places.
 
 * double-line-breaks-in-region
 #+BEGIN_SRC emacs-lisp
+(defun jay/double-line-breaks--org-paragraph-context-p (position)
+  "Return non-nil when POSITION is in an unprotected Org paragraph."
+  (save-excursion
+    (goto-char (max (point-min) (min position (point-max))))
+    (let ((element (org-element-context)))
+      (and (eq (org-element-type element) 'paragraph)
+           (not (org-element-lineage
+                 element
+                 '(center-block comment-block drawer dynamic-block example-block
+                   export-block fixed-width property-drawer quote-block
+                   special-block src-block table verse-block)
+                 t))))))
+
+(defun jay/double-line-breaks--protected-org-newline-run-p (begin end)
+  "Return non-nil when the newline run from BEGIN to END is Org structure.
+Only newlines bordered by ordinary paragraphs may be changed.  This leaves
+property drawers, Org-roam metadata, headings, keywords, tables, and blocks
+unchanged."
+  (and (derived-mode-p 'org-mode)
+       (not (and (jay/double-line-breaks--org-paragraph-context-p (1- begin))
+                 (jay/double-line-breaks--org-paragraph-context-p end)))))
+
 (defun double-line-breaks-in-region (begin end)
   "Replace single line breaks with double line breaks in region.
 Normalizes Windows/Mac line endings first. Collapses 3+ newlines
-to exactly 2, and leaves existing double breaks unchanged."
+to exactly 2, and leaves existing double breaks unchanged.  In Org buffers,
+preserves non-paragraph structure such as property drawers and blocks."
   (interactive "r")
   (save-excursion
     (save-restriction
@@ -2409,13 +2432,17 @@ to exactly 2, and leaves existing double breaks unchanged."
       (while (search-forward "\r" nil t)
         (replace-match "\n"))
       (goto-char (point-min))
-      ;; Collapse 3+ newlines to 2
-      (while (re-search-forward "\n\\{3,\\}" nil t)
-        (replace-match "\n\n"))
-      (goto-char (point-min))
-      ;; Replace single newlines with double
-      (while (re-search-forward "\n\\([^\n]\\)" nil t)
-        (replace-match "\n\n\\1")))))
+      ;; Only change prose newlines; protect Org drawers, blocks, and metadata.
+      (while (re-search-forward "\n+" nil t)
+        (let ((run-begin (match-beginning 0))
+              (run-end (match-end 0)))
+          (unless (jay/double-line-breaks--protected-org-newline-run-p
+                   run-begin run-end)
+            (cond
+             ((>= (- run-end run-begin) 3)
+              (replace-match "\n\n"))
+             ((= (- run-end run-begin) 1)
+              (replace-match "\n\n")))))))))
 #+END_SRC
 
 * xah-replace-pairs
