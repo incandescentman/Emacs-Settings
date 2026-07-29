@@ -335,6 +335,33 @@ Only applies to LaTeX exports from Org files tagged with :contract:."
 ** ignore unresolvable links
 Instead of canceling export. So that I can export org-roam nodes if I want to.
 
+*** Preserve the unsubscribe URL template placeholder
+#+begin_src emacs-lisp
+(defun jay/org-export-preserve-unsubscribe-url (backend)
+  "Preserve the exact {{unsubscribe_url}} placeholder in HTML link targets.
+
+Org otherwise treats `{{unsubscribe_url}}' as an unresolved fuzzy link and
+aborts the export.  Rewrite only that exact target to a private link type in
+the temporary export buffer; all other unresolved links retain Org's normal
+error behavior."
+  (when (org-export-derived-backend-p backend 'html)
+    (save-excursion
+      (goto-char (point-min))
+      (while (search-forward "[[{{unsubscribe_url}}][" nil t)
+        (replace-match "[[jay-unsubscribe-url:placeholder][" t t)))))
+
+(org-link-set-parameters
+ "jay-unsubscribe-url"
+ :export (lambda (_path description backend _info)
+           (if (org-export-derived-backend-p backend 'html)
+               (format "<a href=\"{{unsubscribe_url}}\">%s</a>"
+                       (or description "{{unsubscribe_url}}"))
+             (or description "{{unsubscribe_url}}"))))
+
+(add-hook 'org-export-before-parsing-functions
+          #'jay/org-export-preserve-unsubscribe-url)
+#+end_src
+
 *** my own attempts to fix this. Second one worked
 #+begin_SRC emacs-lisp
 (use-package org-roam-export

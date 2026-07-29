@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-07-29: Preserve the unsubscribe template URL during HTML export
+- Added an exact HTML-export exception in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] for Org links whose target is literally ~{{unsubscribe_url}}~. The temporary export buffer rewrites only that target to a private link type, whose HTML exporter emits ~href="{{unsubscribe_url}}"~; other unresolved links retain Org's normal abort behavior.
+- Deleted and regenerated [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.el][org-export.el]] with an explicit tangle output path after a bare batch tangle misleadingly reported zero code blocks.
+- Passed ~check-parens~ on the regenerated Elisp and the configured startup smoke test. A focused Org 9.6.15 export of [[file+emacs:/Users/jay/Dropbox/data/contacts/templates/2026-07-14-group-m-body.org][the real Group M template]] produced exactly ~<a href="{{unsubscribe_url}}">unsubscribe</a>~, while a control link targeting ~{{some_other_placeholder}}~ still aborted as unresolved.
+
 * 2026-07-25: Move the clocking subsystem into the goals agenda module
 - Moved the complete clocking cluster from [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] into the existing owner at [[file+emacs:/Users/jay/emacs/emacs-settings/goals-agenda.org][goals-agenda.org]]: the ~org-clock~ settings, ~jd-clock-in~, and ~timesheet_insert-custom-clock-entry~.
 - Preserved the command names and load order, so the existing ~s-k c i~ binding in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] still resolves after startup without a keybinding change.
