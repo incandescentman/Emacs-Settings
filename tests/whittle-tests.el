@@ -234,6 +234,39 @@ is passed through to `whittle--transcript-report-generate'."
     (should (< (string-match "Suspicious Output Scar Scan" compact)
                (string-match "Applied High/Medium-Risk Changes" compact)))))
 
+(ert-deftest whittle-applied-reports-check-saved-state-conditionally ()
+  "Applied reports should ask for a save only when disk state is unconfirmed."
+  (let* ((entry (list :number 1
+                      :line 1
+                      :unit 1
+                      :risk "low"
+                      :passes '("duplicate-word collapse")
+                      :hazards nil
+                      :scars nil
+                      :held-back nil
+                      :before "This is is ready."
+                      :after "This is ready."))
+         (entries (list entry))
+         (full (whittle--transcript-report-format
+                "/tmp/source.org" "/tmp/report.org" entries
+                "whittle-transcript" 'transcript t))
+         (compact (whittle--transcript-report-format-compact
+                   "/tmp/source.org" "/tmp/report.org" entries
+                   "whittle-transcript" 'transcript t)))
+    (dolist (report (list full compact))
+      (should (string-match-p
+               (regexp-quote
+                "If they are present, continue the review without asking Jay to save again.")
+               report))
+      (should (string-match-p
+               (regexp-quote
+                "If they are absent or you cannot confirm them, tell Jay to save the buffer and wait for confirmation")
+               report))
+      (should (string-match-p
+               (regexp-quote
+                "Never tell him to discard, revert, or avoid saving the Whittle changes.")
+               report)))))
+
 (ert-deftest whittle-scarred-entries-rank-high ()
   "Any final-output scar should promote the applied entry to high risk."
   (should (equal
@@ -560,7 +593,21 @@ is passed through to `whittle--transcript-report-generate'."
     (should result)
     (should copied)
     (should (string-match-p "- Command :: whittle" copied))
-    (should (string-match-p "cleanup already applied; verify and repair" copied))
+    (should (string-match-p
+             "cleanup applied to Emacs buffer; verify saved source"
+             copied))
+    (should (string-match-p
+             (regexp-quote
+              "If they are present, continue the review without asking Jay to save again.")
+             copied))
+    (should (string-match-p
+             (regexp-quote
+              "If they are absent or you cannot confirm them, tell Jay to save the buffer and wait for confirmation")
+             copied))
+    (should (string-match-p
+             (regexp-quote
+              "Never tell him to discard, revert, or avoid saving the Whittle changes.")
+             copied))
     (should (string-match-p "Full report ::" copied))
     (should (string-match-p
              (regexp-quote (file-truename "/tmp/whittle-test-conservative.org"))
@@ -588,7 +635,21 @@ is passed through to `whittle--transcript-report-generate'."
     (should result)
     (should copied)
     (should (string-match-p "- Command :: whittle-transcript" copied))
-    (should (string-match-p "cleanup already applied; verify and repair" copied))
+    (should (string-match-p
+             "cleanup applied to Emacs buffer; verify saved source"
+             copied))
+    (should (string-match-p
+             (regexp-quote
+              "If they are present, continue the review without asking Jay to save again.")
+             copied))
+    (should (string-match-p
+             (regexp-quote
+              "If they are absent or you cannot confirm them, tell Jay to save the buffer and wait for confirmation")
+             copied))
+    (should (string-match-p
+             (regexp-quote
+              "Never tell him to discard, revert, or avoid saving the Whittle changes.")
+             copied))
     (should (string-match-p "Full report ::" copied))
     (should (string-match-p
              (regexp-quote (file-truename "/tmp/whittle-test-transcript.org"))

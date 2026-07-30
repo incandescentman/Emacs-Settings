@@ -219,6 +219,8 @@ All three commands work on the active region if one is selected, otherwise on th
 
 The clipboard report starts with a =Suspicious Output Scar Scan= section for applied-output artifacts such as orphan ellipses, fused clauses, or suspicious case normalization. Scar hits are advisory review flags, not automatic edits. The report then shows applied high- and medium-risk changes, followed by =Hazard-Tagged / Not Applied= candidate edits that were held back. High- and medium-risk excerpts use a small local window around the changed span so one risky filler word does not dump a whole paragraph. Low-risk changes are summarized, mechanical hazard tags and output scar tags are counted, hazardous candidate edits protect their surrounding spans while safe cleanup in the same paragraph still applies, and the full detailed report is saved under =/tmp=.
 
+Whittle changes the current Emacs buffer before it copies the Codex report, but the buffer may or may not already be saved. Codex first checks whether the source file on disk contains the reported applied changes. If it does, Codex proceeds without asking Jay to save again. If it does not, or Codex cannot confirm it, Codex tells Jay to save the buffer and waits for confirmation before reviewing or repairing the source. Codex must never tell Jay to discard, revert, or avoid saving the Whittle changes.
+
 *Example*
 
 Input:

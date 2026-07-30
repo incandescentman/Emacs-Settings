@@ -1605,9 +1605,9 @@ FULL-REPORT-FILE is the path to the complete before/after report."
      (format "- Source :: %s\n" source)
 	     (format "- Command :: %s\n" command-name)
 	     (format "- Mode :: %s\n"
-	             (if applied
-	                 "cleanup already applied; verify and repair"
-	               "dry run; source unchanged"))
+		     (if applied
+			 "cleanup applied to Emacs buffer; verify saved source"
+		       "dry run; source unchanged"))
 	     (format "- Reported units :: %d\n" (length entries))
 	     (when applied
 	       (format "- Applied units :: %d\n" applied-count))
@@ -1631,7 +1631,7 @@ FULL-REPORT-FILE is the path to the complete before/after report."
 	             whittle/report-clipboard-max-detailed-entries)
 	     "** Codex Instructions\n\n"
 	     (if applied
-	         "The source file has already been changed with safe partial cleanup. Review in this order: Suspicious Output Scar Scan, Applied High/Medium-Risk Changes, then Hazard-Tagged / Not Applied. Scars are suspicious, not proof; inspect the source path above and repair only real whittle damage. Held-back candidate after text is not in the source, so do not apply it just because it appears here. This report is not a replacement transcript. Do not rewrite for style. Use the full report if clipboard excerpts are capped.\n\n"
+		 "Whittle has changed the current Emacs buffer, but the buffer may or may not already be saved to disk. First inspect the source path and confirm whether the reported applied changes are present. If they are present, continue the review without asking Jay to save again. If they are absent or you cannot confirm them, tell Jay to save the buffer and wait for confirmation before inspecting or repairing the source. Never tell him to discard, revert, or avoid saving the Whittle changes. Then review in this order: Suspicious Output Scar Scan, Applied High/Medium-Risk Changes, then Hazard-Tagged / Not Applied. Scars are suspicious, not proof; inspect the source path above and repair only real whittle damage. Held-back candidate after text is not in the source, so do not apply it just because it appears here. This report is not a replacement transcript. Do not rewrite for style. Use the full report if clipboard excerpts are capped.\n\n"
 	       "Source unchanged. Review in this order: Suspicious Output Scar Scan, Applied High/Medium-Risk Changes, then Hazard-Tagged / Not Applied. Scars are suspicious, not proof. If you apply or repair anything, edit the source path above directly; this report is not a replacement transcript. Do not rewrite for style. Use the full report if clipboard excerpts are capped.\n\n")
 	     (whittle--transcript-report-format-scar-section
 	      applied-entries whittle/report-clipboard-max-detailed-entries)
@@ -1681,16 +1681,16 @@ FULL-REPORT-FILE is the path to the complete before/after report."
      (format "- Source :: %s\n" source)
      (format "- Generated :: %s\n" (format-time-string "[%Y-%m-%d %a %H:%M]"))
      (format "- Command :: %s\n" command-name)
-     (if applied
-         "- Mode :: Cleanup has already been applied to the source buffer; this report is for Codex verification and repair.\n"
-       "- Mode :: Dry-run report only; the source buffer is unchanged.\n")
+	     (if applied
+		 "- Mode :: Cleanup has been applied to the current Emacs buffer; verify whether it has been saved before reviewing the source file.\n"
+	       "- Mode :: Dry-run report only; the source buffer is unchanged.\n")
      "- Unit boundary :: Blank-line-delimited paragraph units; org structural lines are boundaries and are excluded from cleanup.\n"
      "- Source edit target :: Codex should edit the source file above directly; this report is not a replacement transcript.\n"
      "- Boundary caveat :: Unit-level dry runs intentionally prevent line-joining across paragraph or heading boundaries, so boundary-sensitive output may differ from a whole-buffer edit.\n"
 	     (format "- Temp file :: %s\n\n" temp-file)
 	     "** Instructions for Codex\n\n"
 	     (if applied
-	         "The source file has already been changed by the command above. Review in this order: Suspicious Output Scar Scan, Applied High/Medium-Risk Changes, then Hazard-Tagged / Not Applied. Scars are suspicious, not proof; inspect the source path above and repair only real whittle damage. Held-back candidate after text is not in the source, so do not apply it just because it appears here. Do not copy this report wholesale into the transcript. Do not rewrite for style.\n\n"
+		 "Whittle has changed the current Emacs buffer, but the buffer may or may not already be saved to disk. First inspect the source path and confirm whether the reported applied changes are present. If they are present, continue the review without asking Jay to save again. If they are absent or you cannot confirm them, tell Jay to save the buffer and wait for confirmation before inspecting or repairing the source. Never tell him to discard, revert, or avoid saving the Whittle changes. Then review in this order: Suspicious Output Scar Scan, Applied High/Medium-Risk Changes, then Hazard-Tagged / Not Applied. Scars are suspicious, not proof; inspect the source path above and repair only real whittle damage. Held-back candidate after text is not in the source, so do not apply it just because it appears here. Do not copy this report wholesale into the transcript. Do not rewrite for style.\n\n"
 	       "Review in this order: Suspicious Output Scar Scan, Applied High/Medium-Risk Changes, then Hazard-Tagged / Not Applied. Scars are suspicious, not proof. If you apply or repair anything, edit the source path above directly. Do not copy this report wholesale into the transcript. Do not rewrite for style.\n\n")
 	     "** Summary\n\n"
 	     (format "- Reported units :: %d\n" (length entries))

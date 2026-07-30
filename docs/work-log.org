@@ -2242,5 +2242,10 @@
 - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so =double-line-breaks-in-region= only changes newline runs bordered by ordinary Org paragraphs. Property drawers, Org-roam metadata, headings, keywords, tables, fixed-width text, and source/example/quote/verse/other special-block contents remain unchanged.
 - Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]] from the literate source and ran =check-parens= on the generated file.
 
+* 2026-07-30: Make Whittle Codex review conditional on saved-buffer state
+- Corrected the compact clipboard and full-report instructions in [[file+emacs:/Users/jay/emacs/emacs-settings/whittle.el][whittle.el]]. Whittle edits the current Emacs buffer, which may or may not already be saved; the prior wording incorrectly presented the source file as already changed.
+- Codex now checks whether the reported applied changes are present in the on-disk source. It proceeds directly when they are present, and asks Jay to save and waits for confirmation only when they are absent or cannot be confirmed. The report explicitly forbids telling Jay to discard, revert, or avoid saving the Whittle changes.
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/tests/whittle-tests.el][tests/whittle-tests.el]], [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][docs/instructions.org]], and [[file+emacs:/Users/jay/emacs/emacs-settings/docs/whittle-transcript-review-workflow-plan.org][the Whittle review workflow plan]] to preserve the conditional save-first protocol.
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.
