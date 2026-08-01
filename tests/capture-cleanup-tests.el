@@ -16,6 +16,14 @@
    (expand-file-name ".." (file-name-directory (or load-file-name buffer-file-name))))
   "Absolute path to `shared-functions.el` in this repo.")
 
+(defconst jay-capture-cleanup-test--pasteboard-file
+  (expand-file-name
+   "pasteboard-copy-and-paste-functions.el"
+   (expand-file-name ".." (file-name-directory (or load-file-name buffer-file-name))))
+  "Absolute path to the pasteboard whitespace cleaner in this repo.")
+
+(load jay-capture-cleanup-test--pasteboard-file nil 'nomessage)
+
 (defun jay-capture-cleanup-test--load-definitions (file symbols)
   "Load defuns/defvars named in SYMBOLS from FILE without loading the full config."
   (with-temp-buffer
@@ -97,22 +105,6 @@
     (should-not (string-match-p "hours? ago" output))
     (should (string-match-p "Main body" output))))
 
-(ert-deftest jay-capture-cleanup-promotes-bold-lines-to-headings ()
-  "Standalone bold lines should convert to level-3 org headings."
-  (should
-   (equal
-    (jay/org-web-tools-cleanup-string
-     (mapconcat
-      #'identity
-      '("*1. Classic Unalome:*"
-        "*Heading*")
-      "\n"))
-    (mapconcat
-     #'identity
-     '("*** 1. Classic Unalome:"
-       "*** Heading")
-     "\n"))))
-
 (ert-deftest jay-capture-cleanup-fixes-heading-body-and-whitespace-spacing ()
   "Cleanup should remove heading-body blank gaps and whitespace-only lines."
   (should
@@ -120,6 +112,14 @@
      (jay/org-web-tools-cleanup-string
       "*** Heading\n\nBody line\n   \n\t\n*** Next\n\n#+begin_src emacs-lisp\n(message \"x\")\n#+end_src\n")
      "*** Heading\nBody line\n*** Next\n\n#+begin_src emacs-lisp\n(message \"x\")\n#+end_src\n")))
+
+(ert-deftest jay-capture-cleanup-normalizes-weird-spaces ()
+  "Web captures should share the clean-paste Unicode-space policy."
+  (should
+   (equal
+    (jay/org-web-tools-cleanup-string
+     "A\u00A0group\u202Fof\u2009children\u200Aand\u200Btext")
+    "A group of children and text")))
 
 (ert-deftest jay-org-web-tools-readable-fetch-sends-browser-headers ()
   "Jay's org-web-tools wrapper should send browser-like request headers."

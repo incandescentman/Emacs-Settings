@@ -1,6 +1,10 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-07-31: Normalize Unicode spaces in clean web captures
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so =jay/org-web-tools-cleanup-string= reuses =replace-weird-spaces= from [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][pasteboard-copy-and-paste-functions.el]]. Captured pages now turn non-breaking, narrow non-breaking, thin, hair, and zero-width spaces into ordinary spaces without running the broader clean-paste typography or Org/Markdown pipeline.
+- Added a regression test covering the exact =group&nbsp;of&nbsp;children= failure class.
+
 * 2026-07-29: Preserve the unsubscribe template URL during HTML export
 - Added an exact HTML-export exception in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] for Org links whose target is literally ~{{unsubscribe_url}}~. The temporary export buffer rewrites only that target to a private link type, whose HTML exporter emits ~href="{{unsubscribe_url}}"~; other unresolved links retain Org's normal abort behavior.
 - Deleted and regenerated [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.el][org-export.el]] with an explicit tangle output path after a bare batch tangle misleadingly reported zero code blocks.

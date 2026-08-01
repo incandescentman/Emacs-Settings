@@ -1528,6 +1528,13 @@ Set to t to preserve them.")
 (defun jay/org-web-tools-cleanup-string (content)
   "Clean up CONTENT string from org-web-tools, removing cruft."
   (let ((result content))
+    ;; Reuse the pasteboard cleaner's Unicode-space policy without applying
+    ;; its broader typography or Org/Markdown transformations.
+    (setq result
+          (with-temp-buffer
+            (insert result)
+            (replace-weird-spaces (point-min) (point-max))
+            (buffer-string)))
     ;; Remove base64-encoded images
     (setq result (replace-regexp-in-string "\\[\\[data:image[^]]*\\]\\]" "" result))
     ;; Remove empty link descriptions like [[url][//]]
