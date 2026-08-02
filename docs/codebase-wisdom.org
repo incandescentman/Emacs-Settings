@@ -2,6 +2,38 @@
 #+DATE: 2025-09-24
 #+DESCRIPTION: Debugging post-mortems and prevention checklists.
 
+* Font-Lock Face Expressions Must Return Faces, Not Side-Effect Results
+  Date: 2026-08-02
+
+** Trigger
+Org editing began emitting ~Invalid face reference: t~ hundreds or thousands of
+times during redisplay, especially in files containing colon-prefixed fixed-width
+quotation lines.
+
+** Mechanism
+A rule in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] placed this expression in font-lock's face slot:
+
+#+begin_src emacs-lisp
+(compose-region (match-beginning 1) (match-end 1) ?❱)
+#+end_src
+
+~compose-region~ returns ~t~. Font-lock therefore stored a literal ~face=t~ text
+property. When Org added its own fixed-width styling, the property became
+~(org-code t)~, and redisplay repeatedly tried to resolve ~t~ as a face. Inspecting
+the live buffers' text properties exposed the bad value directly; static face
+definitions did not.
+
+** Actionable insight
+- In a font-lock highlighter, the face expression's return value is applied as a
+  face. Do not put an arbitrary side-effecting function there unless the expression
+  explicitly returns a valid face or ~nil~.
+- For ~Invalid face reference~ warnings, inspect the live ~face~ and
+  ~font-lock-face~ text properties at affected positions before auditing every
+  theme and ~defface~ declaration.
+- Removing the source rule prevents recurrence, but already-fontified buffers can
+  retain the poisoned properties. Remove the bad properties and refontify those
+  buffers, or restart Emacs.
+
 * Substring Ignore Lists Must Be Scoped To Special Buffers
   Date: 2026-08-01
 
