@@ -1,6 +1,15 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-08-01: Offer pinned non-roam files in the recent-node finder
+- Extended ~jay/org-roam-node-find-recent~ in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-suite/jay-org-roam-core.el]] so the node prompt also offers a short list of files that are not in the Org-roam vault. The new ~jay/org-roam-extra-find-files~ variable holds ~(LABEL . PATH)~ pairs and currently pins ~global CLAUDE~ to [[file+emacs:/Users/jay/.claude/CLAUDE.org][/Users/jay/.claude/CLAUDE.org]].
+- Kept the command name and both existing bindings (=Shift-Cmd-Right= and =Cmd-u f=), so nothing Jay presses changed. Extras sort ahead of the nodes and carry a faint ~file~ tag.
+- Replaced the ~org-roam-node-find~ call with an inline ~completing-read~ modeled on ~org-roam-node-read~, because ~org-roam-node-find~ owns its own prompt and cannot accept injected candidates. The replacement keeps the ~org-roam-node~ completion category, annotation metadata for real nodes, the ~identity~ display and cycle sort that preserves the recently-visited-first ordering, and ~org-roam-node-history~.
+- Opened pinned files with ~find-file~ rather than ~org-roam-node-visit~. ~org-roam-node-visit~ ends in ~org-fold-show-context~, which would fail on a non-Org file, so the plain path keeps the feature safe if a ~.el~ or ~.md~ file is pinned later. Unmatched input still falls through to ~org-roam-capture-~.
+- Made the existing Embark visit action dispatch pinned candidates through ~find-file~. Insert-link, refile, and add-alias remain node-only actions and now give a specific explanation when invoked on a pinned file instead of failing to resolve it as a node.
+- Documented the behavior for Jay under /Finding Nodes (and Pinned Non-Roam Files)/ in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][docs/instructions.org]], including how to pin another file.
+- Passed ~check-parens~ and the configured startup smoke test. Jay relaunched Emacs and confirmed that the original pinned-file and ordinary-node paths work; isolated post-review checks also verified annotation delegation, combined completion metadata, Embark pinned-file visiting, and explicit errors for node-only actions. Live confirmation of the hardened Embark paths follows after the checkpoint commit.
+
 * 2026-07-31: Normalize Unicode spaces in clean web captures
 - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so =jay/org-web-tools-cleanup-string= reuses =replace-weird-spaces= from [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][pasteboard-copy-and-paste-functions.el]]. Captured pages now turn non-breaking, narrow non-breaking, thin, hair, and zero-width spaces into ordinary spaces without running the broader clean-paste typography or Org/Markdown pipeline.
 - Added a regression test covering the exact =group&nbsp;of&nbsp;children= failure class.

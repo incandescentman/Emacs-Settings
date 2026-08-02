@@ -142,6 +142,16 @@ The active profile is saved to =~/.cache/org-roam-current-profile= and restored 
 
 The system closes the old database before opening the next one.
 
+** Pinned files outside the vault
+
+=jay/org-roam-node-find-recent= also offers the ~(LABEL . PATH)~ pairs in
+~jay/org-roam-extra-find-files~, defined in
+[[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-suite/jay-org-roam-core.el]].
+Those files are not nodes, are not in any database, and are unaffected by
+profile switching — the same pinned list appears under every profile. See
+/Finding Nodes (and Pinned Non-Roam Files)/ in
+[[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][docs/instructions.org]].
+
 ** Excluded archive folder
 
 The default vault has a cold-storage folder at [[file+emacs:/Users/jay/Dropbox/roam/archive-excluded/][/Users/jay/Dropbox/roam/archive-excluded/]]. It is for files Jay wants to keep but hide from normal Org-roam node find commands, including =jay/org-roam-node-find-recent=.

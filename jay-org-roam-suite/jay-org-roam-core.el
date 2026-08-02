@@ -546,12 +546,66 @@ Default is `jay/revenue-block-default-sprints' (3 sprints ~= 90 minutes)."
    (format "- [%s] Stopped prolific block early."
            (format-time-string "%H:%M"))))
 
+(defvar jay/org-roam-extra-find-files
+  '(("global CLAUDE" . "/Users/jay/.claude/CLAUDE.org"))
+  "Non-Org-roam files offered by `jay/org-roam-node-find-recent'.
+Each entry is a cons cell (LABEL . PATH).  LABEL is the text you type
+to match the file in the completion prompt; PATH is the absolute file
+name that gets opened.  Entries appear at the top of the candidate
+list, tagged `file', ahead of the Org-roam nodes.")
+
+(defun jay/org-roam-extra-find--candidates ()
+  "Return a completion alist built from `jay/org-roam-extra-find-files'.
+The car is the display string, the cdr the expanded file name."
+  (mapcar (lambda (entry)
+            (cons (concat (car entry)
+                          " "
+                          (propertize "file" 'face 'org-tag))
+                  (expand-file-name (cdr entry))))
+          jay/org-roam-extra-find-files))
+
+(defun jay/org-roam-extra-find--target-path (target)
+  "Return the pinned file path represented by completion TARGET, or nil."
+  (when (stringp target)
+    (cdr (assoc target (jay/org-roam-extra-find--candidates)))))
+
+(defun jay/org-roam-node-find--annotation (candidate)
+  "Return Org-roam's annotation for node CANDIDATE, or nil for a pinned file."
+  (when-let ((node (get-text-property 0 'node candidate)))
+    (funcall org-roam-node-annotation-function node)))
+
 (defun jay/org-roam-node-find-recent (&optional other-window)
   "Find an Org-roam node with recently-visited-first sorting.
+Files listed in `jay/org-roam-extra-find-files' are offered alongside
+the nodes, so this also opens a small set of pinned files that live
+outside the Org-roam vault.
 Passing OTHER-WINDOW mirrors `org-roam-node-find' prefix behavior."
   (interactive "P")
   (jay/with-org-roam
-    (org-roam-node-find other-window nil nil #'org-roam-node-read-sort-by-file-atime)))
+    (let* ((extras (jay/org-roam-extra-find--candidates))
+           (nodes (org-roam-node-read--completions
+                   nil #'org-roam-node-read-sort-by-file-atime))
+           (candidates (append extras nodes))
+           (choice (completing-read
+                    "Node: "
+                    (lambda (string pred action)
+                      (if (eq action 'metadata)
+                          '(metadata
+                            (display-sort-function . identity)
+                            (cycle-sort-function . identity)
+                            (annotation-function . jay/org-roam-node-find--annotation)
+                            (category . org-roam-node))
+                        (complete-with-action action candidates string pred)))
+                    nil nil nil 'org-roam-node-history))
+           (extra (cdr (assoc choice extras)))
+           (node (cdr (assoc choice nodes))))
+      (cond
+       (extra (if other-window
+                  (find-file-other-window extra)
+                (find-file extra)))
+       (node (org-roam-node-visit node other-window))
+       (t (org-roam-capture- :node (org-roam-node-create :title choice)
+                             :props '(:finalize find-file)))))))
 
 ;; Keybindings -----------------------------------------------------------------
 (jay/bind-roam "f" jay/org-roam-node-find-recent)
@@ -617,20 +671,26 @@ Passing OTHER-WINDOW mirrors `org-roam-node-find' prefix behavior."
           (org-roam-node-from-title-or-alias target))))
    (t nil)))
 
+(defun jay/embark-org-roam--require-node (target action)
+  "Return the org-roam node for TARGET or explain why ACTION is unavailable."
+  (or (jay/embark-org-roam--target-node target)
+      (if (jay/org-roam-extra-find--target-path target)
+          (user-error "%s is not available for pinned files" action)
+        (user-error "Could not resolve org-roam node from target"))))
+
 (defun jay/embark-org-roam-visit (target)
-  "Visit org-roam TARGET node."
+  "Visit org-roam TARGET node or open TARGET when it is a pinned file."
   (interactive)
-  (let ((node (jay/embark-org-roam--target-node target)))
-    (unless node
-      (user-error "Could not resolve org-roam node from target"))
-    (jay/with-org-roam (org-roam-node-visit node))))
+  (if-let ((path (jay/org-roam-extra-find--target-path target)))
+      (find-file path)
+    (jay/with-org-roam
+      (org-roam-node-visit
+       (jay/embark-org-roam--require-node target "Visiting as an Org-roam node")))))
 
 (defun jay/embark-org-roam-insert-link (target)
   "Insert link to org-roam TARGET node at point."
   (interactive)
-  (let ((node (jay/embark-org-roam--target-node target)))
-    (unless node
-      (user-error "Could not resolve org-roam node from target"))
+  (let ((node (jay/embark-org-roam--require-node target "Inserting an Org-roam link")))
     (insert
      (org-link-make-string
       (concat "id:" (org-roam-node-id node))
@@ -639,9 +699,7 @@ Passing OTHER-WINDOW mirrors `org-roam-node-find' prefix behavior."
 (defun jay/embark-org-roam-refile (target)
   "Refile region/subtree to org-roam TARGET node."
   (interactive)
-  (let ((node (jay/embark-org-roam--target-node target)))
-    (unless node
-      (user-error "Could not resolve org-roam node from target"))
+  (let ((node (jay/embark-org-roam--require-node target "Refiling to an Org-roam node")))
     (jay/with-org-roam (org-roam-refile node))))
 
 (defun jay/embark-org-roam-buffer-toggle (&optional _target)
@@ -653,9 +711,7 @@ _TARGET is ignored so this can be used as an Embark action."
 (defun jay/embark-org-roam-alias-add (target)
   "Add alias to org-roam TARGET node."
   (interactive)
-  (let ((node (jay/embark-org-roam--target-node target)))
-    (unless node
-      (user-error "Could not resolve org-roam node from target"))
+  (let ((node (jay/embark-org-roam--require-node target "Adding an Org-roam alias")))
     (with-current-buffer (find-file-noselect (org-roam-node-file node))
       (save-excursion
         (goto-char (org-roam-node-point node))

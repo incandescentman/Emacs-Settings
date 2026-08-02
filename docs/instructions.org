@@ -288,6 +288,34 @@ Your last-used profile is remembered across sessions.
 
 Dailies commands use the active profile. After =Cmd-u 4= switches to =roam-parents=, =Cmd-:= opens or creates today's note under [[file+emacs:/Users/jay/Dropbox/roam-parents/journal/][roam-parents/journal/]], not under [[file+emacs:/Users/jay/Dropbox/roam/journal/][default roam/journal/]].
 
+*** Finding Nodes (and Pinned Non-Roam Files)
+
+=Shift-Cmd-Right= (or =Cmd-u f=) runs ~jay/org-roam-node-find-recent~ — the node
+finder, sorted most-recently-visited first.
+
+It also opens a short list of *pinned files that are not in Org-roam at all*.
+Those candidates sit at the top of the list, tagged ~file~ so you can tell them
+apart from real nodes. Currently pinned:
+
+- ~global CLAUDE~ → [[file+emacs:/Users/jay/.claude/CLAUDE.org][/Users/jay/.claude/CLAUDE.org]]
+
+So typing =global CLAUDE= at the node prompt opens the global Claude
+instructions file, even though it lives outside the vault and has no node ID.
+
+Everything else is unchanged: a matching node visits the node, and typing a
+title that matches nothing still falls through to capture.
+
+Embark's ~v~ action also opens a pinned file. Node-only actions such as insert,
+refile, and add-alias report that they are unavailable when the selected
+candidate is a pinned file.
+
+To pin another file, add a ~(LABEL . PATH)~ pair to
+~jay/org-roam-extra-find-files~ in
+[[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-suite/jay-org-roam-core.el]].
+LABEL is what you type; PATH is the absolute file that opens. Keep the list
+short — it is meant for a handful of files you reach for constantly, not as a
+second bookmark system.
+
 *** Capture Templates
 
 Press =SPC a o r c= to capture a note. Common templates:
