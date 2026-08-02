@@ -1233,7 +1233,6 @@ Defines ~ibuffer-do-replace-string~:
 (setq buffer-stack-show-position nil)
 
 (setq buffer-stack-untracked (quote ("KILL" "*Compile-Log*" "*Compile-Log-Show*" "*Group*" "*Completions*" "*Messages*" "*Help*" "*Archive*" "*Agenda*" "*fontification*" "*Warnings*" "Calendar" "*Tree:*" "*spacemacs*" "*scratch*" "*Backtrace*" "todo" "TODO" "*org-roam*")))
-;; the above I don't think works or at least I don't know how to add to it
 
 ;; The below definitely works.
 (defvar buffer-stack-ignored-names

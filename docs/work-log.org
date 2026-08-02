@@ -1,6 +1,10 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-08-02: Remove stale buffer-stack comment
+- Removed the obsolete comment above ~buffer-stack-ignored-names~ in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] claiming that ~buffer-stack-untracked~ did not work. The preceding buffer-stack fix now compares buffer names correctly, so the comment contradicted the live implementation.
+- Regenerated [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]] and passed ~check-parens~.
+
 * 2026-08-02: Lowercase and de-duplicate the buffer-stack ignore list
 - Followed up on the previous day's discovery that ~buffer-stack-ignored-names~ in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] always matched case-insensitively. The mixed capitalization implied a distinction the matcher never made, and it had bred redundant entries. Lowercased every entry.
 - Removed fourteen provably dead entries. Four were case-duplicates: ~Minibuf~/~minibuf~, ~Agenda~/~agenda~, ~Echo~/~echo~, ~Helm~/~helm~. Ten were already covered by a shorter entry, since these are substrings rather than regexps: ~helpful~ by ~help~, ~conversion~ by ~version~, ~Customize~ by ~custom~, ~Backtrace~ by ~trace~, ~Compile-Log~ by ~compile~, ~Alerts~ by ~alert~, ~gnugol~ by ~gnu~, ~melpa~ and ~quelpa~ by ~elpa~, ~spacemacs~ by ~emacs~. The list went from 83 entries to 69.
