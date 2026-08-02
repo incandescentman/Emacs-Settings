@@ -1237,25 +1237,71 @@ Defines ~ibuffer-do-replace-string~:
 
 ;; The below definitely works.
 (defvar buffer-stack-ignored-names
-  '("April" "Help" "helpful" "minibuf" "echo" "conversion" "converting"
-    "agenda" "server" "Messages" "tex" "Output" "autoload" "Customize"
-    "address" "clock" "Backtrace" "Completions" "grep" "Calendar"
-    "archive" "Compile-Log" "tramp" "helm" "Alerts" "Minibuf" "Agenda"
-    "Echo" "gnugol" "RNC" "ediff" "widget" "melpa" "git" "hydra"
-    "which" "fontification" "Helm" "popwin" "Custom" "Warnings" "tags"
-    "hours" "guide-key" "scratch" "vc" "Compile" "mm" "nntpd"
-    "spacemacs" "Gnorb" "quelpa" "eldoc" "tar" "wordnik" "escape"
-    "trace" "debug" "emacs" "Re-Builder" "Ilist" "orgmode" "todo"
-    "loaddefs" "gnu" "elpa" "version" "alert" "counsel" "consult"
-    "*info*" "*affe*" "pixel" "org-roam" "width" "jka" "123244"
-    "Org parse" "EGLOT" "later" "spacing")
-  "List of buffer names or substrings to ignore in buffer-stack.")
+  '("april" "help" "minibuf" "echo" "converting" "agenda" "server"
+    "messages" "tex" "output" "autoload" "address" "clock" "completions"
+    "grep" "calendar" "archive" "tramp" "helm" "rnc" "ediff" "widget" "git"
+    "hydra" "which" "fontification" "popwin" "custom" "warnings" "tags"
+    "hours" "guide-key" "scratch" "vc" "compile" "mm" "nntpd" "gnorb"
+    "eldoc" "tar" "wordnik" "escape" "trace" "debug" "emacs" "re-builder"
+    "ilist" "orgmode" "todo" "loaddefs" "gnu" "elpa" "version" "alert"
+    "counsel" "consult" "*info*" "*affe*" "pixel" "org-roam" "width" "jka"
+    "123244" "org parse" "eglot" "later" "spacing" "jinx" "compilation")
+  "Substrings that hide a buffer from buffer-stack navigation.
+
+These are matched ONLY against special buffers, meaning buffers whose
+name starts with `*' or a space.  That restriction is deliberate: the
+entries here are bare substrings, and matched against ordinary file
+buffers they fire constantly on innocent filenames.  Measured against
+4,121 real filenames in the roam vaults and this repo, the unrestricted
+version hid 281 of them: \"mm\" matched \"grammar\" and \"commands\",
+\"tar\" matched \"startup\", \"tex\" matched \"context\", \"Help\"
+matched \"helps\".  Restricting the list to special buffers removes
+every one of those false positives without needing to audit each entry.
+
+Matching is case-insensitive, so keep entries lowercase.  The list was
+mixed-case until 2026-08-02, which was purely misleading: it implied a
+distinction the matcher never made, and it had accumulated four
+case-duplicate pairs (minibuf/Minibuf, agenda/Agenda, echo/Echo,
+helm/Helm) plus ten entries already covered by a shorter one.  Those
+fourteen were removed after verifying that old and new lists return
+identical verdicts on 4,453 test strings.
+
+Entries are substrings, not regexps, so a shorter entry silently covers
+a longer one: `trace' already covers `backtrace', `elpa' covers `melpa'.
+Before narrowing any entry here, check what else it was covering.
+
+To hide an ordinary file-visiting buffer, use
+`buffer-stack-ignored-file-buffer-names' instead.")
+
+(defvar buffer-stack-ignored-file-buffer-names
+  '("magit:" "-autoloads" "loaddefs" ".tar")
+  "Substrings that hide a buffer even when it is not a special buffer.
+
+Reserve this for the genuine exceptions: uninteresting buffers that do
+not follow the `*name*' convention.  Every entry here is matched against
+ordinary file buffers too, so keep it short and keep it specific.")
+
+(defun buffer-stack--special-name-p (name)
+  "Non-nil when NAME looks like a special (non-file) buffer name."
+  (and name
+       (or (string-prefix-p "*" name)
+           (string-prefix-p " " name))))
 
 (defun buffer-stack-filter-regexp (buffer)
-  "Non-nil if buffer is in buffer-stack-tracked."
-  (let ((ignore-regex (regexp-opt buffer-stack-ignored-names)))
-    (not (or (string-match ignore-regex (buffer-name buffer))
-             (member buffer buffer-stack-untracked)
+  "Non-nil if BUFFER should appear in buffer-stack navigation."
+  (let ((name (buffer-name buffer))
+        ;; Bind explicitly: `string-match' otherwise inherits whatever
+        ;; `case-fold-search' happens to be in the calling buffer.
+        (case-fold-search t))
+    (not (or (null name)
+             ;; Emacs convention: a leading space means internal buffer.
+             (string-prefix-p " " name)
+             (and (buffer-stack--special-name-p name)
+                  (string-match (regexp-opt buffer-stack-ignored-names) name))
+             (string-match (regexp-opt buffer-stack-ignored-file-buffer-names) name)
+             ;; Compare NAME, not BUFFER: `buffer-stack-untracked' holds
+             ;; buffer names, so the old object comparison never matched.
+             (member name buffer-stack-untracked)
              (with-current-buffer buffer
                (derived-mode-p 'dired-mode))))))
 (setq buffer-stack-filter 'buffer-stack-filter-regexp)

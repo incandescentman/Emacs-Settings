@@ -2,6 +2,81 @@
 #+DATE: 2025-09-24
 #+DESCRIPTION: Debugging post-mortems and prevention checklists.
 
+* Substring Ignore Lists Must Be Scoped To Special Buffers
+  Date: 2026-08-01
+
+** Trigger
+=*jinx module compilation*= kept appearing during =buffer-stack-down=. The
+obvious fix was to add =jinx= to =buffer-stack-ignored-names= in
+[[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]].
+Auditing the rest of that list first revealed the real problem.
+
+** Mechanism
+=buffer-stack-filter-regexp= built one =regexp-opt= from ~80 bare substrings and
+matched it against every buffer name, file buffers included. Almost every entry
+was written to target a special buffer (=*Messages*=, =*Help*=, =*grep*=), but
+nothing restricted the match to special buffers, so the entries also fired
+inside ordinary words. Measured against 4,121 real filenames from the roam
+vaults and this repo, *281 of them (6.8%) were being silently skipped by
+=s-left= / =s-right=*:
+
+- =mm= hit 74 files via "gra*mm*ar", "co*mm*ands", "co*mm*unity"
+- =tar= hit 38 via "*star*tup", "karla_*star*r"
+- =tex= hit 33 via "con*tex*t", "la*tex*", "*tex*ts"
+- =emacs= hit 33, =grep= 15, =Help= 14 via "*help*s", =Calendar= 13
+
+Matching is also case-insensitive — =string-match= honors =case-fold-search=,
+which is =t= — so the list's capitalization was decorative, and =Compile= vs
+=compile= never distinguished anything. Two further latent bugs were sitting in
+the same function: it compared the buffer *object* against =buffer-stack-untracked=
+(a list of buffer *names*), so that variable never had any effect at all; and it
+had dropped upstream's exclusion of names beginning with a space.
+
+The failure mode is quiet. A hidden buffer is not an error — it is a file you
+have open that =s-left= / =s-right= simply refuses to land on, which reads as
+flakiness rather than as a filter bug.
+
+** Actionable insight
+- Scope substring ignore lists to buffers whose name starts with =*= or a space.
+  That one restriction removed all 281 false positives without auditing 80
+  individual entries, and it makes dead legacy entries (=gnugol=, =wordnik=,
+  =RNC=, =Gnorb=, =nntpd=) harmless instead of dangerous.
+- Genuine non-asterisk exceptions belong in the separate
+  =buffer-stack-ignored-file-buffer-names= (=magit:=, =-autoloads=, =loaddefs=,
+  =.tar=). Keep that list short and specific — every entry there is matched
+  against real filenames.
+- Once the list is scoped, adding a broad word like =compilation= is safe and
+  free. Before scoping it would have been reckless.
+- Bind =case-fold-search= explicitly inside any filter using =string-match=.
+  Otherwise the result depends on whatever buffer happens to be current when the
+  filter runs.
+- Test a filter change against the *real* corpus, not against invented names.
+  Generate the name list with =fd -e org -e el . <vaults> -x basename=, run every
+  name through the predicate, and count. The 281 figure was invisible to
+  inspection and obvious to measurement.
+
+** Follow-up (2026-08-02): case and redundancy in the same list
+Because the matching was always case-insensitive, the list's mixed
+capitalization was not merely cosmetic — it actively bred redundancy. Four
+entries were exact case-duplicates (=Minibuf=/=minibuf=, =Agenda=/=agenda=,
+=Echo=/=echo=, =Helm=/=helm=), and because entries are substrings rather than
+regexps, ten more were already covered by a shorter entry: =helpful= by =help=,
+=Backtrace= by =trace=, =Compile-Log= by =compile=, =melpa= and =quelpa= by
+=elpa=, =spacemacs= by =emacs=, =conversion= by =version=, =Customize= by
+=custom=, =Alerts= by =alert=, =gnugol= by =gnu=. Lowercasing and dropping all
+fourteen took the list from 83 entries to 69.
+
+- A list that looks case-sensitive but isn't will accumulate duplicate entries
+  indefinitely. Normalize the case in the data, and say so in the docstring.
+- The cleanup introduces its own trap, so it is recorded in the docstring:
+  narrowing a short entry like =trace= or =elpa= now silently removes coverage
+  that previously had a visible entry of its own.
+- Prove a "no-op" cleanup is actually a no-op before applying it. Compare the
+  old and new =regexp-opt= verdicts across the real corpus plus every old entry
+  rendered as a plausible special-buffer name (=*foo*=, =*FOO*=, =*foo output*=,
+  =*foo: bar*=). Here that was 4,453 strings and zero differences — cheap to
+  run, and the only thing that distinguishes a safe cleanup from a hopeful one.
+
 * Hipster CV Needs FontAwesome Seeded Before =\documentclass= Under XeLaTeX
   Date: 2026-05-31
 
