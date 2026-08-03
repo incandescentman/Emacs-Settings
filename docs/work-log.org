@@ -1,6 +1,9 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-08-03: Remove tracked Gladia credential
+- Removed the plaintext =GLADIA_API_KEY= assignment from [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/.spacemacs.env][spacemacs.d/.spacemacs.env]]. The public repository's Git history still contains the previous value, so this current-tree cleanup is not a substitute for rotating or revoking the credential.
+
 * 2026-08-02: Remove invalid Org quote fontification
 - Removed the obsolete quote-composition rule from [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]]. The rule called ~compose-region~ in a font-lock face expression; because ~compose-region~ returns ~t~, font-lock stored ~face=t~ on colon-prefixed Org fixed-width lines. Org then combined that into ~(org-code t)~, causing thousands of ~Invalid face reference: t~ warnings during redisplay.
 - Verified the mechanism against the live Emacs session, removed the rule and poisoned face/composition properties from open Org buffers, and refontified them. Regenerated [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]] and passed ~check-parens~.
