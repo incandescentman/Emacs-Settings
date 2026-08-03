@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-08-03: Document safe Git reconciliation across Rainlight and Destroyer
+- Recorded that =Rainlight= is the secondary Silver laptop and =Destroyer= is the main Black laptop so future agents can identify machine-specific state unambiguously.
+- Added an AI-facing Git update procedure to [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.org][CLAUDE.org]]: inspect and fetch before updating, use fast-forward-only integration when histories permit it, and create recovery refs before reconciling dirty or diverged histories.
+- Documented the two recurring local-state decisions: generated [[file+emacs:/Users/jay/emacs/emacs-settings/docs/lab/startup-profile.org][startup-profile.org]] snapshots may be discarded when profiling is not active, while [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/.spacemacs.env][spacemacs.d/.spacemacs.env]] must retain only the current machine's verified writable =TMPDIR= without resurrecting removed credentials or exposing environment values.
+- Documentation only; no Emacs configuration or runtime behavior changed, so no restart is required.
+
 * 2026-08-03: Remove tracked Gladia credential
 - Removed the plaintext =GLADIA_API_KEY= assignment from [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/.spacemacs.env][spacemacs.d/.spacemacs.env]]. The public repository's Git history still contains the previous value, so this current-tree cleanup is not a substitute for rotating or revoking the credential.
 
