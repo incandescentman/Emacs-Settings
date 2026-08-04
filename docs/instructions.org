@@ -48,6 +48,20 @@ Key features:
    (byte-recompile-directory "~/emacs/emacs-settings" 0)
    #+END_SRC
 
+** Machine-Local Spacemacs Environment
+
+=spacemacs.d/.spacemacs.env= and its =.bak= file are generated, machine-specific snapshots. They are intentionally ignored by Git and must not be copied between =Rainlight= (the secondary Silver laptop) and =Destroyer= (the main Black laptop). A graphical Spacemacs startup creates =.spacemacs.env= automatically when it is missing.
+
+To rebuild the current machine's snapshot explicitly, run =M-x spacemacs/force-init-spacemacs-env= or =SPC f e C-e=, then restart Emacs. Verify that Emacs's =TMPDIR= matches the path reported in Terminal by:
+
+#+BEGIN_SRC sh
+getconf DARWIN_USER_TEMP_DIR
+#+END_SRC
+
+The directory must exist and be writable. Keep credentials in the machine's shell or another local secret store; never commit them through the generated environment snapshot.
+
+When first updating Destroyer past the commit that stopped tracking these files, copy Destroyer's existing =.spacemacs.env= outside the repository before the fast-forward update. If Git removes the formerly tracked file, let Spacemacs regenerate it locally, verify startup and command discovery, and only then remove the temporary backup. Do not restore Rainlight's file onto Destroyer.
+
 ** File Structure
 
 Key files you'll interact with:

@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-08-03: Make Spacemacs environment snapshots machine-local
+- Added =spacemacs.d/.spacemacs.env= and =spacemacs.d/.spacemacs.env.bak= to [[file+emacs:/Users/jay/emacs/emacs-settings/.gitignore][.gitignore]] and removed both generated snapshots from Git's index without deleting Rainlight's local copies.
+- Kept Spacemacs's native environment lifecycle rather than adding custom startup code: graphical startup creates =.spacemacs.env= when absent, and =M-x spacemacs/force-init-spacemacs-env= (=SPC f e C-e=) regenerates it explicitly.
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.org][CLAUDE.org]], [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][docs/instructions.org]], and [[file+emacs:/Users/jay/emacs/emacs-settings/docs/design-architecture.org][docs/design-architecture.org]] with the Rainlight/Destroyer boundary, the one-time Destroyer transition, =TMPDIR= verification, and the rule never to copy or commit generated environment snapshots or their values.
+- Rainlight's local files remained byte-for-byte unchanged. Its =TMPDIR= still matched =getconf DARWIN_USER_TEMP_DIR= and named an existing writable directory; the tracked Git versions are removed so future updates no longer create permanent local dirtiness or risk reintroducing machine-specific values.
+
 * 2026-08-03: Document safe Git reconciliation across Rainlight and Destroyer
 - Recorded that =Rainlight= is the secondary Silver laptop and =Destroyer= is the main Black laptop so future agents can identify machine-specific state unambiguously.
 - Added an AI-facing Git update procedure to [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.org][CLAUDE.org]]: inspect and fetch before updating, use fast-forward-only integration when histories permit it, and create recovery refs before reconciling dirty or diverged histories.

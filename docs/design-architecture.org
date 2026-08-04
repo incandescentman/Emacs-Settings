@@ -360,7 +360,7 @@ This config uses these Spacemacs layers:
 
 *This config*:
 - Git-tracked: All =.el= and =.org= files
-- Not tracked: Byte-compiled =.elc= files, =local-config.el=
+- Not tracked: Byte-compiled =.elc= files, =local-config.el=, and the generated machine-specific =spacemacs.d/.spacemacs.env= / =.spacemacs.env.bak= snapshots
 
 ** Buffer-Local vs. Global State
 

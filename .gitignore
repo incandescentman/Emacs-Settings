@@ -19,6 +19,10 @@ straight/
 pastebin-credentials.el
 secret-codes.el
 
+# Generated, machine-specific Spacemacs environment snapshots
+/spacemacs.d/.spacemacs.env
+/spacemacs.d/.spacemacs.env.bak
+
 # Org Babel tangled files
 *.elc
 *.eln
