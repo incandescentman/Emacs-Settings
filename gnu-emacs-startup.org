@@ -27,17 +27,23 @@ Automatically load abbreviations table:
 (setq-default abbrev-mode t)
 
 (setq abbrev-file-name "/Users/jay/emacs/abbrevs/.abbrev_defs")
-(setq save-abbrevs t)
-(setq save-abbrevs 'silently)
+;; Do not permit automatic writes until the on-disk table has loaded.
+(setq save-abbrevs nil)
 (setq only-global-abbrevs t)
 
 
 (run-with-idle-timer
  1 nil
  (lambda ()
-   (save-place-mode -1)
-   (setq-default abbrev-mode t)
-   (read-abbrev-file "/Users/jay/emacs/abbrevs/.abbrev_defs")))
+   (condition-case err
+       (progn
+         (read-abbrev-file abbrev-file-name)
+         (setq save-abbrevs 'silently)
+         (save-place-mode -1)
+         (setq-default abbrev-mode t))
+     (error
+      (message "Abbrev load failed; automatic abbrev saving remains disabled: %s"
+               (error-message-string err))))))
 #+END_SRC
 
 * Support batch startup

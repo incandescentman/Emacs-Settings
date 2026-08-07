@@ -2801,7 +2801,7 @@ olivetti-enabled programming and utility buffers alone."
 
 (defun open-abbrevs ()
   (interactive)
-(find-file "/Users/jay/emacs/aquamacs-jay/.abbrev_defs")
+(find-file abbrev-file-name)
 )
 #+END_SRC
 

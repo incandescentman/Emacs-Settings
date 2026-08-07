@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-08-07: Prevent deferred abbrev loading from enabling unsafe saves
+- Changed the abbrev startup block in [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org][gnu-emacs-startup.org]] to keep ~save-abbrevs~ nil until [[file+emacs:/Users/jay/emacs/abbrevs/.abbrev_defs][the on-disk abbrev file]] has loaded successfully. The deferred callback now reads through ~abbrev-file-name~, promotes saving to ~'silently~ only after the read, and leaves saving disabled while reporting a load error if the callback fails.
+- Changed ~open-abbrevs~ in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] to use ~abbrev-file-name~, so the editor command follows the same canonical path as startup and saving.
+- Deleted and explicitly retangled [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.el][gnu-emacs-startup.el]] and [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]]. Both generated files parse completely with the Elisp reader, and the abbrev load test produced ~save-abbrevs='silently~, ~abbrevs-changed=nil~, and ~youre~ → ~you're~. Whole-file ~check-parens~ still reports the pre-existing escaped quote in a commented ~C-\\~ binding and an existing docstring escape; those are outside this change.
+
 * 2026-08-03: Remove tracked Gladia credential
 - Removed the plaintext =GLADIA_API_KEY= assignment from [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/.spacemacs.env][spacemacs.d/.spacemacs.env]]. The public repository's Git history still contains the previous value, so this current-tree cleanup is not a substitute for rotating or revoking the credential.
 
