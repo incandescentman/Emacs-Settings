@@ -2,6 +2,29 @@
 #+DATE: 2025-09-24
 #+DESCRIPTION: Debugging post-mortems and prevention checklists.
 
+* Deferred abbrev loading must precede silent saving
+  Date: 2026-08-07
+
+** Trigger
+The startup path deferred ~read-abbrev-file~ by one second while leaving
+~save-abbrevs~ set to ~'silently~. A Jinx/Flyspell correction during that
+interval could mark ~abbrevs-changed~ and allow ~save-some-buffers~ to write the
+incomplete in-memory tables over the real abbrev file without prompting.
+
+** Mechanism
+Emacs's ~abbrev--possibly-save~ hook writes the complete in-memory tables when
+~save-abbrevs~ is non-nil and ~abbrevs-changed~ is non-nil; it does not merge
+with the existing file. ~define-abbrev~ sets ~abbrevs-changed~ when a user
+abbrev changes. A failure before the deferred read completed made the same
+overwrite possible for the rest of the session.
+
+** Prevention
+In [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org][gnu-emacs-startup.org]], keep ~save-abbrevs~ nil before the deferred read,
+read through ~abbrev-file-name~, and promote it to ~'silently~ only after a
+successful read. Wrap the callback in ~condition-case~ so a failed load leaves
+automatic saving disabled and reports the error. This preserves the startup
+deferral while making the failure mode non-destructive.
+
 * Font-Lock Face Expressions Must Return Faces, Not Side-Effect Results
   Date: 2026-08-02
 
