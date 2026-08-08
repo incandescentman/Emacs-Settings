@@ -2304,5 +2304,10 @@ After any edit here, retangle with an explicit output path and re-run the corpus
 - Codex now checks whether the reported applied changes are present in the on-disk source. It proceeds directly when they are present, and asks Jay to save and waits for confirmation only when they are absent or cannot be confirmed. The report explicitly forbids telling Jay to discard, revert, or avoid saving the Whittle changes.
 - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/tests/whittle-tests.el][tests/whittle-tests.el]], [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][docs/instructions.org]], and [[file+emacs:/Users/jay/emacs/emacs-settings/docs/whittle-transcript-review-workflow-plan.org][the Whittle review workflow plan]] to preserve the conditional save-first protocol.
 
+* 2026-08-08: Add the daily morning-pages command
+- Added =M-x morning-pages= to [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-extras.el][jay-org-roam-suite/jay-org-roam-extras.el]]. It opens or creates =morning-pages-YYYY-MM-DD.org= under [[file+emacs:/Users/jay/Dropbox/roam/morning-pages/][roam/morning-pages/]] with a timestamp Org-roam ID, creation metadata, the =morning-pages= filetag, a date heading, and a =Morning Pages= subheading.
+- Created and opened today's real note at [[file+emacs:/Users/jay/Dropbox/roam/morning-pages/morning-pages-2026-08-08.org][Morning Pages — 2026-08-08]].
+- Verified =check-parens= on the implementation, reloaded it in the live Emacs app, and confirmed that =morning-pages= is interactive and opens today's real file.
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.

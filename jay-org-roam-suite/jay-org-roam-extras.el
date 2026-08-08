@@ -20,6 +20,42 @@
 
 (defvar refile-or-roam-refile-mode nil)
 
+(defconst jay/morning-pages-directory
+  "/Users/jay/Dropbox/roam/morning-pages/"
+  "Directory containing daily morning-pages notes.")
+
+(defun morning-pages ()
+  "Open or create today's Org-roam morning-pages note."
+  (interactive)
+  (require 'org-id)
+  (require 'org-roam)
+  (let* ((today (format-time-string "%Y-%m-%d"))
+         (file (expand-file-name
+                (format "morning-pages-%s.org" today)
+                jay/morning-pages-directory))
+         (new-file (not (file-exists-p file))))
+    (make-directory jay/morning-pages-directory t)
+    (find-file file)
+    (when new-file
+      (insert
+       (format
+        (concat ":PROPERTIES:\n"
+                ":ID: %s\n"
+                ":END:\n"
+                "#+TITLE: Morning Pages — %s\n"
+                "#+CREATED: [%s]\n"
+                "#+FILETAGS: :morning-pages:\n\n"
+                "- Links ::\n\n"
+                "* %s\n\n"
+                "** Morning Pages\n\n")
+        (let ((org-id-method 'ts)) (org-id-new))
+        today
+        (format-time-string "%Y-%m-%d %a %H:%M")
+        (format-time-string "%A, %B %-d, %Y")))
+      (save-buffer)
+      (when (file-in-directory-p file org-roam-directory)
+        (org-roam-db-update-file file)))))
+
 (defun select-refile-mode ()
   (interactive)
   (setq refile-or-roam-refile-mode

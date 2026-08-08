@@ -64,6 +64,10 @@ Quick bindings:
 
 Dailies commands follow the active profile. After switching to =roam-parents= with =s-u 4=, =s-:= opens or creates today's note under [[file+emacs:/Users/jay/Dropbox/roam-parents/journal/][roam-parents/journal/]], not under [[file+emacs:/Users/jay/Dropbox/roam/journal/][default roam/journal/]].
 
+** Morning pages
+
+=M-x morning-pages= opens or creates today's dedicated morning-pages note at [[file+emacs:/Users/jay/Dropbox/roam/morning-pages/][roam/morning-pages/]]. Files use the name =morning-pages-YYYY-MM-DD.org= and contain Org-roam metadata, a date heading, and a =Morning Pages= subheading.
+
 * Profiles
 
 ** Default
