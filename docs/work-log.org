@@ -2311,5 +2311,9 @@ After any edit here, retangle with an explicit output path and re-run the corpus
 - Created and opened today's real note at [[file+emacs:/Users/jay/Dropbox/roam/morning-pages/morning-pages-2026-08-08.org][Morning Pages — 2026-08-08]].
 - Verified =check-parens= on the implementation, reloaded it in the live Emacs app, and confirmed that =morning-pages= is interactive and opens today's real file.
 
+* 2026-08-08: Define when startup timing warrants optimization
+- Reviewed the three uncommitted August timing snapshots in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/lab/startup-profile.org][docs/lab/startup-profile.org]]. The two steady launches remained near the established baseline; the =11.045s= total was an isolated uninstrumented outlier, and the one =search-commands.org= spike did not establish a recurring regression.
+- Added durable interpretation rules, current module baselines, explicit thresholds for reopening startup work, and a reproduce-before-explaining checklist. Future sessions should not optimize from one outlier or treat the raw total as additive with module rows.
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.
