@@ -6985,6 +6985,51 @@ Only required if Emacs < 29.3.
 ;; Clipboard primitives were moved to pasteboard-copy-and-paste-functions.el.
 #+end_src
 
+* Clean an exported AI chat
+#+begin_src emacs-lisp
+(require 'subr-x)
+
+(defconst jay/ai-chat-cleanup-program
+  "/Users/jay/Dropbox/apps/bash-scripts/ai-chat-cleanup"
+  "Program used by `ai-chat-cleanup'.")
+
+(defun ai-chat-cleanup ()
+  "Run `ai-chat-cleanup' in place on the current buffer's file.
+
+Save the buffer first.  If the script converts the file, revert the
+buffer from disk and restore point."
+  (interactive)
+  (unless buffer-file-name
+    (user-error "Current buffer is not visiting a file"))
+  (when (file-remote-p buffer-file-name)
+    (user-error "ai-chat-cleanup only supports local files"))
+  (unless (file-regular-p buffer-file-name)
+    (user-error "Current buffer is not visiting a regular file"))
+  (unless (file-executable-p jay/ai-chat-cleanup-program)
+    (user-error "ai-chat-cleanup is not executable: %s"
+                jay/ai-chat-cleanup-program))
+  (save-buffer)
+  (let ((target-buffer (current-buffer))
+        (target-file buffer-file-name)
+        (saved-point (point))
+        status
+        output)
+    (with-temp-buffer
+      (setq status
+            (process-file jay/ai-chat-cleanup-program nil t nil target-file)
+            output
+            (string-trim (buffer-string))))
+    (unless (zerop status)
+      (user-error "ai-chat-cleanup failed (%d): %s" status output))
+    (when (string-prefix-p "converted:" output)
+      (with-current-buffer target-buffer
+        (revert-buffer t t)
+        (goto-char (min saved-point (point-max)))))
+    (message "%s" (if (string-empty-p output)
+                       "ai-chat-cleanup finished"
+                     output))))
+#+end_src
+
 * Make Emacs use MacOS Trash instead of rm
 When deleting a file, don't use vc-delete-file
 #+begin_src emacs-lisp

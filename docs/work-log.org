@@ -1,6 +1,10 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-08-08: Run ai-chat-cleanup on the current file
+- Added ~M-x ai-chat-cleanup~ to [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]]. It saves the current file, invokes [[file+emacs:/Users/jay/Dropbox/apps/bash-scripts/ai-chat-cleanup][the existing cleanup script]] without a shell, reports script failures, and reverts the buffer from disk after a conversion while preserving point.
+- Documented the command in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][docs/instructions.org]].
+
 * 2026-08-07: Prevent deferred abbrev loading from enabling unsafe saves
 - Changed the abbrev startup block in [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org][gnu-emacs-startup.org]] to keep ~save-abbrevs~ nil until [[file+emacs:/Users/jay/emacs/abbrevs/.abbrev_defs][the on-disk abbrev file]] has loaded successfully. The deferred callback now reads through ~abbrev-file-name~, promotes saving to ~'silently~ only after the read, and leaves saving disabled while reporting a load error if the callback fails.
 - Changed ~open-abbrevs~ in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] to use ~abbrev-file-name~, so the editor command follows the same canonical path as startup and saving.

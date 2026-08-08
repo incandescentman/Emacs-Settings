@@ -187,6 +187,10 @@ Example to enable timestamps:
 
 =double-line-breaks-in-region= is useful for converting single-spaced text to double-spaced paragraphs. It normalizes line endings, collapses 3+ newlines to exactly 2, and only doubles single newlines (leaving existing paragraph breaks unchanged). In Org buffers, it changes only ordinary paragraphs, preserving property drawers (including Org-roam metadata), headings, keywords, tables, and the contents of source, example, quote, verse, and other special blocks.
 
+*** AI Chat Cleanup
+
+Run =M-x ai-chat-cleanup= while visiting an exported AI-chat Org file. The command saves the current buffer, runs [[file+emacs:/Users/jay/Dropbox/apps/bash-scripts/ai-chat-cleanup][📄 ai-chat-cleanup]] on that file, and uses =revert-buffer= to show the converted contents when the script changes the file.
+
 *** Transcript Cleanup
 
 Use =M-x whittle= for safe everyday cleanup and =M-x whittle-transcript= when you're cleaning raw spoken transcripts. Both commands change the buffer and copy a compact Codex review report to the macOS clipboard via =pbcopy=, while saving the full report to =/tmp=.
