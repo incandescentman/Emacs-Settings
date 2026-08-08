@@ -361,6 +361,7 @@
     ("M-s-."         . mark-paragraph)
     ("s-m"           . mc/mark-all-like-this)
     ("s-k m c"       . multiple-cursors-reflash)
+    ("s-k m p"       . morning-pages)
     ("s-k r e"       . set-rectangular-region-anchor)
     ("C-8"           . endless/mc-map)
 

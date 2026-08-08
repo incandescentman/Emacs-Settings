@@ -2306,6 +2306,7 @@ After any edit here, retangle with an explicit output path and re-run the corpus
 
 * 2026-08-08: Add the daily morning-pages command
 - Added =M-x morning-pages= to [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-extras.el][jay-org-roam-suite/jay-org-roam-extras.el]]. It opens or creates =morning-pages-YYYY-MM-DD.org= under [[file+emacs:/Users/jay/Dropbox/roam/morning-pages/][roam/morning-pages/]] with a timestamp Org-roam ID, creation metadata, the =morning-pages= filetag, a date heading, and a =Morning Pages= subheading.
+- Bound =s-k m p= to =morning-pages= in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]].
 - Added Jay's reminder beneath the =Morning Pages= heading that dictation is allowed and may be better for this practice.
 - Created and opened today's real note at [[file+emacs:/Users/jay/Dropbox/roam/morning-pages/morning-pages-2026-08-08.org][Morning Pages — 2026-08-08]].
 - Verified =check-parens= on the implementation, reloaded it in the live Emacs app, and confirmed that =morning-pages= is interactive and opens today's real file.
