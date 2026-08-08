@@ -1,6 +1,9 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-08-08: Load completed Emacs changes into the live session
+- Added project guidance to [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.org][CLAUDE.org]] requiring agents to load new or fixed Emacs functions into Jay’s current session and verify that they are active when doing so is safe. Broad reloads that could restart services, overwrite unsaved state, or cause other meaningful side effects still require explanation and Jay’s involvement.
+
 * 2026-08-08: Run ai-chat-cleanup on the current file
 - Added ~M-x ai-chat-cleanup~ to [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]]. It saves the current file, invokes [[file+emacs:/Users/jay/Dropbox/apps/bash-scripts/ai-chat-cleanup][the existing cleanup script]] without a shell, reports script failures, and reverts the buffer from disk after a conversion while preserving point.
 - Documented the command in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][docs/instructions.org]].
