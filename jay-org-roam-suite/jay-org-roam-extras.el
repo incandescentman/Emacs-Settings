@@ -47,7 +47,8 @@
                 "#+FILETAGS: :morning-pages:\n\n"
                 "- Links ::\n\n"
                 "* %s\n\n"
-                "** Morning Pages\n\n")
+                "** Morning Pages\n\n"
+                ": Remember: Dictating is allowed for this, and is maybe often even sometimes better!\n\n")
         (let ((org-id-method 'ts)) (org-id-new))
         today
         (format-time-string "%Y-%m-%d %a %H:%M")
