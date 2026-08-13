@@ -1745,6 +1745,20 @@ Gets URL from Chrome frontmost tab, or clipboard, or prompts."
 (insert "\n")
 )
 
+(defun yas/jd-org-today ()
+  "Return the Org text `jd-org-today' would insert at point.
+The command runs in a temporary Org buffer so a Yasnippet backquote can use
+the result without changing its expansion buffer."
+  (let ((source (buffer-substring-no-properties (point-min) (point-max)))
+        (position (point)))
+    (with-temp-buffer
+      (org-mode)
+      (insert source)
+      (goto-char position)
+      (let ((start (point)))
+        (jd-org-today)
+        (buffer-substring-no-properties start (point))))))
+
 (defun jd-org-approach ()
  "insert a new heading with today's date"
  (interactive)
@@ -4413,9 +4427,12 @@ In collapsed view, hide empty lines between subtrees
 #+begin_src emacs-lisp
 
 (defun today ()
+  "Return today's date in ISO format, or insert it when called interactively."
   (interactive)
-    (insert (shell-command-to-string "echo -n $(date +%F)"))
-  )
+  (let ((date (format-time-string "%F")))
+    (if (called-interactively-p 'any)
+        (insert date)
+      date)))
 #+end_src
 
 * minimalist org ellipsis

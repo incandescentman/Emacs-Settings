@@ -1,6 +1,10 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-08-13: Stop Yasnippet backquotes from changing the expansion buffer
+- Changed ~today~ in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] to return an ISO date when evaluated by a snippet while preserving its interactive insertion command.
+- Added ~yas/jd-org-today~, which runs the existing context-sensitive heading command in a temporary Org buffer and returns precisely its inserted text. The ~td~ snippet now uses that pure helper, so it retains same-level heading behavior without a Yasnippet backquote-change warning.
+
 * 2026-08-08: Load completed Emacs changes into the live session
 - Added project guidance to [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.org][CLAUDE.org]] requiring agents to load new or fixed Emacs functions into Jay’s current session and verify that they are active when doing so is safe. Broad reloads that could restart services, overwrite unsaved state, or cause other meaningful side effects still require explanation and Jay’s involvement.
 
