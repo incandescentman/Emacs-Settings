@@ -92,6 +92,22 @@
 ;; (org-or-orgalist-p)
       (string-match "^\s*\\([-+*]\\|[0-9]+[.\\)]\\)\s\\[.?\\]\s" (or (thing-at-point 'line) ""))))
 
+  (defun jay/org-checkbox-toggle-and-advance ()
+    "Tick the checkbox at point and move on to the next list item.
+
+When point is not on a checkbox item, fall through to `org-todo',
+so that one key means \"mark this thing done and move on\" for both
+checkbox items and TODO headings.
+
+The advance itself is performed by `jay/org-checkbox-advance', via the
+`:around' advice on `org-toggle-checkbox' in shared-functions.org.  Do
+not add an explicit move here — that would advance twice."
+    (interactive)
+    (if (and (derived-mode-p 'org-mode)
+             (org-at-item-checkbox-p))
+        (org-toggle-checkbox)
+      (call-interactively #'org-todo)))
+
   (defun org-plain-text-list-p ()
   "Predicate: Checks whether the current line org-plain-text-list"
     (and

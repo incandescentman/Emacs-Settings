@@ -885,21 +885,22 @@ Mark heading done when all checkboxes are checked. See [[http://thread.gmane.org
 
 (defun org-checkbox-list-complete ()
   (save-excursion
-    (org-back-to-heading t)
-    (let ((beg (point)) end)
-      (end-of-line)
-      (setq end (point))
-      (goto-char beg)
-      (if (re-search-forward "\\[\\([0-9]*%\\)\\]\\|\\[\\([0-9]*\\)/\\([0-9]*\\)\\]" end t)
-          (if (match-end 1)
-              (if (equal (match-string 1) "100%")
-                  ;; all done - do the state change
+    (unless (org-before-first-heading-p)
+      (org-back-to-heading t)
+      (let ((beg (point)) end)
+        (end-of-line)
+        (setq end (point))
+        (goto-char beg)
+        (if (re-search-forward "\\[\\([0-9]*%\\)\\]\\|\\[\\([0-9]*\\)/\\([0-9]*\\)\\]" end t)
+            (if (match-end 1)
+                (if (equal (match-string 1) "100%")
+                    ;; all done - do the state change
+                    (org-todo 'done)
+                  (org-todo 'todo))
+              (if (and (> (match-end 2) (match-beginning 2))
+                       (equal (match-string 2) (match-string 3)))
                   (org-todo 'done)
-                (org-todo 'todo))
-            (if (and (> (match-end 2) (match-beginning 2))
-                     (equal (match-string 2) (match-string 3)))
-                (org-todo 'done)
-              (org-todo 'todo)))))))
+                (org-todo 'todo))))))))
 #+END_SRC
 
 *** org align tables
@@ -2901,27 +2902,27 @@ which is suitable for passing to `advice-add'."
                      `(advice-remove ',fn ,afn)))
                  adlist))))
 
+(defun jay/org-checkbox-advance (&rest _)
+  "Move to the end of the next plain-list item.
+Stay exactly where we are when there is no next item, so that
+toggling the last checkbox in a list does not jerk point to
+column 0."
+  (let ((start (point)))
+    (condition-case nil
+        (progn (org-next-item) (end-of-line))
+      (error (goto-char start)))))
+
 (defun my/org-checkbox-toggle-advice (orig-fn &rest args)
   "Advice to move to next list item on checkbox toggle."
   (my/with-advice
    ((org-update-checkbox-count-maybe
-     :after (lambda () (ignore-errors (progn (org-next-item) (end-of-line))))))
+     :after #'jay/org-checkbox-advance))
    (apply orig-fn args)))
 
 (advice-add #'org-ctrl-c-ctrl-c   :around #'my/org-checkbox-toggle-advice)
 (advice-add #'org-toggle-checkbox :around #'my/org-checkbox-toggle-advice)
 
 #+END_SRC
-
-*** an alternative approach, probably not needed
-#+BEGIN_EXAMPLE emacs-lisp
-;; a temporary hack
-(defun zin/org-checkbox-next ()
- (interactive)
- (when (org-at-item-checkbox-p)
- (org-toggle-checkbox))
- (org-next-item))
-#+END_EXAMPLE
 
 * wrap region
 #+BEGIN_SRC emacs-lisp
