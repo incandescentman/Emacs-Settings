@@ -6568,3 +6568,65 @@ Do not reopen startup optimization merely because this append-only file is modif
 | load jay-osx.el | 0.0007 |
 | load prelude-key-chord.el | 0.0006 |
 | load xah-replace-pairs.el | 0.0006 |
+* 2026-08-08 16:15:55
+- Emacs: 29.4
+- Org: 9.8.8
+- Total init time: 0.630s
+- Measured module loads:
+| Step | Seconds |
+|------+---------|
+| org-babel-load shared-functions.org | 0.3920 |
+| org-babel-load search-commands.org | 0.1378 |
+| require jay-org-roam-core | 0.0916 |
+| org-babel-load gnu-emacs-startup.org | 0.0337 |
+| load frame-cmds.el | 0.0215 |
+| org-babel-load org-export.org | 0.0213 |
+| load keys.el | 0.0178 |
+| org-babel-load goals-agenda.org | 0.0175 |
+| org-babel-load spacecraft-mode.org | 0.0065 |
+| load poetry_JD.el | 0.0063 |
+| load skeletons.el | 0.0060 |
+| load prelude-core.el | 0.0046 |
+| load pasteboard-copy-and-paste-functions.el | 0.0031 |
+| load jay-goals-system.el | 0.0030 |
+| load auto-capitalize.el | 0.0018 |
+| org-babel-load spellcheck.org | 0.0017 |
+| org-babel-load org-authoring.org | 0.0012 |
+| load chatgpt2org.el | 0.0009 |
+| org-babel-load fonts-and-themes.org | 0.0008 |
+| load prelude-key-chord.el | 0.0008 |
+| load jay-org-roam-extras.el | 0.0007 |
+| load buffer-stack.el | 0.0006 |
+| load jay-osx.el | 0.0006 |
+| load xah-replace-pairs.el | 0.0006 |
+* 2026-08-11 14:19:41
+- Emacs: 29.4
+- Org: 9.8.8
+- Total init time: 13.457s
+- Measured module loads:
+| Step | Seconds |
+|------+---------|
+| org-babel-load shared-functions.org | 0.3649 |
+| org-babel-load search-commands.org | 0.1594 |
+| require jay-org-roam-core | 0.0833 |
+| load frame-cmds.el | 0.0243 |
+| load keys.el | 0.0239 |
+| org-babel-load goals-agenda.org | 0.0205 |
+| org-babel-load org-export.org | 0.0203 |
+| load poetry_JD.el | 0.0073 |
+| org-babel-load gnu-emacs-startup.org | 0.0072 |
+| org-babel-load spacecraft-mode.org | 0.0067 |
+| load prelude-core.el | 0.0053 |
+| load pasteboard-copy-and-paste-functions.el | 0.0029 |
+| load auto-capitalize.el | 0.0027 |
+| org-babel-load spellcheck.org | 0.0017 |
+| org-babel-load org-authoring.org | 0.0013 |
+| load jay-org-roam-extras.el | 0.0011 |
+| load jay-goals-system.el | 0.0011 |
+| load buffer-stack.el | 0.0011 |
+| org-babel-load fonts-and-themes.org | 0.0011 |
+| load xah-replace-pairs.el | 0.0009 |
+| load skeletons.el | 0.0009 |
+| load chatgpt2org.el | 0.0009 |
+| load prelude-key-chord.el | 0.0008 |
+| load jay-osx.el | 0.0007 |
