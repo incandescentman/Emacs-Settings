@@ -647,7 +647,7 @@ Passing OTHER-WINDOW mirrors `org-roam-node-find' prefix behavior."
 (global-set-key (kbd "s-/ sn")      #'jay/org-roam-search-nodes)
 (global-set-key (kbd "s-:")         (lambda () (interactive) (jay/with-org-roam (org-roam-dailies-goto-today))))
 (global-set-key (kbd "C-S-d")       (lambda () (interactive) (jay/with-org-roam (org-roam-dailies-goto-today))))
-(global-set-key (kbd ":")           #'insert-colon)
+(global-set-key (kbd ":")           #'smart-colon)
 
 ;; Agenda custom command -------------------------------------------------------
 (add-to-list 'org-agenda-custom-commands

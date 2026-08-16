@@ -133,6 +133,7 @@
     ("C-s-g "        . jay/smart-ripgrep)
     ("s-G"           . counsel-projectile-ag)
     ("C-s-f"         . isearch-forward-word-at-point)
+    ("C-M-g"         . consult-ripgrep-current-directory)
     ("s-k ag"        . affe-grep)
     ("s-k d g"       . deadgrep-current-directory)
     ("s-k rg"        . consult-ripgrep-current-directory)

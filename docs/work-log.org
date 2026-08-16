@@ -2347,5 +2347,9 @@ After any edit here, retangle with an explicit output path and re-run the corpus
 - Reviewed the three uncommitted August timing snapshots in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/lab/startup-profile.org][docs/lab/startup-profile.org]]. The two steady launches remained near the established baseline; the =11.045s= total was an isolated uninstrumented outlier, and the one =search-commands.org= spike did not establish a recurring regression.
 - Added durable interpretation rules, current module baselines, explicit thresholds for reopening startup work, and a reproduce-before-explaining checklist. Future sessions should not optimize from one outlier or treat the raw total as additive with module rows.
 
+* 2026-08-16: Correct colon punctuation and add current-folder search
+- Changed the global ~:~ binding in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-core.el]] from ~insert-colon~ to ~smart-colon~.
+- Bound ~C-M-g~ to ~consult-ripgrep-current-directory~ in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]]. Both bindings were installed and verified in the running Emacs session.
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.
