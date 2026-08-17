@@ -239,7 +239,11 @@ Only effective when `jay/org-roam--skip-next-sync' is non-nil and FORCE is nil."
 
 ;; Custom refile (region-or-subtree) -------------------------------------------
 (defun org-roam-refile-region-or-subtree ()
-  "Refile region if active, else subtree, into an Org-roam node."
+  "Refile region if active, else subtree, into an Org-roam node.
+
+If the source buffer becomes empty, leave it open and modified so its file
+remains recoverable on disk.  Delete it explicitly with
+`crux-delete-file-and-buffer' after reviewing the move."
   (interactive)
   (jay/with-org-roam
    (let* ((regionp (org-region-active-p))
@@ -273,11 +277,7 @@ Only effective when `jay/org-roam--skip-next-sync' is non-nil and FORCE is nil."
               (delete-region (and (org-back-to-heading t) (point))
                              (min (1+ (buffer-size)) (org-end-of-subtree t t) (point)))))
          (when (eq (buffer-size) 0)
-           (when (buffer-file-name) (delete-file (buffer-file-name)))
-           (set-buffer-modified-p nil)
-           (when (and (bound-and-true-p org-capture-mode) (buffer-base-buffer (current-buffer)))
-             (org-capture-kill))
-           (kill-buffer (current-buffer)))))))
+           (message "Source buffer is empty; review it, then use s-k d f to delete its file"))))))
 
 ;; Helpers ---------------------------------------------------------------------
 (defun jay/org-roam-yesterday ()

@@ -2389,5 +2389,10 @@ After any edit here, retangle with an explicit output path and re-run the corpus
 - Added everyday usage guidance to [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][docs/instructions.org]] for the two reviewed choices offered by ~replace-in-all-files-in-current-directory~ and the canonical ~s-k d f~ file-and-buffer deletion command.
 - Confirmed that no documentation outside the work log still refers to the three removed unsafe commands. Documentation only; no Emacs restart is required.
 
+* 2026-08-17: Stop Org-roam refile from deleting an emptied source note
+- Changed ~org-roam-refile-region-or-subtree~ in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-core.el]] so moving the last region or subtree no longer permanently deletes the source file while the destination exists only in an unsaved buffer.
+- An emptied source buffer now remains open and modified, while its original file remains recoverable on disk. The command tells Jay to review the move and use the canonical ~s-k d f~ workflow if the source file should be deleted.
+- Passed ~check-parens~, loaded only the changed definition into the running Emacs session, verified that ~s-u r~ still resolves to it, and passed the startup smoke test.
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.
