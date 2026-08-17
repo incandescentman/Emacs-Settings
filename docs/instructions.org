@@ -459,6 +459,17 @@ Type characters and the listing shrinks to matches. =RET= confirms (keeps narrow
 
 (Added 2026-04, commits =4fefbb7d=, =914edf13=, =adf8ddf1=, =e912ab63=.)
 
+** Reviewed Multi-File Replacement and File Deletion
+
+Run =M-x replace-in-all-files-in-current-directory= when one replacement must span more than one file. The command offers two reviewed workflows:
+
+- =Project files= runs =project-query-replace-regexp= across the current project.
+- =Marked Dired files= runs =dired-do-find-regexp-and-replace= on files already marked in the current Dired buffer.
+
+Both workflows ask before changing each match. The command itself does not recursively open or write files. Its source is [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]].
+
+Use =s-k d f= (=crux-delete-file-and-buffer=) to delete the file visited by the current buffer. It displays the full target path and asks for confirmation before acting. This is the canonical file-and-buffer deletion command; the older duplicate commands have been removed.
+
 ** Embark Context Actions
 
 Use =s-e= (=embark-act=) on the current target for context-specific actions.

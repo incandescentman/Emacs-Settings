@@ -2385,5 +2385,9 @@ After any edit here, retangle with an explicit output path and re-run the corpus
 - Removed ~jay/debug-find-corrupted-file~ from [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-extras.el][jay-org-roam-extras.el]]. The unbound ad-hoc diagnostic could silently overwrite an existing Roam note when moving a parsed file; it had no callers, and the adjacent ~jay/debug-scan-org-tree~ and ~jay/debug-current-buffer~ commands retain the useful read-only parser diagnostics.
 - Passed ~check-parens~, removed the stale definition from the running Emacs session, verified both retained diagnostics remain interactive, and passed the startup smoke test.
 
+* 2026-08-17: Document the reviewed replacement and deletion workflows
+- Added everyday usage guidance to [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][docs/instructions.org]] for the two reviewed choices offered by ~replace-in-all-files-in-current-directory~ and the canonical ~s-k d f~ file-and-buffer deletion command.
+- Confirmed that no documentation outside the work log still refers to the three removed unsafe commands. Documentation only; no Emacs restart is required.
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.
