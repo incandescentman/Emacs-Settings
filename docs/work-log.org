@@ -2357,5 +2357,10 @@ After any edit here, retangle with an explicit output path and re-run the corpus
 - Changed the global ~:~ binding in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-core.el]] from ~insert-colon~ to ~smart-colon~.
 - Bound ~C-M-g~ to ~consult-ripgrep-current-directory~ in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]]. Both bindings were installed and verified in the running Emacs session.
 
+* 2026-08-17: Repair ~double-line-breaks-in-region~
+- Reworked [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so ~double-line-breaks-in-region~ parses the widened Org buffer once, collects the eligible newline edits, then applies them backward in one atomic batch. The previous implementation called ~org-element-context~ twice per newline while also changing the buffer; that was both fragile and needlessly expensive with the Org element cache disabled.
+- Preserved the existing contract: double single prose line breaks, collapse three or more line breaks to two, normalize CRLF and old-Mac line endings, and leave Org drawers, metadata, headings, keywords, tables, fixed-width text, and block contents unchanged.
+- Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]], passed ~check-parens~ and 14 focused batch cases (including a region narrowed inside a source block), processed a 5,000-line Org paragraph in 0.35 seconds, loaded only the changed definitions into the running Emacs session, and verified the structured Org case live.
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.

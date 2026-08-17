@@ -2451,27 +2451,64 @@ Handy way of getting back to previous places.
 
 * double-line-breaks-in-region
 #+BEGIN_SRC emacs-lisp
-(defun jay/double-line-breaks--org-paragraph-context-p (position)
-  "Return non-nil when POSITION is in an unprotected Org paragraph."
-  (save-excursion
-    (goto-char (max (point-min) (min position (point-max))))
-    (let ((element (org-element-context)))
-      (and (eq (org-element-type element) 'paragraph)
-           (not (org-element-lineage
+(defun jay/double-line-breaks--org-paragraph-ranges ()
+  "Return the buffer ranges occupied by unprotected Org paragraphs.
+Parse the widened buffer once so a narrowed region inside a drawer or block
+cannot lose the surrounding structural context."
+  (save-restriction
+    (widen)
+    (org-element-map (org-element-parse-buffer 'element) 'paragraph
+      (lambda (element)
+        (unless (org-element-lineage
                  element
                  '(center-block comment-block drawer dynamic-block example-block
                    export-block fixed-width property-drawer quote-block
                    special-block src-block table verse-block)
-                 t))))))
+                 t)
+          (cons (org-element-property :begin element)
+                (org-element-property :end element)))))))
 
-(defun jay/double-line-breaks--protected-org-newline-run-p (begin end)
-  "Return non-nil when the newline run from BEGIN to END is Org structure.
-Only newlines bordered by ordinary paragraphs may be changed.  This leaves
-property drawers, Org-roam metadata, headings, keywords, tables, and blocks
-unchanged."
-  (and (derived-mode-p 'org-mode)
-       (not (and (jay/double-line-breaks--org-paragraph-context-p (1- begin))
-                 (jay/double-line-breaks--org-paragraph-context-p end)))))
+(defun jay/double-line-breaks--collect-edits (begin end)
+  "Collect newline edits between BEGIN and END without changing the buffer.
+The returned edits are ordered from the end of the region toward the start so
+applying one edit cannot invalidate the positions of the remaining edits."
+  (let ((org-buffer-p (derived-mode-p 'org-mode))
+        (paragraph-ranges
+         (when (derived-mode-p 'org-mode)
+           (jay/double-line-breaks--org-paragraph-ranges)))
+        edits)
+    (cl-labels
+        ((ordinary-paragraph-position-p
+          (position)
+          ;; Newline runs are visited in ascending order, so consumed paragraph
+          ;; ranges never need to be searched again.
+          (while (and paragraph-ranges
+                      (>= position (cdar paragraph-ranges)))
+            (setq paragraph-ranges (cdr paragraph-ranges)))
+          (and paragraph-ranges
+               (>= position (caar paragraph-ranges))
+               (< position (cdar paragraph-ranges)))))
+      (save-excursion
+        (goto-char begin)
+        (while (re-search-forward "\\(?:\r\n\\|\r\\|\n\\)+" end t)
+          (let* ((run-begin (match-beginning 0))
+                 (run-end (match-end 0))
+                 (ordinary-run-p
+                  (or (not org-buffer-p)
+                      (and (ordinary-paragraph-position-p (1- run-begin))
+                           (ordinary-paragraph-position-p run-end))))
+                 (original (match-string-no-properties 0))
+                 (normalized
+                  (replace-regexp-in-string "\r\n?" "\n" original t t))
+                 (newline-count (length normalized))
+                 (replacement
+                  (cond
+                   ((= newline-count 1) "\n\n")
+                   ((>= newline-count 3) "\n\n")
+                   ((not (string= normalized original)) normalized))))
+            (when (and ordinary-run-p replacement)
+              (push (list run-begin run-end replacement) edits))))))
+    edits))
 
 (defun double-line-breaks-in-region (begin end)
   "Replace single line breaks with double line breaks in region.
@@ -2479,28 +2516,17 @@ Normalizes Windows/Mac line endings first. Collapses 3+ newlines
 to exactly 2, and leaves existing double breaks unchanged.  In Org buffers,
 preserves non-paragraph structure such as property drawers and blocks."
   (interactive "r")
-  (save-excursion
-    (save-restriction
-      (narrow-to-region begin end)
-      (goto-char (point-min))
-      ;; Normalize Windows line endings
-      (while (search-forward "\r\n" nil t)
-        (replace-match "\n"))
-      ;; Normalize old Mac line endings
-      (while (search-forward "\r" nil t)
-        (replace-match "\n"))
-      (goto-char (point-min))
-      ;; Only change prose newlines; protect Org drawers, blocks, and metadata.
-      (while (re-search-forward "\n+" nil t)
-        (let ((run-begin (match-beginning 0))
-              (run-end (match-end 0)))
-          (unless (jay/double-line-breaks--protected-org-newline-run-p
-                   run-begin run-end)
-            (cond
-             ((>= (- run-end run-begin) 3)
-              (replace-match "\n\n"))
-             ((= (- run-end run-begin) 1)
-              (replace-match "\n\n")))))))))
+  ;; Classify every newline against the original Org structure before changing
+  ;; the buffer, then apply the edits in one batched backward transaction.
+  (let ((edits (jay/double-line-breaks--collect-edits begin end)))
+    (when edits
+      (combine-after-change-calls
+        (atomic-change-group
+          (save-excursion
+            (dolist (edit edits)
+              (goto-char (nth 0 edit))
+              (delete-region (nth 0 edit) (nth 1 edit))
+              (insert (nth 2 edit)))))))))
 #+END_SRC
 
 * xah-replace-pairs
