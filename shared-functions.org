@@ -5811,66 +5811,6 @@ It will open the link in Emacs with typing C-c C-o.
 ;; (define-key dired-mode-map (kbd "<return>") 'dired-find-file-other-window)
 #+end_src
 
-****** open in external app
-#+begin_src emacs-lisp
-(defun timu-dired-open-in-external-app (&optional file)
-
- "Open the current FILE or Dired marked files in external app.
-
-The app is chosen from your OS's preference.
-
-Credit: http://xahlee.info/emacs/emacs/emacs_dired_open_file_in_ext_apps.html."
-
- (interactive)
-
- (let (doIt (myFileList
-
-       (cond
-
-        ((eq major-mode 'dired-mode)
-
-        (dired-get-marked-files))
-
-        ((not file) (list (buffer-file-name)))
-
-        (file (list file)))))
-
-  (setq doIt (if (<= (length myFileList) 30) t
-
-         (y-or-n-p "Open more than 30 files? ")))
-
-  (when doIt
-
-   (cond
-
-    ((string-equal system-type "windows-nt")
-
-    (mapc (lambda (fPath)
-
-        (w32-shell-execute
-
-         "open" (replace-regexp-in-string "/" "\\" fPath t t)))
-
-       myFileList))
-
-    ((string-equal system-type "darwin")
-
-    (mapc (lambda (fPath)
-
-        (shell-command (format "open \"%s\"" fPath)))
-
-       myFileList))
-
-    ((string-equal system-type "gnu/linux")
-
-    (mapc (lambda (fPath)
-
-        (let ((process-connection-type nil))
-
-         (start-process "" nil "xdg-open" fPath))) myFileList))))))
-
-#+end_src
-
 ** dired-preview
 #+begin_src sh
 (add-to-list 'load-path "/Users/jay/emacs/external-packages/dired-preview")
