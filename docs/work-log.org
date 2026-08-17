@@ -2399,5 +2399,9 @@ After any edit here, retangle with an explicit output path and re-run the corpus
 - The ~s-k d f~ workflow now refuses buffers with unsaved changes, displays the full path, asks once, moves the file through the live macOS ~system-move-file-to-trash~ integration, and kills the buffer only after deletion succeeds. Git-tracked files appear as ordinary unstaged deletions.
 - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][docs/instructions.org]], retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]], passed ~check-parens~ and four focused no-file/no-write control-path tests, loaded the changed definition into the running session, verified the binding and native Trash support, and passed the startup smoke test.
 
+* 2026-08-17: Remove the unsafe Hookmark Org-link handler
+- Removed ~my/hook~ and the ~hook:~ Org-link registration from [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org][gnu-emacs-startup.org]]. The handler interpolated an arbitrary link target into ~shell-command~, so opening a crafted link could execute shell syntax.
+- Preserved the unrelated ~frame-title-format~ setting in its own clearly named section. Explicitly retangled [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.el][gnu-emacs-startup.el]], passed ~check-parens~, removed the stale function and link registration from the running session, verified that ~hook:~ has no follow action, and passed the startup smoke test.
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.

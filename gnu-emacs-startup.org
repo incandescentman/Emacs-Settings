@@ -489,18 +489,9 @@ Adds an empty line before the cloned subtree."
 " "<br>"))))
   #+END_SRC
 
-* Hook app
-[[https://discourse.hookproductivity.com/t/integrating-emacs-and-hook-with-org-mode/932/10][Integrating Emacs and Hook, with org-mode - Discussion & Help - Hook Productivity Forum]]
-
+* Show the visited file in the frame title
 #+begin_src emacs-lisp
-
 (setq frame-title-format '((:eval buffer-file-name)))
-
-(defun my/hook (hook)
- "Create an org-link target string using `hook://` url scheme."
- (shell-command (concat "open \"" hook "\"")))
-
- (org-link-set-parameters "hook" :follow #'my/hook)
 #+end_src
 
 * keybindings for terminal
