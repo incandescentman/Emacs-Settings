@@ -2381,5 +2381,9 @@ After any edit here, retangle with an explicit output path and re-run the corpus
 - Removed ~delete-visited-file~ and its ~crux-delete-buffer-and-file~ alias from [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]]. The duplicate used an invalid interactive prompt and permanently deleted files, while the existing ~crux-delete-file-and-buffer~ command already provides the intended workflow.
 - Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]], passed ~check-parens~, removed both stale definitions from the running Emacs session, and verified that ~crux-delete-file-and-buffer~ remains active on ~s-k d f~. The startup smoke test also passed.
 
+* 2026-08-17: Remove the obsolete corrupted-file mover
+- Removed ~jay/debug-find-corrupted-file~ from [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-extras.el][jay-org-roam-extras.el]]. The unbound ad-hoc diagnostic could silently overwrite an existing Roam note when moving a parsed file; it had no callers, and the adjacent ~jay/debug-scan-org-tree~ and ~jay/debug-current-buffer~ commands retain the useful read-only parser diagnostics.
+- Passed ~check-parens~, removed the stale definition from the running Emacs session, verified both retained diagnostics remain interactive, and passed the startup smoke test.
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.

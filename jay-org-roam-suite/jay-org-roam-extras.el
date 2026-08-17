@@ -147,39 +147,6 @@ Optionally takes a selected NODE and filepaths CHOICES."
 ;; Ad-hoc parser diagnostics for Dropbox-synced Org trees.
 ;; These stay in the sidecar because they are interactive troubleshooting
 ;; tools, not core suite plumbing.
-(defun jay/debug-find-corrupted-file (&optional file)
-  "Prompt for an Org file and try to parse it.
-
-If `org-element-parse-buffer' signals an error, print the error.
-Otherwise report success and, on confirmation, move the file to
-~/Dropbox/roam/notes/ (directory must already exist)."
-  (interactive
-   (list
-    (read-file-name
-     "Org file to test: "
-     "~/Downloads/"
-     nil t
-     nil
-     (lambda (f) (string-match-p "\\.org\\'" f)))))
-  (let* ((debug-on-error nil)
-         (result
-          (with-temp-buffer
-            (insert-file-contents file)
-            (condition-case err
-                (progn (org-element-parse-buffer) 'ok)
-              (error err)))))
-    (cond
-     ((eq result 'ok)
-      (message "✅  %s parsed with no errors" file)
-      (when (yes-or-no-p "Move it to ~/Dropbox/roam/notes/? ")
-        (let* ((dest-dir "~/Dropbox/roam/notes/")
-               (dest-file (expand-file-name (file-name-nondirectory file)
-                                            dest-dir)))
-          (rename-file file dest-file 1)
-          (message "Moved to %s" dest-file))))
-     (t
-      (message "❌  %s --- %S" file result)))))
-
 (defun jay/debug-scan-org-tree (root)
   "Recursively scan ROOT for *.org files that choke `org-element-parse-buffer'."
   (interactive "DDirectory to scan: ")
