@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-08-16: Make the ~yesterday~ Yasnippet expansion pure
+
+- Changed ~yesterday~ in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] to return yesterday's ISO date when called from Lisp while preserving insertion when invoked interactively. This removes the ~yasnippet backquote-change~ warning from the ~yd~ snippet without changing its expansion text.
+- Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]] and verified the generated file structurally and the function's interactive and noninteractive behavior.
+- Loaded the generated definition into the running Emacs session. With warning suppression disabled, the real Yasnippet backquote expanded to ~2026-08-15~ and emitted no ~yasnippet backquote-change~ warning.
+
 * 2026-08-13: Bind ~s-j~ to tick a checkbox and advance
 - Added ~jay/org-checkbox-toggle-and-advance~ to [[file+emacs:/Users/jay/emacs/emacs-settings/org-authoring.org][org-authoring.org]] and bound it to ~s-j~ in ~my/global-key-bindings~ in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]], replacing the plain ~org-todo~ binding. On a checkbox item it ticks the box and moves to the next item; anywhere else it falls through to ~org-todo~, so ~s-j~ now means "mark this done and move on" for both checkbox items and TODO headings. ~s-d~, ~M-d~, and ~M-s-9~ still call ~org-todo~ directly.
 - Extracted the advance itself into ~jay/org-checkbox-advance~ in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] and pointed the existing ~:around~ advice at it. The old inline lambda used ~ignore-errors~ around ~(org-next-item)~ followed by ~(end-of-line)~, so ticking the *last* checkbox in a list left point at column 0 of the same line — ~org-next-item~ signalled before ~end-of-line~ ran. The helper restores the saved position instead, so point now stays put. This fixes ~C-c C-c~ as well as the new key.

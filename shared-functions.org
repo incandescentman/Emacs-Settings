@@ -4418,9 +4418,18 @@ In collapsed view, hide empty lines between subtrees
 #+begin_src emacs-lisp
 
 (defun yesterday ()
+  "Return yesterday's date in ISO format, or insert it when called interactively."
   (interactive)
-    (insert (shell-command-to-string "echo -n $(date -v -1d +%F)"))
-  )
+  (let* ((now (decode-time))
+         (date (format-time-string
+                "%F"
+                (encode-time 0 0 12
+                             (1- (nth 3 now))
+                             (nth 4 now)
+                             (nth 5 now)))))
+    (if (called-interactively-p 'any)
+        (insert date)
+      date)))
 #+end_src
 
 
