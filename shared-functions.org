@@ -7039,21 +7039,20 @@ buffer from disk and restore point."
                      output))))
 #+end_src
 
-* Make Emacs use MacOS Trash instead of rm
-When deleting a file, don't use vc-delete-file
+* Make Emacs use macOS Trash instead of permanent deletion
 #+begin_src emacs-lisp
 (defun crux-delete-file-and-buffer ()
- "Kill the current buffer and deletes the file it is visiting."
- (interactive)
- (let ((filename (buffer-file-name)))
-  (when filename
-   (when (y-or-n-p (format "Are you sure you want to delete %s? " filename))
-    (let ((vc-backend (vc-backend filename)))
-     (when vc-backend
-      (vc-delete-file filename))
-     (call-process "/opt/homebrew/Cellar/trash/0.9.2/bin/trash" nil nil nil filename)
-     (message "Moved file %s to your MacOS Trash 🗑️" filename)
-     (kill-buffer))))))
+  "Move the current buffer's file to macOS Trash, then kill the buffer."
+  (interactive)
+  (let ((filename (buffer-file-name)))
+    (unless filename
+      (user-error "Current buffer is not visiting a file"))
+    (when (buffer-modified-p)
+      (user-error "Buffer has unsaved changes; save or revert before deleting"))
+    (when (y-or-n-p (format "Move %s to Trash? " filename))
+      (delete-file filename t)
+      (kill-buffer)
+      (message "Moved %s to macOS Trash 🗑️" filename))))
 #+end_src
 
 * choose a reviewed multi-file replacement command

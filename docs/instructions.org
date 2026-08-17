@@ -468,7 +468,7 @@ Run =M-x replace-in-all-files-in-current-directory= when one replacement must sp
 
 Both workflows ask before changing each match. The command itself does not recursively open or write files. Its source is [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]].
 
-Use =s-k d f= (=crux-delete-file-and-buffer=) to delete the file visited by the current buffer. It displays the full target path and asks for confirmation before acting. This is the canonical file-and-buffer deletion command; the older duplicate commands have been removed.
+Use =s-k d f= (=crux-delete-file-and-buffer=) to delete the file visited by the current buffer. It refuses to act while the buffer has unsaved changes, displays the full target path, asks once, and uses Emacs's native macOS Trash support. For a Git-tracked file, Git sees an ordinary unstaged deletion. This is the canonical file-and-buffer deletion command; the older duplicate commands have been removed.
 
 ** Embark Context Actions
 

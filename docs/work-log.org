@@ -2394,5 +2394,10 @@ After any edit here, retangle with an explicit output path and re-run the corpus
 - An emptied source buffer now remains open and modified, while its original file remains recoverable on disk. The command tells Jay to review the move and use the canonical ~s-k d f~ workflow if the source file should be deleted.
 - Passed ~check-parens~, loaded only the changed definition into the running Emacs session, verified that ~s-u r~ still resolves to it, and passed the startup smoke test.
 
+* 2026-08-17: Make the canonical deletion command genuinely use Trash
+- Reworked ~crux-delete-file-and-buffer~ in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] to use Emacs's native ~(delete-file filename t)~ path. The old version ran ~vc-delete-file~ first for tracked files, which invoked ~git rm -f~, then called a hard-coded Trash executable on the already-missing path, ignored its failure, and reported that the file had been moved to Trash.
+- The ~s-k d f~ workflow now refuses buffers with unsaved changes, displays the full path, asks once, moves the file through the live macOS ~system-move-file-to-trash~ integration, and kills the buffer only after deletion succeeds. Git-tracked files appear as ordinary unstaged deletions.
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][docs/instructions.org]], retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]], passed ~check-parens~ and four focused no-file/no-write control-path tests, loaded the changed definition into the running session, verified the binding and native Trash support, and passed the startup smoke test.
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.
