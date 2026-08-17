@@ -7072,66 +7072,27 @@ When deleting a file, don't use vc-delete-file
      (kill-buffer))))))
 #+end_src
 
-* query replace all files in current directory
+* choose a reviewed multi-file replacement command
 #+begin_src emacs-lisp
-(defun replace-in-all-files-in-current-directory (from-string to-string &optional regexp-flag)
-  "Replace FROM-STRING with TO-STRING in every file under `default-directory'.
+(defun replace-in-all-files-in-current-directory ()
+  "Choose a reviewed built-in multi-file replacement workflow.
 
-With a *prefix argument* (\\[universal-argument]) treat FROM-STRING as a
-regular expression; otherwise perform a literal search/replace.
+`project-query-replace-regexp' searches project files and asks before every
+replacement.  `dired-do-find-regexp-and-replace' operates on marked Dired
+files, also asking before every replacement.  This command never walks or
+writes files directly."
+  (interactive)
+  (pcase (completing-read
+          "Replace across: "
+          '("Project files" "Marked Dired files")
+          nil t)
+    ("Project files"
+     (call-interactively #'project-query-replace-regexp))
+    ("Marked Dired files"
+     (unless (derived-mode-p 'dired-mode)
+       (user-error "Choose this option from a Dired buffer after marking files"))
+     (call-interactively #'dired-do-find-regexp-and-replace))))
 
-The command visits each regular file recursively, performs a
-non-interactive query replace (i.e. no prompts while it works), saves
-the buffer, and kills it when done."
-  (interactive
-   (let ((from (read-string "Replace: "))
-         (to   (read-string "With: "))
-         (regexp current-prefix-arg))      ;; C-u → regexp mode
-     (list from to regexp)))
-
-  (let* ((dir   default-directory)
-         (files (directory-files-recursively dir ".*" nil))
-         ;; Temporarily disable openwith-mode to prevent external program interference
-         (openwith-mode-enabled (and (boundp 'openwith-mode) openwith-mode)))
-
-    ;; Turn off openwith-mode if it's active
-    (when openwith-mode-enabled
-      (openwith-mode -1))
-
-    (unwind-protect
-        (dolist (file files)
-          (when (file-regular-p file)
-            ;; Use find-file-literally to avoid file handlers and mode hooks
-            (let ((buf (find-file-noselect file t t)))
-              (with-current-buffer buf
-                (let ((inhibit-read-only t))
-                  ;; Read the file contents properly
-                  (erase-buffer)
-                  (insert-file-contents file)
-                  (goto-char (point-min))
-                  (let ((replacements 0))
-                    (if regexp-flag
-                        (while (re-search-forward from-string nil t)
-                          (replace-match to-string)
-                          (setq replacements (1+ replacements)))
-                      (while (search-forward from-string nil t)
-                        (replace-match to-string)
-                        (setq replacements (1+ replacements))))
-                    (when (> replacements 0)
-                      (message "Replaced %d occurrences in %s" replacements file)
-                      (write-region nil nil file nil 'quiet)))
-                  (kill-buffer buf))))))
-      ;; Re-enable openwith-mode if it was active
-      (when openwith-mode-enabled
-        (openwith-mode 1)))))
-
-;; Optional convenient alias:
-
-;; (define-key dired-mode-map (kbd "s-H") 'query-replace-all-files-in-current-directory)
-
-;; (add-hook 'dired-mode-hook
-;;           (lambda ()
-;;             (define-key dired-mode-map (kbd "s-H") 'query-replace-all-files-in-current-directory)))
 #+end_src
 
 * fix buffers

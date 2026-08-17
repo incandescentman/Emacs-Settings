@@ -2372,5 +2372,10 @@ After any edit here, retangle with an explicit output path and re-run the corpus
 - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/mc-lists.el][mc-lists.el]] so multiple cursors run ~remove-hyperlink-at-point~ instead of the removed function. Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]], passed ~check-parens~ and three focused link-removal cases, removed the obsolete live definition, reloaded the multiple-cursor preferences, and verified the effective ~s-k r l~ binding.
 - Added the generated command-list file's missing lexical-binding header after the repository's pre-commit guard surfaced the pre-existing omission.
 
+* 2026-08-17: Replace the unsafe recursive replacement command with a chooser
+- Kept ~replace-in-all-files-in-current-directory~ as the familiar entry point, but removed its direct recursive file traversal and unconditional writes from [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]]. The command now offers ~Project files~ and ~Marked Dired files~.
+- The project choice delegates to ~project-query-replace-regexp~; the Dired choice delegates to ~dired-do-find-regexp-and-replace~ and explains that it must be invoked from a Dired buffer. Both built-ins ask before changing each match.
+- Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]], passed ~check-parens~, verified both delegation paths and the non-Dired guard without touching files, loaded the new definition into the running Emacs session, and passed the startup smoke test.
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.
