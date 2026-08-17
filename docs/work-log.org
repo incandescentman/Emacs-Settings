@@ -2367,5 +2367,10 @@ After any edit here, retangle with an explicit output path and re-run the corpus
 - Described ID links still become their descriptions. Bare ID links now become their path alone, preserving the identifier without recreating an unresolved plain ~id:~ link; the old function attempted to insert ~nil~ and aborted export.
 - Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.el][org-export.el]], passed ~check-parens~ and six focused transformation cases, loaded the two changed definitions into the running Emacs session, and verified real ASCII export for both described and bare ID links.
 
+* 2026-08-17: Retire the broken duplicate hyperlink remover
+- Removed the obsolete ~remove-hyperlinks~ definition from [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]]. It failed on bare Org links by passing a missing description to ~replace-match~; the active ~remove-hyperlink-at-point~ command already preserves the address when no description exists.
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/mc-lists.el][mc-lists.el]] so multiple cursors run ~remove-hyperlink-at-point~ instead of the removed function. Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]], passed ~check-parens~ and three focused link-removal cases, removed the obsolete live definition, reloaded the multiple-cursor preferences, and verified the effective ~s-k r l~ binding.
+- Added the generated command-list file's missing lexical-binding header after the repository's pre-commit guard surfaced the pre-existing omission.
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.
