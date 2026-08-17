@@ -2362,5 +2362,10 @@ After any edit here, retangle with an explicit output path and re-run the corpus
 - Preserved the existing contract: double single prose line breaks, collapse three or more line breaks to two, normalize CRLF and old-Mac line endings, and leave Org drawers, metadata, headings, keywords, tables, fixed-width text, and block contents unchanged.
 - Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]], passed ~check-parens~ and 14 focused batch cases (including a region narrowed inside a source block), processed a 5,000-line Org paragraph in 0.35 seconds, loaded only the changed definitions into the running Emacs session, and verified the structured Org case live.
 
+* 2026-08-17: Make ID-link export removal safe
+- Reworked ~org-export-id-link-removal~ in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] to parse the temporary export buffer once, collect all ID-link replacements, and apply them backward in one atomic batch instead of alternating ~org-element-context~ calls with deletion and insertion.
+- Described ID links still become their descriptions. Bare ID links now become their path alone, preserving the identifier without recreating an unresolved plain ~id:~ link; the old function attempted to insert ~nil~ and aborted export.
+- Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.el][org-export.el]], passed ~check-parens~ and six focused transformation cases, loaded the two changed definitions into the running Emacs session, and verified real ASCII export for both described and bare ID links.
+
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.

@@ -367,24 +367,46 @@ error behavior."
 (use-package org-roam-export
   :defer)
 
-(defun org-export-id-link-removal (backend)
- "Inspired by 'org-attach-expand-links' ，which is in 'org-export-before-parsing-functions' "
- (save-excursion
-  (while (re-search-forward "id:" nil t)
-   (let ((link (org-element-context)))
-    (if (and (eq 'link (org-element-type link))
-         (string-equal "id"
-                (org-element-property :type link)))
-      (let ((description (and (org-element-property :contents-begin link)
-                  (buffer-substring-no-properties
-                   (org-element-property :contents-begin link)
-                   (org-element-property :contents-end link))))
-         )
-       (goto-char (org-element-property :end link))
-       (skip-chars-backward " \t")
-       (delete-region (org-element-property :begin link) (point))
-       (insert description))
-     )))))
+(defun jay/org-export-id-link-replacements ()
+  "Collect safe text replacements for ID links in the export buffer.
+Described links become their descriptions.  Bare links retain their identifier
+path instead of failing export or silently discarding the visible information.
+The returned replacements are ordered from the end of the buffer backward."
+  (let (replacements)
+    (org-element-map (org-element-parse-buffer 'object) 'link
+      (lambda (link)
+        (when (string-equal "id" (org-element-property :type link))
+          (let* ((contents-begin (org-element-property :contents-begin link))
+                 (contents-end (org-element-property :contents-end link))
+                 (description
+                  (and contents-begin contents-end
+                       (buffer-substring-no-properties
+                        contents-begin contents-end)))
+                 (replacement
+                  (or description
+                      (org-element-property :path link)
+                      (org-element-property :raw-link link)))
+                 (begin (org-element-property :begin link))
+                 (end
+                  (save-excursion
+                    (goto-char (org-element-property :end link))
+                    (skip-chars-backward " \t")
+                    (point))))
+            (when replacement
+              (push (list begin end replacement) replacements))))))
+    replacements))
+
+(defun org-export-id-link-removal (_backend)
+  "Replace ID links with plain text in Org's temporary export buffer."
+  (let ((replacements (jay/org-export-id-link-replacements)))
+    (when replacements
+      (combine-after-change-calls
+        (atomic-change-group
+          (save-excursion
+            (dolist (replacement replacements)
+              (goto-char (nth 0 replacement))
+              (delete-region (nth 0 replacement) (nth 1 replacement))
+              (insert (nth 2 replacement)))))))))
 
 (add-to-list 'org-export-before-parsing-functions #'org-export-id-link-removal)
 #+END_SRC
