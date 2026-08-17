@@ -6059,22 +6059,6 @@ Smart jump to beginning / end of lines.
 #+begin_src emacs-lisp
 #+end_src
 
-* delete file
-#+begin_src emacs-lisp
-(defun delete-visited-file (buffer-name)
- "Delete the file visited by the buffer named BUFFER-NAME."
- (interactive "Delete file visited by buffer ")
- (let* ((buffer (get-buffer buffer-name))
-     (filename (buffer-file-name buffer)))
-  (when buffer
-   (when (and filename
-         (file-exists-p filename))
-    (delete-file filename))
-   (kill-buffer buffer))))
-(defalias 'crux-delete-buffer-and-file #'delete-visited-file)
-
-#+end_src
-
 * debug recentf
 #+begin_src emacs-lisp
 (defun jay/recentf-save-list-debug (orig-fun &rest args)
