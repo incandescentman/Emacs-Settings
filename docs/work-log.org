@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-08-19: Point Life Web and Parents Web exports at the canonical monorepo
+
+- Repointed the ~roam-life~ export destination to [[file+emacs:/Users/jay/Dropbox/github/roam-web-monorepo/apps/life-web/src/content/notes/][📁 /Users/jay/Dropbox/github/roam-web-monorepo/apps/life-web/src/content/notes/]].
+- Added the ~roam-parents~ destination at [[file+emacs:/Users/jay/Dropbox/github/roam-web-monorepo/apps/parents-web/src/content/notes/][📁 /Users/jay/Dropbox/github/roam-web-monorepo/apps/parents-web/src/content/notes/]].
+- Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][📄 /Users/jay/emacs/emacs-settings/shared-functions.el]], passed ~check-parens~, loaded the updated destination alist into the running GUI Emacs session, and verified both canonical paths.
+
 * 2026-08-16: Make the ~yesterday~ Yasnippet expansion pure
 
 - Changed ~yesterday~ in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] to return yesterday's ISO date when called from Lisp while preserving insertion when invoked interactively. This removes the ~yasnippet backquote-change~ warning from the ~yd~ snippet without changing its expansion text.
