@@ -978,7 +978,7 @@ process the whole buffer."
 (setq  ; org-export-dispatch-use-expert-ui t non-intrusive export dispatch
  org-latex-pdf-process               ; for regular export
 
- '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+ '("latexmk -xelatex -shell-escape -interaction=nonstopmode -output-directory=%o %f"))
 
 ;; don't add extra lines to numbered lists and bulleted lists (set to nil)
 
@@ -994,6 +994,7 @@ process the whole buffer."
         (files '("elegant-helvetica.el"
                  "beautiful-racket.el"
                  "elegant-garamond.el"
+                 "socratic-proposal.el"
                  "thought-leadership-playbook.el"
                  "thought-leadership-playbook-warm.el"
                  "transcript-garamond.el"
@@ -1021,6 +1022,7 @@ process the whole buffer."
   '(("elegant-helvetica" . "/Users/jay/emacs/emacs-settings/latex-templates/elegant-helvetica.el")
     ("beautiful-racket" . "/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el")
     ("elegant-garamond" . "/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el")
+    ("socratic-proposal" . "/Users/jay/emacs/emacs-settings/latex-templates/socratic-proposal.el")
     ("thought-leadership-playbook" . "/Users/jay/emacs/emacs-settings/latex-templates/thought-leadership-playbook.el")
     ("thought-leadership-playbook-warm" . "/Users/jay/emacs/emacs-settings/latex-templates/thought-leadership-playbook-warm.el")
     ("new-yorker" . "/Users/jay/emacs/emacs-settings/latex-templates/new-yorker.el")
@@ -1187,15 +1189,22 @@ periods (Windows refuses them)."
 (defun jay/org-latex-rename-pdf-to-title (pdf-file)
   "Rename PDF-FILE to <#+TITLE:>.pdf in the same directory.
 Intended as :filter-return advice on `org-latex-export-to-pdf'. When
-the current buffer has a non-empty #+TITLE:, rename the exported PDF
-in place (overwriting any existing target) and return the new path.
-Falls back to PDF-FILE unchanged when no title is available or when
-the return value is not a PDF path (async export returns a process,
+the current buffer has no explicit #+EXPORT_FILE_NAME and has a
+non-empty #+TITLE:, rename the exported PDF in place (overwriting any
+existing target) and return the new path.  Preserve PDF-FILE when an
+explicit export filename is present, when no title is available, or
+when the return value is not a PDF path (async export returns a process,
 not a filename)."
   (if (and (stringp pdf-file)
            (string-suffix-p ".pdf" pdf-file)
            (file-exists-p pdf-file))
-      (let* ((title (jay/org-export-title-for-filename))
+      (let* ((explicit-name
+              (cadr (assoc "EXPORT_FILE_NAME"
+                           (org-collect-keywords '("EXPORT_FILE_NAME")))))
+             (title (unless (and explicit-name
+                                 (not (string-empty-p
+                                       (string-trim explicit-name))))
+                      (jay/org-export-title-for-filename)))
              (sanitized (and title (jay/sanitize-for-filename title))))
         (if (and sanitized (not (string-empty-p sanitized)))
             (let ((new-pdf (expand-file-name

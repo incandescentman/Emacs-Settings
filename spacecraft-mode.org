@@ -262,6 +262,21 @@ lines instead of merging them into one paragraph."
               (forward-line 1))
             (and saw-line all-protected)))))))
 
+(defun jay/org-unfill-block-delimiter-paragraph-p ()
+  "Return non-nil when the current Org paragraph contains a block delimiter.
+Org does not recognize same-type nested blocks, so an inner ~#+begin_*~
+or outer ~#+end_*~ line can appear inside a paragraph element.  Skipping
+that paragraph keeps unfill from joining the delimiter to prose."
+  (let ((element (org-element-at-point))
+        (case-fold-search t))
+    (when (eq (org-element-type element) 'paragraph)
+      (save-excursion
+        (goto-char (org-element-begin element))
+        (re-search-forward
+         "^[ \t]*#\\+\\(?:begin\\|end\\)_[[:alnum:]_-]+"
+         (org-element-end element)
+         t)))))
+
 (defun jay/org-unfill-paragraph-element ()
   "Unfill the current Org paragraph while preserving Org hard line breaks.
 Unlike `org-fill-paragraph', this directly unwraps ordinary prose
@@ -274,7 +289,8 @@ paragraphs, but it leaves protected title-label paragraphs alone."
             (end (min (point-max)
                       (org-element-contents-end element))))
         (unless (or (< (line-end-position) beg)
-                    (jay/org-unfill-protected-paragraph-p))
+                    (jay/org-unfill-protected-paragraph-p)
+                    (jay/org-unfill-block-delimiter-paragraph-p))
           (save-excursion
             (goto-char beg)
             (let ((cuts (list beg)))
@@ -290,38 +306,44 @@ paragraphs, but it leaves protected title-label paragraphs alone."
                 (setq end c)))))))))
 
 (defun jay/org-unfill-element ()
-  "Unfill the current Org element with direct prose handling.
+  "Unfill the current Org paragraph without changing structural elements.
 Paragraphs use `fill-region-as-paragraph' so wrapped prose really
-unwraps, while other elements defer to Org's own fill machinery."
+unwraps.  Source blocks, drawers, block delimiters, and every other
+non-paragraph element are left byte-for-byte alone."
   (let ((element (save-excursion (end-of-line) (org-element-at-point))))
-    (if (eq (org-element-type element) 'paragraph)
-        (jay/org-unfill-paragraph-element)
-      (org-fill-element))))
+    (when (eq (org-element-type element) 'paragraph)
+      (jay/org-unfill-paragraph-element))))
 
 (defun jay/org-unfill-region-preserving-structure ()
-  "Unfill each fillable Org element in the active region.
+  "Unfill each Org paragraph intersecting the active region.
 Protected title-label paragraphs like \"HED:\" and \"SUBHED:\" are
-skipped so they do not collapse onto one line."
-  (let ((origin (point-marker))
-        (start (region-beginning)))
+skipped so they do not collapse onto one line.  Paragraph positions are
+collected from Org's syntax tree first and processed from end to start,
+so source blocks and other structural elements are never passed to fill
+machinery and earlier paragraph positions stay valid as text shrinks."
+  (let* ((origin (point-marker))
+         (start (region-beginning))
+         (end (region-end))
+         (paragraphs
+          (org-element-map (org-element-parse-buffer) 'paragraph
+            (lambda (element)
+              (let ((beg (org-element-begin element))
+                    (finish (org-element-end element)))
+                (when (and (< beg end) (> finish start))
+                  beg))))))
     (unwind-protect
-        (progn
-          (goto-char (region-end))
-          (skip-chars-backward " \t\n")
-          (let ((org--single-lines-list-is-paragraph nil))
-            (while (> (point) start)
-              (jay/org-unfill-element)
-              (org-backward-paragraph)
-              (skip-chars-backward " \t\n"))))
+        (dolist (position (sort paragraphs #'>))
+          (goto-char position)
+          (jay/org-unfill-paragraph-element))
       (goto-char origin)
       (set-marker origin nil))))
 
 (defun jay/unfill-paragraph-dwim ()
   "Unfill prose while preserving Org structure.
 In Org buffers, unwrap ordinary prose paragraphs directly while still
-letting Org preserve drawers, planning lines, tables, source blocks,
-and other non-paragraph structure.  With an active region in Org mode,
-unfill each fillable element in the region.  Protected title-label
+leaving drawers, planning lines, tables, source blocks, block delimiters,
+and other non-paragraph structure unchanged.  With an active region in
+Org mode, unfill only paragraph elements in the region.  Protected title-label
 paragraphs like \"HED:\" and \"SUBHED:\" are skipped."
   (interactive)
   (let ((fill-column most-positive-fixnum))

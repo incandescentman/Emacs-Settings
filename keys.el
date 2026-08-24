@@ -594,7 +594,7 @@
   (append
    my/writing-mode-bindings
    '(("<return>"       . smart-return)
-     ("s-l"            . org-insert-link)
+     ("s-l"            . jay/org-next-checkbox-or-insert-link)
      ("s-k c s"        . org-clone-subtree)    ; overrides global in Org
      ("C-c e"          . eval-adaptive)
      ("C-c C-s"        . org-schedule)

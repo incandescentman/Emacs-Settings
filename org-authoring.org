@@ -108,6 +108,30 @@ not add an explicit move here — that would advance twice."
         (org-toggle-checkbox)
       (call-interactively #'org-todo)))
 
+  (defun jay/org-next-checkbox ()
+    "Move to the next checkbox item without changing any checkbox state.
+
+Non-checkbox list items are skipped.  If there is no later checkbox in
+the current list, leave point where it started.  Point lands inside the
+checkbox marker."
+    (interactive)
+    (let ((start (point)))
+      (condition-case nil
+          (progn
+            (org-next-item)
+            (while (not (org-at-item-checkbox-p))
+              (org-next-item))
+            (beginning-of-line)
+            (search-forward "[" (line-end-position) t))
+        (error (goto-char start)))))
+
+  (defun jay/org-next-checkbox-or-insert-link ()
+    "Advance from a checkbox, or otherwise insert an Org link."
+    (interactive)
+    (if (org-at-item-checkbox-p)
+        (jay/org-next-checkbox)
+      (call-interactively #'org-insert-link)))
+
   (defun org-plain-text-list-p ()
   "Predicate: Checks whether the current line org-plain-text-list"
     (and

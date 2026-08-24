@@ -1,11 +1,27 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-08-23: Keep paragraph unfill away from Org block structure
+
+- Changed ~jay/unfill-paragraph-dwim~ in [[file+emacs:/Users/jay/emacs/emacs-settings/spacecraft-mode.org][spacecraft-mode.org]] so region unfill collects only Org paragraph elements, processes them from end to start, and never passes source blocks or other structural elements to fill machinery.
+- Added protection for the same-type nested-block edge case: Org can parse an inner block delimiter as paragraph text, so any paragraph containing a ~#+begin_*~ or ~#+end_*~ line is now left unchanged rather than joining the delimiter to prose.
+- Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/spacecraft-mode.el][spacecraft-mode.el]] with an explicit output path and passed ~check-parens~, configured startup, and a regression run against the committed pre-cleanup version of [[file+emacs:/Users/jay/Dropbox/roam/socratic-ideas/20260802193025-socratic_ai_mind_map.org][Socratic AI Mind Maps]]. The command unfilled prose while leaving the Mermaid source block byte-for-byte unchanged, preserving all 26 balanced block pairs, and retaining the Shankar paragraph.
+
 * 2026-08-19: Point Life Web and Parents Web exports at the canonical monorepo
 
 - Repointed the ~roam-life~ export destination to [[file+emacs:/Users/jay/Dropbox/github/roam-web-monorepo/apps/life-web/src/content/notes/][📁 /Users/jay/Dropbox/github/roam-web-monorepo/apps/life-web/src/content/notes/]].
 - Added the ~roam-parents~ destination at [[file+emacs:/Users/jay/Dropbox/github/roam-web-monorepo/apps/parents-web/src/content/notes/][📁 /Users/jay/Dropbox/github/roam-web-monorepo/apps/parents-web/src/content/notes/]].
 - Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][📄 /Users/jay/emacs/emacs-settings/shared-functions.el]], passed ~check-parens~, loaded the updated destination alist into the running GUI Emacs session, and verified both canonical paths.
+
+* 2026-08-18: Add and validate the Socratic AI proposal class
+
+- Added [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/socratic-proposal.el][socratic-proposal.el]] as an [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][elegant-garamond.el]] derivative with an automatic cover, class-owned Socratic AI logo, Helvetica Neue LT Pro Condensed labels and running furniture, proposal headings, a ruled agenda, pull quotes, and the large fee treatment. Direct buffer evaluation now resolves the sibling base class without requiring the template directory to have been added to ~load-path~ first.
+- Wired ~socratic-proposal~ into ~jay-load-latex~ and the LaTeX preflight map in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]]. Switched the PDF command to the installed ~latexmk~ so the cover contents and other cross-references receive the required XeLaTeX passes.
+- Made the class enforce ~tocdepth=1~ at document start. Second-level headings remain available in the proposal body but cannot enter the cover contents with the base class's incompatible subsection styling, dot leaders, or page numbers.
+- Added a reusable left-side biography portrait treatment with wrapped text, using a large head-and-shoulders crop of Jay's canonical Cannes headshot in the EDF proposal. The portrait and shortened text remain balanced on the bio page; the following page explicitly returns to full-width prose and credential bullets instead of inheriting stale wrap geometry across the page break.
+- Restored a normal paragraph gap before top-level bullets, vertically centered agenda durations, forced the requested cover-subtitle line break, and added a tiny raised metadata separator for the cover's session details. The prepared-for and prepared-by values now sit in independent minipages so internal line breaks cannot move the prepared-by date into the wrong column.
+- Repaired the proposal source's transcript link after finding that a session-header string had been spliced into its target.
+- Applied the class to [[file+emacs:/Users/jay/Dropbox/roam/prosperous/edf/20260817120000-edf_proposal.org][the EDF proposal source]] without rewriting its prose, and exported [[file+emacs:/Users/jay/Dropbox/roam/prosperous/edf/Jay Dixit - EDF AI Workshop Proposal.pdf][the proposal PDF]]. Verified direct template evaluation, real export completion, the cover contents, running heads and footers, agenda rules, and fee treatment in the rendered pages.
 
 * 2026-08-16: Make the ~yesterday~ Yasnippet expansion pure
 

@@ -2901,14 +2901,10 @@ which is suitable for passing to `advice-add'."
                  adlist))))
 
 (defun jay/org-checkbox-advance (&rest _)
-  "Move to the end of the next plain-list item.
-Stay exactly where we are when there is no next item, so that
-toggling the last checkbox in a list does not jerk point to
-column 0."
-  (let ((start (point)))
-    (condition-case nil
-        (progn (org-next-item) (end-of-line))
-      (error (goto-char start)))))
+  "Move to the next checkbox marker after a checkbox toggle.
+`jay/org-next-checkbox' also preserves point when there is no later
+checkbox in the current list."
+  (jay/org-next-checkbox))
 
 (defun my/org-checkbox-toggle-advice (orig-fn &rest args)
   "Advice to move to next list item on checkbox toggle."

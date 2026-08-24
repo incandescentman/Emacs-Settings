@@ -306,10 +306,10 @@
 % For subsection (24pt heading -> ~17pt subtitle, 70% size)
 \\newenvironment{subsubtitle}%
 {% begin code
-\\vspace{-0.7\\baselineskip}\\fontsize{17}{20}\\selectfont\\itshape
+\\par\\nobreak\\vskip3pt\\noindent\\fontsize{17}{20}\\selectfont\\itshape
 }%
 {% end code
-\\par\\bigskip
+\\par
 }
 
 % For subsubsection (18pt heading -> ~13pt subtitle, 70% size)

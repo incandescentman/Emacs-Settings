@@ -2,6 +2,20 @@
 #+DATE: 2025-09-24
 #+DESCRIPTION: Debugging post-mortems and prevention checklists.
 
+* Org Can Parse Nested Block Delimiters As Paragraph Text
+  Date: 2026-08-23
+
+** Trigger
+Running ~jay/unfill-paragraph-dwim~ across a large Org region joined Mermaid statements, attached two ~#+begin_quote~ and ~#+end_quote~ delimiters to prose, and dropped a paragraph between neighboring paragraphs.
+
+** Mechanism
+The region walker called Org's fill machinery on non-paragraph elements, so source-block contents were eligible for reflow. Restricting the walker to parsed paragraphs fixed that part but exposed a second trap: Org does not recognize same-type nested blocks as nested structure. An inner quote delimiter can therefore live inside a paragraph element, where ordinary paragraph filling joins it to the following prose. Walking and mutating the buffer at the same time also made earlier positions unstable as text shrank.
+
+** Actionable insight
+- For structure-preserving region edits, parse first, collect only the intended element positions, and mutate from the end toward the beginning.
+- Never send source blocks or other non-paragraph Org elements through generic fill machinery when the command promises prose-only behavior.
+- Treat any paragraph containing a line-start ~#+begin_*~ or ~#+end_*~ delimiter as structural and leave it unchanged. Test same-type nested blocks explicitly; a balanced-looking file can still produce paragraph nodes containing delimiter lines.
+
 * Deferred abbrev loading must precede silent saving
   Date: 2026-08-07
 
