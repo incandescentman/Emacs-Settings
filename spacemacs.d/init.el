@@ -55,6 +55,7 @@ This function should only modify configuration layer settings."
      ;; markdown
      ;; mu4e
      emacs-lisp
+     mermaid
      ;; (multiple-cursors :variables multiple-cursors-backend 'mc)
      (org
       :defer

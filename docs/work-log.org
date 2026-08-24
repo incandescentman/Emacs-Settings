@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-08-23: Enable Mermaid files in Spacemacs
+
+- Added Spacemacs's built-in ~mermaid~ layer in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]], synchronized the running configuration, and verified that [[file+emacs:/Users/jay/Dropbox/roam/socratic-ideas/socratic-ai-architecture.mmd][socratic-ai-architecture.mmd]] now selects ~mermaid-mode~ automatically.
+- Confirmed that the existing [[file+emacs:/opt/homebrew/bin/mmdc][mmdc]] 11.16.0 executable is visible to Emacs and successfully rendered the real architecture file to SVG.
+- The Mermaid layer provides editing, compilation, and browser-preview commands for standalone ~.mmd~ files. Mermaid source blocks inside Org buffers remain visible source unless the separate ~org-enable-mermaid-support~ feature is enabled and the block is evaluated to an output file; that feature remains disabled.
+
 * 2026-08-23: Keep paragraph unfill away from Org block structure
 
 - Changed ~jay/unfill-paragraph-dwim~ in [[file+emacs:/Users/jay/emacs/emacs-settings/spacecraft-mode.org][spacecraft-mode.org]] so region unfill collects only Org paragraph elements, processes them from end to start, and never passes source blocks or other structural elements to fill machinery.
