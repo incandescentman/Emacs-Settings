@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-08-24: Make export numbering backend-specific and repair the CSS chooser
+
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] so HTML exports always disable section numbering and LaTeX exports always enable it, overriding conflicting document-local ~#+OPTIONS: num:~ values while leaving other backends unchanged.
+- Repaired the stale CSS paths, made the chooser require a listed option, and made unreadable stylesheet selections stop with a clear error instead of failing silently. Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.el][org-export.el]], passed ~check-parens~ and configured startup, loaded the changes into the running GUI Emacs session, and verified both numbering directions against conflicting document options and every listed stylesheet path.
+- Documented the enforced backend rule and its LaTeX table-of-contents implications in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][docs/instructions.org]] and [[file+emacs:/Users/jay/emacs/emacs-settings/docs/codebase-wisdom.org][docs/codebase-wisdom.org]].
+
 * 2026-08-23: Enable Mermaid files in Spacemacs
 
 - Added Spacemacs's built-in ~mermaid~ layer in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][spacemacs.d/init.el]], synchronized the running configuration, and verified that [[file+emacs:/Users/jay/Dropbox/roam/socratic-ideas/socratic-ai-architecture.mmd][socratic-ai-architecture.mmd]] now selects ~mermaid-mode~ automatically.

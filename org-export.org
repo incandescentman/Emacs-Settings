@@ -150,23 +150,20 @@ The post-processing step is handed the path to your new file; you could use some
     (org-export-to-file 'html outfile async subtreep visible-only body-only ext-plist #'find-file)))
 #+END_SRC
 
-*** Change section numbering depending on what export format I use
-Turn this on if I'm creating documents that I want to export to both HTML and LaTeX. For now I'm turning it off.
-
-Note: disable this when trying to export to org-html-themes!
+*** Change section numbering depending on export format
 
 #+begin_src emacs-lisp
 (defun my-org-export-change-options (plist backend)
- (cond
-  ((equal backend 'html)
-  (plist-put plist :with-toc nil)
-  (plist-put plist :section-numbers nil))
-  ((equal backend 'latex)
-  (plist-put plist :with-toc nil)
-  (plist-put plist :section-numbers t)))
- plist)
+  "Disable section numbers for HTML and enable them for LaTeX exports."
+  (cond
+   ((org-export-derived-backend-p backend 'html)
+    (plist-put plist :section-numbers nil))
+   ((org-export-derived-backend-p backend 'latex)
+    (plist-put plist :section-numbers t))
+   (t plist)))
 
-;; (add-to-list 'org-export-filter-options-functions 'my-org-export-change-options)
+(add-to-list 'org-export-filter-options-functions
+             #'my-org-export-change-options)
 
 #+end_src
 
@@ -256,34 +253,37 @@ Only applies to LaTeX exports from Org files tagged with :contract:."
 
 ** default org-css
 #+begin_SRC emacs-lisp
-(defvar my-org-selected-css "/Users/jaydixit/Dropbox/web-design/custom-css/sans-serif.css"
-  "Path of the selected CSS file or 'none' for no stylesheet. Defaults to sans-serif.css if not manually selected.")
+(defvar my-org-selected-css "/Users/jay/Dropbox/web-design/custom-css/sans-serif.css"
+  "Path of the selected CSS file, or nil for no stylesheet. Defaults to sans-serif.css if not manually selected.")
 
 (defvar my-org-css-options
   '("/Users/jay/Dropbox/web-design/custom-css/email.css"
     "/Users/jay/Dropbox/github/incandescentman/css/gmail.css"
     "/Users/jay/Dropbox/github/incandescentman/css/neocortex.css"
-"/Users/jay/Dropbox/github/incandescentman.github.io/css/bold.css"
-"/Users/jay/Dropbox/web-design/custom-css/chatgpt-images.css"
-    "/Users/jaydixit/Dropbox/web-design/custom-css/sakura-1.50css"
-    "/Users/jaydixit/Dropbox/web-design/custom-css/sans-serif.css"
-    "/Users/jay/Dropbox/github/incandescentman.github.io/css/iphone.css"
+    "/Users/jay/Dropbox/github/incandescentman/css/bold.css"
+    "/Users/jay/Dropbox/web-design/custom-css/chatgpt-images.css"
+    "/Users/jay/Dropbox/web-design/custom-css/sakura-1.50.css"
+    "/Users/jay/Dropbox/web-design/custom-css/sans-serif.css"
+    "/Users/jay/Dropbox/github/incandescentman/css/iphone.css"
     "none")
   "List of CSS file options for Org HTML export.")
 
 (defun select-org-export-css ()
   "Prompt the user to select a CSS file or choose none."
   (interactive)
-  (setq my-org-selected-css
-        (completing-read "Choose a CSS file or none: " my-org-css-options))
-  (when (string-equal my-org-selected-css "none")
-    (setq my-org-selected-css nil)))
+  (let ((selection
+         (completing-read "Choose a CSS file or none: "
+                          my-org-css-options nil t)))
+    (setq my-org-selected-css
+          (if (string-equal selection "none")
+              nil
+            (unless (file-readable-p selection)
+              (user-error "CSS file is not readable: %s" selection))
+            selection))))
 
 (defun my-org-inline-css-hook (exporter)
   "Insert custom inline CSS for Org HTML export."
   (when (eq exporter 'html)
-    (when (eq my-org-selected-css 'unset)
-      (select-org-export-css))
     ;; Force export to use only the manually selected stylesheet.
     ;; Without this, Org can still inject additional style blocks from other
     ;; export variables, which then override the chosen Gmail CSS.
@@ -297,20 +297,24 @@ Only applies to LaTeX exports from Org files tagged with :contract:."
             org-export-preserve-breaks)
           org-html-head-include-scripts nil
           org-html-validation-link nil)
-    (if (and my-org-selected-css (not (eq my-org-selected-css 'unset)))
-        (let ((final my-org-selected-css))
-          (when (file-exists-p final)
-            (setq org-html-head-include-default-style nil)
-            (setq org-html-head (concat
-                                 "<style type=\"text/css\">\n"
-                                 "<!--/*--><![CDATA[/*><!--*/\n"
-                                 (with-temp-buffer
-                                   (insert-file-contents final)
-                                   (buffer-string))
-                                 "/*]]>*/-->\n"
-                                 "</style>\n"))))
-      (setq org-html-head-include-default-style nil)
-      (setq org-html-head nil))))
+    (cond
+     ((null my-org-selected-css)
+      (setq org-html-head-include-default-style nil
+            org-html-head nil))
+     ((not (file-readable-p my-org-selected-css))
+      (user-error "Selected CSS file is not readable: %s"
+                  my-org-selected-css))
+     (t
+      (setq org-html-head-include-default-style nil
+            org-html-head
+            (concat
+             "<style type=\"text/css\">\n"
+             "<!--/*--><![CDATA[/*><!--*/\n"
+             (with-temp-buffer
+               (insert-file-contents my-org-selected-css)
+               (buffer-string))
+             "/*]]>*/-->\n"
+             "</style>\n"))))))
 
 (add-hook 'org-export-before-processing-functions 'my-org-inline-css-hook)
 #+END_SRC

@@ -146,6 +146,8 @@ Org export behavior lives in [[file+emacs:/Users/jay/emacs/emacs-settings/org-ex
 
 Smart quotes are enabled globally with =org-export-with-smart-quotes= so HTML and LaTeX exports can use typographic quotes. Markdown-derived exports are the exception: =jay/org-export-disable-smart-quotes-for-markdown= turns =:with-smart-quotes= off through =org-export-filter-options-functions= so Markdown output keeps plain ASCII apostrophes and double quotes instead of HTML entities such as =\&rsquo;=, =\&ldquo;=, and =\&rdquo;=.
 
+Section numbering is backend-specific and enforced by =my-org-export-change-options=: HTML exports always use =num:nil=, while LaTeX exports always use =num:t=. These settings override conflicting document-local =#+OPTIONS: num:= values. For LaTeX output that should look unnumbered, keep the normal section commands needed for table-of-contents participation and suppress visible numbers with =\setcounter{secnumdepth}{0}=.
+
 If Markdown export starts producing quote entities again, check [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] before adding per-file =#+OPTIONS: ':nil= workarounds. The intended repo-wide behavior is plain quotes for Markdown and smart quotes for the other export backends.
 
 ** Editing Browser Textareas in Emacs (GhostText)
@@ -621,7 +623,7 @@ For LaTeX exports that should show a table of contents but should not print sect
 #+LATEX_HEADER: \setcounter{tocdepth}{3}
 #+END_EXAMPLE
 
-Do not replace this with =num:nil= when a table of contents is needed. In LaTeX export, =num:nil= makes Org emit starred headings such as =\section*= and =\subsection*=; those do not populate the LaTeX =.toc= file unless custom =\addcontentsline= handling is added.
+Do not replace this with =num:nil= when a table of contents is needed. In unmodified Org, =num:nil= makes LaTeX export emit starred headings such as =\section*= and =\subsection*=; those do not populate the LaTeX =.toc= file unless custom =\addcontentsline= handling is added. This configuration now prevents that failure by forcing =num:t= for every LaTeX export, even when a document says =num:nil=.
 
 *** Endnotes (default OFF)
 

@@ -223,6 +223,7 @@ With =num:t=, Org emits normal =\section{...}= and =\subsection{...}= commands, 
 ** Actionable insight
 - If a LaTeX export needs a table of contents with unnumbered-looking headings, keep =num:t= and use =\setcounter{secnumdepth}{0}=.
 - Do not "simplify" that pair to =num:nil= unless you also add explicit =\addcontentsline= handling or otherwise customize the exporter.
+- [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] now enforces =num:t= for every LaTeX export and =num:nil= for every HTML export through =my-org-export-change-options=, overriding conflicting document-local =#+OPTIONS: num:= values.
 - Fast diagnostic: inspect the generated =.tex=. If headings are =\section*= / =\subsection*= and the TOC is empty, the problem is section-star export, not the LaTeX class.
 
 * "Fallback" Coercion Loops Must Respect The Same Heuristic As The Primary
