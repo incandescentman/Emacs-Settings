@@ -6971,3 +6971,34 @@ Do not reopen startup optimization merely because this append-only file is modif
 | org-babel-load fonts-and-themes.org | 0.0009 |
 | load jay-osx.el | 0.0009 |
 | load prelude-key-chord.el | 0.0008 |
+* 2026-08-23 20:58:28
+- Emacs: 29.4
+- Org: 9.8.9
+- Total init time: 2.154s
+- Measured module loads:
+| Step | Seconds |
+|------+---------|
+| org-babel-load shared-functions.org | 0.3839 |
+| org-babel-load search-commands.org | 0.1702 |
+| require jay-org-roam-core | 0.0959 |
+| org-babel-load gnu-emacs-startup.org | 0.0308 |
+| load frame-cmds.el | 0.0213 |
+| org-babel-load goals-agenda.org | 0.0188 |
+| org-babel-load org-export.org | 0.0173 |
+| load keys.el | 0.0157 |
+| load skeletons.el | 0.0072 |
+| org-babel-load spacecraft-mode.org | 0.0069 |
+| load poetry_JD.el | 0.0068 |
+| load prelude-core.el | 0.0048 |
+| load pasteboard-copy-and-paste-functions.el | 0.0032 |
+| load auto-capitalize.el | 0.0020 |
+| org-babel-load spellcheck.org | 0.0017 |
+| load jay-org-roam-extras.el | 0.0012 |
+| load jay-goals-system.el | 0.0011 |
+| org-babel-load org-authoring.org | 0.0009 |
+| org-babel-load fonts-and-themes.org | 0.0009 |
+| load prelude-key-chord.el | 0.0008 |
+| load xah-replace-pairs.el | 0.0008 |
+| load chatgpt2org.el | 0.0008 |
+| load buffer-stack.el | 0.0007 |
+| load jay-osx.el | 0.0006 |
