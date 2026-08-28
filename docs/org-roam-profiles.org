@@ -156,15 +156,15 @@ profile switching — the same pinned list appears under every profile. See
 /Finding Nodes (and Pinned Non-Roam Files)/ in
 [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][docs/instructions.org]].
 
-** Excluded archive folder
+** Excluded archive folders
 
-The default vault has a cold-storage folder at [[file+emacs:/Users/jay/Dropbox/roam/archive-excluded/][/Users/jay/Dropbox/roam/archive-excluded/]]. It is for files Jay wants to keep but hide from normal Org-roam node find commands, including =jay/org-roam-node-find-recent=.
+The default vault excludes the cold-storage folder at [[file+emacs:/Users/jay/Dropbox/roam/archive-excluded/][/Users/jay/Dropbox/roam/archive-excluded/]] and every folder named ~archive~ anywhere below [[file+emacs:/Users/jay/Dropbox/roam/][/Users/jay/Dropbox/roam/]]. Files in those folders remain on disk but are hidden from normal Org-roam node find commands, including ~jay/org-roam-node-find-recent~.
 
 The effective Emacs exclusion is in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-suite/jay-org-roam-core.el]]:
 
 #+begin_src emacs-lisp
 (setq org-roam-file-exclude-regexp
-      "\\.git/\\|attachments/\\|archive-excluded/\\|\\.org~$\\|#.*#$")
+      "\\.git/\\|attachments/\\|archive-excluded/\\|\\(?:^\\|/\\)archive/\\|\\.org~$\\|#.*#$")
 #+end_src
 
 In this installed org-roam build, =org-roam-list-files= honors =org-roam-file-exclude-regexp=. =org-roam-directory-exclude-regexp= alone is not enough to keep files out of the node picker.
@@ -177,11 +177,13 @@ After changing exclusions:
 
 #+begin_src emacs-lisp
 (seq-filter
- (lambda (f) (string-match-p "archive-excluded" f))
+ (lambda (f)
+   (string-match-p "\\(?:^\\|/\\)\\(?:archive-excluded\\|archive\\)/"
+                   (file-relative-name f org-roam-directory)))
  (org-roam-list-files))
 #+end_src
 
-4. Verify [[file+emacs:/Users/jay/.cache/org-roam.db][/Users/jay/.cache/org-roam.db]] has no rows for =archive-excluded= before telling Jay the picker is clean.
+4. Verify [[file+emacs:/Users/jay/.cache/org-roam.db][/Users/jay/.cache/org-roam.db]] has no rows for ~archive-excluded~ or an ~archive~ path segment before telling Jay the picker is clean.
 
 ** Independence
 

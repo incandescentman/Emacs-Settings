@@ -1587,9 +1587,9 @@ Jay wanted a vault folder for files he did not want to delete but also did not w
 The installed org-roam build on this machine documents and honors =org-roam-file-exclude-regexp= for file discovery. =org-roam-directory-exclude-regexp= is present in Jay's old config history, but in the live build it was not enough to filter =org-roam-list-files=.
 
 ** Actionable insight
-- For vault cold storage, keep [[file+emacs:/Users/jay/Dropbox/roam/archive-excluded/][/Users/jay/Dropbox/roam/archive-excluded/]] in =org-roam-file-exclude-regexp= inside [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-suite/jay-org-roam-core.el]].
-- After changing org-roam exclusions, test the live function, not just the variable: =(seq-filter (lambda (f) (string-match-p "archive-excluded" f)) (org-roam-list-files))= should return =nil=.
-- Run =org-roam-db-sync= and verify [[file+emacs:/Users/jay/.cache/org-roam.db][/Users/jay/.cache/org-roam.db]] has no rows for the excluded path before declaring =jay/org-roam-node-find-recent= clean.
+- For vault cold storage, keep [[file+emacs:/Users/jay/Dropbox/roam/archive-excluded/][/Users/jay/Dropbox/roam/archive-excluded/]] and every directory named ~archive~ in ~org-roam-file-exclude-regexp~ inside [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-suite/jay-org-roam-core.el]]. Match ~archive~ as a complete path segment so similarly named directories remain visible.
+- After changing Org-roam exclusions, test the live function, not just the variable: filter ~org-roam-list-files~ for the excluded relative-path segments and require an empty result.
+- Run ~org-roam-db-sync~ and verify [[file+emacs:/Users/jay/.cache/org-roam.db][/Users/jay/.cache/org-roam.db]] has no rows for any excluded path before declaring ~jay/org-roam-node-find-recent~ clean.
 
 * Fontspec LetterSpace Uses Percent, Not DTP Tracking Units
   Date: 2026-07-16

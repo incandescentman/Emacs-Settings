@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-08-28: Exclude archive folders from Org-roam
+
+- Extended the shared Org-roam file exclusion in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-suite/jay-org-roam-core.el]] so every complete ~archive~ path segment below [[file+emacs:/Users/jay/Dropbox/roam/][/Users/jay/Dropbox/roam/]] is omitted from normal Org-roam commands, including ~jay/org-roam-node-find-recent~. The existing [[file+emacs:/Users/jay/Dropbox/roam/archive-excluded/][/Users/jay/Dropbox/roam/archive-excluded/]] exclusion remains in force.
+- Updated the live Emacs setting, synchronized the default Org-roam database, and verified file discovery and database rows contain neither excluded archive form.
+
 * 2026-08-24: Make export numbering backend-specific and repair the CSS chooser
 
 - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] so HTML exports always disable section numbering and LaTeX exports always enable it, overriding conflicting document-local ~#+OPTIONS: num:~ values while leaving other backends unchanged.
