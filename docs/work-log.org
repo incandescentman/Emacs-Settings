@@ -1,6 +1,13 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-08-29: Clean the current transcript with the local S1-mini model
+
+- Added [[file+emacs:/Users/jay/emacs/emacs-settings/s1-clean.el][s1-clean.el]], which provides ~s1-clean-file~, ~s1-clean-stats~, and ~s1-clean-diff~ for the Org transcript in the current buffer. It shells out to the repo-owned wrapper [[file+emacs:/Users/jay/Dropbox/github/transcription/bin/s1-clean][/Users/jay/Dropbox/github/transcription/bin/s1-clean]], which sends each speaker turn to the local Superwhisper S1-mini model through ~llama-server~; the model is local, so nothing is uploaded and nothing is billed.
+- ~s1-clean-file~ saves the buffer, then runs the wrapper asynchronously with ~start-process~ into ~*s1-clean*~, because a long transcript takes minutes. On success the ~_s1mini_cleaned.org~ derivative opens in the other window and the wrapper's summary appears in the echo area; on failure, including its refusal to overwrite an existing derivative, the process buffer is shown. A prefix argument passes ~--force~. ~s1-clean-stats~ is synchronous and needs no model. The wrapper never modifies the transcript it reads.
+- Loaded the same way as [[file+emacs:/Users/jay/emacs/emacs-settings/whittle.el][whittle.el]], through a ~load-file~ block in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]]; that literate source must be tangled for the change to reach [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]].
+- Added [[file+emacs:/Users/jay/emacs/emacs-settings/tests/s1-clean-tests.el][tests/s1-clean-tests.el]] covering the output-path derivation and the non-file buffer guard. Seven ERT tests pass under ~emacs --batch -Q -l tests/s1-clean-tests.el -f ert-run-tests-batch-and-exit~, and the new file byte-compiles without warnings.
+
 * 2026-08-28: Exclude archive folders from Org-roam
 
 - Extended the shared Org-roam file exclusion in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-suite/jay-org-roam-core.el]] so every complete ~archive~ path segment below [[file+emacs:/Users/jay/Dropbox/roam/][/Users/jay/Dropbox/roam/]] is omitted from normal Org-roam commands, including ~jay/org-roam-node-find-recent~. The existing [[file+emacs:/Users/jay/Dropbox/roam/archive-excluded/][/Users/jay/Dropbox/roam/archive-excluded/]] exclusion remains in force.

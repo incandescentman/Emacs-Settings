@@ -426,6 +426,9 @@ With prefix arg FIX-HINTS, append actionable remediation commands."
 
 
 (autoload 'whittle "whittle" nil t)
+(autoload 's1-clean-file "s1-clean" nil t)
+(autoload 's1-clean-stats "s1-clean" nil t)
+(autoload 's1-clean-diff "s1-clean" nil t)
 
 
 

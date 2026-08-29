@@ -6773,6 +6773,12 @@ The maintained implementation now lives in [[file+emacs:/Users/jay/emacs/emacs-s
 (load-file "/Users/jay/emacs/emacs-settings/whittle.el")
 #+end_src
 
+* clean a transcript with the local S1-mini model
+Whittle cleans text with local regular expressions. [[file+emacs:/Users/jay/emacs/emacs-settings/s1-clean.el][/Users/jay/emacs/emacs-settings/s1-clean.el]] instead hands each speaker turn to the local Superwhisper S1-mini model through [[file+emacs:/Users/jay/Dropbox/github/transcription/bin/s1-clean][/Users/jay/Dropbox/github/transcription/bin/s1-clean]], and writes a separate cleaned derivative rather than changing the buffer. The model is local, so nothing is uploaded and nothing is billed.
+#+begin_src emacs-lisp
+(load-file "/Users/jay/emacs/emacs-settings/s1-clean.el")
+#+end_src
+
 * remove redundant bold tags from org headings
 #+begin_src emacs-lisp
 (defun redundant-delete-redundant-asterisks-in-org-headings ()
