@@ -363,12 +363,8 @@ Additional keyword ARGS allow callers to override pieces of the template:
 
 (defun jay/org-roam-close-database ()
   "Safely close the current org-roam database connection."
-  (when (and (boundp 'org-roam-db)
-             org-roam-db
-             (emacsql-live-p org-roam-db))
-    (ignore-errors
-      (emacsql-close org-roam-db)))
-  (setq org-roam-db nil))
+  (when (fboundp 'org-roam-db--close)
+    (org-roam-db--close)))
 
 (defun jay/org-roam-apply-profile (profile-name &optional force-sync)
   "Apply the configuration for PROFILE-NAME.
@@ -434,18 +430,14 @@ If FORCE-SYNC is non-nil, ensure the database is synced even when not switching 
       (make-directory org-roam-directory t)
       (message "Created org-roam directory: %s" org-roam-directory))
 
-    ;; Reinitialize the database connection when switching profiles    ;; No clearing needed - we're just connecting to a different database file
+    ;; Reinitialize the database connection when switching profiles.
     (when switching-profiles
-      (setq org-roam-db nil)
       (org-roam-db))
 
     ;; Sync database if we explicitly switched profiles (or caller requested it)
     (when needs-sync
       (condition-case err
-          (progn
-            (unless (and (boundp 'org-roam-db) (emacsql-live-p org-roam-db))
-              (org-roam-db))
-            (org-roam-db-sync))
+          (org-roam-db-sync)
         (error (message "Org-roam profile sync failed: %s" (error-message-string err)))))
 
     ;; Update current profile

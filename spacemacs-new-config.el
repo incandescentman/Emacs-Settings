@@ -180,11 +180,11 @@
          (db-file (and db-loc (expand-file-name db-loc)))
          (db-size (and db-file (file-exists-p db-file)
                        (file-attribute-size (file-attributes db-file))))
-         (db-live (and (boundp 'org-roam-db)
-                       (boundp 'org-roam-db-location)
+         (db (and (fboundp 'org-roam-db--get-connection)
+                  (org-roam-db--get-connection)))
+         (db-live (and db
                        (fboundp 'emacsql-live-p)
-                       org-roam-db
-                       (ignore-errors (emacsql-live-p org-roam-db)))))
+                       (ignore-errors (emacsql-live-p db)))))
     `(("org-roam-directory" . ,(if (boundp 'org-roam-directory) org-roam-directory "unbound"))
       ("org-roam-db-location" . ,(or db-file "unbound"))
       ("db-file-exists" . ,(if (and db-file (file-exists-p db-file)) "yes" "no"))

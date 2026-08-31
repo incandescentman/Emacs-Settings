@@ -13,10 +13,9 @@
                        (format-time-string "%Y%m%d-%H%M%S"))
                t))
 
-  ;; Close existing connection if any
-  (when (and (boundp 'org-roam-db)
-             (emacsql-live-p org-roam-db))
-    (emacsql-close org-roam-db))
+  ;; Close the current profile's existing connection, if any.
+  (when (fboundp 'org-roam-db--close)
+    (org-roam-db--close))
 
   ;; Delete the database file
   (when (and (boundp 'org-roam-db-location)
@@ -31,7 +30,9 @@
 (defun org-roam-db-diagnose ()
   "Diagnose org-roam database issues."
   (interactive)
-  (let ((msgs '()))
+  (let ((msgs '())
+        (db (and (fboundp 'org-roam-db--get-connection)
+                 (org-roam-db--get-connection))))
     ;; Check if database location is set
     (if (boundp 'org-roam-db-location)
         (push (format "DB location: %s" org-roam-db-location) msgs)
@@ -46,9 +47,7 @@
       (push "ERROR: Database file does not exist" msgs))
 
     ;; Check connection
-    (if (and (boundp 'org-roam-db)
-             org-roam-db
-             (emacsql-live-p org-roam-db))
+    (if (and db (emacsql-live-p db))
         (push "DB connection: LIVE" msgs)
       (push "ERROR: Database connection not live" msgs))
 
@@ -65,14 +64,6 @@
   (interactive)
   (condition-case err
       (progn
-        ;; Ensure database connection is alive
-        (when (and (boundp 'org-roam-db)
-                   (not (emacsql-live-p org-roam-db)))
-          (message "Reconnecting to database...")
-          (setq org-roam-db nil)
-          (org-roam-db))
-
-        ;; Now sync
         (org-roam-db-sync)
         (message "Database sync completed successfully"))
     (error
@@ -87,18 +78,17 @@
       (apply orig-fun args)
     (emacsql-error
      (message "Database error during sync: %s" (error-message-string err))
-     ;; Try to recover
-     (when (and (boundp 'org-roam-db)
-                (not (emacsql-live-p org-roam-db)))
-       (message "Attempting to reconnect...")
-       (setq org-roam-db nil)
-       (org-roam-db)
-       ;; Retry once
-       (condition-case err2
-           (apply orig-fun args)
-         (error
-          (message "Retry failed: %s" (error-message-string err2))
-          nil))))))
+     ;; Retry once only when the current profile has no live connection.
+     (let ((db (and (fboundp 'org-roam-db--get-connection)
+                    (org-roam-db--get-connection))))
+       (when (or (null db) (not (emacsql-live-p db)))
+         (message "Attempting to reconnect...")
+         (org-roam-db)
+         (condition-case err2
+             (apply orig-fun args)
+           (error
+            (message "Retry failed: %s" (error-message-string err2))
+            nil)))))))
 
 ;; Apply the robust sync advice
 (with-eval-after-load 'org-roam-db

@@ -151,9 +151,6 @@ If FILENAME starts with /Users/jay/Dropbox, return it as-is without resolution."
             (setq jay/org-roam--skip-next-sync cache-warm)
             (when jay/org-roam-debug
               (message "⮡ enabling org-roam autosync … (cache warm: %s)" cache-warm)))
-          (when (and (boundp 'org-roam-db) (not (emacsql-live-p org-roam-db)))
-            (setq org-roam-db nil)
-            (org-roam-db))
           (org-roam-db-autosync-mode 1))
        (error (message "Failed to enable autosync: %s" (error-message-string err)))))))
 
