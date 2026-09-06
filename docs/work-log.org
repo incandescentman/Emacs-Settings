@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-09-06: Document the separate Emacs Plus trial
+
+- Added user-facing launch and comparison instructions to [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][the usage guide]]. Explained the existing/trial app paths, simultaneous use, read-only originals, ~trial-edit-copy~, independent configuration snapshot, disabled integrations, update limitations, and the [[file:/Users/jay/gnulisp][/Users/jay/gnulisp]] alias.
+- Documentation only; no live or trial editor configuration changed in this documentation pass. Technical setup evidence remains in [[file:/Users/jay/Library/Application Support/EmacsPlusTrial/verification.org][the trial verification record]].
+
 * 2026-08-30: Repair Org-roam autosync and profile connection handling
 
 - Replaced stale scalar ~org-roam-db~ connection checks in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][jay-org-roam-suite/jay-org-roam-core.el]], [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-profiles.el][jay-org-roam-suite/jay-org-roam-profiles.el]], [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/org-roam-db-fix.el][jay-org-roam-suite/org-roam-db-fix.el]], and [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][spacemacs-new-config.el]] with the current per-profile connection accessors. Autosync now delegates connection initialization to Org-roam, profile changes close and reopen the active profile through Org-roam's connection API, and diagnostics report the actual current connection.

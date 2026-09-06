@@ -12,6 +12,51 @@ Key features:
 - Beautiful themes and fonts optimized for writing
 - Extensive custom functions in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]]
 
+* Choosing Between Existing Emacs and the Emacs Plus Trial
+
+Added 2026-09-06. These launch paths describe the trial installed on Destroyer.
+
+** Launch the existing Emacs
+
+Open [[file:/Applications/Emacs.app][/Applications/Emacs.app]], or use your existing Dock icon and normal Emacs commands. This is Emacs 29.4, your everyday editor: it edits your original documents and uses your live configuration and integrations.
+
+From Terminal:
+
+#+begin_src sh
+open "/Applications/Emacs.app"
+#+end_src
+
+** Launch the new trial
+
+Open [[file:/Users/jay/Applications/Emacs Plus Trial.app][/Users/jay/Applications/Emacs Plus Trial.app]] in Finder. You can keep this separate app in your Dock too. Its window title says Emacs Plus Trial.
+
+From Terminal:
+
+#+begin_src sh
+open "/Users/jay/Applications/Emacs Plus Trial.app"
+#+end_src
+
+The trial is Emacs Plus 31.1 with native compilation. Both apps can run at once; launching or quitting the trial does not require closing your existing Emacs.
+
+** Are they interchangeable?
+
+Not yet. The trial uses a separate snapshot of your settings, packages, caches, and default Org-roam index. Later changes to your normal configuration do not automatically appear in the trial.
+
+- Original documents open read-only in the trial.
+- To test editing, visit a file in the trial and run ~M-x trial-edit-copy~. This opens a separate editable copy under [[file:/Users/jay/Library/Application Support/EmacsPlusTrial/work/][/Users/jay/Library/Application Support/EmacsPlusTrial/work/]]. Edits to this copy do not change your original file.
+- Use your existing Emacs for ordinary work on original documents. Trial edits are not automatically merged back.
+- The trial disables Org-roam autosync, automatic tangling, automatic saving of all Org buffers, goals startup automation, the GhostText browser-editing server, and workspace saving. Commands that write outside the trial directory may be blocked.
+- Fonts and macOS behavior may differ even with the copied settings. The trial is for comparing those behaviors before deciding on a permanent switch.
+- Your usual ~updateall~ does not update this manually installed trial.
+
+** Where the configuration lives
+
+[[file:/Users/jay/gnulisp][/Users/jay/gnulisp]] is a symlink to [[file:/Users/jay/emacs/emacs-settings/][/Users/jay/emacs/emacs-settings/]]; these are two paths to the same live configuration. The trial's independent copy is at [[file:/Users/jay/Library/Application Support/EmacsPlusTrial/emacs-settings/][/Users/jay/Library/Application Support/EmacsPlusTrial/emacs-settings/]].
+
+The trial's [[file:/Users/jay/Library/Application Support/EmacsPlusTrial/README.org][local README]] contains its setup details and limitations. Its [[file:/Users/jay/Library/Application Support/EmacsPlusTrial/verification.org][verification record]] records the checks performed.
+
+Your Karabiner Emacs exemptions include the trial's separate app identity. This preserves shortcuts such as ~C-d~ instead of allowing Karabiner to translate them into ordinary-app editing keys.
+
 * Installation
 
 ** First-Time Setup
