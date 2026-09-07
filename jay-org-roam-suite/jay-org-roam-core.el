@@ -623,8 +623,8 @@ Passing OTHER-WINDOW mirrors `org-roam-node-find' prefix behavior."
 (global-set-key (kbd "s-u 1") #'jay/org-roam-switch-to-default)
 (global-set-key (kbd "s-u 2") #'jay/org-roam-switch-to-mylife)
 (global-set-key (kbd "s-u 3") #'jay/org-roam-switch-to-social)
-(global-set-key (kbd "s-u 4") #'jay/org-roam-switch-to-parents)
-(global-set-key (kbd "s-u 5") #'jay/org-roam-switch-to-side-hustle)
+(global-set-key (kbd "s-u 4") #'jay/org-roam-switch-to-side-hustle)
+(global-set-key (kbd "s-u 5") #'jay/org-roam-switch-to-parents)
 
 (jay/bind-roam "o" org-roam-dailies-find-date)
 (jay/bind-roam "." org-roam-dailies-goto-date)
@@ -762,8 +762,8 @@ _URL is ignored so this can be used as an Embark action."
     "s-u 1"   "profile: Work"
     "s-u 2"   "profile: My Life"
     "s-u 3"   "profile: Social"
-    "s-u 4"   "profile: Parents"
-    "s-u 5"   "profile: Side Hustle"
+    "s-u 4"   "profile: Side Hustle"
+    "s-u 5"   "profile: Parents"
     "s-u P"   "switch profile"
     "s-u C-p" "show profile"
     ;; Dailies

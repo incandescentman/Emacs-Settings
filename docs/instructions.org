@@ -321,8 +321,8 @@ Switch between completely separate note databases:
 | =Cmd-u 1=     | Switch to work notes (default)          |
 | =Cmd-u 2=     | Switch to personal notes                |
 | =Cmd-u 3=     | Switch to relationships (roam-social)   |
-| =Cmd-u 4=     | Switch to parents / family HQ database  |
-| =Cmd-u 5=     | Switch to side-hustle notes             |
+| =Cmd-u 4=     | Switch to side-hustle notes             |
+| =Cmd-u 5=     | Switch to parents / family HQ database  |
 | =Cmd-u P=     | Choose profile interactively            |
 | =Cmd-u C-p=   | Show current profile                    |
 
@@ -348,18 +348,18 @@ The populated legacy vault at [[file+emacs:/Users/jay/Dropbox/roam-social/][/Use
 *Parents / Family HQ (roam-parents)*
 - Location: =~/Dropbox/roam-parents/=
 - Templates: conversations, documents, interviews, notes, people, stories, tasks
-- Keybinding: =Cmd-u 4=
+- Keybinding: =Cmd-u 5=
 
 *Side Hustle (side-hustle)*
 - Location: =~/Dropbox/side-hustle/=
 - Templates: ideas, notes, opportunities, projects, tasks
-- Keybinding: =Cmd-u 5=
+- Keybinding: =Cmd-u 4=
 
 Mode line indicator reflects the active graph (e.g., =[Roam:Default]=, =[Roam:My]=, =[Roam:Social]=, =[Roam:Parents]=, =[Roam:Side Hustle]=). Click it to switch quickly.
 
 Your last-used profile is remembered across sessions.
 
-Dailies commands use the active profile. After =Cmd-u 4= switches to =roam-parents=, =Cmd-:= opens or creates today's note under [[file+emacs:/Users/jay/Dropbox/roam-parents/journal/][roam-parents/journal/]], not under [[file+emacs:/Users/jay/Dropbox/roam/journal/][default roam/journal/]].
+Dailies commands use the active profile. After =Cmd-u 5= switches to =roam-parents=, =Cmd-:= opens or creates today's note under [[file+emacs:/Users/jay/Dropbox/roam-parents/journal/][roam-parents/journal/]], not under [[file+emacs:/Users/jay/Dropbox/roam/journal/][default roam/journal/]].
 
 *** Finding Nodes (and Pinned Non-Roam Files)
 

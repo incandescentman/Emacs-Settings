@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-09-06: Put Side Hustle on ~s-u 4~ and Parents on ~s-u 5~
+
+- Swapped the two quick profile bindings so ~s-u 4~ switches to ~side-hustle~ and ~s-u 5~ switches to ~roam-parents~, and updated their Which-key labels and user guides to match.
+- The changed Elisp passed ~check-parens~ and the configured startup smoke test. Both bindings were applied and exercised in the running Emacs session, with ~s-u 5~ resolving to [[file+emacs:/Users/jay/Dropbox/roam-parents/][/Users/jay/Dropbox/roam-parents/]] and ~s-u 4~ resolving to [[file+emacs:/Users/jay/Dropbox/side-hustle/][/Users/jay/Dropbox/side-hustle/]]; Side Hustle was restored as the active and saved profile afterward.
+
 * 2026-09-06: Add the Side Hustle Org-roam profile
 
 - Added the ~side-hustle~ profile rooted at [[file+emacs:/Users/jay/Dropbox/side-hustle/][/Users/jay/Dropbox/side-hustle/]], with its own database, dailies, general capture templates, mode-line label, and the ~s-u 5~ quick switch.
