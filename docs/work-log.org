@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-09-06: Add the Side Hustle Org-roam profile
+
+- Added the ~side-hustle~ profile rooted at [[file+emacs:/Users/jay/Dropbox/side-hustle/][/Users/jay/Dropbox/side-hustle/]], with its own database, dailies, general capture templates, mode-line label, and the ~s-u 5~ quick switch.
+- Corrected the Social paths in the Org-roam guides and its profile-specific Astro export helper to the active [[file+emacs:/Users/jay/Dropbox/social/][/Users/jay/Dropbox/social/]] vault. Recorded that [[file+emacs:/Users/jay/Dropbox/roam-social/][/Users/jay/Dropbox/roam-social/]] remains a populated legacy vault with 62 Org files and no byte-identical Org files in the active Social vault.
+- Both changed Elisp files passed ~check-parens~, the configured startup smoke test passed, and the running Emacs session successfully switched to ~side-hustle~ with all five capture templates and the ~s-u 5~ binding active. The session and saved profile were returned to ~default~ after the test.
+
 * 2026-09-06: Document the separate Emacs Plus trial
 
 - Added user-facing launch and comparison instructions to [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][the usage guide]]. Explained the existing/trial app paths, simultaneous use, read-only originals, ~trial-edit-copy~, independent configuration snapshot, disabled integrations, update limitations, and the [[file:/Users/jay/gnulisp][/Users/jay/gnulisp]] alias.

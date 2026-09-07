@@ -32,8 +32,9 @@ They can be created automatically, but the explicit paths are:
 
 - =~/Dropbox/roam/journal=
 - =~/Dropbox/roam-life/journal=
-- =~/Dropbox/roam-social/journal=
+- =~/Dropbox/social/journal=
 - =~/Dropbox/roam-parents/journal=
+- =~/Dropbox/side-hustle/journal=
 
 * Usage
 
@@ -53,6 +54,7 @@ Quick bindings:
 - =s-u 2= switch to my-life
 - =s-u 3= switch to roam-social
 - =s-u 4= switch to roam-parents
+- =s-u 5= switch to side-hustle
 
 ** What happens when you switch
 
@@ -93,15 +95,23 @@ Dailies commands follow the active profile. After switching to =roam-parents= wi
 
 ** Roam-Social
 
-- Directory: =~/Dropbox/roam-social/=
-- Database: =~/Dropbox/roam-social/.org-roam.db=
+- Directory: =~/Dropbox/social/=
+- Database: =~/Dropbox/social/.org-roam.db=
 - Focus: relationship notes, event debriefs, introductions, follow-ups, people snapshots
+
+The former vault at [[file+emacs:/Users/jay/Dropbox/roam-social/][/Users/jay/Dropbox/roam-social/]] remains a separate populated archive outside the active profile system. Verified 2026-09-06: it contains 62 Org files, and none is byte-identical to an Org file in the active [[file+emacs:/Users/jay/Dropbox/social/][/Users/jay/Dropbox/social/]] vault. Do not treat it as an empty duplicate.
 
 ** Roam-Parents
 
 - Directory: =~/Dropbox/roam-parents/=
 - Database: =~/Dropbox/roam-parents/.org-roam.db=
 - Focus: caretaking, appointments, medical notes, support reflections, family logistics
+
+** Side-Hustle
+
+- Directory: =~/Dropbox/side-hustle/=
+- Database: =~/Dropbox/side-hustle/.org-roam.db=
+- Focus: side-hustle ideas, notes, opportunities, projects, and tasks
 
 * Customization
 
@@ -211,6 +221,7 @@ Run =M-x jay/org-roam-show-current-profile= and verify the active profile, then 
 - Switch to =default= for work.
 - Use =roam-social= around events and relationship follow-up.
 - Use =roam-parents= when handling family coordination.
+- Use =side-hustle= for side-hustle ideas, opportunities, projects, and tasks.
 - Check the active profile with =s-u C-p= before capturing.
 
 * Integration Notes

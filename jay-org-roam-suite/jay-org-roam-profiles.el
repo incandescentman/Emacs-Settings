@@ -73,7 +73,17 @@
      :capture-templates jay/org-roam-capture-templates-parents
      :dailies-capture-templates jay/org-roam-dailies-template-default
      :astro-source-root "/Users/jay/Dropbox/roam-parents"
-     :mode-line-label "Parents"))
+     :mode-line-label "Parents")
+
+    (side-hustle
+     :name "Side Hustle"
+     :directory "/Users/jay/Dropbox/side-hustle"
+     :db-location "/Users/jay/Dropbox/side-hustle/.org-roam.db"
+     :dailies-directory "journal/"
+     :capture-templates jay/org-roam-capture-templates-side-hustle
+     :dailies-capture-templates jay/org-roam-dailies-template-default
+     :astro-source-root "/Users/jay/Dropbox/side-hustle"
+     :mode-line-label "Side Hustle"))
   "Alist of org-roam profile configurations.
 Each profile is a plist with keys:
   :name - Display name for the profile
@@ -348,6 +358,17 @@ Additional keyword ARGS allow callers to override pieces of the template:
     :body "- Links ::\n\n* ${title}\n\n- [ ] %?"))
   "Capture templates for the roam-parents (family) profile.")
 
+;; SIDE-HUSTLE PROFILE TEMPLATES
+(defvar jay/org-roam-capture-templates-side-hustle
+  (list
+   (jay/roam-template "i" "idea" "ideas" "idea")
+   (jay/roam-template "n" "note" "notes" "note")
+   (jay/roam-template "o" "opportunity" "opportunities" "opportunity")
+   (jay/roam-template "p" "project" "projects" "project")
+   (jay/roam-template "t" "task" "tasks" "task"
+    :body "- Links ::\n\n* ${title}\n\n- [ ] %?"))
+  "Capture templates for the side-hustle profile.")
+
 
 ;; -----------------------------------------------------------------------------
 ;; Core Profile Switching Logic
@@ -579,6 +600,11 @@ Prompts for profile name with completion."
   (interactive)
   (jay/org-roam-apply-profile 'roam-parents))
 
+(defun jay/org-roam-switch-to-side-hustle ()
+  "Quick switch to side-hustle profile."
+  (interactive)
+  (jay/org-roam-apply-profile 'side-hustle))
+
 ;; -----------------------------------------------------------------------------
 ;; Astro export helpers
 ;; -----------------------------------------------------------------------------
@@ -609,9 +635,9 @@ Prompts for profile name with completion."
                                    async subtreep visible-only body-only))
 
 (defun jay/org-astro-export-from-roam-social (&optional async subtreep visible-only body-only)
-  "Run `org-astro-export-to-mdx' with the roam-social tree as source root."
+  "Run `org-astro-export-to-mdx' with the Social profile tree as source root."
   (interactive)
-  (jay/org-astro--export-with-root "/Users/jay/Dropbox/roam-social"
+  (jay/org-astro--export-with-root "/Users/jay/Dropbox/social"
                                    async subtreep visible-only body-only))
 
 (defun jay/org-astro-export-from-roam-parents (&optional async subtreep visible-only body-only)
