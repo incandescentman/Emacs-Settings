@@ -1,6 +1,10 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-09-08: Bind Timeline capture globally
+
+- Added ~s-k c c~ → ~my-timeline-capture~ to ~my/global-key-bindings~ in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]], beside ~s-k c s~ → ~org-schedule~, and updated the Timeline usage references. Applied the new binding to the running session without reloading the complete key configuration; verified the effective capture and scheduling bindings in both a plain buffer and the journal. Elisp syntax and the code whitespace check passed.
+
 * 2026-09-08: Match standard HTML export links to the Socratic signature
 
 - Added pink link text and underlines (~#FBB6CE~, including visited links) to the currently selected default stylesheet, [[file+emacs:/Users/jay/Dropbox/web-design/custom-css/sans-serif.css][sans-serif.css]]. Matched the literal color in [[file+emacs:/Users/jay/Dropbox/github/astro-monorepo/apps/socratic/public/socratic-email-signature.html][the Socratic signature]] and [[file+emacs:/Users/jay/Dropbox/data/contacts/reports/2026-09-06-life-update-group-m-batch-10-preview-reviewed-92.html][the reviewed life-update preview]]. The existing exporter reads this stylesheet on every export, so no Elisp reload or tangle was needed.

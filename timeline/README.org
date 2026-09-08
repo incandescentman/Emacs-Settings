@@ -28,7 +28,7 @@ Opening Calendar saves the current writing layout and places a short three-month
 - ~V~ toggles following and remembers the preference through Custom. ~v~/~o~/~SPC~ show the selected date manually when following is off.
 - ~C-c <left>~/~C-c <right>~ go back and forward through deliberate jumps without recording arrow movement.
 - In the itinerary, ~<~/~>~ extend earlier/later by four weeks; page scrolling extends at the boundaries. ~g~ refreshes and ~q~ returns focus to the grid.
-- ~M-x my-timeline-capture~ captures a date and event from any buffer, then returns to the current work. Capture leaves preexisting unsaved diary edits unsaved.
+- ~s-k c c~ (~M-x my-timeline-capture~) captures a date and event from any buffer, then returns to the current work. Capture leaves preexisting unsaved diary edits unsaved.
 - ~?~ displays an Org guide whose displayed shortcuts come from the current keymaps.
 
 Upcoming and the itinerary share one buffer-setup helper and a cache of entries and paired ranges keyed by the live source buffer's character modification tick. Browsing preserves the diary's point, narrowing, text, and modified state. Olivetti is disabled locally in the generated views; their Org mode is initialized once and their buffers are reused. The Markdown diary and Timeless range format remain the shared source of truth.

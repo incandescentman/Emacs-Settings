@@ -88,7 +88,7 @@ These bindings live in ~calendar-mode-map~.
 
 * Capture Anywhere
 
-~M-x my-timeline-capture~ asks for a natural-language date and event, then returns to the current work. It saves a previously clean diary and preserves the unsaved state of an already modified diary.
+~s-k c c~ (~M-x my-timeline-capture~) asks for a natural-language date and event, then returns to the current work. It saves a previously clean diary and preserves the unsaved state of an already modified diary.
 
 * Markdown Diary Helpers
 The timeline lives in ~~/Dropbox/github/timeless/data/timeline.md~ and is displayed in ~markdown-mode~.

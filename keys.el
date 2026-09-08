@@ -194,6 +194,7 @@
     ("s-k x"         . org-cut-subtree)
     ("s->"           . load-gnu-startup) ; keep this final binding for s->
     ("s-k c s"       . org-schedule)
+    ("s-k c c"       . my-timeline-capture)
     ("C-c C-s"       . org-schedule)
     ("s-k t d"       . org-todo-list)
     ("s-k a f"       . org-attach)

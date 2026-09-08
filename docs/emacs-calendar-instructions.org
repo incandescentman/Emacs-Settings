@@ -83,7 +83,7 @@ Calendar movement leaves the source diary's point and text alone. Editing pauses
 
 * Capture Without Opening Calendar
 
-Run ~M-x my-timeline-capture~ from any Emacs buffer. Enter a natural-language date and the event text; capture inserts it chronologically and returns to your current work. A previously clean diary is saved. If the diary already contains unsaved edits, capture leaves those edits and the new entry unsaved rather than saving other work implicitly.
+Press ~s-k c c~ (or run ~M-x my-timeline-capture~) from any Emacs buffer. Enter a natural-language date and the event text; capture inserts it chronologically and returns to your current work. A previously clean diary is saved. If the diary already contains unsaved edits, capture leaves those edits and the new entry unsaved rather than saving other work implicitly.
 
 * Inside the Diary Buffer (timeline.md)
 When ~timeline.md~ is open in ~markdown-mode~, =my-diary-mode= activates
