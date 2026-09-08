@@ -7,11 +7,23 @@ This reference lists the active keybindings that connect the Emacs Calendar buff
 * Calendar Mode Bindings
 These bindings live in ~calendar-mode-map~.
 
+~j~, ~g d~   ~my-timeline-jump~
+     - Jump with Org's natural-language date prompt; the other ~g~ prefix commands are preserved.
+
+~V~   ~my-timeline-toggle-preview~
+     - Toggle automatic following and save the preference. The itinerary initially covers one week before and three weeks after the selected date.
+
+~C-c <left>~, ~C-c <right>~   ~my-timeline-history-back~, ~my-timeline-history-forward~
+     - Traverse deliberate date jumps; ordinary arrow movement does not enter history.
+
+~q~   ~calendar-exit~
+     - Restore the previous window layout. If the diary editor is still active, close the calendar grid and keep the editor visible.
+
 ~RET~, ~e~   ~my-calendar-edit-diary-entry~
      - Jump to the diary entry for the selected date, land at the end of the last bullet, and keep focus in the diary buffer.
 
 ~o~, ~v~, ~SPC~   ~my-calendar-view-diary-entry~
-     - Reveal the selected date in the diary window while leaving point in the Calendar buffer.
+     - Show the read-only itinerary for the selected date in the lower pane, keeping focus in Calendar. Following stays paused while the diary editor is active.
 
 ~O~   ~my-calendar-show-fancy-diary-listing~
      - Show the fancy diary listing for the date at point, then reselect the Calendar window.
@@ -66,6 +78,18 @@ These bindings live in ~calendar-mode-map~.
 ~I~   ~diary-insert-entry~
      - Stock Emacs inserter kept as a fallback, Markdown-agnostic.
 
+* Itinerary Pane
+
+- ~RET~, ~e~ edit the item at point; ranges open their first-day description.
+- ~i~ adds an entry at the current item's date, defaulting to the selected day on an empty section.
+- ~<~, ~>~ extend the itinerary four weeks earlier or later. Page Up/Page Down and ~M-v~/~C-v~ extend at its boundaries.
+- ~g~ refreshes from the diary buffer, including unsaved text.
+- ~q~ returns focus to the calendar grid.
+
+* Capture Anywhere
+
+~M-x my-timeline-capture~ asks for a natural-language date and event, then returns to the current work. It saves a previously clean diary and preserves the unsaved state of an already modified diary.
+
 * Markdown Diary Helpers
 The timeline lives in ~~/Dropbox/github/timeless/data/timeline.md~ and is displayed in ~markdown-mode~.
 
@@ -73,10 +97,10 @@ The timeline lives in ~~/Dropbox/github/timeless/data/timeline.md~ and is displa
      - Refocus the Calendar window from within the diary buffer and close any diary listing panes so the view stays diary + calendar.
 
 ~C-c C-c~   ~my-diary-return-to-calendar~
-     - From within the diary buffer, jump back to Calendar at the date you originally opened.
+     - From within the diary buffer, jump back to Calendar at the date you originally opened and resume the itinerary in the lower pane.
        (~C-SPC~ is intentionally left as the stock ~set-mark-command~ so region selection works normally in the diary.)
 
-~/~, ~s~   ~my-diary-search~
+~/~   ~my-diary-search~
      - Search all diary entries from inside the diary buffer via consult-ripgrep.
 
 * Behaviour Notes

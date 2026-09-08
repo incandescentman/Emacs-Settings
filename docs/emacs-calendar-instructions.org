@@ -1,5 +1,5 @@
 #+TITLE: Emacs Calendar & Timeline Diary Usage Guide
-#+DATE: 2026-07-13
+#+DATE: 2026-09-08
 #+AUTHOR: Claude
 
 * Overview
@@ -15,21 +15,20 @@ app. See [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/README.org][📄 
 list, and [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-keybindings.org][📄 timeline/timeline-keybindings.org]] for the complete binding
 reference.
 
-When you launch the Calendar, the window shows the current month centered, with
-the previous and next months above/below. Dates that have diary entries are
-highlighted with the ~diary~ face, which this config restyles to a mint-green
-foreground (~#6FCFA6~). Auto-revert relies on polling (file notifications are
-disabled for cloud storage), so external edits appear after a short delay.
+Opening Calendar saves your current window layout, then shows the previous, current, and next months side by side in a short strip above the full-width itinerary. Dates with diary entries use the mint-green ~diary~ face (~#6FCFA6~), and today is marked separately. Auto-revert relies on polling rather than cloud-storage file notifications, so external edits appear after a short delay.
 
 * Opening the Calendar
 - ~M-x calendar~ --- Open the calendar (Spacemacs: ~SPC a d c~ unless remapped).
-- ~q~ --- Quit the calendar (bury buffer).
+- ~q~ --- Restore the window layout you had before opening Calendar. If you are still editing the diary, quit closes the grid and keeps that editor visible.
 
 * Navigation
 Standard Emacs calendar motion still works (~C-f~/~f~/~→~ day forward,
 ~C-b~/~b~/~←~ day back, ~C-n~/~↓~ week down, ~C-p~/~↑~ week up, ~.~ to today,
-~g d~ to jump to a specific date). The =timeline= module adds these:
+~j~ or ~g d~ to jump with an Org date prompt). The =timeline= module adds these:
 
+- ~j~, ~g d~ --- Enter ~fri~, ~oct 12~, or an explicit date. Org interprets ~+3~ relative to today and ~++3~ relative to the selected date; pressing Return accepts the selected date. The other ~g~ prefix commands remain available.
+- ~C-c <left>~, ~C-c <right>~ --- Back and forward through deliberate jumps made with the natural-date prompt, today/edit, today toggle, or an itinerary/Upcoming entry. Arrow movement does not add history.
+- ~V~ --- Toggle automatic itinerary following. The preference is saved through Emacs Custom; opening Calendar still shows an initial view of its selected date.
 - ~n~, ~M-<right>~ (⌥→) --- Forward one month.
 - ~p~, ~M-<left>~ (⌥←) --- Backward one month.
 - ~N~ --- Forward one year.
@@ -51,12 +50,8 @@ The Monday-first week (~calendar-week-start-day 1~) treats the weekend as a unit
 * Working With Diary Entries From the Calendar
 These custom bindings replace several stock calendar keys:
 
-- ~RET~, ~e~ --- =my-calendar-edit-diary-entry=. Open the entry for the date at
-  point in a side window, creating the date heading and a blank bullet if none
-  exists, and land at the end of the last bullet ready to type. Focus stays in
-  the diary buffer.
-- ~v~, ~o~, ~SPC~ --- =my-calendar-view-diary-entry=. Reveal the entry in the
-  side window but keep focus in the Calendar.
+- ~RET~, ~e~ --- =my-calendar-edit-diary-entry=. Open the entry for the date at point in the lower pane, creating the date heading and a blank bullet if none exists, and land at the end of the last bullet ready to type. Following pauses until you return with ~C-c C-c~.
+- ~v~, ~o~, ~SPC~ --- ~my-calendar-view-diary-entry~. Show the itinerary for the selected day while keeping focus in Calendar, including when following is off. An active diary editor takes precedence; return with ~C-c C-c~ to resume browsing.
 - ~O~ --- =my-calendar-show-fancy-diary-listing=. Show the stock
   ~*Fancy Diary Entries*~ listing for the date, then reselect the Calendar and
   jump to the Markdown entry.
@@ -73,6 +68,22 @@ Note: because ~i~ is remapped to the custom inserter, the stock ~i d~ / ~i w~ /
 ~i m~ / ~i y~ / ~i a~ / ~i b~ / ~i c~ recurring-entry sub-bindings are *not*
 available from the calendar in this setup. See the appendix for what those
 stock types mean if you ever want to add a sexp entry manually.
+
+* Following Itinerary
+
+The lower pane is a read-only Org view covering one week before and three weeks after the selected date. Earlier, selected, and later events appear together. Paired multi-day events show their full dates and appear in the selected section while ongoing, even on days with no separate diary entry. An empty selected day offers ~i~ to add an entry and shows the next event with an absolute date.
+
+- ~RET~, ~e~ --- Edit the event at point, or its range's first-day description, in the same lower pane.
+- ~i~ --- Add an entry to the date at point; on an empty selected day, use that selected date.
+- ~<~, ~>~ --- Extend the displayed range by four weeks earlier or later. ~Page Up~/~Page Down~ and ~M-v~/~C-v~ extend it when scrolling reaches the beginning or end.
+- ~g~ --- Refresh from the live diary buffer, including unsaved changes.
+- ~q~ --- Return focus to the grid; ~q~ in the grid exits the calendar session.
+
+Calendar movement leaves the source diary's point and text alone. Editing pauses following, including if you focus the grid with ~s-.~ and move to another date. ~C-c C-c~ returns to the date you opened and swaps the editor back to the itinerary. Upcoming and the itinerary share their Org setup and disable Olivetti locally so its writing margins do not narrow the pane.
+
+* Capture Without Opening Calendar
+
+Run ~M-x my-timeline-capture~ from any Emacs buffer. Enter a natural-language date and the event text; capture inserts it chronologically and returns to your current work. A previously clean diary is saved. If the diary already contains unsaved edits, capture leaves those edits and the new entry unsaved rather than saving other work implicitly.
 
 * Inside the Diary Buffer (timeline.md)
 When ~timeline.md~ is open in ~markdown-mode~, =my-diary-mode= activates

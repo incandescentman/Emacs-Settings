@@ -30,7 +30,9 @@ non-empty bullet strings)."
   (let ((buffer (find-file-noselect diary-file))
         entries)
     (with-current-buffer buffer
-      (save-excursion
+      (save-restriction
+        (widen)
+        (save-excursion
         (goto-char (point-min))
         (while (re-search-forward "^\\([0-9]+\\)/\\([0-9]+\\)/\\([0-9]+\\)$" nil t)
           (let* ((month (string-to-number (match-string 1)))
@@ -44,15 +46,58 @@ non-empty bullet strings)."
                         (not (looking-at "^[0-9]+/[0-9]+/[0-9]+$"))
                         (not (looking-at "^#")))
               (when (looking-at "^  - ?\\(.*\\)$")
-                (let ((text (string-trim (match-string 1))))
+                (let ((text (string-trim (match-string-no-properties 1))))
                   (unless (string-empty-p text)
                     (push text bullets))))
               (forward-line 1))
             (push (list :abs abs :date date
                         :string (my-calendar--diary-format-date month day year)
                         :bullets (nreverse bullets))
-                  entries)))))
+                  entries))))))
     (nreverse entries)))
+
+(defvar-local my-timeline--data-cache nil
+  "Parsed diary text, keyed by this source buffer's character modification tick.")
+
+(defun my-timeline--data ()
+  "Return cached entries and paired ranges from the live, possibly unsaved diary."
+  (with-current-buffer (find-file-noselect diary-file)
+    (let ((tick (buffer-chars-modified-tick)))
+      (unless (equal tick (car my-timeline--data-cache))
+        (let ((entries (my-timeline--collect-entries)))
+          (setq my-timeline--data-cache
+                (list tick entries (my-timeline--collect-ranges entries)))))
+      (cdr my-timeline--data-cache))))
+
+(defun my-timeline--view-buffer (name mode)
+  "Get NAME, initializing its read-only Org MODE only once.
+Keep the writing layout's automatic Olivetti toggle out of generated views."
+  (let ((buffer (get-buffer-create name)))
+    (with-current-buffer buffer
+      (unless (eq major-mode mode) (funcall mode))
+      (setq-local disable-olivetti-auto-toggle t)
+      (when (bound-and-true-p olivetti-mode) (olivetti-mode -1))
+      (setq-local left-margin-width 0)
+      (setq-local right-margin-width 0)
+      (setq-local buffer-read-only t)
+      ;; The near-global key minor mode can shadow Org view keys.  Override
+      ;; only this view's explicit commands, leaving its other shortcuts alone.
+      (when (boundp 'key-minor-mode-map)
+        (let ((override (make-sparse-keymap)))
+          (set-keymap-parent override key-minor-mode-map)
+          (dolist (key '("RET" "e" "i" "o" "g" "q" "<" ">"
+                         "C-v" "M-v" "<next>" "<prior>"))
+            (let ((command (lookup-key (current-local-map) (kbd key))))
+              (when (or (eq command 'quit-window)
+                        (and (symbolp command)
+                             (string-prefix-p "my-timeline-" (symbol-name command))))
+                (define-key override (kbd key) command))))
+          (setq-local minor-mode-overriding-map-alist
+                      (cons (cons 'key-minor-mode override)
+                            (assq-delete-all 'key-minor-mode
+                                             (copy-alist minor-mode-overriding-map-alist))))))
+      (buffer-disable-undo))
+    buffer))
 
 (defun my-timeline--upcoming (today-abs &optional count)
   "Return entries on or after TODAY-ABS, sorted ascending.
@@ -147,8 +192,9 @@ Return nil after the range's final day."
 Paired first/last boundaries become one item.  Active ranges sort under
 today, while unpaired boundary markers remain ordinary entries.  When
 COUNT is non-nil, return at most that many items."
-  (let* ((entries (my-timeline--collect-entries))
-         (ranges (my-timeline--collect-ranges entries))
+  (let* ((data (my-timeline--data))
+         (entries (car data))
+         (ranges (cadr data))
          items)
     (dolist (range ranges)
       (when-let ((item (my-timeline--range-agenda-item range today-abs)))
@@ -270,7 +316,8 @@ sets the count; a plain \\[universal-argument] shows all future entries."
          (today-abs (calendar-absolute-from-gregorian today))
          (week-end-abs (my-timeline--week-end-absolute today-abs))
          (items (my-timeline--agenda-items today-abs count))
-         (buf (get-buffer-create "*Timeline Upcoming*")))
+         (buf (my-timeline--view-buffer "*Timeline Upcoming*"
+                                        #'my-timeline-upcoming-mode)))
     (with-current-buffer buf
       (let ((inhibit-read-only t))
         (erase-buffer)
@@ -286,7 +333,8 @@ sets the count; a plain \\[universal-argument] shows all future entries."
           (my-timeline--insert-agenda-section
            "Later" 'later items today-abs week-end-abs))
         (goto-char (point-min)))
-      (my-timeline-upcoming-mode)
+      (org-show-all)
+      (set-buffer-modified-p nil)
       (setq-local my-timeline-upcoming--current-count count))
     (pop-to-buffer buf)))
 
@@ -301,10 +349,220 @@ sets the count; a plain \\[universal-argument] shows all future entries."
   (let ((date (get-text-property (point) 'my-timeline-date)))
     (unless date
       (user-error "No timeline entry on this line"))
-    (calendar)
-    (calendar-goto-date date)
+    (my-timeline-open)
+    (my-timeline-goto-date date)
     (when (fboundp 'my-calendar-edit-diary-entry)
       (my-calendar-edit-diary-entry))))
+
+(defvar-local my-timeline-preview--date nil)
+(defvar-local my-timeline-preview--before 7)
+(defvar-local my-timeline-preview--after 21)
+(defvar-local my-timeline-preview--render-key nil)
+(defvar-local my-timeline-preview--selected-position nil)
+
+(defun my-timeline--date-label (date)
+  "Describe DATE with its weekday and absolute calendar date."
+  (format "%s, %s" (calendar-day-name date) (my-calendar--describe-date date)))
+
+(defun my-timeline--preview-items (selected before after)
+  "Return items BEFORE through AFTER days around SELECTED's absolute day.
+Ranges active on SELECTED move into its section, so ongoing events count
+as selected-day content even when the diary has no entry for that date."
+  (let (items)
+    (dolist (item (my-timeline--agenda-items (- selected before)))
+      (when (<= (plist-get item :sort-abs) (+ selected after))
+        (when (and (eq (plist-get item :kind) 'range)
+                   (<= (plist-get item :start-abs) selected)
+                   (>= (plist-get item :end-abs) selected))
+          (setq item (plist-put (copy-sequence item) :sort-abs selected)))
+        (push item items)))
+    (sort (nreverse items)
+          (lambda (a b) (< (plist-get a :sort-abs) (plist-get b :sort-abs))))))
+
+(defun my-timeline--insert-preview-item (item selected &optional omit-date-heading)
+  "Insert ITEM with absolute dates and a status relative to SELECTED.
+OMIT-DATE-HEADING avoids repeating the selected day's section heading."
+  (let ((start (point)))
+    (if (eq (plist-get item :kind) 'range)
+        (progn
+          (insert "** " (plist-get item :title) "\n")
+          (insert (my-timeline--date-label (plist-get item :start-date))
+                  " — " (my-timeline--date-label (plist-get item :end-date))
+                  (cond ((< (plist-get item :end-abs) selected) " · ended")
+                        ((< (plist-get item :start-abs) selected)
+                         (if (= (plist-get item :end-abs) selected)
+                             " · last day on selected date" " · ongoing on selected date"))
+                        ((= (plist-get item :start-abs) selected) " · starts on selected date")
+                        (t ""))
+                  "\n\n- " (plist-get item :description) "\n\n"))
+      (unless omit-date-heading
+        (insert "** " (my-timeline--date-label (plist-get item :date)) "\n\n"))
+      (dolist (bullet (plist-get item :bullets)) (insert "- " bullet "\n"))
+      (insert "\n"))
+    (put-text-property start (point) 'my-timeline-date (plist-get item :date))))
+
+(defun my-timeline--render-preview (date &optional preserve-position)
+  "Render DATE in the current itinerary buffer without touching the diary.
+PRESERVE-POSITION keeps point and scroll positions when extending the range."
+  (let* ((selected (calendar-absolute-from-gregorian date))
+         (items (my-timeline--preview-items selected my-timeline-preview--before
+                                          my-timeline-preview--after))
+         (old-point (point))
+         (window-starts (mapcar (lambda (w) (cons w (window-start w)))
+                               (get-buffer-window-list (current-buffer)))))
+    (let ((inhibit-read-only t))
+      (erase-buffer)
+      (insert "#+TITLE: Timeline itinerary\n\n"
+              "RET/e edit · i add · </> extend earlier/later · g refresh · q return to grid\n\n")
+      (when (seq-some (lambda (item) (< (plist-get item :sort-abs) selected)) items)
+        (insert "* Earlier\n\n"))
+      (dolist (item items)
+        (when (< (plist-get item :sort-abs) selected)
+          (my-timeline--insert-preview-item item selected)))
+      (setq my-timeline-preview--selected-position (point))
+      (let ((start (point))
+            (selected-items (seq-filter (lambda (item)
+                                          (= (plist-get item :sort-abs) selected)) items)))
+        (insert "* Selected — " (my-timeline--date-label date) "\n\n")
+        (put-text-property start (point) 'my-timeline-date date)
+        (if selected-items
+            (dolist (item selected-items) (my-timeline--insert-preview-item item selected t))
+          (insert "No entries. Press i to add one.\n")
+          (when-let ((next (car (my-timeline--agenda-items (1+ selected)))))
+            (let ((next-start (point)))
+              (insert "Next: " (my-timeline--date-label (plist-get next :date)) " — "
+                      (if (eq (plist-get next :kind) 'range)
+                          (plist-get next :title) (car (plist-get next :bullets))) "\n")
+              (put-text-property next-start (point) 'my-timeline-date (plist-get next :date))))
+          (insert "\n")))
+      (insert "* Later\n\n")
+      (dolist (item items)
+        (when (> (plist-get item :sort-abs) selected)
+          (my-timeline--insert-preview-item item selected)))
+      (insert "Press > for later dates or < for earlier dates.\n")
+      (org-show-all)
+      (set-buffer-modified-p nil))
+    (goto-char (if preserve-position (min old-point (point-max))
+                 my-timeline-preview--selected-position))
+    (dolist (win (get-buffer-window-list (current-buffer)))
+      (set-window-point win (point))
+      (if preserve-position
+          (set-window-start win (or (cdr (assq win window-starts)) (point-min)) t)
+        ;; Keep earlier context visible without letting it push the selection
+        ;; below the fold when the previous week is unusually busy.
+        (set-window-start win (save-excursion (forward-line -8) (point)) t)))))
+
+(define-derived-mode my-timeline-help-mode org-mode "Timeline-Help"
+  "Read-only Org guide to Timeline's current keybindings."
+  (setq buffer-read-only t))
+(define-key my-timeline-help-mode-map (kbd "q") #'quit-window)
+
+(define-derived-mode my-timeline-preview-mode org-mode "Timeline-Itinerary"
+  "Read-only Org itinerary around the calendar's selected date."
+  (setq buffer-read-only t))
+
+(defun my-timeline-preview-show (&optional date force)
+  "Show DATE's itinerary in the session's lower window.
+FORCE rebuilds even if neither the selected date nor diary text has changed.
+An active diary edit always takes precedence over automatic or manual preview."
+  (interactive)
+  (let* ((session (my-timeline--session))
+         (date (or date (calendar-cursor-to-date t))))
+    (cond
+     ((plist-get session :editing)
+      (when (called-interactively-p 'any)
+        (message "Finish the diary view with C-c C-c to resume the itinerary")))
+     ((not session)
+      (my-timeline-open)
+      (calendar-goto-date date)
+      (my-timeline-preview-show date force))
+     (t
+      (let* ((buffer (my-timeline--view-buffer "*Timeline Itinerary*" #'my-timeline-preview-mode))
+             (window (plist-get session :content-window))
+             (source (find-file-noselect diary-file))
+             (key (list date source (with-current-buffer source (buffer-chars-modified-tick)))))
+        (unless (window-live-p window)
+          (setq window (split-window (plist-get session :calendar-window) 10 'below))
+          (my-timeline--session-put :content-window window))
+        (set-window-buffer window buffer)
+        (set-window-margins window 0 0)
+        (with-current-buffer buffer
+          (unless (equal date my-timeline-preview--date)
+            (setq my-timeline-preview--before 7 my-timeline-preview--after 21))
+          (setq my-timeline-preview--date date)
+          (when (or force (not (equal key my-timeline-preview--render-key)))
+            (my-timeline--render-preview date)
+            (setq my-timeline-preview--render-key key))))))))
+
+(defun my-timeline-preview-refresh ()
+  "Refresh the current itinerary from the live diary buffer."
+  (interactive)
+  (my-timeline-preview-show my-timeline-preview--date t))
+
+(defun my-timeline-preview-extend (earlier)
+  "Extend the visible itinerary by four weeks, EARLIER or later."
+  (if earlier
+      (cl-incf my-timeline-preview--before 28)
+    (cl-incf my-timeline-preview--after 28))
+  ;; Extending the beginning inserts text ahead of point.  Keep the same
+  ;; logical date visible, rather than the old numeric buffer position.
+  (let* ((date (get-text-property (point) 'my-timeline-date))
+         (selected my-timeline-preview--date))
+    (my-timeline--render-preview selected (not earlier))
+    (when (and earlier date)
+      (goto-char (or (text-property-any (point-min) (point-max) 'my-timeline-date date)
+                     my-timeline-preview--selected-position)))))
+
+(defun my-timeline-preview-earlier ()
+  "Show four more weeks before this itinerary."
+  (interactive) (my-timeline-preview-extend t))
+
+(defun my-timeline-preview-later ()
+  "Show four more weeks after this itinerary."
+  (interactive) (my-timeline-preview-extend nil))
+
+(defun my-timeline-preview-scroll-up (&optional arg)
+  "Scroll later, extending the itinerary when the end is reached."
+  (interactive "P")
+  (when (pos-visible-in-window-p (point-max)) (my-timeline-preview-later))
+  (scroll-up-command arg))
+
+(defun my-timeline-preview-scroll-down (&optional arg)
+  "Scroll earlier, extending the itinerary when the beginning is reached."
+  (interactive "P")
+  (when (= (window-start) (point-min)) (my-timeline-preview-earlier))
+  (scroll-down-command arg))
+
+(defun my-timeline-preview-return ()
+  "Return focus to the calendar grid."
+  (interactive) (my-calendar-focus-calendar-window))
+
+(defun my-timeline-preview-visit (&optional insert)
+  "Edit the date at point, or add an entry when INSERT is non-nil."
+  (interactive)
+  (let ((date (or (get-text-property (point) 'my-timeline-date)
+                  my-timeline-preview--date)))
+    (my-calendar-focus-calendar-window)
+    (my-timeline-goto-date date)
+    (if insert (my-calendar-insert-diary-entry date)
+      (my-calendar-edit-diary-entry))))
+
+(defun my-timeline-preview-insert ()
+  "Add an entry to the date at point."
+  (interactive) (my-timeline-preview-visit t))
+
+(dolist (binding '(("RET" . my-timeline-preview-visit)
+                   ("e" . my-timeline-preview-visit)
+                   ("i" . my-timeline-preview-insert)
+                   ("g" . my-timeline-preview-refresh)
+                   ("q" . my-timeline-preview-return)
+                   ("<" . my-timeline-preview-earlier)
+                   (">" . my-timeline-preview-later)
+                   ("C-v" . my-timeline-preview-scroll-up)
+                   ("M-v" . my-timeline-preview-scroll-down)
+                   ("<next>" . my-timeline-preview-scroll-up)
+                   ("<prior>" . my-timeline-preview-scroll-down)))
+  (define-key my-timeline-preview-mode-map (kbd (car binding)) (cdr binding)))
 
 (provide 'timeline-agenda)
 

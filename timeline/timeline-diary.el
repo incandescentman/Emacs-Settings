@@ -86,8 +86,9 @@
 
 (add-hook 'markdown-mode-hook #'my-diary--maybe-enable-mode)
 
-(defun my-calendar--diary-insert-entry (date lines)
-  "Insert diary entry for DATE (MONTH DAY YEAR) using LINES."
+(defun my-calendar--diary-insert-entry (date lines &optional no-save)
+  "Insert diary entry for DATE (MONTH DAY YEAR) using LINES.
+NO-SAVE leaves the change unsaved, for capture into an already modified diary."
   (let* ((month (nth 0 date))
          (day   (nth 1 date))
          (year  (nth 2 date))
@@ -126,7 +127,7 @@
                 (insert "  - " line "\n"))
               (my-calendar--ensure-blank-line-after)))
           (widen)))
-      (save-buffer))))
+      (unless no-save (save-buffer)))))
 
 (defun my-calendar--insert-diary-entry (date stay-in-diary initial)
   "Insert a diary entry for DATE, seeding the minibuffer with INITIAL.
@@ -146,7 +147,9 @@ the interactive prefix argument behaviour from the public commands."
       (let ((my-timeline--suspend-cleanup t)
             (my-timeline--cleanup-skip-date (my-calendar--diary-format-date month day year)))
         (my-calendar--diary-insert-entry date lines))
-      (my-calendar-jump-to-diary-entry date stay-in-diary)
+      (if (and (my-timeline--session) (not stay-in-diary))
+          (my-timeline-preview-show date)
+        (my-calendar-jump-to-diary-entry date stay-in-diary))
       (message "Added diary entry for %s"
                (format "%d/%d/%d" month day year)))))
 
@@ -192,6 +195,28 @@ After jumping, move point to the end of the last bullet item for that date."
           (while (and (not (eobp)) (looking-at "^\\s-*$"))
             (forward-line 1)))
         (goto-char (or last-bullet-pos date-line-end))))))
+
+(defun my-timeline-capture (&optional date text)
+  "Capture TEXT for DATE from any buffer, returning to the current work.
+Prompt for an Org natural-language date and event when called interactively.
+Save a previously clean diary; keep preexisting unsaved edits unsaved."
+  (interactive)
+  (let* ((date (or date (my-timeline--read-date)))
+         (text (or text (read-from-minibuffer
+                        (format "Entry for %s: " (my-calendar--describe-date date))
+                        nil nil nil 'my-calendar-diary-history)))
+         (lines (my-calendar--diary-normalize-lines text)))
+    (unless lines (user-error "Diary entry cannot be empty"))
+    (let* ((buffer (find-file-noselect diary-file))
+           (unsaved (buffer-modified-p buffer))
+           (my-timeline--suspend-cleanup t))
+      (with-current-buffer buffer
+        (save-restriction
+          (widen)
+          (my-calendar--diary-insert-entry date lines unsaved)))
+      (my-timeline--follow)
+      (message "Added entry for %s%s" (my-calendar--describe-date date)
+               (if unsaved "; diary still has unsaved edits" "")))))
 
 (provide 'timeline-diary)
 

@@ -20,6 +20,19 @@ Because everything is stored as clean, structured plain text:
 
 In this way, Timeline functions as a text-first event database — a human-readable, LLM-editable layer that bridges Emacs, AI, and your personal workflow.
 
+* Stacked Calendar and Itinerary
+
+Opening Calendar saves the current writing layout and places a short three-month grid above a full-width, read-only Org itinerary. The itinerary follows the selected date, showing a week before and three weeks after it, with ongoing multi-day events included. ~RET~/~e~ swaps the itinerary for the real diary editor; following pauses until ~C-c C-c~ returns. ~q~ in Calendar restores the original layout, except that an active diary editor is kept visible.
+
+- ~j~ and ~g d~ use Org's natural-language date prompt; the rest of the ~g~ prefix remains intact.
+- ~V~ toggles following and remembers the preference through Custom. ~v~/~o~/~SPC~ show the selected date manually when following is off.
+- ~C-c <left>~/~C-c <right>~ go back and forward through deliberate jumps without recording arrow movement.
+- In the itinerary, ~<~/~>~ extend earlier/later by four weeks; page scrolling extends at the boundaries. ~g~ refreshes and ~q~ returns focus to the grid.
+- ~M-x my-timeline-capture~ captures a date and event from any buffer, then returns to the current work. Capture leaves preexisting unsaved diary edits unsaved.
+- ~?~ displays an Org guide whose displayed shortcuts come from the current keymaps.
+
+Upcoming and the itinerary share one buffer-setup helper and a cache of entries and paired ranges keyed by the live source buffer's character modification tick. Browsing preserves the diary's point, narrowing, text, and modified state. Olivetti is disabled locally in the generated views; their Org mode is initialized once and their buffers are reused. The Markdown diary and Timeless range format remain the shared source of truth.
+
 * Features
 - 📆 *Calendar Integration*: Navigate dates in the Emacs Calendar and jump directly to corresponding entries in your Markdown diary.
 - ✍️ *Markdown Diary Format*: Keeps entries organized hierarchically by year and month using Markdown headings:
@@ -33,7 +46,7 @@ In this way, Timeline functions as a text-first event database — a human-reada
 - 🧭 *Smart Navigation & Focus Control*:
  - ~RET~ --- Open the Markdown diary entry for the selected date.
  - ~e~ --- Open the entry and move the cursor to the end of the last bullet (ready to type).
- - ~v~, ~o~, or ~SPC~ --- View the diary entry while keeping focus in the calendar.
+ - ~v~, ~o~, or ~SPC~ --- Show the itinerary while keeping focus in the calendar.
  - ~O~ --- Show the fancy diary listing for that date.
  - ~C-c C-k~ --- Cancel the current diary block (deletes the date if empty; asks first if populated).
  - ~i~ / ~c~ --- Insert a new diary entry.
@@ -79,7 +92,7 @@ In this way, Timeline functions as a text-first event database — a human-reada
 |-----|----------|-------------|
 | ~RET~ | =my-calendar-edit-diary-entry= | Jump to diary entry for the selected date |
 | ~e~ | =my-calendar-edit-diary-entry= | Jump to entry and move point to end of bullets |
-| ~v~, ~o~, ~SPC~ | =my-calendar-view-diary-entry= | View entry but stay in calendar |
+| ~v~, ~o~, ~SPC~ | =my-calendar-view-diary-entry= | Show itinerary but stay in calendar |
 | ~O~ | =my-calendar-show-fancy-diary-listing= | Show fancy diary listing for date |
 | ~C-c C-k~ | =my-calendar-cancel-current-entry= | Delete current date block (asks if populated) |
 | ~M-t~ | =my-calendar-toggle-last-date= | Toggle between today and last visited date |
@@ -93,7 +106,7 @@ In this way, Timeline functions as a text-first event database — a human-reada
 * Diary Buffer Extras
 - ~C-c C-c~ inside ~timeline.md~ runs =my-diary-return-to-calendar= so you can hop back to the originating calendar date even after editing elsewhere.
 - ~C-c C-k~ runs =my-calendar-cancel-current-entry= to delete the current date block (with confirmation if it has content) and pop back to Calendar.
-- ~/~ or ~s~ trigger =my-diary-search= for instant diary-wide searching.
+- ~/~ triggers =my-diary-search= for diary-wide searching; ~s~ remains available for typing.
 - ~my-diary-mode~ activates automatically in the diary file, showing a 📅 + date in the mode line for context.
 - Saving the diary auto-cleans empty stubs, so exploring or cancelling entries never leaves debris behind.
 

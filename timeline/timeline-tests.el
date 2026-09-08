@@ -304,6 +304,219 @@
                  later-item today-abs week-end-abs)
                 'later))))
 
+(defmacro my-timeline-test-with-real-diary-copy (&rest body)
+  "Run BODY against an in-memory copy of the configured diary, never saving it."
+  (declare (indent 0))
+  `(let ((source-file diary-file)
+         (source (generate-new-buffer " *Timeline test diary*")))
+     (unwind-protect
+         (progn
+           (with-current-buffer source
+             (insert-file-contents source-file)
+             (set-buffer-modified-p nil))
+           (cl-letf (((symbol-function 'find-file-noselect)
+                      (lambda (file &rest _)
+                        (unless (equal (expand-file-name file)
+                                       (expand-file-name source-file))
+                          (error "Unexpected test file: %s" file))
+                        source)))
+             ,@body))
+       (kill-buffer source))))
+
+(ert-deftest my-timeline-test-real-source-cache-and-narrowing ()
+  "Caching preserves point/restriction and refreshes after unsaved character edits."
+  (my-timeline-test-with-real-diary-copy
+    (with-current-buffer source
+      (goto-char (point-max))
+      (let ((position (point))
+            (raw (my-timeline--collect-entries)))
+        (save-restriction
+          (narrow-to-region (point) (point))
+          (let ((first (my-timeline--data)))
+            (should (equal (car first) raw))
+            (should (eq first (my-timeline--data)))
+            (should (= (point-min) position))
+            (should (= (point) position))
+            (widen)
+            ;; Reuse a real source event; the copy is deliberately unsaved.
+            (goto-char (point-min))
+            (re-search-forward "^  - .+")
+            (insert " [edited]")
+            (should-not (eq first (my-timeline--data)))))))))
+
+(ert-deftest my-timeline-test-real-itinerary-range-and-source-contract ()
+  "Every visible ordinary bullet and paired range derives from the real diary."
+  (my-timeline-test-with-real-diary-copy
+    (let* ((data (my-timeline--data))
+           (range (car (cadr data))))
+      (should range)
+      (let* ((start (plist-get (plist-get range :start-entry) :abs))
+             (end (plist-get (plist-get range :end-entry) :abs))
+             (selected (min end (1+ start)))
+             (items (my-timeline--preview-items selected 7 21))
+             (active (seq-find (lambda (item)
+                                (equal (plist-get item :description)
+                                       (plist-get range :start-bullet))) items)))
+        (should active)
+        (should (= (plist-get active :sort-abs) selected))
+        (dolist (item items)
+          (if (eq (plist-get item :kind) 'range)
+              (should (seq-some (lambda (entry)
+                                 (member (plist-get item :description)
+                                         (plist-get entry :bullets))) (car data)))
+            (should (<= (- selected 7) (plist-get item :sort-abs) (+ selected 21)))
+            (dolist (bullet (plist-get item :bullets))
+              (should (seq-some (lambda (entry)
+                                 (and (equal (plist-get entry :date) (plist-get item :date))
+                                      (member bullet (plist-get entry :bullets)))) (car data))))))
+        (with-temp-buffer
+          (my-timeline-preview-mode)
+          (my-timeline--render-preview (calendar-gregorian-from-absolute selected))
+          (should buffer-read-only)
+          (should-not (buffer-modified-p))
+          (should (string-match-p "ongoing on selected date\\|last day on selected date" (buffer-string)))
+          (should (string-match-p (regexp-quote (plist-get range :start-bullet)) (buffer-string)))
+          (should-not (string-match-p "^[─_]+$\\|^ *• " (buffer-string))))))))
+
+(ert-deftest my-timeline-test-view-initializes-org-once ()
+  "Refreshing either generated view must not repeatedly run Org's hook chain."
+  (let ((calls 0) (name " *Timeline view test*"))
+    (unwind-protect
+        (let ((org-mode-hook (list (lambda () (cl-incf calls)))))
+          (my-timeline--view-buffer name #'my-timeline-preview-mode)
+          (my-timeline--view-buffer name #'my-timeline-preview-mode)
+          (should (= calls 1))
+          (with-current-buffer name
+            (should buffer-read-only)
+            (should disable-olivetti-auto-toggle)))
+      (kill-buffer name))))
+
+(ert-deftest my-timeline-test-natural-date-and-history ()
+  "An absolute natural date is parsed; arrows do not populate deliberate history."
+  (should (equal (my-timeline--read-date '(9 8 2026) "oct 12 2026") '(10 12 2026)))
+  (let ((my-timeline--history-back nil) (my-timeline--history-forward nil))
+    (save-window-excursion
+      (calendar)
+      (calendar-goto-date '(9 8 2026))
+      (my-timeline-goto-date '(10 12 2026))
+      (calendar-forward-day 1)
+      (should (equal my-timeline--history-back '((9 8 2026))))
+      (my-timeline-history-back)
+      (should (equal (calendar-cursor-to-date t) '(9 8 2026)))
+      (my-timeline-history-forward)
+      (should (equal (calendar-cursor-to-date t) '(10 13 2026))))))
+
+(ert-deftest my-timeline-test-capture-preserves-unsaved-work ()
+  "Capture appends to a real date in memory without saving existing unsaved work."
+  (my-timeline-test-with-real-diary-copy
+    (let* ((entry (car (my-timeline--collect-entries)))
+           (date (plist-get entry :date))
+           (text (car (plist-get entry :bullets)))
+           (original-window (selected-window)))
+      (with-current-buffer source
+        (goto-char (point-min))
+        (set-buffer-modified-p t)
+        (cl-letf (((symbol-function 'save-buffer) (lambda (&rest _) (ert-fail "Unexpected save"))))
+          (my-timeline-capture date text))
+        (should (= (point) (point-min)))
+        (should (buffer-modified-p)))
+      (should (eq original-window (selected-window)))
+      (should (= 2 (cl-count text (plist-get (car (my-timeline--collect-entries)) :bullets)
+                            :test #'equal))))))
+
+(ert-deftest my-timeline-test-stacked-session-edit-and-quit ()
+  "A real diary copy is untouched by following; editing pauses it; q restores layout."
+  (my-timeline-test-with-real-diary-copy
+    (let ((configuration (current-window-configuration))
+          (my-timeline-follow-preview t)
+          (initial (with-current-buffer source (buffer-string))))
+      (unwind-protect
+          (progn
+            (set-frame-parameter nil 'my-timeline-session nil)
+            (my-timeline-open)
+            (let* ((session (my-timeline--session))
+                   (cal (plist-get session :calendar-window))
+                   (pane (plist-get session :content-window))
+                   (entry (seq-find (lambda (e) (plist-get e :bullets))
+                                    (my-timeline--collect-entries))))
+              (should (= (car (window-edges cal)) (car (window-edges pane))))
+              (should (< (nth 1 (window-edges cal)) (nth 1 (window-edges pane))))
+              (calendar-goto-date (plist-get entry :date))
+              (my-calendar-edit-diary-entry)
+              (let ((position (point)))
+                (select-window cal)
+                (calendar-forward-day 1)
+                (my-calendar-view-diary-entry)
+                (should (eq (window-buffer pane) source))
+                (should (= position (with-current-buffer source (point)))))
+              (select-window pane)
+              (my-diary-return-to-calendar)
+              (should (eq (window-buffer pane) (get-buffer "*Timeline Itinerary*")))
+              (calendar-exit)
+              (should-not (my-timeline--session))
+              (should (compare-window-configurations configuration (current-window-configuration)))
+              (should (equal initial (with-current-buffer source (buffer-string))))
+              (should-not (buffer-modified-p source))))
+        (set-frame-parameter nil 'my-timeline-session nil)
+        (set-window-configuration configuration)))))
+
+(ert-deftest my-timeline-test-follow-off-manual-preview-and-editing-quit ()
+  "Following can pause without stale entry setup; quitting never hides an editor."
+  (my-timeline-test-with-real-diary-copy
+    (let ((configuration (current-window-configuration))
+          (my-timeline-follow-preview nil))
+      (unwind-protect
+          (progn
+            (set-frame-parameter nil 'my-timeline-session nil)
+            (my-timeline-open)
+            (let* ((pane (plist-get (my-timeline--session) :content-window))
+                   (cal (plist-get (my-timeline--session) :calendar-window))
+                   (initial-date (with-current-buffer (window-buffer pane) my-timeline-preview--date))
+                   (entry (seq-find (lambda (e) (plist-get e :bullets)) (my-timeline--collect-entries))))
+              (calendar-forward-day 1)
+              (should (equal initial-date (with-current-buffer (window-buffer pane) my-timeline-preview--date)))
+              (my-calendar-view-diary-entry)
+              (should (equal (calendar-cursor-to-date t)
+                             (with-current-buffer (window-buffer pane) my-timeline-preview--date)))
+              (calendar-goto-date (plist-get entry :date))
+              (my-calendar-edit-diary-entry)
+              (select-window cal)
+              (calendar-exit)
+              (should-not (my-timeline--session))
+              (should (get-buffer-window source))
+              (should-not (get-buffer-window calendar-buffer))))
+        (set-frame-parameter nil 'my-timeline-session nil)
+        (set-window-configuration configuration)))))
+
+(ert-deftest my-timeline-test-empty-day-next-and-extension ()
+  "Empty days have an absolute Next date; extension keeps the selected date."
+  (my-timeline-test-with-real-diary-copy
+    (let* ((entry (car (sort (copy-sequence (my-timeline--collect-entries))
+                             (lambda (a b) (< (plist-get a :abs) (plist-get b :abs))))))
+           (date (calendar-gregorian-from-absolute (1- (plist-get entry :abs)))))
+      (with-temp-buffer
+        (my-timeline-preview-mode)
+        (setq my-timeline-preview--date date)
+        (my-timeline--render-preview date)
+        (should (string-match-p "No entries. Press i to add one." (buffer-string)))
+        (should (string-match-p (regexp-quote (concat "Next: " (my-timeline--date-label (plist-get entry :date)))) (buffer-string)))
+        (my-timeline-preview-later)
+        (should (= my-timeline-preview--after 49))
+        (my-timeline-preview-earlier)
+        (should (= my-timeline-preview--before 35))
+        (should (equal my-timeline-preview--date date))))))
+
+(ert-deftest my-timeline-test-private-date-prompt-preserves-layout ()
+  "An inhibited or programmatic stock calendar does not start a Timeline session."
+  (let ((my-timeline--inhibit-layout t)
+        called)
+    (my-timeline--around-calendar (lambda (&rest _) (setq called t)))
+    (should called))
+  (let ((my-timeline--open-requested nil)
+        called)
+    (my-timeline--around-calendar (lambda (&rest _) (setq called t)))
+    (should called)))
+
 (provide 'timeline-tests)
 
 ;;; timeline-tests.el ends here

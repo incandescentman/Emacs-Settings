@@ -24,59 +24,49 @@
   (define-key calendar-mode-map (kbd "SPC") #'my-calendar-view-diary-entry)
   (define-key calendar-mode-map (kbd "O")   #'my-calendar-show-fancy-diary-listing)
 
+  ;; Natural dates, following, and deliberate-jump history.
+  (define-key calendar-mode-map (kbd "j") #'my-timeline-jump)
+  (define-key calendar-mode-map (kbd "g d") #'my-timeline-jump)
+  (define-key calendar-mode-map (kbd "V") #'my-timeline-toggle-preview)
+  (define-key calendar-mode-map (kbd "C-c <left>") #'my-timeline-history-back)
+  (define-key calendar-mode-map (kbd "C-c <right>") #'my-timeline-history-forward)
+
   ;; Insertion + navigation
   (define-key calendar-mode-map (kbd "i") #'my-calendar-insert-diary-entry)
   (define-key calendar-mode-map (kbd "c") #'my-calendar-insert-diary-entry)
   (define-key calendar-mode-map (kbd "C") #'my-calendar-insert-diary-entry-and-autopopulate)
   (define-key calendar-mode-map (kbd "I") #'diary-insert-entry)
-  (define-key calendar-mode-map (kbd "t")
-              (lambda ()
-                (interactive)
-                (calendar-goto-today)
-                (my-calendar-edit-diary-entry)))
+  (define-key calendar-mode-map (kbd "t") #'my-timeline-today-edit)
   (define-key calendar-mode-map (kbd "M-t") #'my-calendar-toggle-last-date)
   (define-key calendar-mode-map (kbd "a")   #'my-timeline-upcoming)
   (define-key calendar-mode-map (kbd "?")   #'my-calendar-help)
 
   ;; Month / year navigation helpers bound alongside standard keys.
-  (define-key calendar-mode-map (kbd "n")
-              (lambda ()
-                (interactive)
-                (calendar-forward-month 1)))
-  (define-key calendar-mode-map (kbd "M-<right>")
-              (lambda ()
-                (interactive)
-                (calendar-forward-month 1)))
-  (define-key calendar-mode-map (kbd "p")
-              (lambda ()
-                (interactive)
-                (calendar-backward-month 1)))
-  (define-key calendar-mode-map (kbd "M-<left>")
-              (lambda ()
-                (interactive)
-                (calendar-backward-month 1)))
-  (define-key calendar-mode-map (kbd "N")
-              (lambda ()
-                (interactive)
-                (calendar-forward-year 1)))
-  (define-key calendar-mode-map (kbd "P")
-              (lambda ()
-                (interactive)
-                (calendar-backward-year 1))))
+  (define-key calendar-mode-map (kbd "n") #'calendar-forward-month)
+  (define-key calendar-mode-map (kbd "M-<right>") #'calendar-forward-month)
+  (define-key calendar-mode-map (kbd "p") #'calendar-backward-month)
+  (define-key calendar-mode-map (kbd "M-<left>") #'calendar-backward-month)
+  (define-key calendar-mode-map (kbd "N") #'calendar-forward-year)
+  (define-key calendar-mode-map (kbd "P") #'calendar-backward-year))
 
 (with-eval-after-load 'which-key
   (with-eval-after-load 'calendar
     (when (fboundp 'which-key-add-key-based-replacements)
       (which-key-add-key-based-replacements
+        "j" "Jump to natural date"
+        "g d" "Jump to natural date"
+        "V" "Toggle itinerary follow"
+        "C-c <left>" "Previous date jump"
+        "C-c <right>" "Next date jump"
         "i" "Insert diary entry"
         "c" "Insert diary entry"
         "C" "Insert diary (with default)"
         "I" "Stock diary-insert-entry"
         "RET" "Edit diary entry"
         "e" "Edit diary entry"
-        "v" "View diary entry"
-        "o" "View diary entry"
-        "SPC" "View diary entry"
+        "v" "Show itinerary"
+        "o" "Show itinerary"
+        "SPC" "Show itinerary"
         "O" "Fancy diary listing"
         "t" "Jump to today + edit entry"
         "M-t" "Toggle today/last date"
