@@ -1,6 +1,13 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-09-08: Fix Timeline diary key scope, focus, mode line, and theme hooks
+
+- Moved the four diary shortcuts into ~my-diary-mode-map~ in [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-diary.el][timeline-diary.el]], and retired the Markdown hook installers in [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-calendar.el][timeline-calendar.el]], [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-search.el][timeline-search.el]], and [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-cleanup.el][timeline-cleanup.el]]. Restored the exact leaked bindings in the live shared Markdown map to their installed package defaults. Diary mode also activates when insertion has temporarily suspended cleanup.
+- Added a buffer-local ~key-minor-mode~ override for ~s-.~, preserving the other global keys and restoring any prior override when diary mode is disabled. The mode line now reads the date block at point during redisplay, without changing point or match data; year/month headings show the neutral diary indicator.
+- Switched the calendar face callbacks to ~enable-theme-functions~ and ~disable-theme-functions~, accepting the theme argument. Native hook semantics and minor-mode keymap behavior are documented in the [[https://www.gnu.org/software/emacs/manual/html_node/modus-themes/DIY-Use-a-hook-at-the-post_002dload_002dtheme-phase.html][GNU theme-hook guide]] and [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Defining-Minor-Modes.html][Emacs Lisp manual]].
+- Verified syntax, Markdown-map isolation, diary keys, override restoration, dates from the real timeline, and theme enable/disable behavior in batch. Loaded the changes into the running session, verified the same diary and Markdown bindings, confirmed ~s-.~ preserves October 5 when returning from the real diary, and restored the original calendar layout. The diary buffer's content and modified state remained unchanged.
+
 * 2026-09-08: Render Timeline Upcoming as Org
 
 - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-agenda.el][timeline-agenda.el]] at Jay's direction: period sections and event/date entries now use Org headings, event bullets use hyphens, and decorative underline rows are removed. The generated view derives from Org mode, remains read-only, and supports heading folding while retaining its visit, refresh, and quit commands.

@@ -85,14 +85,8 @@ Briefly highlights the candidate block before deletion."
           (when (fboundp 'my-diary-return-to-calendar)
             (run-at-time 0.1 nil #'my-diary-return-to-calendar)))))))
 
-(defun my-calendar--setup-cancel-shortcut ()
-  "Bind C-c C-k to `my-calendar-cancel-current-entry` in the diary file."
-  (when (and buffer-file-name
-             (string= (expand-file-name buffer-file-name)
-                      (expand-file-name diary-file)))
-    (local-set-key (kbd "C-c C-k") #'my-calendar-cancel-current-entry)))
-
-(add-hook 'markdown-mode-hook #'my-calendar--setup-cancel-shortcut)
+;; Diary keys now belong to my-diary-mode; also retire the hook on reload.
+(remove-hook 'markdown-mode-hook #'my-calendar--setup-cancel-shortcut)
 
 (provide 'timeline-cleanup)
 

@@ -11,29 +11,75 @@
 (defvar my-calendar-diary-history nil
   "Minibuffer history for `my-calendar-insert-diary-entry'.")
 
-(defvar-local my-diary-mode--lighter nil)
+(defvar my-diary-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "/") #'my-diary-search)
+    (define-key map (kbd "s-.") #'my-calendar-focus-calendar-window)
+    (define-key map (kbd "C-c C-c") #'my-diary-return-to-calendar)
+    (define-key map (kbd "C-c C-k") #'my-calendar-cancel-current-entry)
+    map)
+  "Diary shortcuts, active only while `my-diary-mode' is enabled.")
+
+(defvar-local my-diary--key-minor-override nil)
+(defvar-local my-diary--previous-key-minor-map nil)
+
+(defun my-diary--mode-line ()
+  "Describe the date block at point without changing point or match data."
+  (save-match-data
+    (save-restriction
+      (widen)
+      (save-excursion
+        (beginning-of-line)
+        (let ((boundary "^\\(?:\\([0-9]+\\)/\\([0-9]+\\)/\\([0-9]+\\)$\\|#+ \\)")
+              date)
+          (when (or (looking-at boundary)
+                    (re-search-backward boundary nil t))
+            (when (match-string 1)
+              (setq date (mapcar (lambda (group)
+                                  (string-to-number (match-string group)))
+                                '(1 2 3)))))
+          (if date
+              (format " 📅 %s" (my-calendar--describe-date date))
+            " 📅"))))))
+
+(defun my-diary--update-key-minor-override ()
+  "Install or restore the diary's buffer-local Command-period override."
+  (let ((current (cdr (assq 'key-minor-mode minor-mode-overriding-map-alist))))
+    (if my-diary-mode
+        (when (and (boundp 'key-minor-mode-map)
+                   (not (and my-diary--key-minor-override
+                             (eq current my-diary--key-minor-override))))
+          (setq my-diary--previous-key-minor-map current
+                my-diary--key-minor-override (make-sparse-keymap))
+          (set-keymap-parent my-diary--key-minor-override
+                             (or current key-minor-mode-map))
+          (define-key my-diary--key-minor-override (kbd "s-.")
+                      #'my-calendar-focus-calendar-window)
+          (setq-local minor-mode-overriding-map-alist
+                      (cons (cons 'key-minor-mode my-diary--key-minor-override)
+                            (assq-delete-all 'key-minor-mode
+                                             (copy-alist minor-mode-overriding-map-alist)))))
+      (when (and my-diary--key-minor-override
+                 (eq current my-diary--key-minor-override))
+        (setq-local minor-mode-overriding-map-alist
+                    (assq-delete-all 'key-minor-mode
+                                     (copy-alist minor-mode-overriding-map-alist)))
+        (when my-diary--previous-key-minor-map
+          (push (cons 'key-minor-mode my-diary--previous-key-minor-map)
+                minor-mode-overriding-map-alist)))
+      (setq my-diary--key-minor-override nil
+            my-diary--previous-key-minor-map nil))))
 
 (define-minor-mode my-diary-mode
   "Minor mode for the diary file, with context in the mode line."
-  :lighter (:eval (or my-diary-mode--lighter " 📅"))
-  (if my-diary-mode
-      (let ((date (or my-diary--origin-date
-                      (save-excursion
-                        (goto-char (point-min))
-                        (when (re-search-forward "^\\([0-9]+\\)/\\([0-9]+\\)/\\([0-9]+\\)$" nil t)
-                          (list (string-to-number (match-string 1))
-                                (string-to-number (match-string 2))
-                                (string-to-number (match-string 3))))))))
-        (setq my-diary-mode--lighter
-              (if date
-                  (format " 📅 %s" (my-calendar--describe-date date))
-                " 📅")))
-    (setq my-diary-mode--lighter nil)))
+  :lighter (:eval (my-diary--mode-line))
+  :keymap my-diary-mode-map
+  (my-diary--update-key-minor-override)
+  (force-mode-line-update))
 
 (defun my-diary--maybe-enable-mode ()
   "Enable `my-diary-mode` automatically for the diary file."
-  (when (and (not my-timeline--suspend-cleanup)
-             buffer-file-name
+  (when (and buffer-file-name
              (string= (expand-file-name buffer-file-name)
                       (expand-file-name diary-file)))
     (my-diary-mode 1)))

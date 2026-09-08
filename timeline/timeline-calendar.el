@@ -78,7 +78,7 @@ Otherwise, save the current date and jump to today."
       diary-comment-end ""
       calendar-week-start-day 1)
 
-(defun my-calendar--disable-holiday-highlighting ()
+(defun my-calendar--disable-holiday-highlighting (&rest _args)
   "Remove calendar holiday colors so dates render like regular days."
   (when (facep 'holiday)
     (set-face-attribute 'holiday nil
@@ -87,7 +87,7 @@ Otherwise, save the current date and jump to today."
                         :background nil
                         :weight 'normal)))
 
-(defun my-calendar--style-diary-face ()
+(defun my-calendar--style-diary-face (&rest _args)
   "Render diary dates with a mint-green foreground."
   (when (facep 'diary)
     (set-face-attribute 'diary nil
@@ -98,9 +98,13 @@ Otherwise, save the current date and jump to today."
 
 ;; Apply immediately and after theme changes.
 (my-calendar--disable-holiday-highlighting)
-(add-hook 'after-load-theme-hook #'my-calendar--disable-holiday-highlighting)
+(remove-hook 'after-load-theme-hook #'my-calendar--disable-holiday-highlighting)
+(add-hook 'enable-theme-functions #'my-calendar--disable-holiday-highlighting)
+(add-hook 'disable-theme-functions #'my-calendar--disable-holiday-highlighting)
 (my-calendar--style-diary-face)
-(add-hook 'after-load-theme-hook #'my-calendar--style-diary-face)
+(remove-hook 'after-load-theme-hook #'my-calendar--style-diary-face)
+(add-hook 'enable-theme-functions #'my-calendar--style-diary-face)
+(add-hook 'disable-theme-functions #'my-calendar--style-diary-face)
 
 (setq calendar-month-header
       '(propertize
@@ -200,15 +204,8 @@ After showing the listing, jump to the Markdown diary entry for that date."
         (select-window window)
         (user-error "No active calendar window to focus"))))
 
-(defun my-calendar--setup-diary-shortcuts ()
-  "Install diary navigation shortcuts when editing the diary file."
-  (when (and buffer-file-name
-             (string= (expand-file-name buffer-file-name)
-                      (expand-file-name diary-file)))
-    (local-set-key (kbd "s-.") #'my-calendar-focus-calendar-window)
-    (local-set-key (kbd "C-c C-c") #'my-diary-return-to-calendar)))
-
-(add-hook 'markdown-mode-hook #'my-calendar--setup-diary-shortcuts)
+;; Diary keys now belong to my-diary-mode; also retire the hook on reload.
+(remove-hook 'markdown-mode-hook #'my-calendar--setup-diary-shortcuts)
 
 (defun my-calendar--update-date-display ()
   "Update `my-calendar--current-date-string` and display it in the echo area."

@@ -21,15 +21,8 @@
          (consult-ripgrep-args (concat base-args (shell-quote-argument file))))
     (consult-ripgrep dir)))
 
-(defun my-diary--setup-search-shortcuts ()
-  "Bind `/` to `my-diary-search` in the diary buffer."
-  (when (and buffer-file-name
-             (string= (expand-file-name buffer-file-name)
-                      (expand-file-name diary-file)))
-    (local-set-key (kbd "/") #'my-diary-search)
-    (local-unset-key (kbd "s"))))  ; keep plain `s` available for typing
-
-(add-hook 'markdown-mode-hook #'my-diary--setup-search-shortcuts)
+;; Diary keys now belong to my-diary-mode; also retire the hook on reload.
+(remove-hook 'markdown-mode-hook #'my-diary--setup-search-shortcuts)
 
 (with-eval-after-load 'calendar
   (define-key calendar-mode-map (kbd "/") #'my-diary-search)
