@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-09-08: Match standard HTML export links to the Socratic signature
+
+- Added pink link text and underlines (~#FBB6CE~, including visited links) to the currently selected default stylesheet, [[file+emacs:/Users/jay/Dropbox/web-design/custom-css/sans-serif.css][sans-serif.css]]. Matched the literal color in [[file+emacs:/Users/jay/Dropbox/github/astro-monorepo/apps/socratic/public/socratic-email-signature.html][the Socratic signature]] and [[file+emacs:/Users/jay/Dropbox/data/contacts/reports/2026-09-06-life-update-group-m-batch-10-preview-reviewed-92.html][the reviewed life-update preview]]. The existing exporter reads this stylesheet on every export, so no Elisp reload or tangle was needed.
+- Regenerated the same narrowed ~nathan~ section from [[file+emacs:/Users/jay/Dropbox/roam/journal/2026-09-08.org][the September 8 journal]] into [[file+emacs:/Users/jay/Dropbox/roam/journal/2026-09-08.html][its HTML export]]. Verified the source hash was unchanged, the HTML differed only in CSS and generated heading IDs, and both browser-rendered links and underlines computed to ~rgb(251, 182, 206)~. Opened the updated export in the browser.
+
 * 2026-09-08: Add stacked Timeline itinerary, natural dates, capture, and jump history
 
 - Implemented the approved stacked layout in [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-calendar.el][timeline-calendar.el]]: a short calendar strip above the itinerary, with the original window configuration restored on quit. Editing occupies the same lower pane and pauses following; quitting while an editor is active keeps that editor visible. Calendar openings used internally by date prompts retain their stock behavior.
