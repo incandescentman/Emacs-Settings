@@ -195,6 +195,25 @@ Section numbering is backend-specific and enforced by =my-org-export-change-opti
 
 If Markdown export starts producing quote entities again, check [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] before adding per-file =#+OPTIONS: ':nil= workarounds. The intended repo-wide behavior is plain quotes for Markdown and smart quotes for the other export backends.
 
+*** Standard HTML export appearance
+
+The default ~my-org-selected-css~ is [[file+emacs:/Users/jay/Dropbox/web-design/custom-css/sans-serif.css][sans-serif.css]]. It uses 13px Helvetica Neue/Helvetica text and pink ~#FBB6CE~ link text and underlines, including visited links, matching [[file+emacs:/Users/jay/Dropbox/github/astro-monorepo/apps/socratic/public/socratic-email-signature.html][the Socratic email signature]]. ~my-org-inline-css-hook~ reads the selected stylesheet afresh on each export; a CSS-only change needs a new export, not an Emacs restart. ~M-x select-org-export-css~ chooses another stylesheet or none; those choices retain their own appearance.
+
+To export a section while keeping the document title and the section heading, narrow to that section and use ordinary HTML export. Org's subtree-export option instead makes the selected heading the export title. The September 8 journal export uses the narrowed-section workflow.
+
+** Calendar and Timeline
+
+~M-x calendar~ opens a short three-month grid above a following Org itinerary. Move through dates to see the preceding week, selected day, and following three weeks together; ongoing multi-day events appear even when the selected day has no separate diary entry.
+
+- ~j~ or ~g d~ jumps to a natural-language date; ~V~ toggles following.
+- ~RET~/~e~ edits in the lower pane. ~C-c C-c~ returns to the originating date and resumes the itinerary; ~s-.~ focuses the grid while keeping the editor in place.
+- ~s-k c c~ captures a date and event from any buffer, then returns to the current work. ~s-k c s~ remains scheduling.
+- ~C-c <left>~/~C-c <right>~ traverse deliberate date jumps; arrow movement does not enter this history.
+- ~a~ opens Upcoming, which starts from today. The itinerary follows the grid's selected date.
+- ~q~ in the grid restores the earlier window layout; if the diary editor is still active, it remains visible. ~?~ shows the current bindings.
+
+The source is [[file+emacs:/Users/jay/Dropbox/github/timeless/data/timeline.md][the shared Timeless Markdown diary]]. See [[file+emacs:/Users/jay/emacs/emacs-settings/docs/emacs-calendar-instructions.org][the Calendar and Timeline guide]] for pane controls, capture behavior, and troubleshooting.
+
 ** Editing Browser Textareas in Emacs (GhostText)
 
 Any time you find yourself writing more than a sentence into a browser textarea — Substack drafts, GitHub PR descriptions, social compose boxes, ChatGPT — edit it in Emacs instead via =atomic-chrome= + the GhostText Chrome extension.

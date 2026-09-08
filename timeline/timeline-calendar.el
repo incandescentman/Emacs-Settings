@@ -66,7 +66,12 @@ Otherwise, save the current date and jump to today."
                          (my-diary-search . "Search the diary")))
           (insert "- " (mapconcat #'key-description (where-is-internal (car entry) my-diary-mode-map) ", ")
                   " — " (cdr entry) "\n"))
-        (insert "\n* Capture from anywhere\n\n- M-x my-timeline-capture — date, then event; return to your current work.\n\nq closes this guide.\n")
+        (insert "\n* Capture from anywhere\n\n- ")
+        (when-let ((keys (and (boundp 'key-minor-mode-map)
+                             (where-is-internal 'my-timeline-capture
+                                                key-minor-mode-map))))
+          (insert (mapconcat #'key-description keys ", ") " / "))
+        (insert "M-x my-timeline-capture — date, then event; return to your current work.\n\nq closes this guide.\n")
         (goto-char (point-min))
         (org-show-all)
         (set-buffer-modified-p nil)))

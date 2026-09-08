@@ -125,9 +125,11 @@ Upcoming and the itinerary share one buffer-setup helper and a cache of entries 
 - ~timeline-diary.el~ — diary insertion/edit commands and the lightweight `my-diary-mode`.
 - ~timeline-cleanup.el~ — the before-save cleanup pass and the `C-c C-k` cancel workflow.
 - ~timeline-search.el~ — consult-ripgrep integration and search bindings for both calendar and diary buffers.
-- ~timeline-agenda.el~ — the =my-timeline-upcoming= "what's next" view over future-dated entries.
-- ~timeline-tests.el~ — ERT coverage that exercises insertion, editing, cleanup, and cancel behaviour.
+- [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-agenda.el][timeline-agenda.el]] — shared cached data and Org view setup, the following itinerary, and Upcoming.
+- [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-tests.el][timeline-tests.el]] — regression coverage for insertion, cleanup, capture, range rendering, cache invalidation, navigation, and window behavior.
 - ~timeline.el~ — entry point that stitches the modules together and installs the shared keybindings.
+
+The current workflow and implementation contracts are maintained in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/emacs-calendar-instructions.org][the Calendar and Timeline guide]].
 
 * Requirements
 - Emacs 28 or newer.

@@ -8,14 +8,18 @@ This guide covers the custom Calendar + Markdown-diary workflow provided by the
 [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/][/Users/jay/emacs/emacs-settings/timeline/]] and is loaded from
 [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][📄 shared-functions.org]] via ~(require 'timeline)~.
 
-The diary file is a plain-text Markdown timeline at
-=/Users/jay/Dropbox/github/timeless/data/timeline.md=. It doubles as the live
-data file for the *Timeless* app, so it can be edited from either Emacs or that
-app. See [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/README.org][📄 timeline/README.org]] for the design philosophy and full feature
+The diary file is the plain-text [[file+emacs:/Users/jay/Dropbox/github/timeless/data/timeline.md][Timeless Markdown timeline]]. It doubles as the live data file for the *Timeless* app, so it can be edited from either Emacs or that app. See [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/README.org][📄 timeline/README.org]] for the design philosophy and full feature
 list, and [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-keybindings.org][📄 timeline/timeline-keybindings.org]] for the complete binding
 reference.
 
 Opening Calendar saves your current window layout, then shows the previous, current, and next months side by side in a short strip above the full-width itinerary. Dates with diary entries use the mint-green ~diary~ face (~#6FCFA6~), and today is marked separately. Auto-revert relies on polling rather than cloud-storage file notifications, so external edits appear after a short delay.
+
+* Quick Start
+
+- Capture without leaving your work: ~s-k c c~, then the date and event text. ~s-k c s~ continues to schedule an Org item.
+- Browse: ~M-x calendar~, then ~j~ and a date such as ~oct 12~. The itinerary follows automatically; ~V~ toggles following.
+- Edit: ~RET~/~e~ opens the diary in the lower pane; ~C-c C-c~ returns to browsing.
+- Exit: ~q~ from the grid restores the previous layout. An editor that is still active stays visible.
 
 * Opening the Calendar
 - ~M-x calendar~ --- Open the calendar (Spacemacs: ~SPC a d c~ unless remapped).
@@ -90,6 +94,7 @@ When ~timeline.md~ is open in ~markdown-mode~, =my-diary-mode= activates
 automatically and shows a 📅 plus the current date in the mode line. These
 buffer-local keys are installed:
 
+- ~RET~ --- The existing ~my-markdown-newline-with-bullet~ continues a populated bullet; Return on an empty bullet ends the list entry.
 - ~s-.~ (⌘.) --- =my-calendar-focus-calendar-window=. Refocus the live Calendar
   window (and close stray fancy-diary panes) without changing its date.
 - ~C-c C-c~ --- =my-diary-return-to-calendar=. Jump back to the Calendar at the
@@ -135,7 +140,9 @@ Defined in [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-core.e
 - ~calendar-week-start-day~ = 1 (Monday)
 - ~calendar-mark-holidays-flag~ = nil, ~calendar-holidays~ = nil (holidays off)
 - ~calendar-mark-diary-entries-flag~ = t (diary dates highlighted)
-- ~calendar-view-diary-initially-flag~ = nil (no auto diary pane on open)
+- ~calendar-view-diary-initially-flag~ = nil (no automatic stock diary listing; the custom itinerary still opens)
+- ~my-timeline-follow-preview~ defaults to ~t~ and is saved through Custom when toggled with ~V~.
+- ~calendar-mark-today~ runs from ~calendar-today-visible-hook~ alongside the existing Org-roam daily-entry marker.
 - ~diary-display-function~ = ~diary-fancy-display~
 - ~diary-comment-start~ = ~#~
 - The ~diary~ face is restyled to mint-green ~#6FCFA6~; the ~holiday~ face is
@@ -147,9 +154,26 @@ Defined in [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-core.e
 - [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-diary.el][timeline-diary.el]] --- diary insert/edit commands and ~my-diary-mode~.
 - [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-cleanup.el][timeline-cleanup.el]] --- before-save cleanup and the ~C-c C-k~ cancel flow.
 - [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-search.el][timeline-search.el]] --- consult-ripgrep search bindings.
-- [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-agenda.el][timeline-agenda.el]] --- the range-aware =my-timeline-upcoming= view and its Today/This week/Later sections.
-- [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-tests.el][timeline-tests.el]] --- ERT coverage for insertion, editing, cleanup, cancel.
+- [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-agenda.el][timeline-agenda.el]] --- shared cached entries/ranges, reusable read-only Org view setup, Upcoming, and the following itinerary.
+- [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-tests.el][timeline-tests.el]] --- ERT coverage for insertion, cleanup, capture, range rendering, cache invalidation, jump history, and window lifecycle; newer tests use in-memory copies of the real diary.
 - [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline.el][timeline.el]] --- entry point that requires the modules and installs bindings.
+
+* Implementation Contracts
+
+These are the implemented decisions from the September 8, 2026 calendar work, accepted in this session.
+
+- The Markdown diary remains the shared source. Org headings and ~-~ list syntax belong to the generated views. Paired ranges follow [[file+emacs:/Users/jay/Dropbox/github/timeless/docs/instructions.org][the Timeless first-day/last-day protocol]]; the views reuse the existing collectors rather than maintaining another parser.
+- Browsing preserves the source buffer's text, modified state, point, and narrowing. ~my-timeline--data~ caches entries and ranges in the source buffer using ~buffer-chars-modified-tick~; unsaved character edits and text loaded by auto-revert invalidate the cache. A refresh reads the live buffer. It does not force a disk revert.
+- Upcoming, itinerary, and help reuse ~my-timeline--view-buffer~. Their Org mode initializes once; refreshes replace generated text in the same read-only buffer. The helper disables Olivetti locally and sets ~disable-olivetti-auto-toggle~ so the existing split-window hook does not restore writing margins.
+- The frame's ~my-timeline-session~ parameter holds the original window configuration, grid window, lower window, and editing state. The lower pane shows either the itinerary or the source editor. Automatic and manual preview both leave an active editor in place. ~C-c C-c~ ends that pause. Browsing quit restores the saved layout; editing quit closes the grid and preserves the editor.
+- Explicit calendar openings get the stacked view. Internal calendar calls and date prompts retain their existing behavior. ~org-read-date~ prompts use the selected date as the default without opening an extra calendar.
+- Diary shortcuts belong to ~my-diary-mode-map~. Its ~s-.~ override uses a buffer-local ~minor-mode-overriding-map-alist~ entry to take precedence over ~key-minor-mode-map~. Global capture belongs to ~my/global-key-bindings~ in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]]. The itinerary uses ~<~/~>~ for extension because the live Spacemacs emulation map owns ~]~.
+- The diary lighter evaluates the date block at point. Calendar face restyling uses ~enable-theme-functions~ and ~disable-theme-functions~. The Calendar ~?~ guide resolves displayed calendar/diary keys from their maps; its capture section also displays the global capture shortcut when available.
+- [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-README.org][timeline-README.org]] is a symlink to [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/README.org][README.org]]. The implementation is in the module's Elisp files; it has no separate literate source to tangle.
+
+The existing test suite can be run from [[file+emacs:/Users/jay/emacs/emacs-settings/][the configuration repository]] with ~emacs --batch -Q -L timeline -l timeline --eval '(ert-run-tests-batch-and-exit "^my-\\(calendar\\|timeline\\)-test-")'~. It passed 23 tests for the September 8 implementation. Live verification also covered keymap precedence, the stacked window sizes and margins, the today marker, paused editing, and layout restoration.
+
+References: [[https://orgmode.org/manual/The-date_002ftime-prompt.html][Org's date prompt]] describes relative-date semantics. The installed Emacs documentation for ~current-window-configuration~, ~buffer-chars-modified-tick~, and ~minor-mode-overriding-map-alist~ describes the underlying APIs; [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Active-Keymaps.html][the GNU keymap reference]] specifies precedence. The separate [[https://emacs.stackexchange.com/questions/352/how-to-override-major-mode-bindings][practitioner discussion of keymap overrides]] provides examples; the Timeline-specific bindings and Spacemacs conflict above were checked in the live session.
 
 * Workflow Examples
 ** Daily review
@@ -161,8 +185,7 @@ Defined in [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-core.e
 ** Weekly planning
 1. ~M-x calendar~, then ~.~ to today.
 2. Move through the week with ~C-f~/~C-b~ (or down a week with ~C-n~).
-3. ~v~ / ~SPC~ to preview each day's entry without leaving the Calendar; ~e~ to
-   edit one.
+3. Read the following itinerary as you move. If following is off, ~v~/~SPC~ shows the selected date manually; ~e~ opens its editor.
 
 ** Finding something
 - ~/~ or ~s~ from the Calendar (or ~/~ inside the diary) runs
@@ -173,9 +196,8 @@ Defined in [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-core.e
   file. Press ~e~/~RET~ instead to create it. (The lookup is now anchored to the
   start of a line, so it won't accidentally match a date mentioned inside a
   bullet.)
-- *Calendar not updating after edits* --- auto-revert is poll-based for cloud
-  storage; wait a few seconds or run ~M-x revert-buffer~ in ~timeline.md~. Also
-  remember the Timeless app may be editing the same file.
+- *Itinerary not following* --- ~V~ controls automatic following. If the lower pane is editing the diary, use ~C-c C-c~ to resume the itinerary; focusing the grid with ~s-.~ does not end the editing pause.
+- *External edits not visible yet* --- auto-revert polls the shared diary. After it has loaded the external changes, ~g~ in the itinerary refreshes from that buffer. Unsaved buffer edits are included as well; a preview refresh does not discard them by reverting from disk.
 - *Custom keys not active* --- ensure ~(require 'timeline)~ has loaded; the
   bindings install via ~(with-eval-after-load 'calendar ...)~ in
   [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline.el][timeline.el]]. Restart Emacs if needed.
@@ -185,9 +207,7 @@ Defined in [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-core.e
 - [[info:emacs#Calendar/Diary][Emacs Manual: Calendar/Diary]].
 
 * Appendix: Stock Emacs Diary Entry Types
-These are standard Emacs diary sexp entries. They are *not* wired to ~i~ in this
-Markdown workflow (which uses the custom inserter), but you can add them by hand
-if you ever want recurrence. They live as non-comment lines in the diary file.
+These stock-diary examples are reference material for a separate Emacs diary, not supported entries for the shared Timeless Markdown file. The custom Timeline parser does not expand diary sexps. Use the shared format described above for entries that must appear in both Timeline and Timeless.
 
 - ~%%(diary-weekly)~ --- recurs on a given weekday.
 - ~%%(diary-monthly) DAY~ --- recurs on a day of the month.

@@ -12,6 +12,8 @@ Phrase reminders briefly and once per session. Don't repeat the same reminder tu
 - In Dired, press *=/=* or *=s-f=* to narrow the listing to matching filenames. Use it when a directory is visually noisy and you want to temporarily filter down to just the files you care about.
 - *GhostText* (Chrome extension): Edit any browser textarea (Substack drafts, GitHub PRs, social compose boxes, etc.) live in Emacs via =atomic-chrome=. Click into a textarea, click the GhostText icon, and an Emacs frame opens with the contents in =org-mode=; type and the browser auto-syncs both ways. Kill the buffer to disconnect. Use it any time you find yourself writing more than a sentence in a browser textarea.
 
+- *Calendar capture*: ~s-k c c~ runs ~my-timeline-capture~ from any buffer: choose a date, enter the event, and return to the current work. ~s-k c s~ remains ~org-schedule~.
+
 ** Documentation Files
 
 The following documentation files provide detailed information about various aspects of this configuration:
@@ -29,6 +31,7 @@ The following documentation files provide detailed information about various asp
 - [[file+emacs:docs/experimental-mode-playbook.org][📄 experimental-mode-playbook.org]] - Guide for experimental mode features
 - [[file+emacs:docs/org-roam-profiles.org][📄 org-roam-profiles.org]] - Guide to the multi-profile Org Roam system
 - [[file+emacs:docs/pasteboard-markdown-detection.org][📄 pasteboard-markdown-detection.org]] - Documentation for the smart pasteboard system
+- [[file+emacs:/Users/jay/emacs/emacs-settings/docs/emacs-calendar-instructions.org][📄 Calendar and Timeline guide]] - Stacked itinerary, date navigation, capture, editing, and implementation contracts
 - [[file+emacs:docs/goals-system.org][📄 goals-system.org]] - Goals workflow integration (rep counter, morning ritual, anti-stall)
 
 ** Configuration Architecture
@@ -65,6 +68,8 @@ The following documentation files provide detailed information about various asp
 - =org-yt.el= - YouTube link support
 - =org-visual-style.el= - Visual enhancements for org-mode
 
+- [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/][Timeline]] - Calendar over the shared Timeless Markdown diary, with read-only Org itinerary and Upcoming views; ~s-k c c~ captures globally.
+
 **** 4. Publishing & Export
 - =latex-templates/= - Extensive library of custom LaTeX classes (CVs, Books, Letters)
 - =ox-koma-letter.el= - KOMA-Script letter integration
@@ -80,6 +85,7 @@ The following documentation files provide detailed information about various asp
 - =skeletons.el= - Code templates and snippets
 
 ** Guidance for AI/LLM Editing Sessions
+- *Timeline calendar*: Before changing [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/][Timeline]], read the workflow and implementation contracts in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/emacs-calendar-instructions.org][the Calendar and Timeline guide]]. They record the approved stacked layout, editor-safe following, shared parser and Org views, source-file protocol, and keymap ownership. The global capture binding belongs to ~my/global-key-bindings~ in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]]. [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-ideas.org][Timeline Ideas]] contains dated historical proposals, not the current implementation specification.
 - *Don't ask, just do*: When Jay provides a file path, READ IT FIRST before asking questions. If he says "here's an error" or "look at this" with a path, just read the file—don't ask what it is or request more context.
 - *Git updates across the two Macs*: =Rainlight= is the secondary Silver laptop; =Destroyer= is the main Black laptop. Before pulling, identify the machine with =scutil --get ComputerName=, inspect =git status --short --branch=, fetch the live remote with =git fetch --prune origin=, and compare the local and remote histories. A clean fast-forward may use =git merge --ff-only origin/main=. If the worktree is dirty or the histories have diverged, do not run a plain =git pull=: first create a recoverable safety branch and stash, inspect overlaps and patch-equivalent commits, align deliberately, restore only approved local deltas, and retain the recovery points until Jay confirms startup.
   - [[file+emacs:/Users/jay/emacs/emacs-settings/docs/lab/startup-profile.org][docs/lab/startup-profile.org]] is an automatically appended timing log. Uncommitted snapshots may be discarded during reconciliation unless startup profiling is the active task.

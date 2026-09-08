@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-09-08: Consolidate calendar documentation and instruction routing
+
+- Added Timeline capture to the reminders and a short editing route to [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.org][the repo instructions]], which are also reached through the existing [[file+emacs:/Users/jay/emacs/emacs-settings/AGENTS.md][AGENTS.md symlink]]. The detailed implementation contracts live in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/emacs-calendar-instructions.org][the Calendar and Timeline guide]], covering shared data and Org views, cache invalidation, editor pause/resume, quit behavior, keymap ownership, and validation.
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][the main usage guide]] with the calendar workflow, capture shortcut, and default HTML stylesheet location and pink link appearance. Reconciled older manual-preview instructions, module descriptions, capture aliases, and diary-format guidance in the Timeline references. Marked implemented ideas in [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-ideas.org][Timeline Ideas]] while preserving the historical proposals and examples.
+- Updated the live Calendar ~?~ guide to resolve the capture shortcut from ~key-minor-mode-map~, keeping ~M-x my-timeline-capture~ as the fallback. Verified it displays ~s-k c c~ in the running session and confirmed the existing diary Return command is ~my-markdown-newline-with-bullet~. Checked introduced local links, the README and instruction symlinks, and the help function's Elisp syntax. No restart is needed.
+
 * 2026-09-08: Bind Timeline capture globally
 
 - Added ~s-k c c~ → ~my-timeline-capture~ to ~my/global-key-bindings~ in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]], beside ~s-k c s~ → ~org-schedule~, and updated the Timeline usage references. Applied the new binding to the running session without reloading the complete key configuration; verified the effective capture and scheduling bindings in both a plain buffer and the journal. Elisp syntax and the code whitespace check passed.

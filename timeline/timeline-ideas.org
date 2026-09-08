@@ -2,6 +2,17 @@
 #+AUTHOR: Jay Dixit
 #+DATE: <2025-10-16>
 
+* Implementation Status — September 8, 2026
+
+- Jump history is implemented as ~C-c <left>~/~C-c <right>~ for deliberate jumps. Ordinary arrow movement is not recorded.
+- The mini-agenda idea is implemented as the read-only Org Upcoming view on ~a~. The following itinerary separately shows a week before and three weeks after the selected date, with ongoing ranges included.
+- Bullet continuation already exists through ~my-markdown-newline-with-bullet~ in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]]: Return continues a populated bullet and ends an empty bullet. The live diary uses this command.
+- Natural-date navigation is on ~j~/~g d~; global capture is on ~s-k c c~. The today marker is installed and confirmed live.
+- The historical proposal to make old diary entries read-only is not implemented; the source diary remains editable. The generated Org views are read-only.
+- Range marking across the grid, a range inserter, and rescheduling remain future work, outside the completed September 8 changes.
+
+The proposals and sample code below are retained as historical material. Use [[file+emacs:/Users/jay/emacs/emacs-settings/docs/emacs-calendar-instructions.org][the current Calendar and Timeline guide]] for the implemented workflow and keymaps.
+
 *** 2. *Calendar Jump History ("Breadcrumbs")*
 
 You already track the last visited date with `my-calendar-toggle-last-date`.
