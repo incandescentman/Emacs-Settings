@@ -8,6 +8,7 @@
 ;;; Code:
 
 (require 'seq)
+(require 'org)
 (require 'timeline-core)
 (require 'timeline-diary)
 
@@ -211,18 +212,18 @@ COUNT is non-nil, return at most that many items."
   (let ((start (point)))
     (if (eq (plist-get item :kind) 'range)
         (progn
-          (insert (format "%s\n" (plist-get item :title)))
-          (insert (format "    %s\n"
+          (insert (format "** %s\n" (plist-get item :title)))
+          (insert (format "%s\n\n"
                           (my-timeline--range-status item today-abs)))
-          (insert (format "    • %s\n\n" (plist-get item :description))))
+          (insert (format "- %s\n\n" (plist-get item :description))))
       (let* ((date (plist-get item :date))
              (delta (- (plist-get item :sort-abs) today-abs)))
-        (insert (format "%s %s  (%s)\n"
+        (insert (format "** %s %s  (%s)\n\n"
                         (calendar-day-name date)
                         (my-calendar--describe-date date)
                         (my-timeline--relative-day-string delta)))
         (dolist (bullet (plist-get item :bullets))
-          (insert (format "    • %s\n" bullet)))
+          (insert (format "- %s\n" bullet)))
         (insert "\n")))
     (put-text-property start (point) 'my-timeline-date
                        (plist-get item :date))))
@@ -236,7 +237,7 @@ COUNT is non-nil, return at most that many items."
                 section))
           items)))
     (when section-items
-      (insert title "\n" (make-string (length title) ?─) "\n\n")
+      (insert "* " title "\n\n")
       (dolist (item section-items)
         (my-timeline--insert-agenda-item item today-abs)))))
 
@@ -249,8 +250,13 @@ COUNT is non-nil, return at most that many items."
     map)
   "Keymap for `my-timeline-upcoming-mode'.")
 
-(define-derived-mode my-timeline-upcoming-mode special-mode "Timeline-Upcoming"
-  "Major mode for the upcoming-events listing.")
+;; Set explicitly so reloading also replaces the former special-mode parent.
+(set-keymap-parent my-timeline-upcoming-mode-map org-mode-map)
+
+(define-derived-mode my-timeline-upcoming-mode org-mode "Timeline-Upcoming"
+  "Read-only Org mode for the upcoming-events listing."
+  (org-show-all)
+  (setq buffer-read-only t))
 
 (defun my-timeline-upcoming (&optional count)
   "Show upcoming timeline entries in the *Timeline Upcoming* buffer.
@@ -268,7 +274,7 @@ sets the count; a plain \\[universal-argument] shows all future entries."
     (with-current-buffer buf
       (let ((inhibit-read-only t))
         (erase-buffer)
-        (insert (format "Upcoming timeline events — as of %s\n"
+        (insert (format "#+TITLE: Upcoming timeline events — as of %s\n\n"
                         (my-calendar--describe-date today)))
         (insert "RET/o jump to entry or range start · g refresh · q quit\n\n")
         (if (null items)
