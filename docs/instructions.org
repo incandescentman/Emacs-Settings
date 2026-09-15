@@ -507,6 +507,8 @@ Note: [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-fun
 
 * Search and Navigation
 
+For a task-based guide to current-buffer, directory, project, Org-roam, open-buffer, filename, and heading searches, see [[file+emacs:/Users/jay/emacs/emacs-settings/docs/search-guide.org][the Emacs Search Guide]]. It includes ~C-M-g~ for full-text search in the current directory and identifies older bindings that are currently unavailable.
+
 | Keys      | Command       | Purpose                           |
 |-----------+---------------+-----------------------------------|
 | =SPC /=   | Project search | Search current project (ripgrep) |

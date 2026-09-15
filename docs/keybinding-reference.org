@@ -34,6 +34,7 @@ Annotations from [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-an
 - *[NEW]* - ~C-s-g ~ :: =jay/smart-ripgrep=
 - *[NEW]* - ~s-G~ :: =counsel-projectile-ag=
 - *[NEW]* - ~C-s-f~ :: =isearch-forward-word-at-point=
+- *[NEW]* - ~C-M-g~ :: =consult-ripgrep-current-directory=
 - *[NEW]* - ~s-k ag~ :: =affe-grep=
 - *[NEW]* - ~s-k d g~ :: =deadgrep-current-directory=
 - *[NEW]* - ~s-k rg~ :: =consult-ripgrep-current-directory=

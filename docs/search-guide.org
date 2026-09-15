@@ -1,0 +1,115 @@
+#+TITLE: Emacs Search Guide
+#+DATE: [2026-09-15 Tue]
+#+STARTUP: showall
+
+* Start here
+
+- Find text in the current buffer: ~C-s~ → ~consult-line~.
+- Find text in other files in the current directory: ~C-M-g~ → ~consult-ripgrep-current-directory~.
+- Find text throughout the current project: ~s-G~ → ~counsel-projectile-ag~.
+- Find text throughout the active Org-roam vault: ~s-/ r r~ → ~roam-rg-search~.
+- Find a file by its name: ~C-x C-f~ → ~find-file-at-point-or-affe-find~.
+- Reopen a recent file: ~s-r~ → ~jay/consult-recent-file-folder-first~.
+- Jump to a heading or function in the current buffer: ~KK~ → ~consult-imenu~.
+
+* How to read the keys
+
+~C~ means Control, ~M~ means Option/Alt, and ~s~ means Command on your Mac. Thus ~C-M-g~ is Control–Option–G, ~C-s-g~ is Control–Command–G, and ~s-G~ is Command–Shift–G. Uppercase letters require Shift.
+
+Spaces separate successive keystrokes: ~s-/ r r~ means hold Command and press ~/~, release, then press ~r~ twice. ~KK~ is a chord: press uppercase ~K~ twice quickly. ~M-x command-name RET~ runs a command by name. ~C-u~ before a command supplies a prefix argument; its effect depends on the command.
+
+* Text in the current buffer
+
+- ~C-s~ → ~consult-line~: show a list of matching lines, narrow it as you type, and press ~RET~ to jump to the selected line. This reads the current buffer, including unsaved edits, and respects narrowing.
+- ~s-f~ → ~jay/search-forward-dwim~: search forward in place, ignoring case. Use this when you want to move through occurrences one at a time. In Dired, the same key filters filenames instead.
+- ~s-g~ → ~isearch-repeat-forward~: repeat the incremental search and move to the next occurrence. This belongs to the ~s-f~ search workflow, rather than the ~C-s~ results list.
+- ~C-s-f~ → ~isearch-forward-word-at-point~: search for the word under the cursor without typing it. Repeat the command to move to the next occurrence.
+- ~s-F~ → ~pasteboard-search-for-clipboard-contents~: find the exact text on the macOS clipboard in the current buffer.
+
+* Text in other files
+
+These searches read saved files on disk. They include subdirectories unless you supply a restriction. A directory search can include the current file too.
+
+** Current directory
+
+~C-M-g~ → ~consult-ripgrep-current-directory~ searches from the current buffer's ~default-directory~, normally the folder containing its file. It explicitly uses that folder even when it sits inside a larger project. ~s-k r g~ and ~s-/ r g~ run the same command.
+
+Use this when the related documents are beside the one you are editing. A buffer whose ~default-directory~ has been changed will search that directory instead.
+
+** Current project
+
+~s-G~ → ~counsel-projectile-ag~ searches from Projectile's current project root using ~ag~. Use this when the matching text could be anywhere in the project, including sibling folders. ~M-x projectile-display-project-root~ reports the root Projectile recognizes.
+
+~M-x consult-ripgrep~ offers Consult's project-wide alternative, using ~rg~. It uses Consult's detected project root, or the current directory when it detects no project. These two commands use different project-detection paths, so check the search location if their scopes differ.
+
+** Org-roam vault
+
+~s-/ r r~ → ~roam-rg-search~ searches the directory in ~org-roam-directory~, which follows the active Org-roam profile. This is a disk text search, not a search of node titles or the Org-roam database.
+
+~C-s-g~ → ~jay/smart-ripgrep~ chooses the scope for you: inside a file under the active vault, it searches the vault; elsewhere, it searches the current directory. ~C-u C-s-g~ forces the current directory even inside the vault.
+
+** A directory you choose
+
+~C-u M-x consult-ripgrep RET~ prompts for the directories or files to search. Use this when the target is somewhere else. Use the plain ~consult-ripgrep~ command here: the ~C-M-g~ wrapper always supplies its own directory.
+
+** Other matching styles
+
+- ~s-/ g g~ → ~consult-git-grep~: search Git-tracked content with ~git grep~. Untracked files are outside its default search.
+- ~s-k a g~ → ~affe-grep~: fuzzy text matching when you remember the shape of a phrase rather than an exact spelling. Its default scope is the detected project or current directory.
+- ~s-/ g r~ → ~consult-grep~: the ordinary ~grep~ alternative. For routine directory searches, start with ~C-M-g~.
+
+** Why a disk search may miss something
+
+The live Consult asynchronous-search setting requires three characters before it starts a search. Consult ripgrep uses smart case: lowercase input ignores case, while uppercase input makes the match case-sensitive. Input is interpreted as a regular expression, so punctuation such as ~.~ can have special meaning.
+
+Ripgrep normally excludes hidden and ignored files. Vault-wide text search follows ripgrep's file rules, not the Org-roam database's exclusion rules. Unsaved edits appear in buffer searches, but not in disk searches.
+
+* Text across open buffers
+
+~M-x consult-line-multi~ searches lines in open buffers belonging to the current project. ~C-u M-x consult-line-multi~ searches across all eligible open buffers. This is useful when you want to search unsaved text or only material already open in Emacs. It does not search unopened files on disk.
+
+~s-B~ → ~consult-buffer~ helps choose a buffer or file by its name; it does not search its contents.
+
+* Filenames and recently used paths
+
+- ~C-x C-f~ → ~find-file-at-point-or-affe-find~: open a file path under the cursor if one is recognized; otherwise start ~affe-find~, a fuzzy filename search. Without an explicit directory, Affe uses the detected project or current directory. ~M-x affe-find~ bypasses the file-at-point behavior.
+- ~C-s-r~ → ~consult-find~: search filenames and paths using regular-expression matching, from the detected project or current directory. Use this when you know part of a filename, not a phrase inside it.
+- ~s-r~ → ~jay/consult-recent-file-folder-first~: choose from recent files. Despite the function's name, your current display preference is filename first.
+- ~s-R~ → ~fasd-find-file~: choose a file or directory from fasd's history of used paths.
+- ~C-x C-l~ → ~consult-locate~: another history-based path search in your configuration. Its backend is explicitly set to ~fasd -t -l -R~, so it is not a complete filesystem search.
+- In Dired, ~s-f~ filters the directory listing by filename; it does not search inside the files.
+
+* Headings and structure
+
+- ~KK~ → ~consult-imenu~: jump to a heading, function, or other structural entry in the current buffer, with a searchable picker.
+- ~s-;~ → ~consult-outline~: jump to an outline heading in the current buffer.
+- ~s-i~ → ~imenu~: open the standard structural index.
+
+Use these when you know the section or function you want, rather than a phrase somewhere inside it.
+
+* Book, proposal, and fixed-directory shortcuts
+
+- ~s-/ f p~ → ~search-filename-proposal-directory~: find a filename in your proposal directory.
+- ~s-/ f B~ → ~search-filename-book-directory~: find a filename in your book directory. The final ~B~ is uppercase.
+- ~s-/ f b~ → ~search-filename-both-book-and-proposal-directories~: choose a filename from both directories.
+- ~s-/ g b~ → ~grep-both-directories~: an alias for ~counsel-projectile-ag~. It searches the current project; the name does not force the book and proposal directories. It covers both when the current project contains both.
+- ~s-/ g l~ → ~affe-grep-gnulisp-directory~: fuzzy text search in [[file+emacs:/Users/jay/gnulisp/][/Users/jay/gnulisp/]].
+
+* Older shortcuts that are currently unavailable
+
+Checked in the running Emacs session on September 15, 2026. These bindings exist, but the commands below are not currently callable; they are included here so that an older reference does not send you to a dead end.
+
+- ~s-8~ → ~search-open-buffers~, ~M-s c~ → ~current-buffers-search~, and ~M-s b~ → ~book-search~ are not interactive commands in the current session. Use ~consult-line-multi~ for open-buffer contents, or the directory/project commands above for saved writing.
+- ~s-/ g u b~ → ~affe-grep-bash-scripts~ and ~s-/ g u p~ → ~affe-grep-bash-profile~ are not interactive commands in the current session. Use ~C-u M-x consult-ripgrep~ to choose the desired directory.
+- ~s-k d g~ and ~s-/ d g~ invoke ~deadgrep-current-directory~, whose call to ~deadgrep~ currently resolves to the undefined ~deadgrep-project-directory~ alias. Use ~C-M-g~ for current-directory text search.
+
+* Sources and verification
+
+The shortcut mappings were queried in the running Emacs session on September 15, 2026, including the main text-search bindings in an existing Org buffer. Command descriptions and scope come from the live definitions, configuration, and installed package documentation. This was a binding and definition check, not an end-to-end execution of every interactive search. Dired's context-specific behavior was checked in its wrapper source.
+
+- [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][Global bindings and the context-sensitive Command-F wrapper]].
+- [[file+emacs:/Users/jay/emacs/emacs-settings/search-commands.org][Search helpers, directory selection, recent-file display, and fasd backend configuration]].
+- [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][Clipboard text search]].
+- [[file+emacs:/Users/jay/.emacs.d/elpa/develop/consult-20260913.2232/consult.el][Installed Consult command documentation and directory-selection implementation]].
+- [[file+emacs:/Users/jay/.emacs.d/elpa/develop/affe-20260519.1026/affe.el][Installed Affe command documentation and directory-selection implementation]].
+- [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-reference.org][Broader keybinding reference]] and [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][main usage guide]].

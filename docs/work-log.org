@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-09-15: Consolidate search commands into a task-based guide
+
+- Added [[file+emacs:/Users/jay/emacs/emacs-settings/docs/search-guide.org][the Emacs Search Guide]] and linked it from [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][the main usage guide]]. It distinguishes current-buffer, current-directory, project, active-vault, open-buffer, filename, history, and structural searches, with Mac modifier notation and alternate shortcuts.
+- Added the missing ~C-M-g~ → ~consult-ripgrep-current-directory~ entry to [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-reference.org][the existing keybinding reference]]. Verified the live mappings and relevant definitions, including the main search keys in an existing Org buffer. Documented the fasd backend behind ~consult-locate~, the project-scoped ~grep-both-directories~ alias, and unavailable legacy search commands. No search implementation or binding was changed.
+
 * 2026-09-08: Consolidate calendar documentation and instruction routing
 
 - Added Timeline capture to the reminders and a short editing route to [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.org][the repo instructions]], which are also reached through the existing [[file+emacs:/Users/jay/emacs/emacs-settings/AGENTS.md][AGENTS.md symlink]]. The detailed implementation contracts live in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/emacs-calendar-instructions.org][the Calendar and Timeline guide]], covering shared data and Org views, cache invalidation, editor pause/resume, quit behavior, keymap ownership, and validation.
