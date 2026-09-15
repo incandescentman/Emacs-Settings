@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-09-15: Checkpoint the fragrance-tracker source exclusion
+
+- Committed the existing change in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][Org-roam core]] that excludes [[file+emacs:/Users/jay/Dropbox/roam/consumerist/fragrance-tracker/source/][fragrance-tracker source files]] from Org-roam file discovery. Verified the exact exclusion against the two real source files and confirmed that all 43 Org notes in [[file+emacs:/Users/jay/Dropbox/roam/consumerist/fragrance-tracker/fragrances/][the fragrance notes directory]] remain eligible.
+- Elisp syntax, the code whitespace check, and the configured batch startup smoke test passed. The running Emacs session already has the same exclusion regexp as the source file. Left the automatically appended startup timing log out of the checkpoint.
+
 * 2026-09-15: Consolidate search commands into a task-based guide
 
 - Added [[file+emacs:/Users/jay/emacs/emacs-settings/docs/search-guide.org][the Emacs Search Guide]] and linked it from [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][the main usage guide]]. It distinguishes current-buffer, current-directory, project, active-vault, open-buffer, filename, history, and structural searches, with Mac modifier notation and alternate shortcuts.
