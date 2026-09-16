@@ -275,7 +275,8 @@
     ("M-t"           . titlecase-dwim)
     ("C-w"           . copy-region-as-kill-and-push-to-clipboard)
     ("s-c"           . pasteboard-copy-adaptive) ; <–– Fix: now active everywhere
-    ("s-C"           . pasteboard-copy-file)
+    ;; s-C is Fantastical's system-wide shortcut (Jay, 2026-09-15).
+    ("M-s-c"         . pasteboard-copy-file)
     ("s-v"           . pasteboard-paste-adaptive)
     ("s-V"           . pasteboard-paste-verbatim)
     ("s-x"           . pasteboard-cut-adaptive)

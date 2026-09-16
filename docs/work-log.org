@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-09-15: Correct the copy-file shortcut conflict
+
+- Replaced the initial ~s-C~ binding with ~M-s-c~ (Option-Command-C) in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][the global keybindings]]. Jay confirmed that Command-Shift-C belongs to Fantastical and requested a single chord rather than a prefix sequence. The earlier Emacs-only availability check missed the system-wide assignment. Recorded Fantastical in [[file+emacs:/Users/jay/Dropbox/roam/notes/20260904033029-jay_s_global_keyboard_shortcuts.org][the existing global shortcut inventory]] and linked that inventory from [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][the usage guide]].
+- Option-Command-C was unbound in the running Emacs session; the global inventory lists it only as a Lightroom-specific menu shortcut. Applied the replacement live, verified it in the current and an existing Org buffer, and confirmed removal of the old Emacs override. Key syntax, the code whitespace check, and the configured batch startup smoke test passed. The file-copy implementation is unchanged.
+
 * 2026-09-15: Copy clipboard-referenced files from Emacs
 
 - Added ~pasteboard-copy-file~ in [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][the clipboard module]] and bound ~s-C~ (Cmd-Shift-c) in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][the global keybindings]]. The command delegates to the existing [[file+emacs:/Users/jay/Dropbox/apps/bash-scripts/copy-file][copy-file script]], preserving its clipboard-path input and file-object output. The script path is customizable, and failures become readable minibuffer errors.

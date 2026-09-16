@@ -140,10 +140,12 @@ The clipboard system automatically cleans up text from the web:
 
 *Copying a file from its clipboard path:*
 1. Copy a file's path as text to the macOS clipboard.
-2. Press ~Cmd-Shift-c~ (~s-C~), or run ~M-x pasteboard-copy-file~.
+2. Press ~Option-Cmd-c~ (~M-s-c~), or run ~M-x pasteboard-copy-file~.
 3. Paste normally in Finder, Mail, Messages, or another app that accepts files.
 
 This calls the existing [[file+emacs:/Users/jay/Dropbox/apps/bash-scripts/copy-file][copy-file script]]. It accepts one regular file, including quoted and ~~/~ paths. Relative paths use the current Emacs buffer's directory, or your home directory in a remote buffer. Errors appear in the minibuffer. The command does not copy buffer text or add anything to the kill ring; the script location is configurable with ~pasteboard-copy-file-program~.
+
+~Cmd-Shift-c~ belongs to Fantastical system-wide. The cross-application inventory is [[file+emacs:/Users/jay/Dropbox/roam/notes/20260904033029-jay_s_global_keyboard_shortcuts.org][Global Keyboard Shortcuts]].
 
 *Copying from web to org-mode:*
 1. Select text on a webpage
