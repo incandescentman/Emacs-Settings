@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-09-15: Copy the current Emacs file without a manual path step
+
+- Changed ~pasteboard-copy-file~ in [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][the clipboard module]] to obtain the current buffer's filename, copy that path to the clipboard, and invoke the existing script. Indirect buffers use their base buffer's file. The ~M-s-c~ shortcut remains unchanged; Alfred continues to consume a path already on the clipboard.
+- Buffers without a saved local file fail before changing the clipboard. The command copies the saved file and reports unsaved buffer edits without writing them to disk. Updated [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][the usage guide]] and [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-reference.org][the keybinding reference]].
+- Loaded the new definition into live Emacs. Starting each case with unrelated clipboard text, verified the file object for the currently open global-shortcut note and an indirect buffer of that same real file. A buffer without a file produced the expected error and preserved the clipboard. Restored and byte-checked the original clipboard afterward. Elisp syntax, the code whitespace check, and the configured batch startup smoke test passed.
+
 * 2026-09-15: Correct the copy-file shortcut conflict
 
 - Replaced the initial ~s-C~ binding with ~M-s-c~ (Option-Command-C) in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][the global keybindings]]. Jay confirmed that Command-Shift-C belongs to Fantastical and requested a single chord rather than a prefix sequence. The earlier Emacs-only availability check missed the system-wide assignment. Recorded Fantastical in [[file+emacs:/Users/jay/Dropbox/roam/notes/20260904033029-jay_s_global_keyboard_shortcuts.org][the existing global shortcut inventory]] and linked that inventory from [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][the usage guide]].

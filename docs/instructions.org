@@ -138,12 +138,12 @@ The clipboard system automatically cleans up text from the web:
 
 *** Common Use Cases
 
-*Copying a file from its clipboard path:*
-1. Copy a file's path as text to the macOS clipboard.
+*Copying the current file:*
+1. Open the file in Emacs.
 2. Press ~Option-Cmd-c~ (~M-s-c~), or run ~M-x pasteboard-copy-file~.
 3. Paste normally in Finder, Mail, Messages, or another app that accepts files.
 
-This calls the existing [[file+emacs:/Users/jay/Dropbox/apps/bash-scripts/copy-file][copy-file script]]. It accepts one regular file, including quoted and ~~/~ paths. Relative paths use the current Emacs buffer's directory, or your home directory in a remote buffer. Errors appear in the minibuffer. The command does not copy buffer text or add anything to the kill ring; the script location is configurable with ~pasteboard-copy-file-program~.
+Emacs gets the current file's path automatically, including from the base buffer of an indirect buffer, then calls the existing [[file+emacs:/Users/jay/Dropbox/apps/bash-scripts/copy-file][copy-file script]]. No manual path-copy step is needed. It copies the saved local file and reports when the buffer has unsaved edits; it does not save those edits automatically. Buffers without a saved local file produce a clear error. The script location is configurable with ~pasteboard-copy-file-program~. Alfred continues to use the path already on the clipboard.
 
 ~Cmd-Shift-c~ belongs to Fantastical system-wide. The cross-application inventory is [[file+emacs:/Users/jay/Dropbox/roam/notes/20260904033029-jay_s_global_keyboard_shortcuts.org][Global Keyboard Shortcuts]].
 

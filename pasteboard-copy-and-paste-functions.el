@@ -361,26 +361,37 @@ Single-asterisk italics become `/italic/` and double-asterisk bold becomes `*bol
   :group 'pasteboard)
 
 (defun pasteboard-copy-file ()
-  "Replace the file path on the macOS clipboard with a pasteable file.
-Read the path from clipboard text, not the buffer or kill ring.
-Relative paths use the current buffer's directory, or the home directory
-when the current buffer is remote.  Delegate to the copy-file script."
+  "Copy the current buffer's local file to the macOS clipboard.
+For indirect buffers, use the base buffer's file.  Put its path on the
+clipboard, then delegate to the copy-file script.  Copy the saved file;
+report unsaved buffer changes without saving them automatically."
   (interactive)
   (unless (eq system-type 'darwin)
     (user-error "Copying files to the clipboard requires macOS"))
   (unless (file-executable-p pasteboard-copy-file-program)
     (user-error "Copy-file script is not executable: %s"
                 pasteboard-copy-file-program))
-  (let ((default-directory (if (file-remote-p default-directory)
-                               (expand-file-name "~/")
-                             default-directory)))
+  (let* ((source-buffer (or (buffer-base-buffer) (current-buffer)))
+         (filename (buffer-file-name source-buffer))
+         (unsaved (buffer-modified-p source-buffer)))
+    (unless filename
+      (user-error "This buffer has no file; save it to a file first"))
+    (when (file-remote-p filename)
+      (user-error "Copying a file to the macOS clipboard requires a local file"))
+    (unless (file-regular-p filename)
+      (user-error "File does not exist or is not a regular file: %s" filename))
     (with-temp-buffer
+      (insert filename)
+      (unless (eq 0 (call-process-region (point-min) (point-max)
+                                        "/usr/bin/pbcopy" nil nil nil))
+        (user-error "Could not copy the current file's path to the clipboard"))
+      (erase-buffer)
       (let* ((status (call-process pasteboard-copy-file-program nil t nil))
              (output (string-trim (buffer-string))))
         (if (eq status 0)
-            (message "%s" (if (string-empty-p output)
-                              "Copied file to clipboard"
-                            output))
+            (message "%s%s"
+                     (if (string-empty-p output) "Copied file to clipboard" output)
+                     (if unsaved " (saved file; buffer has unsaved edits)" ""))
           (user-error "%s" (if (string-empty-p output)
                                  (format "Copy-file failed: %s" status)
                                output)))))))
