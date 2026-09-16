@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-09-15: Copy clipboard-referenced files from Emacs
+
+- Added ~pasteboard-copy-file~ in [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][the clipboard module]] and bound ~s-C~ (Cmd-Shift-c) in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][the global keybindings]]. The command delegates to the existing [[file+emacs:/Users/jay/Dropbox/apps/bash-scripts/copy-file][copy-file script]], preserving its clipboard-path input and file-object output. The script path is customizable, and failures become readable minibuffer errors.
+- Documented usage in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][the usage guide]] and [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-reference.org][the keybinding reference]]. Loaded only the new definitions and binding into the running Emacs session, without reloading broader configuration.
+- Verified the live shortcut with absolute, quoted, and relative paths to the real script, plus directory rejection; AppKit readback confirmed the expected file URL. Restored and byte-checked every saved clipboard flavor afterward. Confirmed the effective binding in the current buffer and an existing Org buffer. Elisp syntax, the code whitespace check, and the configured batch startup smoke test passed. The unrelated startup timing log remains outside this checkpoint.
+
 * 2026-09-15: Checkpoint the fragrance-tracker source exclusion
 
 - Committed the existing change in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][Org-roam core]] that excludes [[file+emacs:/Users/jay/Dropbox/roam/consumerist/fragrance-tracker/source/][fragrance-tracker source files]] from Org-roam file discovery. Verified the exact exclusion against the two real source files and confirmed that all 43 Org notes in [[file+emacs:/Users/jay/Dropbox/roam/consumerist/fragrance-tracker/fragrances/][the fragrance notes directory]] remain eligible.

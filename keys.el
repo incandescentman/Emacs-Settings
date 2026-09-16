@@ -275,6 +275,7 @@
     ("M-t"           . titlecase-dwim)
     ("C-w"           . copy-region-as-kill-and-push-to-clipboard)
     ("s-c"           . pasteboard-copy-adaptive) ; <–– Fix: now active everywhere
+    ("s-C"           . pasteboard-copy-file)
     ("s-v"           . pasteboard-paste-adaptive)
     ("s-V"           . pasteboard-paste-verbatim)
     ("s-x"           . pasteboard-cut-adaptive)

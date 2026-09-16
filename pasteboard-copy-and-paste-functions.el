@@ -352,6 +352,39 @@ Single-asterisk italics become `/italic/` and double-asterisk bold becomes `*bol
           (buffer-string)
           (error "pbpaste timed out")))))
 
+(defcustom pasteboard-copy-file-program
+  (expand-file-name "copy-file"
+                    (or (getenv "BASH_SCRIPTS_ROOT")
+                        "~/Dropbox/apps/bash-scripts/"))
+  "Script that converts a clipboard pathname into a macOS file object."
+  :type 'file
+  :group 'pasteboard)
+
+(defun pasteboard-copy-file ()
+  "Replace the file path on the macOS clipboard with a pasteable file.
+Read the path from clipboard text, not the buffer or kill ring.
+Relative paths use the current buffer's directory, or the home directory
+when the current buffer is remote.  Delegate to the copy-file script."
+  (interactive)
+  (unless (eq system-type 'darwin)
+    (user-error "Copying files to the clipboard requires macOS"))
+  (unless (file-executable-p pasteboard-copy-file-program)
+    (user-error "Copy-file script is not executable: %s"
+                pasteboard-copy-file-program))
+  (let ((default-directory (if (file-remote-p default-directory)
+                               (expand-file-name "~/")
+                             default-directory)))
+    (with-temp-buffer
+      (let* ((status (call-process pasteboard-copy-file-program nil t nil))
+             (output (string-trim (buffer-string))))
+        (if (eq status 0)
+            (message "%s" (if (string-empty-p output)
+                              "Copied file to clipboard"
+                            output))
+          (user-error "%s" (if (string-empty-p output)
+                                 (format "Copy-file failed: %s" status)
+                               output)))))))
+
 (defun pasteboard-copy-adaptive ()
   "Smart copy to macOS pasteboard: choose verbatim vs. cleaned text.
 With prefix argument (C-u), force verbatim copy."

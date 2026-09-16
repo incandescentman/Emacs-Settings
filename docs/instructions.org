@@ -138,6 +138,13 @@ The clipboard system automatically cleans up text from the web:
 
 *** Common Use Cases
 
+*Copying a file from its clipboard path:*
+1. Copy a file's path as text to the macOS clipboard.
+2. Press ~Cmd-Shift-c~ (~s-C~), or run ~M-x pasteboard-copy-file~.
+3. Paste normally in Finder, Mail, Messages, or another app that accepts files.
+
+This calls the existing [[file+emacs:/Users/jay/Dropbox/apps/bash-scripts/copy-file][copy-file script]]. It accepts one regular file, including quoted and ~~/~ paths. Relative paths use the current Emacs buffer's directory, or your home directory in a remote buffer. Errors appear in the minibuffer. The command does not copy buffer text or add anything to the kill ring; the script location is configurable with ~pasteboard-copy-file-program~.
+
 *Copying from web to org-mode:*
 1. Select text on a webpage
 2. =Cmd-c= to copy
