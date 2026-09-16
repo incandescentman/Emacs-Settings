@@ -143,7 +143,9 @@ The clipboard system automatically cleans up text from the web:
 2. Press ~Option-Cmd-c~ (~M-s-c~), or run ~M-x pasteboard-copy-file~.
 3. Paste normally in Finder, Mail, Messages, or another app that accepts files.
 
-Emacs gets the current file's path automatically, including from the base buffer of an indirect buffer, then calls the existing [[file+emacs:/Users/jay/Dropbox/apps/bash-scripts/copy-file][copy-file script]]. No manual path-copy step is needed. It copies the saved local file and reports when the buffer has unsaved edits; it does not save those edits automatically. Buffers without a saved local file produce a clear error. The script location is configurable with ~pasteboard-copy-file-program~. Alfred continues to use the path already on the clipboard.
+Emacs gets the current file's path automatically, including from the base buffer of an indirect buffer, then calls the existing [[file+emacs:/Users/jay/Dropbox/apps/bash-scripts/copy-file][copy-file script]]. No manual path-copy step is needed. It copies the saved local file and reports when the buffer has unsaved edits; it does not save those edits automatically. Buffers without a saved local file produce a clear error. The script location is configurable with ~pasteboard-copy-file-program~.
+
+Outside Emacs, the same ~Option-Cmd-c~ chord runs the [[file+emacs:/Users/jay/Dropbox/apps/bash-scripts/docs/alfred-workflows.org][Alfred Copy File to Clipboard workflow]], which requires the file's path to be on the clipboard first. Alfred excludes ~org.gnu.Emacs~, so the native Emacs command handles the chord while Emacs has focus.
 
 ~Cmd-Shift-c~ belongs to Fantastical system-wide. The cross-application inventory is [[file+emacs:/Users/jay/Dropbox/roam/notes/20260904033029-jay_s_global_keyboard_shortcuts.org][Global Keyboard Shortcuts]].
 

@@ -1,6 +1,10 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-09-15: Document the shared Emacs and Alfred copy-file shortcut
+
+- Completed the final behavior description in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][the usage guide]] and [[file+emacs:/Users/jay/emacs/emacs-settings/docs/pasteboard-architecture.org][the clipboard architecture reference]]: Option-Command-C copies the currently open saved file inside Emacs and uses an already-copied clipboard path through Alfred outside Emacs. Recorded the Emacs application exclusion and linked the dedicated Alfred configuration reference and global shortcut inventory. Rechecked the saved Alfred workflow and documentation links; this checkpoint changes documentation only.
+
 * 2026-09-15: Copy the current Emacs file without a manual path step
 
 - Changed ~pasteboard-copy-file~ in [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][the clipboard module]] to obtain the current buffer's filename, copy that path to the clipboard, and invoke the existing script. Indirect buffers use their base buffer's file. The ~M-s-c~ shortcut remains unchanged; Alfred continues to consume a path already on the clipboard.
