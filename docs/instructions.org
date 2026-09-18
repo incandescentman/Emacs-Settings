@@ -140,12 +140,12 @@ The clipboard system automatically cleans up text from the web:
 
 *Copying the current file:*
 1. Open the file in Emacs.
-2. Press ~Option-Cmd-c~ (~M-s-c~), or run ~M-x pasteboard-copy-file~.
+2. Press ~Control-Cmd-c~ (~C-s-c~), or run ~M-x pasteboard-copy-file~.
 3. Paste normally in Finder, Mail, Messages, or another app that accepts files.
 
 Emacs gets the current file's path automatically, including from the base buffer of an indirect buffer, then calls the existing [[file+emacs:/Users/jay/Dropbox/apps/bash-scripts/copy-file][copy-file script]]. No manual path-copy step is needed. It copies the saved local file and reports when the buffer has unsaved edits; it does not save those edits automatically. Buffers without a saved local file produce a clear error. The script location is configurable with ~pasteboard-copy-file-program~.
 
-Outside Emacs, the same ~Option-Cmd-c~ chord runs the [[file+emacs:/Users/jay/Dropbox/apps/bash-scripts/docs/alfred-workflows.org][Alfred Copy File to Clipboard workflow]], which requires the file's path to be on the clipboard first. Alfred excludes ~org.gnu.Emacs~, so the native Emacs command handles the chord while Emacs has focus.
+Outside Emacs, ~Option-Cmd-c~ runs the [[file+emacs:/Users/jay/Dropbox/apps/bash-scripts/docs/alfred-workflows.org][Alfred Copy File to Clipboard workflow]], which requires the file's path to be on the clipboard first. Alfred excludes ~org.gnu.Emacs~, so it does not intercept Emacs shortcuts. In Emacs, ~Option-Cmd-c~ (~M-s-c~) runs ~ox-clip-formatted-copy~ for formatted text.
 
 ~Cmd-Shift-c~ belongs to Fantastical system-wide. The cross-application inventory is [[file+emacs:/Users/jay/Dropbox/roam/notes/20260904033029-jay_s_global_keyboard_shortcuts.org][Global Keyboard Shortcuts]].
 
@@ -954,6 +954,14 @@ Or within Emacs: =SPC f e R= (reload) or =SPC f e U= (update packages)
 - *macOS only:* These functions use =pbcopy= and =pbpaste=
 - Check Terminal has clipboard access: System Settings → Privacy → Accessibility
 - Test in terminal: =echo "test" | pbcopy && pbpaste=
+
+** Large saved HTML pages open in So Long mode
+
+Saved web pages and email exports can contain enormous lines of CSS that stall ~web-mode~ syntax highlighting. HTML files larger than 1,048,576 characters now open automatically in ~so-long-mode~, before web-mode starts. Smaller HTML files retain their usual editing mode.
+
+So Long mode opens the file read-only, without syntax highlighting. Run ~M-x read-only-mode~ to enable editing while keeping the lightweight mode. For an already-open buffer that needs the same protection, run ~M-x so-long-mode~. Explicitly selecting ~web-mode~ overrides the protection and can bring the delay back.
+
+The threshold is ~jay/large-html-threshold~, defined in [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org][the startup configuration]]. See [[file+emacs:/Users/jay/emacs/emacs-settings/docs/codebase-wisdom.org::*Saved HTML can hang during web-mode's initial fontification][the saved HTML diagnosis]] for the verified cause and recovery details.
 
 ** Slow startup
 

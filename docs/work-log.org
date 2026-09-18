@@ -1,10 +1,22 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-09-18: Document large HTML handling and checkpoint pending configuration changes
+
+- Added the large HTML troubleshooting instructions to [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][the usage guide]], including read-only behavior, enabling editing, the configurable threshold, and the existing diagnosis. Included the pending clipboard shortcut swap and Jay's Goals picker entry with their documentation in the requested local commit. The generated startup timing log remains outside the checkpoint.
+
 * 2026-09-18: Prevent large saved HTML from entering web-mode
 
 - Added an early HTML size guard in [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org][the startup source]]. Files larger than 1,048,576 characters select built-in ~so-long-mode~ before web-mode starts; smaller HTML and Org files retain their normal modes. Large HTML opens without syntax highlighting, read-only by default, with editing available through ~M-x read-only-mode~.
 - Regenerated the startup Elisp and loaded only the guard definitions into running Emacs. Verified the real EDF saved email in isolated and live temporary buffers: safe mode selected, font lock disabled, contents and modification state preserved. Verified normal HTML and Org mode selection, generated Elisp parentheses, and the prescribed batch startup smoke test. Recorded the verified cause and prevention in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/codebase-wisdom.org][Codebase Wisdom]].
+
+* 2026-09-18: Swap file-copy and formatted-copy shortcuts
+
+- At Jay's request, changed ~C-s-c~ (Control-Command-C) to ~pasteboard-copy-file~ and moved ~ox-clip-formatted-copy~ to ~M-s-c~ (Option-Command-C) in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][the global keybindings]]. Updated the current shortcut and clipboard guides; Alfred retains Option-Command-C outside Emacs. Applied only these bindings and their registry entries to running Emacs, verified both effective commands, and passed ~check-parens~ and the code whitespace check.
+
+* 2026-09-17: Pin Jay's Goals in the Org-roam picker
+
+- Added Jay's Goals to ~jay/org-roam-extra-find-files~ in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][Org-roam core]], pointing to [[file+emacs:/Users/jay/.claude/jays-goals.org][Jay's Goals]] without moving or changing the file. Updated the running Emacs value and verified exactly one matching picker candidate and an existing target. Elisp syntax, code whitespace, and the configured startup smoke test passed.
 
 * 2026-09-15: Document the shared Emacs and Alfred copy-file shortcut
 

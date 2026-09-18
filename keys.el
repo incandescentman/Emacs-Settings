@@ -276,14 +276,14 @@
     ("C-w"           . copy-region-as-kill-and-push-to-clipboard)
     ("s-c"           . pasteboard-copy-adaptive) ; <–– Fix: now active everywhere
     ;; s-C is Fantastical's system-wide shortcut (Jay, 2026-09-15).
-    ("M-s-c"         . pasteboard-copy-file)
+    ("C-s-c"         . pasteboard-copy-file)
     ("s-v"           . pasteboard-paste-adaptive)
     ("s-V"           . pasteboard-paste-verbatim)
     ("s-x"           . pasteboard-cut-adaptive)
     ("C-v"           . html2org-clipboard)
     ("C-s-v"         . html2org-clipboard)
     ("M-s-v"         . html2org-clipboard)
-    ("C-s-c"         . ox-clip-formatted-copy)
+    ("M-s-c"         . ox-clip-formatted-copy)
     ("s-k g b"       . gist-buffer-to-pasteboard)
     ("s-k u p"       . jay/unfill-paragraph-dwim)
     ("M--"           . cycle-hyphenation-or-toggle-item)

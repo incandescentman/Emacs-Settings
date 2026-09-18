@@ -156,14 +156,14 @@ Annotations from [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-an
 - *[NEW]* - ~M-t~ :: =titlecase-dwim=
 - *[NEW]* - ~C-w~ :: =copy-region-as-kill-and-push-to-clipboard=
 - *[NEW]* - ~s-c~ :: =pasteboard-copy-adaptive=
-- ~M-s-c~ (Option-Cmd-c) :: ~pasteboard-copy-file~ — copy the current buffer's file to the clipboard.
+- ~C-s-c~ (Control-Cmd-c) :: ~pasteboard-copy-file~ — copy the current buffer's file to the clipboard.
 - *[NEW]* - ~s-v~ :: =pasteboard-paste-adaptive=
 - *[NEW]* - ~s-V~ :: =pasteboard-paste-verbatim=
 - *[NEW]* - ~s-x~ :: =pasteboard-cut-adaptive=
 - *[NEW]* - ~C-v~ :: =html2org-clipboard=
 - *[NEW]* - ~C-s-v~ :: =html2org-clipboard=
 - *[NEW]* - ~M-s-v~ :: =html2org-clipboard=
-- *[NEW]* - ~C-s-c~ :: =ox-clip-formatted-copy=
+- *[NEW]* - ~M-s-c~ :: =ox-clip-formatted-copy=
 - *[NEW]* - ~s-k g b~ :: =gist-buffer-to-pasteboard=
 - *[NEW]* - ~s-k u p~ :: =jay/unfill-paragraph-dwim=
 - *[NEW]* - ~M--~ :: =cycle-hyphenation-or-toggle-item=
