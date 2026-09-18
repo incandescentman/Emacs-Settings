@@ -2,6 +2,19 @@
 #+DATE: 2025-09-24
 #+DESCRIPTION: Debugging post-mortems and prevention checklists.
 
+* Saved HTML can hang during web-mode's initial fontification
+Date: 2026-09-18
+
+** Trigger
+Emacs became unresponsive while opening [[file+emacs:/Users/jay/Dropbox/roam/prosperous/edf/source-materials/Action needed_ AI retreat session (by COB) - sunjaydixit@gmail.com.html][the saved EDF retreat email]]. The file had 7,871,958 characters and a longest line of 2,943,236 characters. A process sample showed regular-expression matching; a SIGUSR2 debugger interrupt identified ~web-mode-fontify-css-rules~ called by initial, whole-buffer fontification.
+
+** Mechanism and prevention
+The installed web-mode explicitly sets its buffer-local ~font-lock-support-mode~ to nil, even though the global default is ~jit-lock-mode~. Its first fontification can therefore scan the entire saved HTML file. A file-opening size warning is not a fontification guard, and a ~find-file-hook~ runs after the major mode has initialized.
+
+[[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org][The startup source]] now registers ~jay/large-html-p~ in ~magic-mode-alist~, which selects built-in ~so-long-mode~ for HTML files larger than 1,048,576 characters before filename-based selection can invoke web-mode. Smaller HTML and Org files retain their normal modes. The safe mode disables syntax highlighting and is read-only by default; ~M-x read-only-mode~ enables editing. This guard handles automatic mode selection; explicitly choosing another major mode still overrides it. The actual saved email passed both an isolated check and a temporary-buffer check in the running configuration without changing content or modification state.
+
+Sources: [[https://elpa.gnu.org/packages/so-long.html][GNU so-long documentation]], the installed Emacs 29.4 definitions of ~magic-mode-alist~ and ~so-long-mode~, and the installed web-mode source. The source and unsaved buffer were preserved during recovery; the debugger backtrace was a diagnostic interrupt, not a second error.
+
 * Org Can Parse Nested Block Delimiters As Paragraph Text
   Date: 2026-08-23
 

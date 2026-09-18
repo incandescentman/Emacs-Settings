@@ -656,6 +656,25 @@ different → different
 #+END_SRC
 
 * web-mode
+Large saved HTML pages can contain megabytes of minified CSS. Select Emacs's built-in ~so-long-mode~ before ~web-mode~ initializes; a ~find-file-hook~ would run after major-mode initialization. Files over 1,048,576 characters open without syntax highlighting, read-only by default (~C-x C-q~ still enables editing). Smaller HTML files retain their normal mode. See [[https://elpa.gnu.org/packages/so-long.html][GNU's so-long documentation]].
+
+#+BEGIN_SRC emacs-lisp
+(defcustom jay/large-html-threshold (* 1024 1024)
+  "HTML buffer size in characters above which to bypass expensive modes."
+  :type 'integer
+  :group 'files)
+
+(defun jay/large-html-p ()
+  "Return non-nil for a large HTML file before its major mode is selected."
+  (and buffer-file-name
+       (> (buffer-size) jay/large-html-threshold)
+       (let ((case-fold-search t))
+         (string-match-p "\\.html?\\'" buffer-file-name))))
+
+;; Magic matches precede filename-based modes, avoiding web-mode entirely.
+(add-to-list 'magic-mode-alist '(jay/large-html-p . so-long-mode))
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
 (use-package web-mode
   :defer t

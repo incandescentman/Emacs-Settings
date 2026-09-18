@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-09-18: Prevent large saved HTML from entering web-mode
+
+- Added an early HTML size guard in [[file+emacs:/Users/jay/emacs/emacs-settings/gnu-emacs-startup.org][the startup source]]. Files larger than 1,048,576 characters select built-in ~so-long-mode~ before web-mode starts; smaller HTML and Org files retain their normal modes. Large HTML opens without syntax highlighting, read-only by default, with editing available through ~M-x read-only-mode~.
+- Regenerated the startup Elisp and loaded only the guard definitions into running Emacs. Verified the real EDF saved email in isolated and live temporary buffers: safe mode selected, font lock disabled, contents and modification state preserved. Verified normal HTML and Org mode selection, generated Elisp parentheses, and the prescribed batch startup smoke test. Recorded the verified cause and prevention in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/codebase-wisdom.org][Codebase Wisdom]].
+
 * 2026-09-15: Document the shared Emacs and Alfred copy-file shortcut
 
 - Completed the final behavior description in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][the usage guide]] and [[file+emacs:/Users/jay/emacs/emacs-settings/docs/pasteboard-architecture.org][the clipboard architecture reference]]: Option-Command-C copies the currently open saved file inside Emacs and uses an already-copied clipboard path through Alfred outside Emacs. Recorded the Emacs application exclusion and linked the dedicated Alfred configuration reference and global shortcut inventory. Rechecked the saved Alfred workflow and documentation links; this checkpoint changes documentation only.
