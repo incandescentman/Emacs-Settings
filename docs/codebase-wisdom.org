@@ -2,6 +2,15 @@
 #+DATE: 2025-09-24
 #+DESCRIPTION: Debugging post-mortems and prevention checklists.
 
+* macOS San Francisco variable weight needs LuaLaTeX
+Date: 2026-09-26
+
+** Trigger
+[[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-arno.el][The Arno template]] used the macOS San Francisco font for headings, but XeLaTeX selected only the regular instance of [[file+emacs:/System/Library/Fonts/SFNS.ttf][SFNS.ttf]] and synthesized bold.
+
+** Mechanism and prevention
+The system font contains a ~wght~ axis with regular at 400 and bold at 700. XeLaTeX can load the font file but cannot select its OpenType variable weight axis; the [[https://texdoc.org/serve/fontspec/0][fontspec manual]] documents variable-font support in LuaTeX. LuaLaTeX with ~Renderer=HarfBuzz~ and ~BoldFeatures={Weight=700}~ produced visibly heavier bold text from the same font file. The class uses the [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][Org export hook]] to select LuaLaTeX without changing the compiler for other classes. For future variable system-font use in PDF templates, test the requested weight in the rendered PDF rather than relying on the family name or a successful compile.
+
 * Saved HTML can hang during web-mode's initial fontification
 Date: 2026-09-18
 

@@ -998,6 +998,7 @@ process the whole buffer."
         (files '("elegant-helvetica.el"
                  "beautiful-racket.el"
                  "elegant-garamond.el"
+                 "elegant-arno.el"
                  "socratic-proposal.el"
                  "thought-leadership-playbook.el"
                  "thought-leadership-playbook-warm.el"
@@ -1026,6 +1027,7 @@ process the whole buffer."
   '(("elegant-helvetica" . "/Users/jay/emacs/emacs-settings/latex-templates/elegant-helvetica.el")
     ("beautiful-racket" . "/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el")
     ("elegant-garamond" . "/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el")
+    ("elegant-arno" . "/Users/jay/emacs/emacs-settings/latex-templates/elegant-arno.el")
     ("socratic-proposal" . "/Users/jay/emacs/emacs-settings/latex-templates/socratic-proposal.el")
     ("thought-leadership-playbook" . "/Users/jay/emacs/emacs-settings/latex-templates/thought-leadership-playbook.el")
     ("thought-leadership-playbook-warm" . "/Users/jay/emacs/emacs-settings/latex-templates/thought-leadership-playbook-warm.el")
@@ -1088,6 +1090,24 @@ process the whole buffer."
     (jay/advice-add-once 'org-latex-export-to-pdf :before #'jay/org-latex-preflight-check)
   (unless (advice-member-p #'jay/org-latex-preflight-check 'org-latex-export-to-pdf)
     (advice-add 'org-latex-export-to-pdf :before #'jay/org-latex-preflight-check)))
+
+(defun jay/org-latex-export-arno-with-lualatex (original &rest args)
+  "Default to LuaLaTeX for elegant-arno so SF heading weights are real."
+  (if (and (derived-mode-p 'org-mode)
+           (equal (or (jay/org-export--keyword-value "LATEX_CLASS")
+                      org-latex-default-class)
+                  "elegant-arno"))
+      (let ((org-latex-compiler "lualatex")
+            (org-latex-pdf-process
+             '("%latex -interaction nonstopmode %f"
+               "%latex -interaction nonstopmode %f")))
+        (apply original args))
+    (apply original args)))
+
+(unless (advice-member-p #'jay/org-latex-export-arno-with-lualatex
+                         'org-latex-export-to-pdf)
+  (advice-add 'org-latex-export-to-pdf :around
+              #'jay/org-latex-export-arno-with-lualatex))
 #+end_src
 
 *** fix latex verbatim

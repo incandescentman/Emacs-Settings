@@ -1,6 +1,18 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-09-26: Swap the Emacs file-copy chord with Fantastical
+
+- Jay moved Fantastical's system-wide hotkey from ~⇧⌘C~ to ~⌃⌘C~ and rebound ~pasteboard-copy-file~ from ~C-s-c~ to ~s-C~ in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][the global keybindings]]. Fantastical's preferences confirm the new hotkey (~HotKeyCode~ 8, ~HotKeyFlags~ 1310720, Command and Control).
+- Updated the binding comment, [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][the usage guide]], [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-reference.org][the keybinding reference]], [[file+emacs:/Users/jay/emacs/emacs-settings/docs/pasteboard-architecture.org][the clipboard architecture reference]], and [[file+emacs:/Users/jay/Dropbox/roam/notes/20260904033029-jay_s_global_keyboard_shortcuts.org][the global shortcut inventory]], which also still described ~⌥⌘C~ as the in-Emacs file copy from before the 2026-09-18 swap. The running session keeps a stale ~C-s-c~ entry until restart; after restart only ~s-C~ is bound.
+
+* 2026-09-26: Add elegant-arno with real San Francisco heading weights
+
+- Created [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-arno.el][elegant-arno.el]] from the Garamond layout, using Arno Pro body text and the macOS San Francisco system font for the headings that previously used Helvetica Neue LT Pro. Registered it in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][the Org export source]] and selected LuaLaTeX only for this class's PDF export so its SF bold weight comes from the font's variable weight axis.
+- Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.el][org-export.el]], checked parentheses, and exported a sample without a compiler keyword. The generated TeX selected LuaLaTeX and produced a PDF embedding Arno Pro and the SF system font. The unrelated dirty files were left untouched.
+- Set top-level headings in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-arno.el][elegant-arno.el]] to bold SF with the capitalization supplied in the source, tracking of ~-0.035em~, and color ~#24394A~, then reloaded the class in the running Emacs session.
+- A LuaLaTeX test page showed bold italic falling back to upright bold because no Arno Pro Bold Italic was installed. Jay installed it; the recompiled page embeds ~ArnoPro-BoldItalic~ with no substituted font shapes. LuaLaTeX also selects Arno's optical sizes by point size, so footnote-size text uses Arno Pro SmText automatically.
+
 * 2026-09-18: Document large HTML handling and checkpoint pending configuration changes
 
 - Added the large HTML troubleshooting instructions to [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][the usage guide]], including read-only behavior, enabling editing, the configurable threshold, and the existing diagnosis. Included the pending clipboard shortcut swap and Jay's Goals picker entry with their documentation in the requested local commit. The generated startup timing log remains outside the checkpoint.

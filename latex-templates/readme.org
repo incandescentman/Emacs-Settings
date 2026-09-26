@@ -2,7 +2,7 @@
 
 * Header Configuration
 
-Templates that use =fancyhdr= (e.g., =elegant-garamond=, =elegant-helvetica=) define =\leftheader= and =\leftheaderurl=. For =elegant-garamond= and =elegant-garamond-tabularray=, if you omit =\leftheader{...}= the top-left page header falls back to the document title. Add =\leftheaderurl{...}= only when you want that left header text linked:
+Templates that use =fancyhdr= (e.g., =elegant-garamond=, =elegant-helvetica=) define =\leftheader= and =\leftheaderurl=. For =elegant-garamond=, =elegant-garamond-tabularray=, and =elegant-arno=, if you omit =\leftheader{...}= the top-left page header falls back to the document title. Add =\leftheaderurl{...}= only when you want that left header text linked:
 
 #+begin_example
 #+LATEX_HEADER: \leftheader{Jay Dixit}
@@ -29,7 +29,7 @@ The =num:t= setting is intentional: Org emits normal =\section{...}= commands th
 
 * Footer Configuration
 
-For =elegant-garamond= and =elegant-garamond-tabularray=, the footer logo is also configurable per document. The template keeps the old Storytelling NYC image as the default, but you can override it and pair it with a different company name in the header:
+For =elegant-garamond=, =elegant-garamond-tabularray=, and =elegant-arno=, the footer logo is also configurable per document. The template keeps the old Storytelling NYC image as the default, but you can override it and pair it with a different company name in the header:
 
 #+begin_example
 #+LATEX_CLASS: elegant-garamond
@@ -37,7 +37,7 @@ For =elegant-garamond= and =elegant-garamond-tabularray=, the footer logo is als
 #+LATEX_HEADER: \EnableLogoFooter
 #+end_example
 
-If you omit =\EnableLogoFooter=, the template falls back to a centered page number. If you use =\DisableFooter=, it suppresses the footer entirely. In the Garamond templates, the footer is also suppressed automatically on the first and last page.
+If you omit =\EnableLogoFooter=, the template falls back to a centered page number. If you use =\DisableFooter=, it suppresses the footer entirely. In the Garamond and Arno templates, the footer is also suppressed automatically on the first and last page.
 
 You can also add footer text beside the logo:
 
@@ -54,6 +54,7 @@ If =\footerbrand= is empty, the footer stays image-only. If it is set, the templ
 ** Templates with optional =\leftheader=
 - =elegant-garamond= ([[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][📄 elegant-garamond.el]]) defaults to the document title when =\leftheader= is omitted
 - =elegant-garamond-tabularray= ([[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond-tabularray.el][📄 elegant-garamond-tabularray.el]]) defaults to the document title when =\leftheader= is omitted
+- =elegant-arno= ([[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-arno.el][📄 elegant-arno.el]]) defaults to the document title when =\leftheader= is omitted
 
 ** Templates requiring =\leftheader=
 - Any template that loads =fancyhdr= and references =\the\leftheader= without an empty-fallback branch
@@ -98,6 +99,14 @@ The warm class also accepts a separate title that does not affect the blue cover
 #+LATEX_HEADER: \PlaybookCoverTitle{Thought Leadership Countdown}
 #+LATEX_HEADER: \PlaybookWarmTitle{Thought Leadership Countdown \& Launch Plan}
 #+end_example
+
+* Elegant Arno
+
+=elegant-arno= ([[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-arno.el][📄 elegant-arno.el]]) is the =elegant-garamond= layout with Arno Pro body text and the macOS San Francisco system font in the headings. Header and footer commands work as in the Garamond template.
+
+PDF export compiles it with LuaLaTeX automatically, through =jay/org-latex-export-arno-with-lualatex= in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][📄 org-export.org]]; no =#+LATEX_COMPILER:= line is needed. LuaLaTeX gives SF a real bold weight and selects Arno's optical sizes by point size, so small text uses Arno Pro SmText without any setting. The class still compiles under XeLaTeX, but there bold Arno resolved to Semibold Subhead and bold italic to Semibold Italic Subhead in a 2026-09-26 test, so keep the automatic LuaLaTeX route.
+
+Arno Pro Regular, Italic, Bold, and Bold Italic must be installed as files in [[file+emacs:/Users/jay/Library/Fonts/][📁 /Users/jay/Library/Fonts/]]. A missing style is replaced by a neighboring one, and the only sign is a font warning in the LaTeX log.
 
 * TODOs
 - [ ] Increase spacing between paragraphs

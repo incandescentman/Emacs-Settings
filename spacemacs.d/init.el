@@ -818,6 +818,13 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 		      . consult-source-project-recent-file-hidden)))
     (defvaralias (car aliases) (cdr aliases)))
 
+  ;; Spacemacs commit 3bdd13cd2 (2026-08-23, spacemacs-editing) pushes onto
+  ;; `evil-collection-binding-overrides' in dired-quick-sort's :config without
+  ;; checking that evil-collection is installed.  It is not installed here, so
+  ;; the variable is void and the first dired buffer of a session errors.
+  ;; Declaring it makes that push harmless.
+  (defvar evil-collection-binding-overrides nil)
+
 
   (setq org-babel-use-quick-and-dirty-noweb-expansion t)
 

@@ -51,7 +51,7 @@
        (t
         (require 'dired-x)
         (call-interactively #'dired-isearch-filenames)))
-    (call-interactively #'isearch-forward-ignore-case)))
+      (call-interactively #'isearch-forward-ignore-case)))
 
 (defun visit-messages-buffer-full-screen ()
   "Visit the *Messages* buffer in full screen."
@@ -65,7 +65,7 @@
   (interactive)
   (let ((contents (if (minibufferp)
                       (minibuffer-contents-no-properties)
-                    (buffer-substring-no-properties (point-min) (point-max)))))
+                      (buffer-substring-no-properties (point-min) (point-max)))))
     (kill-new contents)
     (when (fboundp 'gui-select-text)
       (gui-select-text contents))))
@@ -275,8 +275,8 @@
     ("M-t"           . titlecase-dwim)
     ("C-w"           . copy-region-as-kill-and-push-to-clipboard)
     ("s-c"           . pasteboard-copy-adaptive) ; <–– Fix: now active everywhere
-    ;; s-C is Fantastical's system-wide shortcut (Jay, 2026-09-15).
-    ("C-s-c"         . pasteboard-copy-file)
+    ;; C-s-c is Fantastical's system-wide shortcut; Jay swapped it with s-C on 2026-09-26.
+    ("s-C"         . pasteboard-copy-file)
     ("s-v"           . pasteboard-paste-adaptive)
     ("s-V"           . pasteboard-paste-verbatim)
     ("s-x"           . pasteboard-cut-adaptive)
@@ -552,7 +552,7 @@
 ;; Run it once after init, or immediately if init already finished.
 (if after-init-time
     (my/install-global-keys)
-  (add-hook 'after-init-hook #'my/install-global-keys))
+    (add-hook 'after-init-hook #'my/install-global-keys))
 
 ;;;; 4. Prefix map bindings
 (when (boundp 'endless/mc-map)
