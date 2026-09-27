@@ -1,6 +1,37 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-09-27: Make arno-claude-design the default LaTeX class
+
+- At Jay's request, changed ~org-latex-default-class~ in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][the Org export source]] from elegant-garamond to arno-claude-design, so a PDF export without a ~#+LATEX_CLASS:~ line uses [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][arno-claude-design.el]]. Because the LuaLaTeX advice resolves the class through the same default, those exports compile with LuaLaTeX.
+- Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.el][org-export.el]] with the explicit output path (the only change is the default), checked parentheses, set the new default in running Emacs, and confirmed that a class-less buffer resolves to LuaLaTeX and passes the preflight check. Updated [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][the usage guide]], which had named elegant-garamond as the default.
+
+* 2026-09-27: Apply selected Arno design choices incrementally
+
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][the working Arno class]] with Jay's choices: retain SF for level one; use Arno at level two; use regular uppercase Arno at level three, including ~TL;DR~ and ~Section 1~; use the right-side Arno bullet and list spacing; give ~Key Findings~ the red condensed label; and retain the old running-header typography at 11pt with a thin rule. The level-three treatment is the selected starting point for further refinement.
+- The original [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-arno.el][Elegant Arno class]] remains the reference. A real-font EDF excerpt compiled with LuaLaTeX in six pages. Inspected the rendered first three and final pages, including the headings, list, running header, red label, and an unchanged later paragraph heading; reloaded the working class in the live Emacs session. Selected the working class in [[file+emacs:/Users/jay/Dropbox/roam/prosperous/edf/20260925170021-edf_deep_research_prompts.org][the EDF research source]] for its next export. Other design differences remain undecided.
+- Jay then chose the red condensed label for ~Stage-ready findings (Section 1)~. Applied it to all ~Stage-ready findings~ headings in the working class, covering the six sections in the EDF source, while retaining the established style for other paragraph headings. The EDF excerpt compiled again in six pages; its final page shows the label and list cleanly. Reloaded the class in live Emacs.
+- Jay chose the current powder-blue quote box over the stone-rose panel; the working class already uses his choice, so its quote definition required no edit.
+- Jay specified ~#FBB6CE~ for links. Defined that exact color in the working class and applied it to citation, file, internal, and URL links; compiled a real-font link sample and reloaded the class in live Emacs. The rendered pink is pale on white, so readability remains a visual consideration.
+- After seeing the generic level-four heading, Jay said Claude's red condensed treatment looked good and questioned why headings at that level differed. Made the red condensed label the uniform level-four style instead of matching specific heading text. Level three remains 18pt regular uppercase Arno. Compiled a sample with a long generic level-four heading and ~Key Findings~ under a level-three heading, inspected the render, and reloaded the class in live Emacs. Removed the now-unneeded ~xstring~ dependency and heading interception.
+- Jay then reversed the pink link choice. Restored ~elegantblue~ for citation, file, internal, and URL links in the working class, removed the unused pink color definition, checked the class in batch Emacs, and reloaded it in live Emacs.
+- The EDF slide manuscript exposed the working class's old title fallback in the left running header. Changed its default to the LaTeX author, preserving an explicit ~\\leftheader{...}~ override. A two-page real-font LuaLaTeX sample with the manuscript title and ~Jay Dixit~ as author showed ~Jay Dixit~ in the second-page left header; reloaded the class in live Emacs. The slide manuscript source itself needed no header directive.
+- Jay requested a larger red level 4 heading and chose 12pt after viewing a 9.5pt versus 12pt real-font comparison under a level 3 heading. Set the uniform level 4 style to 12pt with 14.4pt leading; retained the red condensed caps and existing hierarchy.
+
+* 2026-09-27: Fix Arno heading sizes and compare the design variant
+
+- Added ~\\selectfont~ after the level-three, level-four, and level-five ~\\fontsize~ calls in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-arno.el][elegant-arno.el]] and its [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][arno-claude-design.el]] duplicate. Registered [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-arno-claude-design.el][the experimental design class]] for on-demand PDF export and LuaLaTeX without loading its global Org macros at startup; retangled [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] and checked parentheses.
+- Compiled the same excerpt of [[file+emacs:/Users/jay/Dropbox/roam/prosperous/edf/20260925170021-edf_deep_research_prompts.org][the EDF research]] through both classes with the installed fonts and inspected all six rendered pages. Jay approved the red ~Key Findings~ label in the design variant, but explicitly did not approve the design as a whole. Other visual choices remain open.
+
+* 2026-09-27: Duplicate elegant-arno as arno-claude-design
+
+- At Jay's request, copied [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-arno.el][elegant-arno.el]] to [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][arno-claude-design.el]], changing only the class name and file header. Registered the new class in ~jay-load-latex~ and ~jay/org-latex-class-template-files~ in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][the Org export source]], and extended ~jay/org-latex-export-arno-with-lualatex~ so both Arno classes default to LuaLaTeX.
+- Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.el][org-export.el]] with the explicit output path, checked parentheses in both files, loaded the class and the two changed functions into running Emacs, and confirmed that the new class's preamble matches elegant-arno's, that it routes to LuaLaTeX while elegant-garamond stays on XeLaTeX, and that the batch startup smoke test passes.
+
+* 2026-09-27: Choose Garamond Premier Pro Display for subsections
+
+- After comparing the Subhead and Display cuts side by side, Jay chose Display for the 24-point subsection in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][the Elegant Garamond template]]. The earlier Subhead change remains recorded below as the preceding state.
+
 * 2026-09-27: Stop the file snippet from changing its buffer during expansion
 
 - Added a link-returning helper in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] and changed [[file+emacs:/Users/jay/emacs/interesting-snippets/org-mode/file.yasnippet][the file snippet]] to use it. Retangled the Emacs source, checked parentheses, loaded the functions into the running session, and expanded the snippet with warning suppression off.

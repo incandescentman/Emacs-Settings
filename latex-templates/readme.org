@@ -9,9 +9,11 @@ Templates that use =fancyhdr= (e.g., =elegant-garamond=, =elegant-helvetica=) de
 #+LATEX_HEADER: \leftheaderurl{https://storytelling.nyc}
 #+end_example
 
-If you do set =\leftheader{...}=, it overrides the title fallback completely.
+If you do set =\leftheader{...}=, it overrides the template's fallback completely.
 
 When the title fallback is in effect, only =#+TITLE:= appears in the left header. A =#+SUBTITLE:= on the document is preserved on the title page itself but stripped out of the running header.
+
+For =arno-claude-design=, an omitted =\leftheader{...}= uses the first line of =#+AUTHOR:= instead of the title. An explicit =\leftheader{...}= still overrides it.
 
 The right header (=\rhead=) auto-populates from the current section or subsection title. Subsubsections do not replace it.
 
@@ -55,6 +57,7 @@ If =\footerbrand= is empty, the footer stays image-only. If it is set, the templ
 - =elegant-garamond= ([[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][📄 elegant-garamond.el]]) defaults to the document title when =\leftheader= is omitted
 - =elegant-garamond-tabularray= ([[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond-tabularray.el][📄 elegant-garamond-tabularray.el]]) defaults to the document title when =\leftheader= is omitted
 - =elegant-arno= ([[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-arno.el][📄 elegant-arno.el]]) defaults to the document title when =\leftheader= is omitted
+- =arno-claude-design= ([[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][📄 arno-claude-design.el]]) defaults to the document author when =\leftheader= is omitted
 
 ** Templates requiring =\leftheader=
 - Any template that loads =fancyhdr= and references =\the\leftheader= without an empty-fallback branch
@@ -107,6 +110,10 @@ The warm class also accepts a separate title that does not affect the blue cover
 PDF export compiles it with LuaLaTeX automatically, through =jay/org-latex-export-arno-with-lualatex= in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][📄 org-export.org]]; no =#+LATEX_COMPILER:= line is needed. LuaLaTeX gives SF a real bold weight and selects Arno's optical sizes by point size, so small text uses Arno Pro SmText without any setting. The class still compiles under XeLaTeX, but there bold Arno resolved to Semibold Subhead and bold italic to Semibold Italic Subhead in a 2026-09-26 test, so keep the automatic LuaLaTeX route.
 
 For the intended appearance, install Arno Pro Regular, Italic, Bold, and Bold Italic. They are currently in [[file+emacs:/Users/jay/Library/Fonts/][📁 /Users/jay/Library/Fonts/]] on this Mac; the class selects Arno by family name and does not require that directory. If a style is unavailable, another may be substituted. Check the LaTeX log and the PDF's embedded fonts to confirm which styles were used.
+
+=arno-claude-design= ([[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][📄 arno-claude-design.el]]) is the working variant chosen on 2026-09-27. It keeps the SF heading at level one, uses 22pt Arno at level two and 18pt regular uppercase Arno at level three, and gives every level 4 heading the same 12pt red condensed label treatment. It retains the powder-blue quote box and blue links, uses Arno bullets, and keeps the original 11pt running header with a thin rule. The left header defaults to the author. LuaLaTeX and the same Arno fonts are required.
+
+=elegant-arno-claude-design= ([[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-arno-claude-design.el][📄 elegant-arno-claude-design.el]]) is Claude's broader experimental proposal, registered for explicit comparison exports. Its other design changes have not been approved for the working variant.
 
 * TODOs
 - [ ] Increase spacing between paragraphs

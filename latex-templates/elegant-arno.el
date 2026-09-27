@@ -350,7 +350,7 @@
 }
 
 \\newcommand{\\mysubsubsectiontitle}[1]{%
-  \\jayheadingfont\\bfseries\\scshape\\fontsize{18}{16}\\raggedright\\color{spacegrey} #1
+  \\jayheadingfont\\bfseries\\scshape\\fontsize{18}{16}\\selectfont\\raggedright\\color{spacegrey} #1
 }
 
 \\titleformat{\\section}
@@ -369,8 +369,8 @@
   {}
   {0em}
   {\\mysubsubsectiontitle}
-\\titleformat*{\\paragraph}{\\jayheadingfont\\bfseries\\fontsize{19}{12}\\raggedright}
-\\titleformat*{\\subparagraph}{\\jayheadingfont\\bfseries\\fontsize{16}{12}\\raggedright}
+\\titleformat*{\\paragraph}{\\jayheadingfont\\bfseries\\fontsize{19}{12}\\selectfont\\raggedright}
+\\titleformat*{\\subparagraph}{\\jayheadingfont\\bfseries\\fontsize{16}{12}\\selectfont\\raggedright}
 
 % Hyperref Configuration
 \\hypersetup{

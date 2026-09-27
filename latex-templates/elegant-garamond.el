@@ -92,9 +92,9 @@
   \\defaultfontfeatures{Mapping=tex-text, Scale=MatchLowercase}
   \\setsansfont[
     Path = /Users/jay/Library/Fonts/,
-    UprightFont = GaramondPremrPro-Subh,
+    UprightFont = GaramondPremrPro-Disp,
     Extension = .otf
-  ]{Garamond Premier Pro Subhead}
+  ]{Garamond Premier Pro Display}
   \\newfontfamily\\jayfooterbrandfont[
     Path = /Users/jay/Library/Fonts/,
     UprightFont = HelveticaNeueLTPro-BdCn,

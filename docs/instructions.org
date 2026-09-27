@@ -621,8 +621,8 @@ first few words in small caps.
 
 ** elegant-garamond
 
-The default template (=org-latex-default-class=). Features:
-- Garamond Premier Pro body font and Subhead variant for subsections
+The default template (=org-latex-default-class=) until 2026-09-27, when arno-claude-design replaced it. Features:
+- Garamond Premier Pro body font and Display variant for subsections
 - Styled quote blocks (powder blue background, centered)
 - Clean section headings
 - Configurable logo footer via =\EnableLogoFooter=
@@ -631,6 +631,10 @@ The default template (=org-latex-default-class=). Features:
 ** elegant-arno
 
 Use ~#+LATEX_CLASS: elegant-arno~ for the elegant layout with Arno Pro body text and the macOS San Francisco system font in the headings formerly set in Helvetica Neue LT Pro. PDF export defaults to LuaLaTeX for this class so the system font's real bold weight is used; the subsection uses Arno Pro Subhead. The class requires Arno Pro to be installed on the exporting Mac.
+
+** arno-claude-design
+
+The default template (=org-latex-default-class=) since 2026-09-27. This working Arno variant compiles with LuaLaTeX automatically, so a document without a ~#+LATEX_CLASS:~ line exports with it. Its current choices are SF at level one, Arno at levels two and three, 12pt red condensed labels for every level 4 heading, Arno bullets, the original quote box and blue links, and an 11pt running header with a thin rule. When ~\leftheader{...}~ is omitted, the header uses ~#+AUTHOR:~; an explicit header overrides it. See [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/readme.org][the template reference]] for details.
 
 ** beautiful-racket-classic
 

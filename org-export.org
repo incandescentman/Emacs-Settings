@@ -64,7 +64,7 @@
 
 ;; (setq org-latex-inline-image-rules (quote (("file" . "\\.\\(pdf\\|jpeg\\|gif\\|jpg\\|png\\|ps\\|eps\\|tikz\\|pgf\\|svg\\)\\'"))))
 
-(setq org-latex-default-class "elegant-garamond")
+(setq org-latex-default-class "arno-claude-design")
 
 (setq org-latex-inline-image-rules '(("file" . "\\.\\(pdf\\|jpeg\\|jpg\\|png\\|ps\\|eps\\|tikz\\|pgf\\|svg\\|gif\\)\\'")))
 
@@ -999,6 +999,7 @@ process the whole buffer."
                  "beautiful-racket.el"
                  "elegant-garamond.el"
                  "elegant-arno.el"
+                 "arno-claude-design.el"
                  "socratic-proposal.el"
                  "thought-leadership-playbook.el"
                  "thought-leadership-playbook-warm.el"
@@ -1028,6 +1029,8 @@ process the whole buffer."
     ("beautiful-racket" . "/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el")
     ("elegant-garamond" . "/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el")
     ("elegant-arno" . "/Users/jay/emacs/emacs-settings/latex-templates/elegant-arno.el")
+    ("arno-claude-design" . "/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el")
+    ("elegant-arno-claude-design" . "/Users/jay/emacs/emacs-settings/latex-templates/elegant-arno-claude-design.el")
     ("socratic-proposal" . "/Users/jay/emacs/emacs-settings/latex-templates/socratic-proposal.el")
     ("thought-leadership-playbook" . "/Users/jay/emacs/emacs-settings/latex-templates/thought-leadership-playbook.el")
     ("thought-leadership-playbook-warm" . "/Users/jay/emacs/emacs-settings/latex-templates/thought-leadership-playbook-warm.el")
@@ -1092,11 +1095,11 @@ process the whole buffer."
     (advice-add 'org-latex-export-to-pdf :before #'jay/org-latex-preflight-check)))
 
 (defun jay/org-latex-export-arno-with-lualatex (original &rest args)
-  "Default to LuaLaTeX for elegant-arno so SF heading weights are real."
+  "Default to LuaLaTeX for the Arno classes so SF heading weights are real."
   (if (and (derived-mode-p 'org-mode)
-           (equal (or (jay/org-export--keyword-value "LATEX_CLASS")
-                      org-latex-default-class)
-                  "elegant-arno"))
+           (member (or (jay/org-export--keyword-value "LATEX_CLASS")
+                       org-latex-default-class)
+                   '("elegant-arno" "arno-claude-design" "elegant-arno-claude-design")))
       (let ((org-latex-compiler "lualatex")
             (org-latex-pdf-process
              '("%latex -interaction nonstopmode %f"
