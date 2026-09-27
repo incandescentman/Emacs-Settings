@@ -352,6 +352,7 @@
 \\titlespacing*{\\subsection}{0pt}{30pt plus 6pt minus 4pt}{10pt}
 \\titlespacing*{\\subsubsection}{0pt}{26pt plus 5pt minus 3pt}{8pt}
 \\titlespacing*{\\paragraph}{0pt}{12pt plus 2pt}{5pt}
+\\titlespacing*{\\subparagraph}{0pt}{12pt plus 2pt}{3pt}
 
 \\newcommand{\\mysectiontitle}[1]{%
   \\markboth{#1}{#1}%
@@ -388,7 +389,9 @@
 \\titleformat{\\paragraph}[block]
   {\\normalfont\\jaycaps\\bfseries\\fontsize{12}{14.4}\\selectfont\\raggedright\\color{jayaccent}}
   {}{0pt}{\\myparagraphtitle}
-\\titleformat*{\\subparagraph}{\\jayheadingfont\\bfseries\\fontsize{16}{12}\\selectfont\\raggedright}
+\\titleformat{\\subparagraph}[block]
+  {\\normalfont\\bfseries\\normalsize\\raggedright}
+  {}{0pt}{}
 
 % Hyperref Configuration
 \\hypersetup{

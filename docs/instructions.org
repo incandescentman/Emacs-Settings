@@ -634,7 +634,7 @@ Use ~#+LATEX_CLASS: elegant-arno~ for the elegant layout with Arno Pro body text
 
 ** arno-claude-design
 
-The default template (=org-latex-default-class=) since 2026-09-27. This working Arno variant compiles with LuaLaTeX automatically, so a document without a ~#+LATEX_CLASS:~ line exports with it. Its current choices are SF at level one, Arno at levels two and three, 12pt red condensed labels for every level 4 heading, Arno bullets, the original quote box and blue links, and an 11pt running header with a thin rule. When ~\leftheader{...}~ is omitted, the header uses ~#+AUTHOR:~; an explicit header overrides it. See [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/readme.org][the template reference]] for details.
+The default template (=org-latex-default-class=) since 2026-09-27. This working Arno variant compiles with LuaLaTeX automatically, so a document without a ~#+LATEX_CLASS:~ line exports with it. Its current choices are SF at level one, Arno at levels two and three, 12pt red condensed labels for every level 4 heading, bold Arno at body size on its own line for level 5, Arno bullets, the original quote box and blue links, and an 11pt running header with a thin rule. When ~\leftheader{...}~ is omitted, the header uses ~#+AUTHOR:~; an explicit header overrides it. See [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/readme.org][the template reference]] for details.
 
 ** beautiful-racket-classic
 

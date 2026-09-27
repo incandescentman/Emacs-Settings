@@ -6,6 +6,10 @@
 - At Jay's request, changed ~org-latex-default-class~ in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][the Org export source]] from elegant-garamond to arno-claude-design, so a PDF export without a ~#+LATEX_CLASS:~ line uses [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][arno-claude-design.el]]. Because the LuaLaTeX advice resolves the class through the same default, those exports compile with LuaLaTeX.
 - Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.el][org-export.el]] with the explicit output path (the only change is the default), checked parentheses, set the new default in running Emacs, and confirmed that a class-less buffer resolves to LuaLaTeX and passes the preflight check. Updated [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][the usage guide]], which had named elegant-garamond as the default.
 
+* 2026-09-27: Choose the level 5 Arno heading
+
+- Jay chose the body-size bold Arno treatment for every level 5 Org heading after viewing a real-font comparison beside the former 16pt bold SF treatment. Updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][the working class]] to set level 5 on its own line with 12pt before and 3pt after, and updated the template guidance.
+
 * 2026-09-27: Apply selected Arno design choices incrementally
 
 - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][the working Arno class]] with Jay's choices: retain SF for level one; use Arno at level two; use regular uppercase Arno at level three, including ~TL;DR~ and ~Section 1~; use the right-side Arno bullet and list spacing; give ~Key Findings~ the red condensed label; and retain the old running-header typography at 11pt with a thin rule. The level-three treatment is the selected starting point for further refinement.
