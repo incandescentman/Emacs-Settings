@@ -95,7 +95,7 @@
 \\else
   \\usepackage{fontspec}
   \\defaultfontfeatures{Ligatures=TeX, Scale=MatchLowercase}
-  \\setsansfont{TeX Gyre Pagella}
+  \\setsansfont{Arno Pro Subhead}
   \\newfontfamily\\jayfooterbrandfont[
     Path = /Users/jay/Library/Fonts/,
     UprightFont = HelveticaNeueLTPro-BdCn,

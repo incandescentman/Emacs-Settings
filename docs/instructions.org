@@ -622,7 +622,7 @@ first few words in small caps.
 ** elegant-garamond
 
 The default template (=org-latex-default-class=). Features:
-- Garamond Premier Pro font
+- Garamond Premier Pro body font and Subhead variant for subsections
 - Styled quote blocks (powder blue background, centered)
 - Clean section headings
 - Configurable logo footer via =\EnableLogoFooter=
@@ -630,7 +630,7 @@ The default template (=org-latex-default-class=). Features:
 
 ** elegant-arno
 
-Use ~#+LATEX_CLASS: elegant-arno~ for the elegant layout with Arno Pro body text and the macOS San Francisco system font in the headings formerly set in Helvetica Neue LT Pro. PDF export defaults to LuaLaTeX for this class so the system font's real bold weight is used; the subsection remains TeX Gyre Pagella. The class requires Arno Pro to be installed on the exporting Mac.
+Use ~#+LATEX_CLASS: elegant-arno~ for the elegant layout with Arno Pro body text and the macOS San Francisco system font in the headings formerly set in Helvetica Neue LT Pro. PDF export defaults to LuaLaTeX for this class so the system font's real bold weight is used; the subsection uses Arno Pro Subhead. The class requires Arno Pro to be installed on the exporting Mac.
 
 ** beautiful-racket-classic
 

@@ -6530,27 +6530,21 @@ point with completion.
 
 * Insert local file link from clipboard
 #+begin_SRC emacs-lisp
-(defun insert-local-file-link-from-clipboard ()
-  "Inserts an org-mode link using the clipboard content as the file path."
-  (interactive)
+(defun jay/local-file-link-from-clipboard ()
+  "Return an Org link for the file path on the clipboard."
   (clipboard-to-kill-ring)
   (let* ((clip-content (substring-no-properties (current-kill 0)))
          (file-name (file-name-nondirectory clip-content))
          (file-name-base (file-name-sans-extension file-name))
          (hyphen-and-underscore-replaced (replace-regexp-in-string "[-_]" " " file-name-base))
-         (no-leading-numbers (replace-regexp-in-string "^[0-9]*" "" hyphen-and-underscore-replaced))
-         (start-pos (point)))
-    (insert (format "[[file+emacs:%s][📄 %s]]" clip-content (string-trim no-leading-numbers)))
-    (goto-char start-pos)
-    (search-forward "[[" nil t)
-    (search-forward "[" nil t)
-    (let ((title-start (point)))
-      (search-forward "]" nil t)
-      (backward-char)
-      (capitalize-region title-start (point)))
-    (goto-char (+ 2 start-pos))
-    (search-forward "[" nil t)
-    (search-forward "]" nil t))
+         (no-leading-numbers (replace-regexp-in-string "^[0-9]*" "" hyphen-and-underscore-replaced)))
+    (format "[[file+emacs:%s][📄 %s]]" clip-content (capitalize (string-trim no-leading-numbers)))))
+
+(defun insert-local-file-link-from-clipboard ()
+  "Inserts an org-mode link using the clipboard content as the file path."
+  (interactive)
+  (insert (jay/local-file-link-from-clipboard))
+  (backward-char)
   nil)  ; Explicitly return nil
 #+END_SRC
 

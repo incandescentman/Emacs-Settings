@@ -90,7 +90,11 @@
 \\ifxetex
   \\usepackage{fontspec}
   \\defaultfontfeatures{Mapping=tex-text, Scale=MatchLowercase}
-  \\setsansfont{TeX Gyre Pagella}
+  \\setsansfont[
+    Path = /Users/jay/Library/Fonts/,
+    UprightFont = GaramondPremrPro-Subh,
+    Extension = .otf
+  ]{Garamond Premier Pro Subhead}
   \\newfontfamily\\jayfooterbrandfont[
     Path = /Users/jay/Library/Fonts/,
     UprightFont = HelveticaNeueLTPro-BdCn,

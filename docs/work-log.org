@@ -1,6 +1,18 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-09-27: Stop the file snippet from changing its buffer during expansion
+
+- Added a link-returning helper in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] and changed [[file+emacs:/Users/jay/emacs/interesting-snippets/org-mode/file.yasnippet][the file snippet]] to use it. Retangled the Emacs source, checked parentheses, loaded the functions into the running session, and expanded the snippet with warning suppression off.
+
+* 2026-09-27: Use Garamond Premier Pro Subhead for Elegant Garamond subsections
+
+- Replaced TeX Gyre Pagella in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][the Elegant Garamond template]] with the installed Garamond Premier Pro Subhead file after Jay chose the rendered comparison. Kept the change scoped to the XeLaTeX subsection treatment.
+
+* 2026-09-27: Use Arno Pro Subhead for Elegant Arno subsections
+
+- Replaced TeX Gyre Pagella with Arno Pro Subhead for the ~\\sffamily~ subsection heading in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-arno.el][the Elegant Arno template]], after Jay chose it from a side-by-side rendered comparison. Confirmed the font resolves, checked Elisp parentheses, and reloaded LaTeX classes in the running Emacs session.
+
 * 2026-09-26: Swap the Emacs file-copy chord with Fantastical
 
 - Jay moved Fantastical's system-wide hotkey from ~⇧⌘C~ to ~⌃⌘C~ and rebound ~pasteboard-copy-file~ from ~C-s-c~ to ~s-C~ in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][the global keybindings]]. Fantastical's preferences confirm the new hotkey (~HotKeyCode~ 8, ~HotKeyFlags~ 1310720, Command and Control).
