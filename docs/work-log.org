@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-09-28: Isolate Hunspell discovery from checkout symlinks
+
+- Replaced the checkout working directory used by [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][the early Hunspell guard]] with a dedicated ~jay-hunspell-scan~ directory under Emacs's ~temporary-file-directory~. [[file+emacs:/Users/jay/emacs/emacs-settings/gnulisp][The checkout's existing ~gnulisp~ symlink]] showed that using the repo was only an interim fix: a future symlinked tree could make ~hunspell -D~ traverse widely again.
+- Verified the live Emacs temporary directory matches ~getconf DARWIN_USER_TEMP_DIR~, and checked dictionary discovery from the dedicated directory while launched from the home directory. Updated the guard in the running Emacs session.
+
 * 2026-09-28: Restore graphical Emacs startup blocked by Hunspell discovery
 
 - A graphical launch from [[file+emacs:/Users/jay/][/Users/jay/]] stalled while Emacs synchronously ran ~hunspell -D -a /dev/null~. Process samples showed Hunspell repeatedly descending into the CoreSimulator directory tree. The same command completed from [[file+emacs:/Users/jay/emacs/emacs-settings/][the configuration checkout]].
