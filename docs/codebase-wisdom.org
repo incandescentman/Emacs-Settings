@@ -2,6 +2,11 @@
 #+DATE: 2025-09-24
 #+DESCRIPTION: Debugging post-mortems and prevention checklists.
 
+* Unsupported research citations can invalidate LaTeX typography comparisons
+Date: 2026-09-27
+
+The EDF research Org source contained private-use citation sequences such as ~citeturn18view0~. Arno Pro lacked those glyphs, so the PDF showed boxes and distorted paragraph spacing. A sentence-spacing comparison built from that page looked bad in both versions. Removing the sequences only in temporary comparison copies made the large word gaps disappear; changing ~\emergencystretch~ from ~3em~ to ~1em~ or ~0pt~ made no visible improvement to that clean page. Use a source whose citations render correctly, or a separately cleaned comparison copy, before judging template typography. Preserve the original citation-bearing source.
+
 * macOS San Francisco variable weight needs LuaLaTeX
 Date: 2026-09-26
 
