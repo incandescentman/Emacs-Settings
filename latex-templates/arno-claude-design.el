@@ -368,7 +368,7 @@
 }
 
 \\newcommand{\\mysubsubsectiontitle}[1]{%
-  \\normalfont\\fontsize{18}{22}\\selectfont\\raggedright\\MakeUppercase{#1}
+  \\normalfont\\fontsize{15}{17}\\selectfont\\ifPDFTeX\\else\\addfontfeatures{LetterSpace=5, Numbers=Lining, Letters=Uppercase}\\fi\\raggedright\\MakeUppercase{#1}
 }
 
 \\titleformat{\\section}

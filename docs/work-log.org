@@ -1,6 +1,10 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-09-27: Refine Arno level-3 headings
+
+- Jay selected 15pt regular uppercase Arno after reviewing 18pt, 16pt, 14pt, then a direct 14pt versus 15pt comparison on the real Metabolic Mind proposal. Updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][the default class]] to 15pt with 5% tracking and lining figures. The other heading levels and their prior rulings are unchanged.
+
 * 2026-09-27: Set general-purpose Arno margins from a proposal comparison
 
 - Jay selected the 1.375in side margins after comparing the real Metabolic Mind business proposal at 1in, 1.375in, and 1.625in. Updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][arno-claude-design]] with 1.375in left and right margins, keeping 1in top and bottom. With the selected line and paragraph spacing, the proposal rendered at 11, 12, and 13 pages respectively; the narrowest version also collided running heads and increased hyphenation. This choice sets a reusable PDF default, not a slide-manuscript special case.
