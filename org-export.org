@@ -999,7 +999,7 @@ process the whole buffer."
                  "beautiful-racket.el"
                  "elegant-garamond.el"
                  "elegant-arno.el"
-                 "arno-claude-design.el"
+                 "arno-approved-default.el"
                  "socratic-proposal.el"
                  "thought-leadership-playbook.el"
                  "thought-leadership-playbook-warm.el"
@@ -1029,8 +1029,8 @@ process the whole buffer."
     ("beautiful-racket" . "/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el")
     ("elegant-garamond" . "/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el")
     ("elegant-arno" . "/Users/jay/emacs/emacs-settings/latex-templates/elegant-arno.el")
-    ("arno-claude-design" . "/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el")
-    ("elegant-arno-claude-design" . "/Users/jay/emacs/emacs-settings/latex-templates/elegant-arno-claude-design.el")
+    ("arno-claude-design" . "/Users/jay/emacs/emacs-settings/latex-templates/arno-approved-default.el")
+    ("elegant-arno-claude-design" . "/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-proposal.el")
     ("socratic-proposal" . "/Users/jay/emacs/emacs-settings/latex-templates/socratic-proposal.el")
     ("thought-leadership-playbook" . "/Users/jay/emacs/emacs-settings/latex-templates/thought-leadership-playbook.el")
     ("thought-leadership-playbook-warm" . "/Users/jay/emacs/emacs-settings/latex-templates/thought-leadership-playbook-warm.el")

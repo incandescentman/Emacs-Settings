@@ -1,0 +1,46 @@
+#+TITLE: Arno PDF Template: Design Rulings and Preferences
+#+DATE: 2026-09-27
+
+* Scope
+
+This is the canonical record of Jay's choices for the default Org PDF class ~arno-claude-design~, implemented in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-approved-default.el][arno-approved-default.el]]. It is for content PDFs, such as business proposals. The EDF slide manuscript was a test document, not the template's sole purpose. These choices are specific to this class: they are not global website UI preferences and do not approve [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-proposal.el][arno-claude-proposal.el]], Claude's experimental class, as a whole. The older Org class identifiers remain so existing documents continue to export.
+
+* Standing preferences expressed in this review
+
+- Favor generously sized, readable type and looser lines over a crowded page. Judge type by its rendered size: the condensed label's earlier ~12pt~ setting looked too small because inherited font scaling reduced it.
+- Use one treatment for every heading at a given Org level. A new heading's words do not require separate style approval.
+- Prefer the justified body shown in the real proposal comparison, while avoiding ugly hyphenation. This is not a request to suppress every ordinary word break.
+- Compare meaningful visual changes side by side in rendered documents using the installed fonts and representative content before changing this default.
+
+* Selected design
+
+** Page and prose
+
+- Use Arno Pro body type with justified paragraphs, symmetric ~1.375in~ side margins, ~\setstretch{1.22}~, and ~9pt plus 2pt minus 1pt~ between paragraphs. Keep the current, slightly wider space after sentences; do not add ~\frenchspacing~.
+- Use the Arno bullet in soft ink. Top-level list items have ~3pt~ between them, with tighter indents for nested lists.
+
+** Heading hierarchy
+
+- Level 1 keeps the existing bold SF treatment. Level 2 uses regular Arno at ~22pt~.
+- Level 3 uses regular uppercase Arno at ~15pt~, tracked ~5%~, with lining figures. This applies uniformly to headings such as “TL;DR” and “Section 1.”
+- Level 4 uses a red condensed Helvetica Neue LT Pro label at a true ~10pt~ on its own line. Every level-4 heading gets this treatment, including “Key Findings,” “Speaker Notes,” and “Stage-ready findings.” Keep the label above its content with the selected ~16pt plus 3pt minus 2pt~ space before and ~-4pt~ after.
+- Level 5 uses bold Arno at body size on its own line.
+
+** Color, furniture, and page flow
+
+- Keep the original powder-blue quote box and the original blue links (~elegantblue~, ~#4380b9~).
+- Use the older running-header design with the added thin rule and the smaller ~10.1pt~ font setting. The left header defaults to the document author; an explicit ~\leftheader{...}~ overrides it.
+- Keep the Arno contents title and blue page numbers. Use the selected lighter, more widely spaced gray dot leaders.
+- Keep headings with the text they introduce. Let level-1 headings flow naturally rather than forcing each onto a new page. Export through ~latexmk~ so contents page numbers settle; the shared prose defaults already handle widow and orphan lines.
+
+* Rejected or superseded treatments
+
+- The pink ~#FBB6CE~ link color was tried and then explicitly reversed to the original blue.
+- The stone-rose quote panel, ragged-right body sample, equal spacing after periods, and margin-placed red labels were not selected.
+- The ~1.625in~ side margins were passed over for the selected ~1.375in~ general PDF measure.
+- The earlier ~18pt~ level-3 heading and ~12pt~ level-4 setting were superseded by the rendered ~15pt~ Arno heading and true-size ~10pt~ condensed label. The former SF level-5 treatment was superseded by bold Arno at body size.
+- The large SF contents title and Claude's per-document ~\PartsOnNewPage~ option were not selected. That option would break before every level-1 heading, leaving large blank areas in the tested manuscript.
+
+* Decision history
+
+The dated implementation record is [[file+emacs:/Users/jay/emacs/emacs-settings/docs/work-log.org][the Emacs work log]]. Jay's exact reactions and the comparison artifacts are indexed in [[file+emacs:/Users/jay/Dropbox/github/vibecoding/preferences/cross-repo-visual-experiment-reactions.org][the cross-repo visual reaction ledger]]. When the implementation changes, update this file as the current decision record and keep the work log as history.

@@ -1,4 +1,4 @@
-;;; elegant-arno-claude-design.el --- Org LaTeX class -*- lexical-binding: t; -*-
+;;; arno-claude-proposal.el --- Claude's experimental Org PDF proposal (Org class: elegant-arno-claude-design) -*- lexical-binding: t; -*-
 
 (provide 'elegant-arno-claude-design)
 

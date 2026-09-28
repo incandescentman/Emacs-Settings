@@ -1,21 +1,29 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-09-27: Name the approved Arno class file and Claude proposal distinctly
+
+- Renamed the active default template file to [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-approved-default.el][arno-approved-default.el]] and the unapproved comparison class file to [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-proposal.el][arno-claude-proposal.el]]. Retained the existing Org class identifiers ~arno-claude-design~ and ~elegant-arno-claude-design~ so existing ~#+LATEX_CLASS:~ lines remain valid. Updated the loader and preflight paths in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]], retangled the ignored [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.el][org-export.el]], and updated current documentation links. Both class IDs registered in batch Emacs, the startup smoke test passed, and the targeted loader and map changes were loaded into the running Emacs session. The filenames before this rename were ~arno-claude-design.el~ and ~elegant-arno-claude-design.el~, respectively.
+
+* 2026-09-27: Consolidate Arno PDF design rulings and preferences
+
+- Created [[file+emacs:/Users/jay/emacs/emacs-settings/docs/arno-design-rulings.org][the canonical Arno decision record]] for the default content-PDF class, separating standing preferences, selected settings, and rejected or superseded treatments. Linked it from [[file+emacs:/Users/jay/Library/CloudStorage/Dropbox/github/vibecoding/preferences/UI-PREFERENCES.org][the global UI preferences index]] with an explicit note that these are class-specific, not global UI rules. Corrected stale level-3 and running-header sizes in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/readme.org][the template readme]] and [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][the usage guide]]. The experimental Claude class remains a reference, while [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-approved-default.el][arno-claude-design]] remains the default.
+
 * 2026-09-27: Keep natural page flow for level-1 headings
 
 - Jay chose A after comparing the current EDF manuscript flow with Claude's proposed ~\PartsOnNewPage~ opt-in. The proposed macro would insert a page break before every level-1 heading, not just headings named “part”; in the rendered manuscript it increased length from 73 to 78 pages and left the page before Keynote part 2 mostly blank. No class option was added. A document that needs a specific break can insert it at that heading.
 
 * 2026-09-27: Keep current sentence spacing in Arno PDFs
 
-- Jay chose A, the current sentence spacing, after comparing four sentence breaks in a paragraph from the real Metabolic Mind proposal against ~\frenchspacing~. The earlier EDF excerpt had too few visible sentence breaks to judge the setting. No change was needed in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][the default Arno class]].
+- Jay chose A, the current sentence spacing, after comparing four sentence breaks in a paragraph from the real Metabolic Mind proposal against ~\frenchspacing~. The earlier EDF excerpt had too few visible sentence breaks to judge the setting. No change was needed in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-approved-default.el][the default Arno class]].
 
 * 2026-09-27: Keep level-4 labels above the text
 
-- Jay chose A after reviewing the current layout against a refined margin-label variant using the real EDF research brief. The margin variant made the long label fit on two lines by shifting the text column right and would require shortening long running heads. The default [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][Arno class]] retains the approved red condensed level-4 labels above their text and the symmetric 1.375in side margins; no class change was needed.
+- Jay chose A after reviewing the current layout against a refined margin-label variant using the real EDF research brief. The margin variant made the long label fit on two lines by shifting the text column right and would require shortening long running heads. The default [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-approved-default.el][Arno class]] retains the approved red condensed level-4 labels above their text and the symmetric 1.375in side margins; no class change was needed.
 
 * 2026-09-27: Keep justified Arno body text
 
-- Jay chose A, the current justified body, over a ragged-right, no-automatic-hyphenation rendering of exact prose from [[file+emacs:/Users/jay/Dropbox/roam/prosperous/edf/20260817120000-edf_proposal.org][the EDF proposal]]. No body-alignment change was needed in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][the default Arno class]]. The comparison does not change the separate standing preference to avoid ugly prose hyphenation.
+- Jay chose A, the current justified body, over a ragged-right, no-automatic-hyphenation rendering of exact prose from [[file+emacs:/Users/jay/Dropbox/roam/prosperous/edf/20260817120000-edf_proposal.org][the EDF proposal]]. No body-alignment change was needed in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-approved-default.el][the default Arno class]]. The comparison does not change the separate standing preference to avoid ugly prose hyphenation.
 
 * 2026-09-27: Replace an invalid sentence-spacing comparison
 
@@ -23,55 +31,55 @@
 
 * 2026-09-27: Lighten and space the contents dot leaders
 
-- Jay chose B in a side-by-side comparison using the real EDF research brief. The [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][Arno class]] now uses the lighter ~jayrule~ color and ~\cftdotsep=6~ for contents dot leaders. The selected Arno title and current blue page numbers are unchanged.
+- Jay chose B in a side-by-side comparison using the real EDF research brief. The [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-approved-default.el][Arno class]] now uses the lighter ~jayrule~ color and ~\cftdotsep=6~ for contents dot leaders. The selected Arno title and current blue page numbers are unchanged.
 
 * 2026-09-27: Keep the current Arno contents title
 
-- Jay chose the existing Arno “Table of Contents” title over Claude's large SF title in a real EDF research-brief comparison. The contents-title setting in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][arno-claude-design]] stays as it is; dot leaders and page numbers remain separate decisions.
+- Jay chose the existing Arno “Table of Contents” title over Claude's large SF title in a real EDF research-brief comparison. The contents-title setting in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-approved-default.el][arno-claude-design]] stays as it is; dot leaders and page numbers remain separate decisions.
 
 * 2026-09-27: Bring red level-4 labels closer to their text
 
-- Jay chose the closer label spacing from a rendered EDF research-brief comparison, with a little more room below the label than Claude's ~-7pt~ version. Set level-4 heading spacing in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][arno-claude-design]] to ~16pt plus 3pt minus 2pt~ above and ~-4pt~ below. The red condensed typography and uniform level-4 treatment remain.
+- Jay chose the closer label spacing from a rendered EDF research-brief comparison, with a little more room below the label than Claude's ~-7pt~ version. Set level-4 heading spacing in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-approved-default.el][arno-claude-design]] to ~16pt plus 3pt minus 2pt~ above and ~-4pt~ below. The red condensed typography and uniform level-4 treatment remain.
 
 * 2026-09-27: Reduce Arno running-head size
 
-- Jay chose B from the real Metabolic Mind proposal comparison: the smaller running heads. Set the left and right header commands in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][arno-claude-design]] to ~\fontsize{10.1}{12}~. The left header still uses the author fallback and the established thin rule; only the rendered header size changes.
+- Jay chose B from the real Metabolic Mind proposal comparison: the smaller running heads. Set the left and right header commands in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-approved-default.el][arno-claude-design]] to ~\fontsize{10.1}{12}~. The left header still uses the author fallback and the established thin rule; only the rendered header size changes.
 
 * 2026-09-27: Refine Arno level-3 headings
 
-- Jay selected 15pt regular uppercase Arno after reviewing 18pt, 16pt, 14pt, then a direct 14pt versus 15pt comparison on the real Metabolic Mind proposal. Updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][the default class]] to 15pt with 5% tracking and lining figures. The other heading levels and their prior rulings are unchanged.
+- Jay selected 15pt regular uppercase Arno after reviewing 18pt, 16pt, 14pt, then a direct 14pt versus 15pt comparison on the real Metabolic Mind proposal. Updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-approved-default.el][the default class]] to 15pt with 5% tracking and lining figures. The other heading levels and their prior rulings are unchanged.
 
 * 2026-09-27: Set general-purpose Arno margins from a proposal comparison
 
-- Jay selected the 1.375in side margins after comparing the real Metabolic Mind business proposal at 1in, 1.375in, and 1.625in. Updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][arno-claude-design]] with 1.375in left and right margins, keeping 1in top and bottom. With the selected line and paragraph spacing, the proposal rendered at 11, 12, and 13 pages respectively; the narrowest version also collided running heads and increased hyphenation. This choice sets a reusable PDF default, not a slide-manuscript special case.
+- Jay selected the 1.375in side margins after comparing the real Metabolic Mind business proposal at 1in, 1.375in, and 1.625in. Updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-approved-default.el][arno-claude-design]] with 1.375in left and right margins, keeping 1in top and bottom. With the selected line and paragraph spacing, the proposal rendered at 11, 12, and 13 pages respectively; the narrowest version also collided running heads and increased hyphenation. This choice sets a reusable PDF default, not a slide-manuscript special case.
 
 * 2026-09-27: Increase Arno paragraph spacing
 
-- Jay chose B from a side-by-side rendering of the EDF manuscript: 9pt paragraph spacing with the already-selected ~\setstretch{1.22}~. Updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][arno-claude-design]] from ~6.5pt plus 1pt minus 1pt~ to ~9pt plus 2pt minus 1pt~. The comparison held fonts, line spacing, margins, and explicit list item spacing constant; the full manuscript sample changed from 68 to 71 pages.
+- Jay chose B from a side-by-side rendering of the EDF manuscript: 9pt paragraph spacing with the already-selected ~\setstretch{1.22}~. Updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-approved-default.el][arno-claude-design]] from ~6.5pt plus 1pt minus 1pt~ to ~9pt plus 2pt minus 1pt~. The comparison held fonts, line spacing, margins, and explicit list item spacing constant; the full manuscript sample changed from 68 to 71 pages.
 
 * 2026-09-27: Loosen Arno body line spacing
 
-- Jay chose the looser line spacing from a side-by-side render of the EDF manuscript. Changed [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][arno-claude-design]] from ~\setstretch{1.16}~ to ~\setstretch{1.22}~. The isolated comparison held font size, margins, paragraph spacing, and list item spacing constant; the full sample changed from 64 to 68 pages. This selection applies to the default class, including lines within lists.
+- Jay chose the looser line spacing from a side-by-side render of the EDF manuscript. Changed [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-approved-default.el][arno-claude-design]] from ~\setstretch{1.16}~ to ~\setstretch{1.22}~. The isolated comparison held font size, margins, paragraph spacing, and list item spacing constant; the full sample changed from 64 to 68 pages. This selection applies to the default class, including lines within lists.
 
 * 2026-09-27: Settle Arno contents pages and keep headings with text
 
 - The EDF slide manuscript PDF had contents entries four pages behind the actual sections because the Arno export advice ran LuaLaTeX twice. Changed [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][the export advice]] to run ~latexmk -lualatex~, which repeats the build until references settle. The advice owns this setting during PDF export; a class-level ~org-latex-pdf-process~ setting would be overridden.
-- Added ~needspace~ to [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][the working Arno class]] so levels 3, 4, and 5 keep room for the text they introduce. The EDF PDF had stranded a level 3 title at the foot of page 29.
+- Added ~needspace~ to [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-approved-default.el][the working Arno class]] so levels 3, 4, and 5 keep room for the text they introduce. The EDF PDF had stranded a level 3 title at the foot of page 29.
 - The previous 12pt level 4 setting rendered the condensed font at roughly 7.6pt because ~Scale=MatchLowercase~ was inherited. Jay approved making it visibly larger. Set ~Scale=1.0~ on that font and 10pt on the label; this changes the actual rendered size while leaving the red condensed treatment in place.
 - Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.el][org-export.el]], checked parentheses, and reloaded the export advice and class in the live Emacs session. A copy of the real EDF manuscript exported to a 64-page PDF with its contents entries and section starts agreeing at pages 52 (Break) and 62 (Q&A). The dictation heading moved to page 30 with its Visuals and Speaker Notes. The PDF label measured 10pt after the font scaling change.
 
 * 2026-09-27: Make arno-claude-design the default LaTeX class
 
-- At Jay's request, changed ~org-latex-default-class~ in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][the Org export source]] from elegant-garamond to arno-claude-design, so a PDF export without a ~#+LATEX_CLASS:~ line uses [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][arno-claude-design.el]]. Because the LuaLaTeX advice resolves the class through the same default, those exports compile with LuaLaTeX.
+- At Jay's request, changed ~org-latex-default-class~ in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][the Org export source]] from elegant-garamond to arno-claude-design, so a PDF export without a ~#+LATEX_CLASS:~ line uses [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-approved-default.el][arno-claude-design.el]]. Because the LuaLaTeX advice resolves the class through the same default, those exports compile with LuaLaTeX.
 - Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.el][org-export.el]] with the explicit output path (the only change is the default), checked parentheses, set the new default in running Emacs, and confirmed that a class-less buffer resolves to LuaLaTeX and passes the preflight check. Updated [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][the usage guide]], which had named elegant-garamond as the default.
 
 * 2026-09-27: Choose the level 5 Arno heading
 
-- Jay chose the body-size bold Arno treatment for every level 5 Org heading after viewing a real-font comparison beside the former 16pt bold SF treatment. Updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][the working class]] to set level 5 on its own line with 12pt before and 3pt after, and updated the template guidance.
+- Jay chose the body-size bold Arno treatment for every level 5 Org heading after viewing a real-font comparison beside the former 16pt bold SF treatment. Updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-approved-default.el][the working class]] to set level 5 on its own line with 12pt before and 3pt after, and updated the template guidance.
 
 * 2026-09-27: Apply selected Arno design choices incrementally
 
-- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][the working Arno class]] with Jay's choices: retain SF for level one; use Arno at level two; use regular uppercase Arno at level three, including ~TL;DR~ and ~Section 1~; use the right-side Arno bullet and list spacing; give ~Key Findings~ the red condensed label; and retain the old running-header typography at 11pt with a thin rule. The level-three treatment is the selected starting point for further refinement.
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-approved-default.el][the working Arno class]] with Jay's choices: retain SF for level one; use Arno at level two; use regular uppercase Arno at level three, including ~TL;DR~ and ~Section 1~; use the right-side Arno bullet and list spacing; give ~Key Findings~ the red condensed label; and retain the old running-header typography at 11pt with a thin rule. The level-three treatment is the selected starting point for further refinement.
 - The original [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-arno.el][Elegant Arno class]] remains the reference. A real-font EDF excerpt compiled with LuaLaTeX in six pages. Inspected the rendered first three and final pages, including the headings, list, running header, red label, and an unchanged later paragraph heading; reloaded the working class in the live Emacs session. Selected the working class in [[file+emacs:/Users/jay/Dropbox/roam/prosperous/edf/20260925170021-edf_deep_research_prompts.org][the EDF research source]] for its next export. Other design differences remain undecided.
 - Jay then chose the red condensed label for ~Stage-ready findings (Section 1)~. Applied it to all ~Stage-ready findings~ headings in the working class, covering the six sections in the EDF source, while retaining the established style for other paragraph headings. The EDF excerpt compiled again in six pages; its final page shows the label and list cleanly. Reloaded the class in live Emacs.
 - Jay chose the current powder-blue quote box over the stone-rose panel; the working class already uses his choice, so its quote definition required no edit.
@@ -83,12 +91,12 @@
 
 * 2026-09-27: Fix Arno heading sizes and compare the design variant
 
-- Added ~\\selectfont~ after the level-three, level-four, and level-five ~\\fontsize~ calls in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-arno.el][elegant-arno.el]] and its [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][arno-claude-design.el]] duplicate. Registered [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-arno-claude-design.el][the experimental design class]] for on-demand PDF export and LuaLaTeX without loading its global Org macros at startup; retangled [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] and checked parentheses.
+- Added ~\\selectfont~ after the level-three, level-four, and level-five ~\\fontsize~ calls in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-arno.el][elegant-arno.el]] and its [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-approved-default.el][arno-claude-design.el]] duplicate. Registered [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-proposal.el][the experimental design class]] for on-demand PDF export and LuaLaTeX without loading its global Org macros at startup; retangled [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] and checked parentheses.
 - Compiled the same excerpt of [[file+emacs:/Users/jay/Dropbox/roam/prosperous/edf/20260925170021-edf_deep_research_prompts.org][the EDF research]] through both classes with the installed fonts and inspected all six rendered pages. Jay approved the red ~Key Findings~ label in the design variant, but explicitly did not approve the design as a whole. Other visual choices remain open.
 
 * 2026-09-27: Duplicate elegant-arno as arno-claude-design
 
-- At Jay's request, copied [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-arno.el][elegant-arno.el]] to [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][arno-claude-design.el]], changing only the class name and file header. Registered the new class in ~jay-load-latex~ and ~jay/org-latex-class-template-files~ in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][the Org export source]], and extended ~jay/org-latex-export-arno-with-lualatex~ so both Arno classes default to LuaLaTeX.
+- At Jay's request, copied [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-arno.el][elegant-arno.el]] to [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-approved-default.el][arno-claude-design.el]], changing only the class name and file header. Registered the new class in ~jay-load-latex~ and ~jay/org-latex-class-template-files~ in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][the Org export source]], and extended ~jay/org-latex-export-arno-with-lualatex~ so both Arno classes default to LuaLaTeX.
 - Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.el][org-export.el]] with the explicit output path, checked parentheses in both files, loaded the class and the two changed functions into running Emacs, and confirmed that the new class's preamble matches elegant-arno's, that it routes to LuaLaTeX while elegant-garamond stays on XeLaTeX, and that the batch startup smoke test passes.
 
 * 2026-09-27: Choose Garamond Premier Pro Display for subsections

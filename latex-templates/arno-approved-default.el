@@ -1,4 +1,4 @@
-;;; arno-claude-design.el --- Org LaTeX class, duplicated from elegant-arno -*- lexical-binding: t; -*-
+;;; arno-approved-default.el --- Approved default Org PDF class (Org class: arno-claude-design) -*- lexical-binding: t; -*-
 
 (provide 'arno-claude-design)
 
