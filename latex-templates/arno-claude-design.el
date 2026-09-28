@@ -196,11 +196,11 @@
     {\\expandafter\\jay@leftheader@split\\@author\\\\\\jay@leftheader@end}
     {\\def\\jayresolvedleftheader{\\the\\leftheader}}%
   \\expandafter\\ifstrempty\\expandafter{\\the\\leftheaderurl}
-    {\\lhead{\\scshape\\fontsize{11}{13}\\selectfont\\jayresolvedleftheader}}
-    {\\lhead{\\scshape\\fontsize{11}{13}\\selectfont\\href{\\the\\leftheaderurl}{\\jayresolvedleftheader}}}%
+    {\\lhead{\\scshape\\fontsize{10.1}{12}\\selectfont\\jayresolvedleftheader}}
+    {\\lhead{\\scshape\\fontsize{10.1}{12}\\selectfont\\href{\\the\\leftheaderurl}{\\jayresolvedleftheader}}}%
 }
 \\makeatother
-\\rhead{\\scshape\\fontsize{11}{13}\\selectfont{\\nouppercase{\\rightmark}}}
+\\rhead{\\scshape\\fontsize{10.1}{12}\\selectfont{\\nouppercase{\\rightmark}}}
 \\AtBeginDocument{\\jayapplyleftheader}
 
 % Footer configuration (controlled from org file)

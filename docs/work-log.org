@@ -1,6 +1,10 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-09-27: Reduce Arno running-head size
+
+- Jay chose B from the real Metabolic Mind proposal comparison: the smaller running heads. Set the left and right header commands in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][arno-claude-design]] to ~\fontsize{10.1}{12}~. The left header still uses the author fallback and the established thin rule; only the rendered header size changes.
+
 * 2026-09-27: Refine Arno level-3 headings
 
 - Jay selected 15pt regular uppercase Arno after reviewing 18pt, 16pt, 14pt, then a direct 14pt versus 15pt comparison on the real Metabolic Mind proposal. Updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][the default class]] to 15pt with 5% tracking and lining figures. The other heading levels and their prior rulings are unchanged.
