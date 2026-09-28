@@ -1,6 +1,10 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-09-27: Loosen Arno body line spacing
+
+- Jay chose the looser line spacing from a side-by-side render of the EDF manuscript. Changed [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][arno-claude-design]] from ~\setstretch{1.16}~ to ~\setstretch{1.22}~. The isolated comparison held font size, margins, paragraph spacing, and list item spacing constant; the full sample changed from 64 to 68 pages. This selection applies to the default class, including lines within lists.
+
 * 2026-09-27: Settle Arno contents pages and keep headings with text
 
 - The EDF slide manuscript PDF had contents entries four pages behind the actual sections because the Arno export advice ran LuaLaTeX twice. Changed [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][the export advice]] to run ~latexmk -lualatex~, which repeats the build until references settle. The advice owns this setting during PDF export; a class-level ~org-latex-pdf-process~ setting would be overridden.
