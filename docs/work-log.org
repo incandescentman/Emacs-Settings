@@ -1,6 +1,10 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-09-27: Set general-purpose Arno margins from a proposal comparison
+
+- Jay selected the 1.375in side margins after comparing the real Metabolic Mind business proposal at 1in, 1.375in, and 1.625in. Updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][arno-claude-design]] with 1.375in left and right margins, keeping 1in top and bottom. With the selected line and paragraph spacing, the proposal rendered at 11, 12, and 13 pages respectively; the narrowest version also collided running heads and increased hyphenation. This choice sets a reusable PDF default, not a slide-manuscript special case.
+
 * 2026-09-27: Increase Arno paragraph spacing
 
 - Jay chose B from a side-by-side rendering of the EDF manuscript: 9pt paragraph spacing with the already-selected ~\setstretch{1.22}~. Updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][arno-claude-design]] from ~6.5pt plus 1pt minus 1pt~ to ~9pt plus 2pt minus 1pt~. The comparison held fonts, line spacing, margins, and explicit list item spacing constant; the full manuscript sample changed from 68 to 71 pages.

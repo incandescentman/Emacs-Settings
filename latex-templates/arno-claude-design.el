@@ -8,7 +8,7 @@
 \\providecommand{\\DocumentMetadata}[1]{}
 \\DocumentMetadata{lang=en-US}
 \\documentclass[12pt]{article}
-\\usepackage[includeheadfoot, margin=1in]{geometry} % Standard proposal/document margins
+\\usepackage[includeheadfoot, top=1in, bottom=1in, left=1.375in, right=1.375in]{geometry} % Selected general-purpose reading width
 \\setlength{\\footskip}{0.95in}
 
 % Package Inclusions
