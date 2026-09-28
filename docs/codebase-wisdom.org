@@ -2,6 +2,15 @@
 #+DATE: 2025-09-24
 #+DESCRIPTION: Debugging post-mortems and prevention checklists.
 
+* Hunspell dictionary discovery can stall Emacs when launched from home
+Date: 2026-09-28
+
+** Trigger
+A graphical Emacs process was alive but its server did not respond. A process sample put the Lisp thread inside a synchronous ~call_process~ to ~hunspell -D -a /dev/null~. Hunspell used a full CPU core and its sample showed repeated ~listdicpath~ calls while traversing [[file+emacs:/Users/jay/Library/Developer/CoreSimulator/][CoreSimulator data]] beneath the home directory.
+
+** Mechanism and prevention
+On this machine, ~hunspell -D~ searches its working directory recursively. Starting it from [[file+emacs:/Users/jay/][/Users/jay/]] did not finish within three seconds; starting it from [[file+emacs:/Users/jay/emacs/emacs-settings/][the configuration checkout]] finished promptly and reported the configured dictionary by absolute path. Starting it from [[file+emacs:/Users/jay/emacs/Spelling/][Spelling]] also finished, but reported the loaded dictionary as ~./en_US-large.aff~; the installed Emacs ~ispell-find-hunspell-dictionaries~ filters those relative lines out and then reports that it cannot find an affix file. The early advice in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][Spacemacs initialization]] binds ~default-directory~ to the checkout only around Hunspell discovery. If this symptom recurs, sample the Hunspell child and check its working directory before changing dictionaries or disabling spellcheck.
+
 * Unsupported research citations can invalidate LaTeX typography comparisons
 Date: 2026-09-27
 

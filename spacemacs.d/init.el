@@ -952,6 +952,13 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (setenv "DICTIONARY" "en_US-large")
 
   (require 'ispell)
+  (defun jay/ispell-find-hunspell-dictionaries-in-config-dir (original &rest args)
+    "Run Hunspell discovery from a small directory outside the dictionaries."
+    (let ((default-directory (file-name-as-directory
+                              (expand-file-name "~/emacs/emacs-settings"))))
+      (apply original args)))
+  (advice-add 'ispell-find-hunspell-dictionaries :around
+              #'jay/ispell-find-hunspell-dictionaries-in-config-dir)
   (dolist (mapping '(("en_US" "en_US-large")
                      ("american" "en_US-large")
                      ("english" "en_US-large")))

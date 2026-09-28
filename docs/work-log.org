@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-09-28: Restore graphical Emacs startup blocked by Hunspell discovery
+
+- A graphical launch from [[file+emacs:/Users/jay/][/Users/jay/]] stalled while Emacs synchronously ran ~hunspell -D -a /dev/null~. Process samples showed Hunspell repeatedly descending into the CoreSimulator directory tree. The same command completed from [[file+emacs:/Users/jay/emacs/emacs-settings/][the configuration checkout]].
+- Added an early guard in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][Spacemacs initialization]] that runs ~ispell-find-hunspell-dictionaries~ from the checkout, while keeping the configured dictionary path in [[file+emacs:/Users/jay/emacs/Spelling/][Spelling]]. Running discovery from Spelling itself failed because Hunspell returned a relative loaded-dictionary path that Emacs ignored.
+- Verified dictionary discovery from the home directory in batch Emacs, then launched a fresh graphical Emacs process and confirmed that its server responded with a visible frame and the guard active. The earlier stalled process exited during recovery. The generated startup timing log was left outside this checkpoint.
+
 * 2026-09-27: Name the approved Arno class file and Claude proposal distinctly
 
 - Renamed the active default template file to [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-approved-default.el][arno-approved-default.el]] and the unapproved comparison class file to [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-proposal.el][arno-claude-proposal.el]]. Retained the existing Org class identifiers ~arno-claude-design~ and ~elegant-arno-claude-design~ so existing ~#+LATEX_CLASS:~ lines remain valid. Updated the loader and preflight paths in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]], retangled the ignored [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.el][org-export.el]], and updated current documentation links. Both class IDs registered in batch Emacs, the startup smoke test passed, and the targeted loader and map changes were loaded into the running Emacs session. The filenames before this rename were ~arno-claude-design.el~ and ~elegant-arno-claude-design.el~, respectively.
