@@ -1,6 +1,10 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-09-27: Keep level-4 labels above the text
+
+- Jay chose A after reviewing the current layout against a refined margin-label variant using the real EDF research brief. The margin variant made the long label fit on two lines by shifting the text column right and would require shortening long running heads. The default [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][Arno class]] retains the approved red condensed level-4 labels above their text and the symmetric 1.375in side margins; no class change was needed.
+
 * 2026-09-27: Keep justified Arno body text
 
 - Jay chose A, the current justified body, over a ragged-right, no-automatic-hyphenation rendering of exact prose from [[file+emacs:/Users/jay/Dropbox/roam/prosperous/edf/20260817120000-edf_proposal.org][the EDF proposal]]. No body-alignment change was needed in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][the default Arno class]]. The comparison does not change the separate standing preference to avoid ugly prose hyphenation.
