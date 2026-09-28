@@ -1,6 +1,10 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-09-27: Lighten and space the contents dot leaders
+
+- Jay chose B in a side-by-side comparison using the real EDF research brief. The [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][Arno class]] now uses the lighter ~jayrule~ color and ~\cftdotsep=6~ for contents dot leaders. The selected Arno title and current blue page numbers are unchanged.
+
 * 2026-09-27: Keep the current Arno contents title
 
 - Jay chose the existing Arno “Table of Contents” title over Claude's large SF title in a real EDF research-brief comparison. The contents-title setting in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][arno-claude-design]] stays as it is; dot leaders and page numbers remain separate decisions.

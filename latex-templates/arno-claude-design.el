@@ -249,6 +249,8 @@
 % Table of Contents Customization
 \\renewcommand{\\contentsname}{Table of Contents}
 \\renewcommand{\\cftsecleader}{\\cftdotfill{\\cftdotsep}}
+\\renewcommand{\\cftdotsep}{6}
+\\renewcommand{\\cftdot}{\\textcolor{jayrule}{.}}
 
 % Description Environment Customization
 \\renewcommand{\\descriptionlabel}[1]{%
