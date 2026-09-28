@@ -1,6 +1,10 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-09-27: Keep natural page flow for level-1 headings
+
+- Jay chose A after comparing the current EDF manuscript flow with Claude's proposed ~\PartsOnNewPage~ opt-in. The proposed macro would insert a page break before every level-1 heading, not just headings named “part”; in the rendered manuscript it increased length from 73 to 78 pages and left the page before Keynote part 2 mostly blank. No class option was added. A document that needs a specific break can insert it at that heading.
+
 * 2026-09-27: Keep current sentence spacing in Arno PDFs
 
 - Jay chose A, the current sentence spacing, after comparing four sentence breaks in a paragraph from the real Metabolic Mind proposal against ~\frenchspacing~. The earlier EDF excerpt had too few visible sentence breaks to judge the setting. No change was needed in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][the default Arno class]].
