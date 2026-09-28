@@ -243,7 +243,7 @@
 
 % Paragraph and Indentation Settings
 \\setlength{\\parindent}{0pt}
-\\setlength{\\parskip}{6.5pt plus 1pt minus 1pt} % Space between paragraphs
+\\setlength{\\parskip}{9pt plus 2pt minus 1pt} % Space between paragraphs
 \\setstretch{1.22}
 
 % Table of Contents Customization

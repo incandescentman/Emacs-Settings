@@ -1,6 +1,10 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-09-27: Increase Arno paragraph spacing
+
+- Jay chose B from a side-by-side rendering of the EDF manuscript: 9pt paragraph spacing with the already-selected ~\setstretch{1.22}~. Updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][arno-claude-design]] from ~6.5pt plus 1pt minus 1pt~ to ~9pt plus 2pt minus 1pt~. The comparison held fonts, line spacing, margins, and explicit list item spacing constant; the full manuscript sample changed from 68 to 71 pages.
+
 * 2026-09-27: Loosen Arno body line spacing
 
 - Jay chose the looser line spacing from a side-by-side render of the EDF manuscript. Changed [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][arno-claude-design]] from ~\setstretch{1.16}~ to ~\setstretch{1.22}~. The isolated comparison held font size, margins, paragraph spacing, and list item spacing constant; the full sample changed from 64 to 68 pages. This selection applies to the default class, including lines within lists.
