@@ -1,6 +1,10 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-09-27: Keep justified Arno body text
+
+- Jay chose A, the current justified body, over a ragged-right, no-automatic-hyphenation rendering of exact prose from [[file+emacs:/Users/jay/Dropbox/roam/prosperous/edf/20260817120000-edf_proposal.org][the EDF proposal]]. No body-alignment change was needed in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][the default Arno class]]. The comparison does not change the separate standing preference to avoid ugly prose hyphenation.
+
 * 2026-09-27: Replace an invalid sentence-spacing comparison
 
 - The first comparison used an EDF research export whose private-use citation markers rendered as boxes and changed line breaks. Jay rejected both versions. In temporary comparison copies, removing the unsupported markers eliminated the conspicuous word gaps; changing ~\emergencystretch~ from ~3em~ to ~1em~ or ~0pt~ did not improve the clean text. Rendered a new comparison from exact prose in [[file+emacs:/Users/jay/Dropbox/roam/prosperous/edf/20260817120000-edf_proposal.org][the EDF proposal]]. No sentence-spacing or body-alignment change was made to the class.
