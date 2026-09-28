@@ -1,6 +1,10 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-09-27: Keep current sentence spacing in Arno PDFs
+
+- Jay chose A, the current sentence spacing, after comparing four sentence breaks in a paragraph from the real Metabolic Mind proposal against ~\frenchspacing~. The earlier EDF excerpt had too few visible sentence breaks to judge the setting. No change was needed in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][the default Arno class]].
+
 * 2026-09-27: Keep level-4 labels above the text
 
 - Jay chose A after reviewing the current layout against a refined margin-label variant using the real EDF research brief. The margin variant made the long label fit on two lines by shifting the text column right and would require shortening long running heads. The default [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][Arno class]] retains the approved red condensed level-4 labels above their text and the symmetric 1.375in side margins; no class change was needed.
