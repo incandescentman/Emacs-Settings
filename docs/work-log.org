@@ -1,6 +1,10 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-09-27: Bring red level-4 labels closer to their text
+
+- Jay chose the closer label spacing from a rendered EDF research-brief comparison, with a little more room below the label than Claude's ~-7pt~ version. Set level-4 heading spacing in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][arno-claude-design]] to ~16pt plus 3pt minus 2pt~ above and ~-4pt~ below. The red condensed typography and uniform level-4 treatment remain.
+
 * 2026-09-27: Reduce Arno running-head size
 
 - Jay chose B from the real Metabolic Mind proposal comparison: the smaller running heads. Set the left and right header commands in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][arno-claude-design]] to ~\fontsize{10.1}{12}~. The left header still uses the author fallback and the established thin rule; only the rendered header size changes.

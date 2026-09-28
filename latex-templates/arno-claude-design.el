@@ -353,7 +353,7 @@
 \\titlespacing*{\\section}{0pt}{48pt}{0pt}
 \\titlespacing*{\\subsection}{0pt}{30pt plus 6pt minus 4pt}{10pt}
 \\titlespacing*{\\subsubsection}{0pt}{26pt plus 5pt minus 3pt}{8pt}
-\\titlespacing*{\\paragraph}{0pt}{12pt plus 2pt}{5pt}
+\\titlespacing*{\\paragraph}{0pt}{16pt plus 3pt minus 2pt}{-4pt}
 \\titlespacing*{\\subparagraph}{0pt}{12pt plus 2pt}{3pt}
 
 \\newcommand{\\mysectiontitle}[1]{%
