@@ -1102,8 +1102,7 @@ process the whole buffer."
                    '("elegant-arno" "arno-claude-design" "elegant-arno-claude-design")))
       (let ((org-latex-compiler "lualatex")
             (org-latex-pdf-process
-             '("%latex -interaction nonstopmode %f"
-               "%latex -interaction nonstopmode %f")))
+             '("latexmk -lualatex -interaction=nonstopmode -output-directory=%o %f")))
         (apply original args))
     (apply original args)))
 

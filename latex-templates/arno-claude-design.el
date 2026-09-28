@@ -48,6 +48,7 @@
 \\usepackage{enumitem}
 \\usepackage{csquotes}
 \\usepackage{titlesec}
+\\usepackage{needspace}
 \\usepackage{lipsum}
 \\usepackage[breaklinks=true, linktocpage]{hyperref}
 \\usepackage{bookmark}
@@ -118,6 +119,7 @@
     Extension = .otf
   ]{Helvetica Neue LT Pro}
   \\newfontfamily\\jaylabelfont[
+    Scale = 1.0,
     Path = /Users/jay/Library/Fonts/,
     UprightFont = HelveticaNeueLTPro-MdCn,
     BoldFont = HelveticaNeueLTPro-BdCn,
@@ -387,11 +389,16 @@
   {\\mysubsubsectiontitle}
 \\newcommand{\\myparagraphtitle}[1]{\\MakeUppercase{#1}}
 \\titleformat{\\paragraph}[block]
-  {\\normalfont\\jaycaps\\bfseries\\fontsize{12}{14.4}\\selectfont\\raggedright\\color{jayaccent}}
+  {\\normalfont\\jaycaps\\bfseries\\fontsize{10}{12}\\selectfont\\raggedright\\color{jayaccent}}
   {}{0pt}{\\myparagraphtitle}
 \\titleformat{\\subparagraph}[block]
   {\\normalfont\\bfseries\\normalsize\\raggedright}
   {}{0pt}{}
+
+% Keep each smaller heading with the text it introduces.
+\\pretocmd{\\subsubsection}{\\Needspace*{6\\baselineskip}}{}{}
+\\pretocmd{\\paragraph}{\\Needspace*{4\\baselineskip}}{}{}
+\\pretocmd{\\subparagraph}{\\Needspace*{3\\baselineskip}}{}{}
 
 % Hyperref Configuration
 \\hypersetup{

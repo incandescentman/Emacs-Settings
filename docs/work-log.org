@@ -1,6 +1,13 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-09-27: Settle Arno contents pages and keep headings with text
+
+- The EDF slide manuscript PDF had contents entries four pages behind the actual sections because the Arno export advice ran LuaLaTeX twice. Changed [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][the export advice]] to run ~latexmk -lualatex~, which repeats the build until references settle. The advice owns this setting during PDF export; a class-level ~org-latex-pdf-process~ setting would be overridden.
+- Added ~needspace~ to [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][the working Arno class]] so levels 3, 4, and 5 keep room for the text they introduce. The EDF PDF had stranded a level 3 title at the foot of page 29.
+- The previous 12pt level 4 setting rendered the condensed font at roughly 7.6pt because ~Scale=MatchLowercase~ was inherited. Jay approved making it visibly larger. Set ~Scale=1.0~ on that font and 10pt on the label; this changes the actual rendered size while leaving the red condensed treatment in place.
+- Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.el][org-export.el]], checked parentheses, and reloaded the export advice and class in the live Emacs session. A copy of the real EDF manuscript exported to a 64-page PDF with its contents entries and section starts agreeing at pages 52 (Break) and 62 (Q&A). The dictation heading moved to page 30 with its Visuals and Speaker Notes. The PDF label measured 10pt after the font scaling change.
+
 * 2026-09-27: Make arno-claude-design the default LaTeX class
 
 - At Jay's request, changed ~org-latex-default-class~ in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][the Org export source]] from elegant-garamond to arno-claude-design, so a PDF export without a ~#+LATEX_CLASS:~ line uses [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][arno-claude-design.el]]. Because the LuaLaTeX advice resolves the class through the same default, those exports compile with LuaLaTeX.
