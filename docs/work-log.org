@@ -1,6 +1,10 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-09-27: Keep the current Arno contents title
+
+- Jay chose the existing Arno “Table of Contents” title over Claude's large SF title in a real EDF research-brief comparison. The contents-title setting in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][arno-claude-design]] stays as it is; dot leaders and page numbers remain separate decisions.
+
 * 2026-09-27: Bring red level-4 labels closer to their text
 
 - Jay chose the closer label spacing from a rendered EDF research-brief comparison, with a little more room below the label than Claude's ~-7pt~ version. Set level-4 heading spacing in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-design.el][arno-claude-design]] to ~16pt plus 3pt minus 2pt~ above and ~-4pt~ below. The red condensed typography and uniform level-4 treatment remain.
