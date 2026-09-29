@@ -3,6 +3,17 @@
 (require 'subr-x)
 (require 'url-parse)
 
+(defun jay/org-rich-yank--store-on-copy (original &rest args)
+  "Let ORIGINAL annotate a private kill-ring string, never its caller's string.
+Path-copy commands can pass `buffer-file-name' directly to `kill-new'.
+Mutating that shared string embeds live buffer objects in Org-roam's cache."
+  (when (and (consp kill-ring) (stringp (car kill-ring)))
+    (setcar kill-ring (copy-sequence (car kill-ring))))
+  (apply original args))
+
+(with-eval-after-load 'org-rich-yank
+  (advice-add 'org-rich-yank--store :around #'jay/org-rich-yank--store-on-copy))
+
 (defgroup pasteboard nil
   "Adaptive pasteboard options."
   :group 'convenience

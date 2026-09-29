@@ -1,6 +1,18 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-09-28: Fix repeated fontspec errors during PDF export
+
+- Removed the invalid ~Letters=Uppercase~ fontspec option from the level-three heading definition in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-approved-default.el][the approved Arno class]]. The heading already uses ~\\MakeUppercase~, which preserves its capitalization.
+- Reloaded the class in the running Emacs session and exported [[file+emacs:/Users/jay/Dropbox/roam/prosperous/edf/EDF_slideshow_v3.org][EDF slideshow v3]] through its configured LuaLaTeX path. The export completed; [[file+emacs:/Users/jay/Dropbox/roam/prosperous/edf/EDF slideshow v3.pdf][the 153-page PDF]] passed ~qpdf --check~.
+
+* 2026-09-28: Restore Org-roam queries after rich-yank filename contamination
+
+- The installed ~org-rich-yank--store~ annotated the kill-ring string in place. ~path-copy-path-to-clipboard~ passes ~buffer-file-name~ directly to ~kill-new~, so copying a path attached a live buffer object to the buffer’s own filename. Org-roam serialized it as ~#<buffer ...>~, which EmacSQL could not read. The node-list query failed and the picker showed only its two pinned extras.
+- Added ~jay/org-rich-yank--store-on-copy~ in [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][the clipboard module]], preserving rich-yank metadata on a private string. Changed [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][the Org-roam query wrapper]] to propagate errors instead of returning an apparent empty result.
+- Backed up the database to [[file+emacs:/Users/jay/.cache/org-roam.db.before-rich-yank-repair-20260928-162401][the pre-repair SQLite backup]], removed text properties from live filename variables, and repaired six serialized file records and two node-property records in one transaction. Four duplicate cache records were consolidated; all 4,193 nodes were retained. No Org source files were edited by the repair.
+- Loaded the changed definitions into the running session. Verified 4,276 node/alias completions plus two pinned entries; SQLite integrity and foreign-key checks passed. A path-copy regression check confirmed that the filename stayed plain while the copied text retained rich-yank source metadata. The query wrapper now propagates a simulated database error. The required batch startup smoke test exited successfully; it emitted dictionary-alias warnings for american/english and started Hunspell with en_US-large.
+
 * 2026-09-28: Isolate Hunspell discovery from checkout symlinks
 
 - Replaced the checkout working directory used by [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][the early Hunspell guard]] with a dedicated ~jay-hunspell-scan~ directory under Emacs's ~temporary-file-directory~. [[file+emacs:/Users/jay/emacs/emacs-settings/gnulisp][The checkout's existing ~gnulisp~ symlink]] showed that using the repo was only an interim fix: a future symlinked tree could make ~hunspell -D~ traverse widely again.

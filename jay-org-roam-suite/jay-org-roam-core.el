@@ -162,8 +162,11 @@ If FILENAME starts with /Users/jay/Dropbox, return it as-is without resolution."
 (advice-add 'org-roam-db-update-file :around #'jay/org-roam--safe-update)
 
 (defun jay/org-roam--safe-query (orig-fn &rest args)
+  "Run ORIG-FN with ARGS without treating database errors as empty results."
   (condition-case err (apply orig-fn args)
-    (error (message "org-roam query skipped: %s" (error-message-string err)) nil)))
+    (error
+     (message "org-roam query failed: %s" (error-message-string err))
+     (signal (car err) (cdr err)))))
 (with-eval-after-load 'org-roam
   (advice-add 'org-roam-db-query :around #'jay/org-roam--safe-query))
 

@@ -1701,3 +1701,14 @@ Deleting the original link collapsed a default marker at the region end toward t
 - Use ~(copy-marker end t)~ when replacements inside the scan can expand text at the limit.
 - Treat balanced delimiters as a small parser problem: track depth, skip escaped characters, reject invalid whitespace, and leave unbalanced input untouched.
 - Test multiple matches in one region, not only one successful replacement; marker-bound bugs often appear only after the first expansion.
+
+* Org-rich-yank can mutate shared filename strings (2026-09-28)
+
+** Trigger
+Org-roam returned ~EmacSQL had an unhandled condition: "#"~ and its picker showed only two pinned extras despite 4,193 database nodes.
+
+** Mechanism
+The installed org-rich-yank version 20260924.1340 adds text properties directly to the string at the head of ~kill-ring~. The path-copy command in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] passes the original ~buffer-file-name~ string to ~kill-new~, so rich-yank mutated that variable too. Serialized filenames and node FILE properties then contained unreadable ~#<buffer ...>~ objects. SQLite itself passed its integrity check; EmacSQL’s Lisp reader failed. The old query wrapper hid the failure by returning nil. [[https://github.com/magit/emacsql#faq][EmacSQL documents its printed-Lisp storage]], and [[https://github.com/unhammer/org-rich-yank/blob/master/org-rich-yank.el][org-rich-yank’s store function]] supplies the metadata mutation.
+
+** Actionable insight
+The clipboard module now gives ~org-rich-yank--store~ a private copy of the kill-ring string before it adds metadata. Preserve that separation: clearing text properties on the shared string would also erase useful paste metadata, while fixing only database reads would leave future writes vulnerable. Check native SQLite row counts and raw columns separately from ~org-roam-node-list~ when diagnosing this error. Repair the serialized cache records from a backed-up database; a full rebuild is unnecessary for this failure. Test both invariants after changes: the caller’s filename is unchanged and the kill-ring entry retains source metadata.
