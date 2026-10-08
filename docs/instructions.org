@@ -276,7 +276,7 @@ Example to enable timestamps:
 |-------------+--------------------------------+-------------------------------------------------|
 | =Cmd-k d l= | =double-line-breaks-in-region= | Double all single line breaks in selected region |
 
-=double-line-breaks-in-region= is useful for converting single-spaced text to double-spaced paragraphs. It normalizes line endings, collapses 3+ newlines to exactly 2, and only doubles single newlines (leaving existing paragraph breaks unchanged). In Org buffers, it changes only ordinary paragraphs, preserving property drawers (including Org-roam metadata), headings, keywords, tables, and the contents of source, example, quote, verse, and other special blocks.
+=double-line-breaks-in-region= is useful for converting single-spaced text to double-spaced paragraphs. It normalizes line endings, collapses 3+ newlines to exactly 2, and only doubles single newlines (leaving existing paragraph breaks unchanged). In Org buffers, it changes ordinary paragraphs and the breaks between prose list items, preserving property drawers (including Org-roam metadata), headings, keywords, tables, and the contents of source, example, quote, verse, and other special blocks.
 
 *** AI Chat Cleanup
 
@@ -786,6 +786,8 @@ Notes:
 
 *** Invoice Letterhead Branding
 
+Before creating, editing, or exporting an invoice, read [[file+emacs:/Users/jay/emacs/emacs-settings/docs/invoice-creation-guide.org][Creating and Updating Invoices]]. It holds the supplier name, service-table format, payment-source rules, same-folder export, and fixed-date safeguard. (2026-10-06.)
+
 Supported classes:
 - =blue-invoice-letterhead=
 
@@ -793,7 +795,7 @@ Override the header wordmark and logo for one document:
 #+BEGIN_EXAMPLE
 #+LATEX_CLASS: blue-invoice-letterhead
 #+LATEX_HEADER: \letterheadbrand{SOCRATIC AI}
-#+LATEX_HEADER: \letterheadlogo{/Users/jay/Dropbox/github/astro-monorepo/apps/socratic/src/assets/images/socratic-ai-complex-logo-transparent_color.png}
+#+LATEX_HEADER: \letterheadlogo{/Users/jay/Dropbox/github/astro-monorepo/apps/socratic/src/assets/images/brand/candidates/socratic-ai-live-logo-pink-nodes-imagegen-651.png}
 #+END_EXAMPLE
 
 Notes:

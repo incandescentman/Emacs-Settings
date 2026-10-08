@@ -2425,6 +2425,8 @@ Handy way of getting back to previous places.
 #+BEGIN_SRC emacs-lisp
 (defun jay/double-line-breaks--org-paragraph-ranges ()
   "Return the buffer ranges occupied by unprotected Org paragraphs.
+Include the list marker when a paragraph starts an item, so breaks between
+prose list items are eligible too.
 Parse the widened buffer once so a narrowed region inside a drawer or block
 cannot lose the surrounding structural context."
   (save-restriction
@@ -2437,8 +2439,13 @@ cannot lose the surrounding structural context."
                    export-block fixed-width property-drawer quote-block
                    special-block src-block table verse-block)
                  t)
-          (cons (org-element-property :begin element)
-                (org-element-property :end element)))))))
+          (let* ((begin (org-element-property :begin element))
+                 (parent (org-element-property :parent element)))
+            (cons (if (and (eq (org-element-type parent) 'item)
+                           (= begin (org-element-property :contents-begin parent)))
+                      (org-element-property :begin parent)
+                    begin)
+                  (org-element-property :end element))))))))
 
 (defun jay/double-line-breaks--collect-edits (begin end)
   "Collect newline edits between BEGIN and END without changing the buffer.
@@ -2486,7 +2493,7 @@ applying one edit cannot invalidate the positions of the remaining edits."
   "Replace single line breaks with double line breaks in region.
 Normalizes Windows/Mac line endings first. Collapses 3+ newlines
 to exactly 2, and leaves existing double breaks unchanged.  In Org buffers,
-preserves non-paragraph structure such as property drawers and blocks."
+also spaces prose list items while preserving headings, drawers and blocks."
   (interactive "r")
   ;; Classify every newline against the original Org structure before changing
   ;; the buffer, then apply the edits in one batched backward transaction.

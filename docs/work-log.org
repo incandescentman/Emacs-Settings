@@ -1,6 +1,34 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-10-06: Space numbered list items with double-line-breaks-in-region
+
+- Fixed [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so an unprotected paragraph at the start of a list item includes its marker in the eligible range. Previously the newline before each numbered item failed the paragraph check, leaving Jay’s emoji interview questions unchanged.
+- Verified the exact ten-question sample from [[file+emacs:/Users/jay/Dropbox/roam/journal/2026-10-06.org][the October 6 journal]] in temporary buffers: nine blank lines added, exact wording and heading preserved, a second run unchanged, and the selected region’s surroundings and parsed list structure preserved. Source blocks, quote blocks, and drawers containing the same questions remained unchanged.
+- Regenerated [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]], passed ~check-parens~, and loaded only the three command definitions into the running Emacs session. The journal itself was not edited.
+
+* 2026-10-06: Record the invoice workflow and fixed-date safeguard
+
+- At Jay’s request, created [[file+emacs:/Users/jay/emacs/emacs-settings/docs/invoice-creation-guide.org][Creating and Updating Invoices]] from his EDF and Matthews South corrections. Added read-before-work routes in the Emacs and Roam shared instruction files and the existing invoice documentation; retained their loading symlinks. Corrected current logo examples and the stale logo guidance. Runtime template and global save-hook behavior were not changed.
+
+** Superseded logo guidance, preserved verbatim
+
+*** [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][docs/instructions.org]]
+
+#+begin_src org
+#+LATEX_HEADER: \letterheadlogo{/Users/jay/Dropbox/github/astro-monorepo/apps/socratic/src/assets/images/socratic-ai-complex-logo-transparent_color.png}
+#+end_src
+
+*** [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/readme.org][latex-templates/readme.org]]
+
+#+begin_src org
+#+LATEX_HEADER: \letterheadlogo{/Users/jay/Dropbox/github/astro-monorepo/apps/socratic/src/assets/images/socratic-ai-complex-logo-transparent_color.png}
+#+end_src
+
+*** [[file+emacs:/Users/jay/emacs/emacs-settings/docs/codebase-wisdom.org][docs/codebase-wisdom.org]]
+
+- For invoice logo failures, inspect the invoice template's =\fancyhead[C]= block and =\letterheadlogo= value first. The current Storytelling.NYC header image path is [[file+emacs:/Users/jay/Dropbox/github/incandescentman/assets/images/2023-10-final-new-logo_high-res-no-text.png][2023-10-final-new-logo_high-res-no-text.png]]. Socratic AI invoice exports use [[file+emacs:/Users/jay/Dropbox/github/astro-monorepo/apps/socratic/src/assets/images/socratic-ai-complex-logo-transparent_color.png][socratic-ai-complex-logo-transparent_color.png]].
+
 * 2026-09-28: Fix repeated fontspec errors during PDF export
 
 - Removed the invalid ~Letters=Uppercase~ fontspec option from the level-three heading definition in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-approved-default.el][the approved Arno class]]. The heading already uses ~\\MakeUppercase~, which preserves its capitalization.

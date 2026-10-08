@@ -64,12 +64,14 @@ If =\footerbrand= is empty, the footer stays image-only. If it is set, the templ
 
 * Invoice Letterhead Branding
 
+Before creating, editing, or exporting an invoice, read [[file+emacs:/Users/jay/emacs/emacs-settings/docs/invoice-creation-guide.org][Creating and Updating Invoices]]. It holds the supplier name, service-table format, payment-source rules, same-folder export, and fixed-date safeguard. (2026-10-06.)
+
 The invoice-with-letterhead templates let you override the header wordmark and header logo per document without editing the template file:
 
 #+begin_example
 #+LATEX_CLASS: blue-invoice-letterhead
 #+LATEX_HEADER: \letterheadbrand{SOCRATIC AI}
-#+LATEX_HEADER: \letterheadlogo{/Users/jay/Dropbox/github/astro-monorepo/apps/socratic/src/assets/images/socratic-ai-complex-logo-transparent_color.png}
+#+LATEX_HEADER: \letterheadlogo{/Users/jay/Dropbox/github/astro-monorepo/apps/socratic/src/assets/images/brand/candidates/socratic-ai-live-logo-pink-nodes-imagegen-651.png}
 #+end_example
 
 The defaults stay the same if you omit that header line:

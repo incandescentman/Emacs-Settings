@@ -1,0 +1,62 @@
+#+TITLE: Creating and Updating Invoices
+#+DATE: 2026-10-06
+
+* Start from a real invoice
+
+Use this guide before creating, editing, or exporting an invoice for Jay. It records his October 6, 2026 decisions and the export behavior verified that day. The job is a correct, readable invoice that the client can pay.
+
+Use the [[file+emacs:/Users/jay/Dropbox/roam/prosperous/edf/20261006151230-edf-workshop-invoice-2026-003.org][EDF invoice Org source]] and [[file+emacs:/Users/jay/Dropbox/roam/prosperous/edf/edf-workshop-invoice-2026-003.pdf][EDF invoice PDF]] as the current format reference. The [[file+emacs:/Users/jay/Dropbox/roam/storytelling-nyc-roam/20260811001349-matthews_south_invoice_sai_2026_001.org][Matthews South invoice]] is another approved example. Reuse the structure, not the previous client's amounts, dates, invoice number, contract number, or terms.
+
+Read the actual current source and check for unsaved Emacs edits before changing it. Preserve Jay's changes. A supplied review document provides information; its wording and layout still need judgment, and Jay's corrections take precedence.
+
+* Content and format
+
+- The supplier/business name is *Sunjay E. Dixit*. A Socratic AI letterhead does not change that name. Do not append ~| Socratic AI~ to the supplier name.
+- Put the invoice number, invoice date, and total due near the top. Obtain the client, service, fee, and payment requirements from Jay's instructions and the engagement's sources. Resolve any material contradiction with Jay.
+- Preserve the service-and-fee table. The general preference against Org tables does not apply to this functional invoice table. Keep the approved letterhead and actual company/contact details.
+- Identify the work plainly. For EDF, Jay chose ~Workshop for the EDF MarComm retreat~ and ~Contract: 202168540~. He removed ~including breaks~, the session duration, ~Customized~, and ~Full workshop fee under~. Do not turn these local edits into a ban on useful detail for a different invoice.
+- Include only applicable, supported billing terms. Do not add a tax assertion, legal qualification, duration, or promotional adjective merely because a review draft contains it. Jay removed ~Fee inclusive of all taxes.~ from EDF and approved ~Payment terms: Net 45 from receipt of invoice.~ That term is EDF-specific, not a universal default.
+- When Jay requests ACH details, copy the actual fields from the current approved invoice/payment source and verify them in the final PDF. Do not substitute ~Payment details provided separately.~ Bank details belong in the invoice, not in this reusable guide; do not commit them without the applicable authorization and checks.
+- Keep source links and preparation notes in Org comments or an excluded section so they do not appear on the client-facing invoice. Creating an invoice does not authorize sending it.
+
+* Location and export
+
+Keep the editable Org invoice and its finished PDF together, normally in the relevant client/project folder. Link the invoice from that project's existing index. Do not create a separate ~output/pdf/~ destination because a generic PDF skill recommends one, and do not move existing source material without authorization.
+
+~#+EXPORT_FILE_NAME~ can force a different destination. Omit it when normal export naming is suitable, or use a hyphenated basename or an absolute path in the source folder. Check the actual result. Jay's [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][Org export configuration]] also has a title-based PDF renaming helper when there is no explicit export filename; distinguish that helper from standard Org behavior.
+
+* Letterhead and current logo
+
+Use the ~blue-invoice-letterhead~ class and the invoice header controls, not the Garamond footer-logo system. The [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/blue-invoice-letterhead-socratic-ai.el][Socratic AI invoice class]] still has an older default logo as of October 6; set the current logo explicitly in the invoice:
+
+#+begin_src org
+#+LATEX_CLASS: blue-invoice-letterhead
+#+LATEX_HEADER: \letterheadbrand{\addfontfeatures{LetterSpace=-4}SOCRATIC AI}
+#+LATEX_HEADER: \letterheadlogo{/Users/jay/Dropbox/github/astro-monorepo/apps/socratic/src/assets/images/brand/candidates/socratic-ai-live-logo-pink-nodes-imagegen-651.png}
+#+end_src
+
+The [[file+emacs:/Users/jay/Dropbox/github/astro-monorepo/apps/socratic/src/components/InteractiveLogo.astro][Socratic site logo component]] verifies the current default mark. Its ~candidates~ path does not mean it is unselected. Recheck the component if the current branding changes. If a class definition changes, reload with ~M-x jay-load-latex~ before judging the next export.
+
+* Preserve the intended invoice date
+
+Jay's [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared functions]] enable ~time-stamp~ in ~before-save-hook~ with a pattern matching the invoice-date line in the first 50 lines. Saving the EDF invoice changed its required September 29 date to October 6. This was observed in the output and traced to the configuration; ~#+DATE~ alone does not protect the invoice-date line in the body.
+
+When an invoice date must stay fixed, use the following file-local setting at the end of that Org invoice. Verify that ~time-stamp-active~ is nil in its live buffer and check the date again after saving and exporting. Do not disable the hook globally for this purpose.
+
+#+begin_src org
+# Local Variables:
+# time-stamp-active: nil
+# End:
+#+end_src
+
+* Export and review
+
+Export the actual Org source through the invoice class. For a controlled batch export, load ~ox-latex~ and the invoice class explicitly; do not rebuild the invoice in an unrelated renderer. Inspect the finished PDF for the expected amount, currency, invoice number, invoice date, supplier name, service, payment fields, and all of Jay's corrections. Render and inspect the page for clipped text, broken table wrapping, stale logos, and overflow. Keep these short invoices on one page when the content fits comfortably.
+
+Open the Org source in Emacs and the final PDF in Preview for Jay. Delete agent-created test screenshots after inspection under his standing authorization. Do not report an older PDF as current merely because the source is correct.
+
+* Technical sources and scope
+
+- [[https://orgmode.org/manual/Export-Settings.html][Official Org manual: Export Settings]] documents ~EXPORT_FILE_NAME~ and per-file settings. The same-directory placement above is Jay's decision, not an Org requirement.
+- [[https://raw.githubusercontent.com/emacs-mirror/emacs/master/lisp/time-stamp.el][GNU Emacs time-stamp source]] documents ~before-save-hook~ integration and that ~time-stamp-active~ set to nil prevents timestamp updates. The invoice-specific pattern is Jay's local configuration.
+- Community practice was reviewed in [[https://emacs.stackexchange.com/questions/9893/how-can-i-export-to-latex-every-time-i-save-an-org-mode-buffer][Emacs Stack Exchange: export on save]]. This is background, not the authority for the workflow; no automatic export hook was added.
