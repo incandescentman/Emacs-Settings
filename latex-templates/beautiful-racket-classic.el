@@ -192,15 +192,19 @@
 
 \\usepackage{listings}
 
+% Build the colored arrow before listings redefines spaces inside postbreak.
+\\newsavebox{\\jaylistingbreakmarker}
+\\AtBeginDocument{\\sbox{\\jaylistingbreakmarker}{\\ttfamily\\small\\textcolor{red}{$\\hookrightarrow$}\\space}}
+
 \\lstset{
   breaklines=true,          % Enable line breaking
   breakatwhitespace=true,   % Break at whitespace when possible
-  basicstyle=\ttfamily\small,
+  basicstyle=\\ttfamily\\small,
   columns=fullflexible,
   keepspaces=true,
   breakindent=0pt,
   breakautoindent=true,
-  postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},  % Visual indicator for wrapped lines
+  postbreak=\\usebox{\\jaylistingbreakmarker},  % Visual indicator for wrapped lines
   frame=single,              % Optional: adds a frame
   xleftmargin=2em,
   framexleftmargin=1.5em

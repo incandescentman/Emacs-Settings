@@ -49,6 +49,8 @@
 \\usepackage{amsmath}
 \\usepackage{ifxetex}
 \\usepackage{setspace}
+\\usepackage{etoolbox}
+\\usepackage{needspace}
 \\ifxetex
 \\usepackage{fontspec,xltxtra,xunicode}
 \\defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
@@ -59,6 +61,14 @@ Contextuals=Alternate
 ]{Garamond Premier Pro}
  \\setsansfont{TeX Gyre Pagella}
   \\setmonofont{TeX Gyre Heros}
+  \\newfontfamily\\jaylabelfont[
+    Scale=1.0,
+    Path=/Users/jay/Library/Fonts/,
+    UprightFont=HelveticaNeueLTPro-MdCn,
+    BoldFont=HelveticaNeueLTPro-BdCn,
+    Extension=.otf
+  ]{Helvetica Neue LT Pro}
+  \\newcommand{\\jaycaps}{\\jaylabelfont\\addfontfeatures{LetterSpace=9}}
 
 \\else
   \\usepackage[mathletters]{ucs}
@@ -87,6 +97,7 @@ Contextuals=Alternate
 \\definecolor{nliblue}{HTML}{2f9ed3}
 \\definecolor{elegantblue}{HTML}{4380b9}
 \\definecolor{spacegrey}{HTML}{434346}
+\\definecolor{jayaccent}{HTML}{C0261F}
 
 \\newtoks\\leftheader
 \\newtoks\\leftheaderurl
@@ -124,35 +135,8 @@ Contextuals=Alternate
   \\removelastskip\\penalty-100\\vspace{\\tufteskipamount}\\fi}
 \\newcommand{\\newthought}[1]{\\tuftebreak\\noindent\\textsc{#1}}
 
-% Tufte-style font size definitions (10pt base with 14pt baseline)
-\\makeatletter
-\\renewcommand\\normalsize{%
-   \\@setfontsize\\normalsize\\@xpt{14}%
-   \\abovedisplayskip 10\\p@ \\@plus2\\p@ \\@minus5\\p@
-   \\abovedisplayshortskip \\z@ \\@plus3\\p@
-   \\belowdisplayshortskip 6\\p@ \\@plus3\\p@ \\@minus3\\p@
-   \\belowdisplayskip \\abovedisplayskip
-   \\let\\@listi\\@listI}
-\\normalbaselineskip=14pt
-\\normalsize
-\\renewcommand\\small{%
-   \\@setfontsize\\small\\@ixpt{12}%
-   \\abovedisplayskip 8.5\\p@ \\@plus3\\p@ \\@minus4\\p@
-   \\abovedisplayshortskip \\z@ \\@plus2\\p@
-   \\belowdisplayshortskip 4\\p@ \\@plus2\\p@ \\@minus2\\p@
-   \\belowdisplayskip \\abovedisplayskip}
-\\renewcommand\\footnotesize{%
-   \\@setfontsize\\footnotesize\\@viiipt{10}%
-   \\abovedisplayskip 6\\p@ \\@plus2\\p@ \\@minus4\\p@
-   \\abovedisplayshortskip \\z@ \\@plus\\p@
-   \\belowdisplayshortskip 3\\p@ \\@plus\\p@ \\@minus2\\p@
-   \\belowdisplayskip \\abovedisplayskip}
-\\renewcommand\\large{\\@setfontsize\\large\\@xipt{15}}
-\\renewcommand\\Large{\\@setfontsize\\Large\\@xiipt{16}}
-\\renewcommand\\LARGE{\\@setfontsize\\LARGE\\@xivpt{18}}
-\\renewcommand\\huge{\\@setfontsize\\huge\\@xxpt{30}}
-\\renewcommand\\Huge{\\@setfontsize\\Huge{24}{36}}
-\\makeatother
+% Use article's complete 12pt size ladder, including captions and display helpers.
+
 
 
 \\hyphenpenalty=1000
@@ -189,7 +173,9 @@ Contextuals=Alternate
 \\pagestyle{fancy}
 
 
-\\setlength{\\headheight}{14.49998pt} % Set headheight for fancyhdr
+\\setlength{\\headheight}{28pt} % Reserve room for wrapped running headers.
+\\fancyheadwidth[L][tl]{0.30\\headwidth}
+\\fancyheadwidth[R][tr]{0.67\\headwidth}
 
 \\fancypagestyle{plain}{%
   \\fancyhf{}%
@@ -206,9 +192,13 @@ Contextuals=Alternate
 
 \\renewcommand{\\subsectionmark}[1]{\\markboth{#1}{}} % for subsections in the headers instead of sections
 % \\renewcommand{\\sectionmark}[1]{\\markboth{#1}{}}
-\\lhead{\\mbox{\\small\\scshape\\href{\\the\\leftheaderurl}{\\the\\leftheader}}}
+% Preserve an empty left header unless the document supplies one.
+\\lhead{\\scshape\\fontsize{9}{12}\\selectfont%
+  \\expandafter\\ifstrempty\\expandafter{\\the\\leftheaderurl}
+    {\\the\\leftheader}
+    {\\href{\\the\\leftheaderurl}{\\the\\leftheader}}}
 \\chead{}
-\\rhead{\\mbox{\\small\\scshape{\\leftmark}}} % Add section heading
+\\rhead{\\scshape\\fontsize{9}{12}\\selectfont{\\leftmark}} % Add section heading
 % \\rhead{\\@title: {{\\leftmark}}}
 \\lfoot{}
 \\cfoot{\\thepage} % Add page numbers
@@ -255,27 +245,25 @@ Contextuals=Alternate
 \\lstset{
   breaklines=true,          % Enable line breaking
   breakatwhitespace=true,   % Break at whitespace when possible
-  basicstyle=\ttfamily\small,
+  basicstyle=\\ttfamily\\small,
   columns=fullflexible,
   keepspaces=true,
   breakindent=0pt,
   breakautoindent=true,
-  postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},  % Visual indicator for wrapped lines
+  postbreak=\\mbox{\\textcolor{red}{$\\hookrightarrow$}\\space},  % Visual indicator for wrapped lines
   frame=single,              % Optional: adds a frame
   xleftmargin=2em,
   framexleftmargin=1.5em
 }
 
 \\setlength{\\parindent}{0pt}
-\\setlength{\\parskip}{12pt plus 2pt minus 1pt} % space between paragraphs
+\\setlength{\\parskip}{8pt plus 1pt minus 1pt} % space between paragraphs
 
-% spacing: how to read {12pt plus 4pt minus 2pt}
-%           12pt is what we would like the spacing to be
-%           plus 4pt means that TeX can stretch it by at most 4pt
-%           minus 2pt means that TeX can shrink it by at most 2pt
+% Paragraph glue prefers 8pt, with up to 1pt of stretch or shrink.
 %       This is one example of the concept of, 'glue', in TeX
 
-\\setstretch{1.2}
+\\setstretch{1.18}
+\\lefthyphenmin=3 % Avoid short fragments before automatic hyphen breaks.
 
 \\usepackage{fancyvrb}
 \\usepackage{ctable}
@@ -287,6 +275,7 @@ Contextuals=Alternate
 
 \\usepackage{tocloft}
 \\renewcommand{\\cftsecleader}{\\cftdotfill{\\cftdotsep}}
+\\cftsetrmarg{2.55em plus 1fil} % Let contents titles wrap between words.
 \\tocloftpagestyle{empty} % Suppress page number on TOC page
 \\usepackage[normalem]{ulem}
 
@@ -315,7 +304,7 @@ Contextuals=Alternate
 
 
                % control line spacing in bulleted list
-               \\setlist{noitemsep, topsep=-8pt} % keep nested lists tight; no forced post-list gap
+               \\setlist{noitemsep, topsep=-4pt} % keep nested lists tight; no forced post-list gap
                % see: https://tex.stackexchange.com/questions/199118/modifying-whitespace-before-and-after-list-separately-using-enumitem-package
                %\\setlist{topsep=0pt} % for a line between list items
                \\newenvironment{resumeenum}{\\begin{enumerate}[resume*]}{\\end{enumerate}}
@@ -344,6 +333,16 @@ Contextuals=Alternate
                \\setlist[itemize,9]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
                \\setlist[itemize,10]{label=\\raisebox{0.25ex}{\\tiny$\\bullet$}}
                \\renewlist{itemize}{itemize}{10}
+
+% Keep outer list introductions attached without changing nested-list breaks.
+\\makeatletter
+\\edef\\jaydefaultlistbeginpenalty{\\the\\@beginparpenalty}
+\\newcommand{\\jaylistbeginpenalty}{%
+  \\ifnum\\@listdepth=1 10000\\else\\jaydefaultlistbeginpenalty\\fi
+}
+\\makeatother
+\\setlist*{beginpenalty=\\jaydefaultlistbeginpenalty}
+\\setlist*[itemize,enumerate]{beginpenalty=\\jaylistbeginpenalty}
 
 
                \\renewcommand{\\contentsname}{Table of Contents}
@@ -472,7 +471,8 @@ Contextuals=Alternate
                %\\titlespacing*{\\subsection}{0pt}{0pt}{-6pt}
                \\titlespacing*{\\subsubsection}{0pt}{16pt}{0pt}
 
-               \\titlespacing{\\paragraph}{0pt}{0pt}{.5em}[]
+               \\titlespacing*{\\paragraph}{0pt}{16pt plus 3pt minus 2pt}{-4pt}
+               \\titlespacing*{\\subparagraph}{0pt}{12pt plus 2pt}{3pt}
 
                \\newcommand{\\mysectiontitle}[1]{%
                \\parbox{10cm}{\\raggedleft\\fontsize{40}{48}\\selectfont #1}
@@ -489,8 +489,23 @@ Contextuals=Alternate
 
                \\titleformat*{\\subsubsection}{\\ttfamily\\scshape\\fontsize{18}{16}\\raggedright\\ttfamily\\color{spacegrey}}
 
-               \\titleformat*{\\paragraph}{\\ttfamily\\fontseries{sb}\\fontsize{13}{12}\\selectfont\\raggedright}
-               \\titleformat*{\\subparagraph}{\\sffamily\\fontsize{16}{12}\\raggedright\\ttfamily\\bfseries}
+               \\newcommand{\\myparagraphtitle}[1]{\\MakeUppercase{#1}}
+               \\titleformat{\\paragraph}[block]
+                 {\\normalfont\\jaycaps\\bfseries\\fontsize{10}{12}\\selectfont\\raggedright\\color{jayaccent}}
+                 {}{0pt}{\\myparagraphtitle}
+               \\titleformat{\\subparagraph}[block]
+                 {\\normalfont\\bfseries\\normalsize\\raggedright}
+                 {}{0pt}{}
+
+% Reserve space without breaking a chain of consecutive headings.
+\\makeatletter
+\\newcommand{\\jayheadingneedspace}[1]{%
+  \\if@nobreak\\else\\Needspace*{#1}\\fi
+}
+\\makeatother
+\\pretocmd{\\subsubsection}{\\jayheadingneedspace{6\\baselineskip}}{}{}
+\\pretocmd{\\paragraph}{\\jayheadingneedspace{4\\baselineskip}}{}{}
+\\pretocmd{\\subparagraph}{\\jayheadingneedspace{3\\baselineskip}}{}{}
 
                \\DeclareTextFontCommand{\\nonsection}{\\sffamily\\fontsize{19}{19}\\raggedright\\sffamily\\textlf}
 

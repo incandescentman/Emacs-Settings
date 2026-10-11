@@ -94,20 +94,24 @@ All links use ~elegantblue~ color (#4380b9):
 When compiled with XeTeX:
 - Roman: Garamond Premier Pro
 - The ~\sffamily~ slot uses TeX Gyre Pagella, a serif face, for subsection headings.
-- The ~\ttfamily~ slot uses TeX Gyre Heros, a proportional sans-serif face, for the other heading levels. The slot name does not make it monospaced.
+- The ~\ttfamily~ slot uses TeX Gyre Heros, a proportional sans-serif face, for levels one and three and for listings. The slot name does not make it monospaced.
+- Level four uses Helvetica Neue LT Pro Bold Condensed; level five uses bold Garamond Premier Pro.
 
 ** Tufte-Style Features
 
 - ~\newthought{text}~ - Start a new section with small caps
 - ~\smallcaps{text}~ - Letterspaced small caps
 - ~\allcaps{text}~ - Letterspaced all caps
-- 10pt base font with a 14pt baseline before the 1.2 line stretch is applied. The class declares 12pt but explicitly overrides ~\normalsize~ to 10pt.
+- 12pt body with the standard article size ladder: ~\small~ is 10.95pt, ~\footnotesize~ is 10pt, ~\large~ is 14.4pt, and ~\Large~ is 17.28pt. The former 10pt override was removed on 2026-10-11 after Jay selected 1B.
 
 ** Spacing
 
 - No paragraph indentation
-- 12pt paragraph skip
-- 1.2 line stretch; this is not one-half spacing.
+- 8pt paragraph skip, with 1pt stretch or shrink
+- 1.18 line stretch applied to the 14.5pt normal baseline
+- Small raised bullets and existing list indents; ~noitemsep~ with ~topsep=-4pt~ keeps the lists compact at the smaller paragraph gap.
+- Outer bullet and numbered lists stay with their introduction; nested lists retain the original break penalty.
+- Class-local ~\lefthyphenmin=3~ avoids two-letter fragments before automatic hyphen breaks, alongside the shared prose defaults.
 
 * Page Layout
 
@@ -118,30 +122,34 @@ When compiled with XeTeX:
 
 * Headers and Footers
 
-- Left header: Configurable via ~\leftheader~ token (small caps, small font)
-- Right header: Current subsection name (small caps, small font)
+- Left header: Configurable via ~\leftheader~ token, with an optional ~\leftheaderurl~; empty unless the document supplies text. There is no title fallback.
+- Right header: Current subsection name
+- Both headers use 9pt small caps with a 12pt baseline. Bounded widths of 30% and 67% permit wrapping; 28pt head height accommodates two lines.
 - Center footer: Page number
 - No header rule
 - TOC page: No page number
-- Headers wrapped in ~\mbox{}~ to prevent list interpretation when section titles start with numbers like "2."
+- Long contents entries can wrap between words using ~\cftsetrmarg{2.55em plus 1fil}~.
 
 * Headings
 
 ** Section Hierarchy
 
-| Level         | Style                          |
-|---------------+--------------------------------|
-| Section       | 40pt TeX Gyre Heros, small caps, right-aligned |
-| Subsection    | 24pt TeX Gyre Pagella serif |
-| Subsubsection | 18pt TeX Gyre Heros, small caps |
-| Paragraph     | 13pt TeX Gyre Heros, semibold requested, run-in |
-| Subparagraph  | 16pt TeX Gyre Heros, bold requested, run-in |
+- Section: 40pt TeX Gyre Heros, small caps, right-aligned.
+- Subsection: 24pt TeX Gyre Pagella serif.
+- Subsubsection: 18pt TeX Gyre Heros, small caps.
+- Paragraph: a true 10pt Helvetica Neue LT Pro Bold Condensed uppercase label, 9% tracking, red ~#C0261F~, on its own line.
+- Subparagraph: 12pt bold Garamond Premier Pro, on its own line.
+
+Levels four and five are Jay's selected 2B treatment. Levels one through three retain their existing design. Space reservations for levels three through five keep headings with their opening text without separating consecutive headings.
 
 ** Custom Environments
 
 - ~subtitle~ - 18pt italic text below section headings (no hyphenation, ragged right)
 - ~subsubtitle~ - Normal italic text below subsection headings
-- ~tagline~ - Italic intro text with adjusted margins
+- ~tagline~ - 17.28pt italic intro text with adjusted margins
+- ~fauxtitle~ - 17.28pt bold display text
+- ~fauxcenter~ - 17.28pt centered display text
+- Figure and table captions use 14.4pt bold text.
 
 * Block Quotes
 
@@ -161,7 +169,7 @@ The listing setup requests the following formatting:
 - Line breaking enabled
 - Red arrow indicator for wrapped lines
 
-Review finding, 2026-10-11: the ~basicstyle~ and ~postbreak~ values contain single backslashes inside the Elisp string. A fresh export confirmed that Emacs converts or removes those escapes before LaTeX receives them. Repair is proposed; the template has not been changed by this documentation update.
+Repaired 2026-10-11: the Elisp string now preserves the backslashes in ~basicstyle~ and ~postbreak~. The same defect was repaired in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket-classic.el][Classic]] and [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket-tabularray.el][Tabularray]]. Classic also builds its colored continuation arrow in a saved box before listings changes the meaning of spaces. Real code with wrapped lines compiles and shows the red arrows in all three variants.
 
 * Packages Included
 
@@ -214,6 +222,11 @@ Some text with a reference.[fn:1] More text.[fn:2]
 #+end_src
 
 * Changelog
+
+** 2026-10-11 — Apply selections 1B and 2B
+- Applied the 12pt body, 8pt paragraph gap, 1.18 line stretch, and separate lower headings from [[file+emacs:/Users/jay/emacs/emacs-settings/output/pdf/beautiful-racket-review-2026-10-11/comparison-build/beautiful-racket-comparison.pdf][the approved comparison]]. Restored the complete article size ladder so captions and display helpers scale coherently with the body.
+- Added wrapping headers while preserving the empty left-header default; applied the tested contents, outer-list, and short-hyphen-fragment repairs. The 1.5-inch side margins and top three heading designs remain.
+- Reloaded the live classes and checked [[file+emacs:/Users/jay/emacs/emacs-settings/output/pdf/beautiful-racket-review-2026-10-11/selected-preview-build/selected-preview.pdf][the combined selected preview]], helper sizes, listings, and the unchanged real EDF excerpt. EDF now takes 14 pages, with one 0.68pt overfull line that does not clip.
 
 ** 2026-10-11
 - Corrected the actual font families, effective body-size override, line-stretch description, subsection running header, and opt-in ~enotez~ behavior after inspecting the current class and a fresh EDF export.

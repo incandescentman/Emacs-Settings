@@ -2,6 +2,11 @@
 #+DATE: 2025-09-24
 #+DESCRIPTION: Debugging post-mortems and prevention checklists.
 
+* A repaired listings escape can expose a postbreak color error
+Date: 2026-10-11
+
+After repairing single backslashes in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket-classic.el][Beautiful Racket Classic's Elisp string]], real wrapped listings failed with ~Missing number, treated as zero~. The error trace led through color conversion while ~postbreak~ was active; the installed [[file+emacs:/usr/local/texlive/2025/texmf-dist/tex/latex/listings/lstmisc.sty][listings implementation]] temporarily replaces ~\space~ with ~\kern\lst@width~ there. Building the colored arrow with ~\sbox~ at document start and using ~\usebox~ in ~postbreak~ restored compilation and visible arrows. Verify escaped template commands by exercising their actual rendered behavior, including a wrapped line; a valid exported command alone did not establish a working listing.
+
 * Enumitem list-start penalties pass into nested lists
 Date: 2026-10-11
 
