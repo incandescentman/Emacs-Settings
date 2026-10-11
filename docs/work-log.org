@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-10-11: Restore transcript-garamond loading during PDF preflight
+
+- Added the missing ~transcript-garamond~ entry to ~jay/org-latex-class-template-files~ in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]]. The template was already included in ~jay-load-latex~, but preflight could not load it on demand when the class was not yet registered.
+- Reproduced the reported error on [[file+emacs:/Users/jay/Dropbox/github/transcription/transcriptions/Jay-and-Jenny-Emoji-presentation_2026-10-08.org][the Jay and Jenny transcript]]. Regenerated [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.el][org-export.el]], passed ~check-parens~, and verified in batch Emacs that the mapping loads the template and repeated preflight checks keep one class registration. Added the mapping to the running Emacs session and confirmed preflight passes there.
+- The documented init-only batch smoke command failed with ~void-variable dotspacemacs-directory~. Loading [[file+emacs:/Users/jay/.emacs.d/early-init.el][Spacemacs early-init.el]], which defines that variable, before [[file+emacs:/Users/jay/.emacs.d/init.el][init.el]] passed the startup check; dictionary-alias warnings for american/english remained. A graphical restart and full PDF compilation were not performed.
+
 * 2026-10-06: Space numbered list items with double-line-breaks-in-region
 
 - Fixed [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so an unprotected paragraph at the start of a list item includes its marker in the eligible range. Previously the newline before each numbered item failed the paragraph check, leaving Jay’s emoji interview questions unchanged.

@@ -1028,6 +1028,7 @@ process the whole buffer."
   '(("elegant-helvetica" . "/Users/jay/emacs/emacs-settings/latex-templates/elegant-helvetica.el")
     ("beautiful-racket" . "/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el")
     ("elegant-garamond" . "/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el")
+    ("transcript-garamond" . "/Users/jay/emacs/emacs-settings/latex-templates/transcript-garamond.el")
     ("elegant-arno" . "/Users/jay/emacs/emacs-settings/latex-templates/elegant-arno.el")
     ("arno-claude-design" . "/Users/jay/emacs/emacs-settings/latex-templates/arno-approved-default.el")
     ("elegant-arno-claude-design" . "/Users/jay/emacs/emacs-settings/latex-templates/arno-claude-proposal.el")
