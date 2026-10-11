@@ -1,6 +1,13 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-10-11: Separate Elegant Garamond visual decisions after Claude's review
+
+- Claude's second opinion exposed two limits in the first review: its labels named only body spacing although the updated side contained every refinement, and its sample omitted heading levels 4 and 5. Corrected the labels in [[file+emacs:/Users/jay/emacs/emacs-settings/output/pdf/elegant-garamond-review-2026-10-11/elegant-garamond-comparison.pdf][the bundled comparison]]. The implementation was already committed as ~6fbfef40~; Claude's uncommitted status report was stale.
+- Created [[file+emacs:/Users/jay/emacs/emacs-settings/output/pdf/elegant-garamond-isolated-review-2026-10-11/elegant-garamond-isolated-comparisons.pdf][five isolated comparisons]]: body spacing on eight consecutive paragraphs from [[file+emacs:/Users/jay/Dropbox/github/transcription/transcriptions/Jay-and-Jenny-Emoji-presentation_2026-10-08.org][the real emoji presentation introduction]], bullet size and indentation as separate choices on [[file+emacs:/Users/jay/Dropbox/roam/prosperous/edf/20260925170021-edf_deep_research_prompts.org][the EDF research list]], lower headings using Claude's supplied five-level sample, and one-inch versus 1.375-inch margins. Each pair has identical text; the body-spacing pair changes only paragraph and line spacing from the original template. The proposed lower headings adapt the recorded Arno red label and body-size bold treatment to Garamond.
+- Inspected all five rendered comparisons, checked PDF integrity and compilation, and verified that both source files stayed unchanged. No template changes were made during this review; the candidates await Jay's visual choices, and Claude's observations do not constitute those choices.
+- The existing requirement in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/arno-design-rulings.org][Arno's design rulings]] already calls for meaningful side-by-side comparisons with representative content. The correction is better sample selection and isolating the decisions, not an additional instruction rule.
+
 * 2026-10-11: Apply Arno spacing and navigation refinements to Elegant Garamond
 
 - At Jay's direction, updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][Elegant Garamond]] with the approved Arno template's subsection and subsubsection spacing, smaller ruled running headers, lower-heading page guards, clearer bullets and nested-list spacing, and lighter table-of-contents dots. Applied the proposed trial of 8pt paragraph spacing and 1.18 line spacing. Kept the existing Garamond Display subsection face and one-inch side margins.
