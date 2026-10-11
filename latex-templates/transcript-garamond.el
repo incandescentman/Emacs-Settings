@@ -12,8 +12,12 @@
 \\providecommand{\\DocumentMetadata}[1]{}
 \\DocumentMetadata{lang=en-US}
 \\documentclass[12pt]{article}
-\\usepackage[includeheadfoot, top=1.15in, bottom=1.15in, left=1.375in, right=1.375in]{geometry} % Side margins selected 2026-10-11; vertical margins unchanged.
+\\usepackage[includeheadfoot, top=1.15in, bottom=1.15in, left=1.375in, right=1.375in]{geometry} % Selected body margins.
 \\setlength{\\footskip}{0.95in}
+% Grow the header upward into existing white space, preserving the body
+% position and text height from the previous 14.49998pt running head.
+\\setlength{\\headheight}{52pt} % Up to four 12pt header lines.
+\\addtolength{\\topmargin}{\\dimexpr14.49998pt-\\headheight\\relax}
 
 % Package Inclusions
 \\usepackage{wrapfig}
@@ -72,8 +76,6 @@
 
 \\newcounter{level} % Define the custom counter
 \\usepackage{forloop}
-
-\\setlength{\\headheight}{14.49998pt}
 
 % Table configuration for automatic text wrapping
 \\newcolumntype{Y}{>{\\RaggedRight\\arraybackslash}X}
@@ -184,7 +186,33 @@
 \\makeatother
 % Keep the running section independent of speaker-level marks.
 \\NewMarkClass{transcript-section}
-\\rhead{\\scshape\\fontsize{10.1}{12}\\selectfont{\\nouppercase{\\FirstMark{transcript-section}}}}
+\\newlength{\\jaytranscriptleftwidth}
+\\newlength{\\jaytranscriptrightwidth}
+\\makeatletter
+\\newcommand{\\jaytranscriptprepareheader}{%
+  \\protected@edef\\jaytranscriptsection{\\FirstMark{transcript-section}}%
+  \\protected@edef\\jaytranscripttitle{\\@title}%
+  % Exact equality only; a distinct section remains informative.
+  \\ifdefstrequal{\\jaytranscriptsection}{\\jaytranscripttitle}
+    {\\let\\jaytranscriptsection\\@empty}{}%
+  \\setlength{\\jaytranscriptleftwidth}{\\headwidth}%
+  \\setlength{\\jaytranscriptrightwidth}{0pt}%
+  \\ifdefempty{\\jaytranscriptsection}{}{%
+    \\settowidth{\\jaytranscriptrightwidth}
+      {\\scshape\\fontsize{10.1}{12}\\selectfont\\jaytranscriptsection}%
+    % Short sections use only their natural width; long ones wrap.
+    \\ifdim\\jaytranscriptrightwidth>0.40\\headwidth
+      \\setlength{\\jaytranscriptrightwidth}{0.40\\headwidth}%
+    \\fi
+    \\setlength{\\jaytranscriptleftwidth}
+      {\\dimexpr\\headwidth-\\jaytranscriptrightwidth-1em\\relax}%
+  }%
+  \\fancyheadwidth[L][tl]{\\jaytranscriptleftwidth}%
+  \\fancyheadwidth[R][tr]{\\jaytranscriptrightwidth}%
+}
+\\makeatother
+\\fancyheadinit{\\jaytranscriptprepareheader}
+\\rhead{\\scshape\\fontsize{10.1}{12}\\selectfont{\\nouppercase{\\jaytranscriptsection}}}
 \\AtBeginDocument{\\jayapplyleftheader}
 
 % Footer configuration (controlled from org file)
