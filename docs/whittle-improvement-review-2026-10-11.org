@@ -1,5 +1,11 @@
 #+title: Whittle Improvement Review — October 11, 2026
 
+* Current decision and completed work — 2026-10-11
+
+Jay chose to catch uncommon repetition mistakes during before/after review. Duplicate-word and repeated-prefix false-start cleanup remain unchanged. The recommendation below to redesign those passes, including automated preservation of Bling Bling Dumpling, is withdrawn. No name-specific exception or preservation test was added. Report redesign and content hashes were not selected for this work.
+
+The authorized punctuation fix is complete and loaded in Emacs. Filler removal keeps an existing clause comma in cases such as ~You can, um, it's very good.~ → ~You can, it's very good.~, while still cleaning incidental commas in ~This is, um, useful.~ → ~This is useful.~ Filler matching no longer consumes em dashes, quotes, sentence punctuation, or line breaks. All 45 tests pass. On the full pre-Whittle emoji transcript, preview and apply agree for both profiles and ordered speaker headings remain unchanged. These are local punctuation repairs; abandoned fragments still receive contextual review.
+
 * Implementation review and follow-up fixes — 2026-10-11
 
 Claude's two principal changes work on the full committed emoji transcript: both apply commands agree with their respective report engine, speaker headings stay separate, and the company list, October reference, language qualification, and three rhetorical transitions survive. All 41 tests in Claude's patch passed independently.
@@ -8,13 +14,13 @@ I found and, at your direction, repaired two gaps. The added capitalization step
 
 The two changed capitalization expectations in Claude's tests are appropriate for ordinary words, subject to the name-preservation fix above. The changed performance bound is also justified: it checks at most two protection scans per pass in the paragraph, matching the guarded and ungated runs, and still catches per-match rescanning. A single full-transcript apply check took about 0.23 seconds, compared with about 0.03 seconds for the old unguarded apply. This is an increased cost of the checks, but not a concerning delay on this transcript.
 
-The Bling Bling Dumpling, expressive-repetition, and clause-fusion failures still reproduce; they were not introduced by Claude's patch. They remain recorded as deferred work in [[file+emacs:/Users/jay/Dropbox/roam/velocity/goals/current-focus.org::#capture-whittle-remaining-fixes][Current Focus]]. Preserving a name and preventing ~You can it's very good~ are correctness requirements. The judgment needed is how narrowly to limit automatic deletion while preserving useful cleanup, rather than whether those corruptions are acceptable.
+At this stage, repetition changes and clause fusion still reproduced and were captured in [[file+emacs:/Users/jay/Dropbox/roam/velocity/goals/current-focus.org::#capture-whittle-remaining-fixes][Current Focus]]. Updated 2026-10-11 after Jay's correction: preserving every uncommon repetition automatically is not a requirement. Jay accepts catching those exceptions in review; the clause-punctuation fix is now complete as recorded above.
 
 Claude is right that content hashes are unnecessary for fixing the differing engines. A shared engine does not, however, establish that a later report, unsaved buffer, and saved file contain the same input. Hashes could help diagnose that separate problem; they need not be part of this patch. No additional capture item was created.
 
 * Original recommendation
 
-The following records the initial review, before Claude's implementation and the follow-up fixes above.
+The remainder records the initial review, before Claude's implementation, the follow-up fixes, and Jay's scope correction above. It is historical assessment, not an approved work queue; the duplicate redesign and corresponding name-preservation tests are withdrawn.
 
 Start with two changes: disable the broad em-dash false-start deletion by default, and make ~whittle-transcript-apply~ use the same paragraph-based, guarded cleanup engine as ~whittle-transcript-report~ and ~whittle-transcript~. Keep the existing apply-plus-report workflow. Then tighten filler and duplicate removal, which also lose meaning in the guarded path.
 

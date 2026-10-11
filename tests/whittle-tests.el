@@ -1084,6 +1084,35 @@ surviving \"you, you\" should push the entry to high, not medium."
               (should (equal (whittle-test--heading-lines input)
                              (whittle-test--heading-lines output))))))))))
 
+(ert-deftest whittle-fillers-preserve-clause-punctuation ()
+  "Removing fillers must keep clause separators without stranding other commas."
+  (dolist (case '(("You can, um, it's very good." . "You can, it's very good.")
+                  ("You can, um, uh, it's very good." . "You can, it's very good.")
+                  ("They're kind of like, I don't say compound characters."
+                   . "They're, I don't say compound characters.")
+                  ("We're actually usually kind of like— I always use the girl."
+                   . "We're actually usually — I always use the girl.")
+                  ("This is, um, useful." . "This is useful.")
+                  ("Um, \"iPhone\" is the name." . "\"iPhone\" is the name.")))
+    (dolist (command '(whittle whittle-transcript whittle-apply
+                       whittle-transcript-apply whittle/remove-filler-words))
+      (let ((output (car (whittle-test--reported-command-output
+                         (car case) command))))
+        (should (string= output (cdr case)))))))
+
+(ert-deftest whittle-filler-chains-preserve-punctuation-and-line-breaks ()
+  "A filler chain may consume local commas, but not other delimiters."
+  (dolist (case '(("You can, um, uh, it's very good." . "You can, it's very good.")
+                  ("You can um, uh, it's very good." . "You can , it's very good.")
+                  ("Um, uh— it's very good." . "— it's very good.")
+                  ("Um, uh, \"iPhone\" is the name." . "\"iPhone\" is the name.")
+                  ("Um, uh\n\n*** Jenny:\nIt's very good."
+                   . "\n\n*** Jenny:\nIt's very good.")
+                  ("Um,\nuh, it's very good." . "Um,\nuh, it's very good.")))
+    (should (string=
+             (whittle-test--command-output (car case) #'whittle--remove-filler-chains)
+             (cdr case)))))
+
 (provide 'whittle-tests)
 
 ;;; whittle-tests.el ends here

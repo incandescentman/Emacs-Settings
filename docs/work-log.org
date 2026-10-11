@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-10-11: Preserve clause punctuation during Whittle filler cleanup
+
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/whittle.el][Whittle]] so filler removal retains an existing comma before a subject pronoun, common clause opener, or quotation, while still removing incidental filler commas within a phrase. ~You can, um, it's very good.~ now becomes ~You can, it's very good.~ Narrowed filler matching to horizontal whitespace and optional commas so it does not consume em dashes, quotation marks, sentence punctuation, or line breaks.
+- Jay's scope correction: uncommon repetition mistakes, including Bling Bling Dumpling, can be caught and repaired during before/after review. Duplicate-word and repeated-prefix false-start cleanup remain unchanged. The earlier recommendation to redesign those passes is withdrawn; there is no Bling-specific exception or preservation test. Existing proportionality guidance already covers this decision; no new global rule was added.
+- The two new punctuation tests failed before the fix; all 45 tests in [[file+emacs:/Users/jay/emacs/emacs-settings/tests/whittle-tests.el][whittle-tests.el]] now pass. Reviewed the output differences on the full emoji transcript from transcription commit ~1cf5eea~ in temporary buffers: clause separators survive, preview and apply agree for both profiles, and ordered speaker headings are unchanged. Loaded the fix and updated default filler rules into running Emacs, preserving the checked existing settings. No transcript edits were made.
+
 * 2026-10-11: Apply the selected Elegant Garamond heading refinements
 
 - Jay approved both B options in [[file+emacs:/Users/jay/emacs/emacs-settings/output/pdf/elegant-garamond-heading-review-2026-10-11/comparison-build/elegant-garamond-heading-comparisons.pdf][the isolated heading comparisons]]: regular uppercase Garamond at 15pt with 5% tracking and lining figures for level-three headings, and dark blue-gray ~#24394A~ for level-one headings. Applied both to [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][Elegant Garamond]], retaining the level-three gray and the existing main heading font. Recorded his exact approval, “agreed. proceed”, in [[file+emacs:/Users/jay/Dropbox/github/vibecoding/preferences/cross-repo-visual-experiment-reactions.org][the visual reaction ledger]].

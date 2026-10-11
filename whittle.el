@@ -32,16 +32,16 @@
 ;;; Customization -------------------------------------------------------------
 
 (defvar whittle/conservative-filler-rules
-  ;; Two patterns per filler: the comma-bounded interjection form (",
-  ;; um, ") is removed wholesale, including both surrounding commas, so
-  ;; we don't leave a stranded leading comma like "very, hierarchical".
-  ;; The bare form ("um ") is removed afterward for any leftovers.
+  ;; Remove surrounding commas within a phrase, but preserve an existing
+  ;; comma before a likely new clause via `whittle--filler-replacement'.
+  ;; Matches consume only horizontal spacing and an optional comma, never
+  ;; quotes, sentence punctuation, em dashes, or line breaks.
   '(("kind of like" ",[[:blank:]]*\\<kind of like\\>[[:blank:]]*,?[[:blank:]]*" " ")
-    ("kind of like" "\\<kind of like\\>[[:space:][:punct:]]*" "")
+    ("kind of like" "\\<kind of like\\>[[:blank:]]*,?[[:blank:]]*" "")
     ("i mean" ",[[:blank:]]*\\<i mean\\>[[:blank:]]*,?[[:blank:]]*" " ")
-    ("i mean" "\\<i mean\\>[[:space:][:punct:]]*" "")
+    ("i mean" "\\<i mean\\>[[:blank:]]*,?[[:blank:]]*" "")
     ("um/uh" ",[[:blank:]]*\\<\\(?:um+\\|uh\\)\\>[[:blank:]]*,?[[:blank:]]*" " ")
-    ("um/uh" "\\<\\(?:um+\\|uh\\)\\>[[:space:][:punct:]]*" "")
+    ("um/uh" "\\<\\(?:um+\\|uh\\)\\>[[:blank:]]*,?[[:blank:]]*" "")
     (", like," ",[[:blank:]]*\\<like\\>[[:blank:]]*,[[:blank:]]*" " "))
   "Conservative filler cleanup rules as (LABEL REGEXP REPLACEMENT).")
 
@@ -61,7 +61,7 @@ Microsoft, Adobe, Google, Apple—\"), a date (\"In October, you—\"), and a
 qualification (\"There are not technically a language, but let's just—\").")
 
 (defconst whittle/transcript-filler-chain-regexp
-  "\\(?:\\<\\(?:um+\\|uh\\|erm\\|ah\\|like\\|you know\\|i mean\\)\\>[[:space:][:punct:]]*\\)\\{2,\\}"
+  "\\(?:\\<\\(?:um+\\|uh\\|erm\\|ah\\|like\\|you know\\|i mean\\)\\>[[:blank:]]*,?[[:blank:]]*\\)\\{2,\\}"
   "Regexp matching transcript-style chains of filler phrases.")
 
 (defconst whittle/duplicate-word-exclusions
@@ -286,6 +286,33 @@ separate from transcript-report held-back spans."
                (whittle--abbreviation-period-p punct-pos))))
      (t nil))))
 
+(defun whittle--filler-replacement (replacement)
+  "Keep an existing clause comma in the current filler match when needed.
+Otherwise return REPLACEMENT unchanged.  This is a local punctuation
+check, not a grammatical rewrite: subject pronouns, common clause
+openers, and quoted speech can start a new clause after an interjection.
+At a sentence or line opening, or within a phrase such as \"is, um,
+useful\", the filler's own commas can still be removed."
+  (save-match-data
+    (let ((matched (match-string 0))
+          (beg (match-beginning 0))
+          (end (match-end 0))
+          (case-fold-search t))
+      (if (and (string-blank-p replacement)
+               (string-match-p "," matched)
+               (save-excursion
+                 (goto-char beg)
+                 (skip-chars-backward " \t")
+                 (not (memq (char-before)
+                            '(nil ?\n ?\r ?. ?? ?! ?, ?\; ?: ?— ?–
+                                  ?\( ?\[ ?\{ ?\" ?“ ?‘))))
+               (save-excursion
+                 (goto-char end)
+                 (looking-at
+                  "\\(?:i\\|you\\|we\\|they\\|he\\|she\\|it\\|there\\|this\\|that\\|these\\|those\\|who\\|what\\|when\\|where\\|why\\|how\\|ask\\|outline\\|tell\\|think\\|forget\\|let\\)\\>\\|[\"“‘]")))
+          ", "
+        replacement))))
+
 (defun whittle--apply-rules (beg end rules)
   "Apply RULES between BEG and END and return a hash table of match counts."
   (pcase-let* ((`(,start . ,limit) (whittle--region-bounds beg end))
@@ -303,7 +330,7 @@ separate from transcript-report held-back spans."
                   (unless (whittle--org-protected-match-p
                            (match-beginning 0) (match-end 0)
                            start (marker-position limit-marker))
-                    (replace-match replacement t nil)
+                    (replace-match (whittle--filler-replacement replacement) t nil)
                     (whittle--increment counts label)))))))
       (set-marker limit-marker nil))
     counts))
@@ -351,7 +378,7 @@ separate from transcript-report held-back spans."
               (unless (whittle--org-protected-match-p
                        (match-beginning 0) (match-end 0)
                        start (marker-position limit-marker))
-                (replace-match "" t t)
+                (replace-match (whittle--filler-replacement "") t t)
                 (setq count (1+ count))))))
       (set-marker limit-marker nil))
     count))
