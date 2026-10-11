@@ -18,6 +18,7 @@ This is the canonical record of Jay's choices for the default Org PDF class ~arn
 
 - Use Arno Pro body type with justified paragraphs, symmetric ~1.375in~ side margins, ~\setstretch{1.22}~, and ~9pt plus 2pt minus 1pt~ between paragraphs. Keep the current, slightly wider space after sentences; do not add ~\frenchspacing~.
 - Use the Arno bullet in soft ink. Top-level list items have ~3pt~ between them, with tighter indents for nested lists.
+- Use ~\lefthyphenmin=3~ to avoid two-letter fragments before automatic hyphen breaks, retaining the shared five-letter right minimum. Selected on 2026-10-11 as B in both the Arno and Elegant Garamond comparisons; occasional awkward paragraph endings do not justify different defaults for the two reusable templates.
 
 ** Heading hierarchy
 
@@ -31,7 +32,7 @@ This is the canonical record of Jay's choices for the default Org PDF class ~arn
 - Keep the original powder-blue quote box and the original blue links (~elegantblue~, ~#4380b9~).
 - Use the older running-header design with the added thin rule and the smaller ~10.1pt~ font setting. The left header defaults to the document author; an explicit ~\leftheader{...}~ overrides it.
 - Keep the Arno contents title and blue page numbers. Use the selected lighter, more widely spaced gray dot leaders.
-- Contents entries wrap between words. Keep an introduction with its outer bullet or numbered list while retaining ordinary page breaks within nested lists. Tested on the real EDF excerpt on 2026-10-11, preserving its 15-page length; the body-hyphenation trial remains a separate visual choice.
+- Contents entries wrap between words. Keep an introduction with its outer bullet or numbered list while retaining ordinary page breaks within nested lists. Tested on the real EDF excerpt on 2026-10-11, preserving its 15-page length.
 - Keep headings with the text they introduce. Let level-1 headings flow naturally rather than forcing each onto a new page. Export through ~latexmk~ so contents page numbers settle; the shared prose defaults already handle widow and orphan lines.
 
 * Rejected or superseded treatments

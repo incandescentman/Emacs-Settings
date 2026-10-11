@@ -245,6 +245,7 @@
 \\setlength{\\parindent}{0pt}
 \\setlength{\\parskip}{9pt plus 2pt minus 1pt} % Space between paragraphs
 \\setstretch{1.22}
+\\lefthyphenmin=3 % Avoid short fragments before automatic hyphen breaks.
 
 % Table of Contents Customization
 \\renewcommand{\\contentsname}{Table of Contents}

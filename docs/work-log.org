@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-10-11: Select the three-letter hyphenation minimum for both templates
+
+- Jay approved B for both [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][Elegant Garamond]] and [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-approved-default.el][approved Arno]] after questioning the split recommendation. Set ~\lefthyphenmin=3~ in those two templates, retained the shared right minimum, and updated [[file+emacs:/Users/jay/emacs/emacs-settings/docs/arno-design-rulings.org][Arno's design rulings]] and [[file+emacs:/Users/jay/Dropbox/github/vibecoding/preferences/cross-repo-visual-experiment-reactions.org][the visual reaction ledger]]. The earlier 1B/2A recommendation below is superseded: it put too much weight on one paragraph ending when choosing defaults for reusable templates. Existing purpose-based judgment guidance covers the correction; no additional process rule was needed.
+- Reloaded both live classes while preserving the compiler setting. Elisp syntax and XeLaTeX compilation passed. Exported the unchanged EDF body through the live classes and verified that every word and its page coordinates exactly match the reviewed B versions across all 16 Garamond pages and 15 Arno pages. PDF integrity checks passed; no new overflow warnings appeared.
+
 * 2026-10-11: Repair contents and outer-list pagination; compare hyphenation in Garamond and Arno
 
 - Applied word-boundary contents wrapping and outer-list introduction protection in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][Elegant Garamond]]. At Jay's request, also tested the same EDF excerpt in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-approved-default.el][approved Arno]], then applied the tested repairs there. In Garamond, “Which sources AI engines cite.” moves from the foot of page 11 to its list on page 12. Both classes now keep “communications” intact in the contents. The list guard uses actual nesting depth because a level-one enumitem penalty was verified to reach deeper lists too.
