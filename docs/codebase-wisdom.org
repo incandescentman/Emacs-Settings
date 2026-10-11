@@ -2,6 +2,13 @@
 #+DATE: 2025-09-24
 #+DESCRIPTION: Debugging post-mortems and prevention checklists.
 
+* Enumitem list-start penalties pass into nested lists
+Date: 2026-10-11
+
+Setting ~beginpenalty=10000~ only through ~\setlist*[itemize,1]~ and ~\setlist*[enumerate,1]~ does not confine the effect to outer lists. In the real EDF excerpt, runtime logging showed ~10000~ at depths 1, 2, and 3; the baseline was ~-51~ at all three depths. This inheritance is also documented in section 3.5 of the [[https://mirrors.mit.edu/CTAN/macros/latex/contrib/enumitem/enumitem.pdf][enumitem manual]].
+
+[[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][Elegant Garamond]] and [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-approved-default.el][approved Arno]] capture the existing default, restore it at list entry, and use actual ~\@listdepth~ to select ~10000~ only for outer bullet and numbered lists. Runtime checks then showed ~10000~ at depth 1 and ~-51~ at depths 2 and 3. When list pagination is meant to change at one level, check the effective penalty inside nested lists rather than inferring scope from the ~setlist~ selector.
+
 * Needspace can split consecutive headings
 Date: 2026-10-11
 

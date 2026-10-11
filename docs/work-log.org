@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-10-11: Repair contents and outer-list pagination; compare hyphenation in Garamond and Arno
+
+- Applied word-boundary contents wrapping and outer-list introduction protection in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][Elegant Garamond]]. At Jay's request, also tested the same EDF excerpt in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-approved-default.el][approved Arno]], then applied the tested repairs there. In Garamond, “Which sources AI engines cite.” moves from the foot of page 11 to its list on page 12. Both classes now keep “communications” intact in the contents. The list guard uses actual nesting depth because a level-one enumitem penalty was verified to reach deeper lists too.
+- Re-exported both live classes while preserving Emacs's compiler setting, compiled the identical source body, and inspected the repaired contents and list pages. Garamond stays at 16 pages with its existing 0.74pt overfull line; Arno stays at 15 pages with none. Runtime logging confirms outer-list penalties of 10000 and the original -51 inside nested lists. The source research document was not edited.
+- Created [[file+emacs:/Users/jay/emacs/emacs-settings/output/pdf/prose-layout-review-2026-10-11/comparison-build/hyphenation-comparison.pdf][the two-font hyphenation comparison]], using cropped paragraphs from the actual PDFs and putting the two repairs in both versions. A retains the two-letter left minimum; B trials a three-letter minimum. Both classes keep their page counts. Garamond's loose-line warnings rise from 13 to 16; Arno's stay at 11, but its opening paragraph acquires a one-word final line. Codex recommends 1B for Garamond and 2A for Arno after inspecting the rendered tradeoffs; these are recommendations awaiting Jay's visual choices. Neither production class has adopted the hyphenation trial.
+
 * 2026-10-11: Preserve clause punctuation during Whittle filler cleanup
 
 - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/whittle.el][Whittle]] so filler removal retains an existing comma before a subject pronoun, common clause opener, or quotation, while still removing incidental filler commas within a phrase. ~You can, um, it's very good.~ now becomes ~You can, it's very good.~ Narrowed filler matching to horizontal whitespace and optional commas so it does not consume em dashes, quotation marks, sentence punctuation, or line breaks.

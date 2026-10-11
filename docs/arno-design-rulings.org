@@ -31,6 +31,7 @@ This is the canonical record of Jay's choices for the default Org PDF class ~arn
 - Keep the original powder-blue quote box and the original blue links (~elegantblue~, ~#4380b9~).
 - Use the older running-header design with the added thin rule and the smaller ~10.1pt~ font setting. The left header defaults to the document author; an explicit ~\leftheader{...}~ overrides it.
 - Keep the Arno contents title and blue page numbers. Use the selected lighter, more widely spaced gray dot leaders.
+- Contents entries wrap between words. Keep an introduction with its outer bullet or numbered list while retaining ordinary page breaks within nested lists. Tested on the real EDF excerpt on 2026-10-11, preserving its 15-page length; the body-hyphenation trial remains a separate visual choice.
 - Keep headings with the text they introduce. Let level-1 headings flow naturally rather than forcing each onto a new page. Export through ~latexmk~ so contents page numbers settle; the shared prose defaults already handle widow and orphan lines.
 
 * Rejected or superseded treatments

@@ -251,6 +251,7 @@
 \\renewcommand{\\cftsecleader}{\\cftdotfill{\\cftdotsep}}
 \\renewcommand{\\cftdotsep}{6}
 \\renewcommand{\\cftdot}{\\textcolor{jayrule}{.}}
+\\cftsetrmarg{2.55em plus 1fil} % Let contents titles wrap between words.
 
 % Description Environment Customization
 \\renewcommand{\\descriptionlabel}[1]{%
@@ -287,6 +288,16 @@
 \\setlist*[itemize,2]{itemsep=1.5pt, leftmargin=1.35em}
 \\setlist*[itemize,3]{leftmargin=1.25em}
 \\setlist*[enumerate,1]{itemsep=3pt}
+
+% Keep outer list introductions attached without changing nested-list breaks.
+\\makeatletter
+\\edef\\jaydefaultlistbeginpenalty{\\the\\@beginparpenalty}
+\\newcommand{\\jaylistbeginpenalty}{%
+  \\ifnum\\@listdepth=1 10000\\else\\jaydefaultlistbeginpenalty\\fi
+}
+\\makeatother
+\\setlist*{beginpenalty=\\jaydefaultlistbeginpenalty}
+\\setlist*[itemize,enumerate]{beginpenalty=\\jaylistbeginpenalty}
 
 % Define custom colors for quote environment
 \\definecolor{powderblue}{HTML}{f5f7ff}
