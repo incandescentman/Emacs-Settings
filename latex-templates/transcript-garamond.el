@@ -53,6 +53,7 @@
 \\usepackage{enumitem}
 \\usepackage{csquotes}
 \\usepackage{titlesec}
+\\usepackage{needspace}
 \\usepackage{lipsum}
 \\usepackage[breaklinks=true, linktocpage, xetex]{hyperref}
 \\usepackage{bookmark}
@@ -149,6 +150,7 @@
 \\definecolor{spacegrey}{HTML}{434346}
 \\definecolor{azure}{HTML}{f2feff}
 \\definecolor{jayfooterbrandgrey}{HTML}{4F4F4F}
+\\definecolor{jayrule}{HTML}{BDB6B0}
 
 \\newcommand{\\labelitemv}{\\textbullet}
 \\newcommand{\\labelitemvi}{\\textbullet}
@@ -159,7 +161,8 @@
 
 % Header and Footer Configuration
 \\fancyhf{} % Clear all header and footer fields
-\\renewcommand{\\headrulewidth}{0pt}
+\\renewcommand{\\headrulewidth}{0.4pt}
+\\renewcommand{\\headrule}{{\\color{jayrule}\\hrule height\\headrulewidth width\\headwidth \\vskip-\\headrulewidth}}
 \\pagestyle{fancy}
 \\newtoks\\leftheader
 \\newtoks\\leftheaderurl
@@ -169,6 +172,7 @@
 \\def\\jayfooterbrand{}
 \\newcommand{\\footerbrand}[1]{\\def\\jayfooterbrand{#1}\\jayapplyfooter}
 \\renewcommand{\\sectionmark}[1]{\\markboth{#1}{}}
+\\renewcommand{\\subsectionmark}[1]{\\markright{#1}}
 \\makeatletter
 \\def\\jay@leftheader@split#1\\\\#2\\jay@leftheader@end{\\def\\jayresolvedleftheader{#1}}
 \\newcommand{\\jayapplyleftheader}{%
@@ -176,11 +180,11 @@
     {\\expandafter\\jay@leftheader@split\\@title\\\\\\jay@leftheader@end}
     {\\def\\jayresolvedleftheader{\\the\\leftheader}}%
   \\expandafter\\ifstrempty\\expandafter{\\the\\leftheaderurl}
-    {\\lhead{\\scshape\\jayresolvedleftheader}}
-    {\\lhead{\\scshape\\href{\\the\\leftheaderurl}{\\jayresolvedleftheader}}}%
+    {\\lhead{\\scshape\\fontsize{10.1}{12}\\selectfont\\jayresolvedleftheader}}
+    {\\lhead{\\scshape\\fontsize{10.1}{12}\\selectfont\\href{\\the\\leftheaderurl}{\\jayresolvedleftheader}}}%
 }
 \\makeatother
-\\rhead{\\scshape{\\nouppercase{\\rightmark}}}
+\\rhead{\\scshape\\fontsize{10.1}{12}\\selectfont{\\nouppercase{\\rightmark}}}
 \\AtBeginDocument{\\jayapplyleftheader}
 
 % Footer configuration (controlled from org file)
@@ -224,7 +228,7 @@
 % Paragraph and Indentation Settings
 \\setlength{\\parindent}{0pt}
 \\setlength{\\parskip}{8pt plus 0.75pt minus 0.5pt} % Readable turn-internal paragraph breaks
-\\setstretch{1.14}
+\\setstretch{1.18}
 
 % Table of Contents Customization
 \\renewcommand{\\contentsname}{Table of Contents}
@@ -363,6 +367,10 @@
   {\\mysubsubsectiontitle}
 \\titleformat*{\\paragraph}{\\ttfamily\\bfseries\\fontsize{19}{12}\\raggedright}
 \\titleformat*{\\subparagraph}{\\sffamily\\fontsize{16}{12}\\raggedright\\ttfamily\\bfseries}
+
+% Reserve room for a speaker label and the opening dialogue lines.
+\\pretocmd{\\subsection}{\\Needspace*{4\\baselineskip}}{}{}
+\\pretocmd{\\subsubsection}{\\Needspace*{4\\baselineskip}}{}{}
 
 % Hyperref Configuration
 \\hypersetup{

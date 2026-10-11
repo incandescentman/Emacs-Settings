@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-10-11: Borrow Arno reading refinements for transcripts
+
+- Jay authorized all three recommendations from [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-approved-default.el][the approved Arno template]]. Updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/transcript-garamond.el][the transcript template]] with 10.1-point running headers and the same 0.4-point warm-gray rule, 1.18 line spacing, and a four-baseline ~needspace~ reservation before second- and third-level speaker headings. Running headers retain the transcript title and speaker; automatic subsection numbers were removed from the speaker header.
+- Reloaded the template in live Emacs while preserving the existing PDF compiler setting. The exported dialogue and speaker names matched the pre-change export after excluding generated Org label IDs; the source buffer's modification tick stayed unchanged. XeLaTeX compilation and ~qpdf --check~ passed. All 44 speaker labels appeared in source order with dialogue below them on the same page; inspected the opening, a long answer, and the video-narration turns. The narrowed Q&A remains 14 pages.
+- Regenerated and opened [[file+emacs:/Users/jay/Dropbox/github/transcription/transcriptions/Jay and Jenny Emoji Presentation — October 8, 2026.pdf][the transcript PDF]]. Preserved [[file+emacs:/Users/jay/emacs/emacs-settings/output/pdf/transcript-speaker-review-2026-10-11/before-arno-refinements.pdf][the preceding PDF]] with the review artifacts.
+
 * 2026-10-11: Distinguish transcript speakers with bold Garamond
 
 - Jay selected bold Garamond in [[file+emacs:/Users/jay/emacs/emacs-settings/output/pdf/transcript-speaker-review-2026-10-11/speaker-label-comparison.pdf][the rendered comparison]]: “i prefer bold garamond”. Updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/transcript-garamond.el][transcript-garamond.el]] so both second- and third-level speaker headings use 14-point bold Garamond, with 8 points before and 2 points after the heading. Second-level headings previously used an unbolded serif style and did not pick up the third-level speaker treatment.
