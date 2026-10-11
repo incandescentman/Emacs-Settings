@@ -294,6 +294,8 @@ Use =M-x whittle= for safe everyday cleanup and =M-x whittle-transcript= when yo
 
 All three commands work on the active region if one is selected, otherwise on the whole buffer.
 
+=M-x whittle-apply= and =M-x whittle-transcript-apply= make exactly the same changes as =whittle= and =whittle-transcript= without writing or copying a report, so applying after a =whittle-transcript-report= dry run changes what that report previewed. Deleting a short comma-bearing fragment before an em-dash is off by default because it removes real clauses; set =whittle/collapse-em-dash-false-starts= to =t= to turn it on.
+
 *Conservative =whittle=*
 - Safe defaults for ordinary prose
 - Keeps legitimate phrases like =I like cats=

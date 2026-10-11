@@ -15,7 +15,12 @@
 ;;     report to the clipboard for Codex review.
 ;;
 ;; Both accept an optional region. Empty buffer or no region falls through to
-;; the whole buffer. Reports per-rule counts in the echo area on completion.
+;; the whole buffer. Reports per-pass counts in the echo area on completion.
+;;
+;; Every command that applies a cleanup profile (`whittle', `whittle-apply',
+;; `whittle-transcript', `whittle-transcript-apply') runs the same
+;; paragraph-by-paragraph, hazard-gated engine that `whittle-transcript-report'
+;; previews, so a dry-run report and an apply always agree.
 
 ;;; Code:
 
@@ -46,6 +51,14 @@ Discourse-marker deletion is off by default because sentence-edge
 markers such as \"So,\" \"Well,\" \"OK,\" and \"you know\" often carry
 meaning in transcripts. Customize this variable to opt into specific
 edge-filler removals.")
+
+(defvar whittle/collapse-em-dash-false-starts nil
+  "When non-nil, transcript cleanup deletes short comma-bearing fragments before `—'.
+Off by default: a comma, an em-dash, and a word count do not establish
+that a fragment is a false start. On the October 2026 emoji presentation
+transcript the rule deleted a company list (\"So you had Oracle, IBM,
+Microsoft, Adobe, Google, Apple—\"), a date (\"In October, you—\"), and a
+qualification (\"There are not technically a language, but let's just—\").")
 
 (defconst whittle/transcript-filler-chain-regexp
   "\\(?:\\<\\(?:um+\\|uh\\|erm\\|ah\\|like\\|you know\\|i mean\\)\\>[[:space:][:punct:]]*\\)\\{2,\\}"
@@ -421,10 +434,16 @@ separate from transcript-report held-back spans."
 (defun whittle--collapse-em-dash-false-starts (beg end)
   "Drop transcript false-start fragments ending in `—' between BEG and END.
 A candidate fragment is the text between the previous sentence boundary
-and an em-dash followed by whitespace. It is removed only if it contains
-at least one comma (a strong false-start signal — \"I, it's— I think\")
-and is 10 words or fewer. Leading-comma-less em-dash uses like \"The cat
-— a tabby — sat\" are left alone."
+and an em-dash followed by same-line whitespace. It is removed only if it
+contains at least one comma (\"I, it's— I think\") and is 10 words or
+fewer. Leading-comma-less em-dash uses like \"The cat — a tabby — sat\"
+are left alone. An em-dash that ends its line, even with trailing spaces
+or tabs, is never a candidate:
+matching through the newline used to pull the next paragraph, or the
+next speaker heading, up onto the fragment's line.
+
+Opt-in via `whittle/collapse-em-dash-false-starts'; the cleanup profiles
+skip this pass by default."
   (pcase-let* ((`(,start . ,limit) (whittle--region-bounds beg end))
                (limit-marker (copy-marker limit))
                (count 0))
@@ -433,7 +452,7 @@ and is 10 words or fewer. Leading-comma-less em-dash uses like \"The cat
             start (marker-position limit-marker)
           (save-excursion
             (goto-char start)
-            (while (re-search-forward "—[[:space:]]+" limit-marker t)
+            (while (re-search-forward "—[[:blank:]]+" limit-marker t)
               (let* ((em-start (match-beginning 0))
                      (em-end (match-end 0))
                      (frag-start
@@ -445,7 +464,9 @@ and is 10 words or fewer. Leading-comma-less em-dash uses like \"The cat
                                    (point))
                           start)))
                      (fragment (buffer-substring-no-properties frag-start em-start)))
-                (when (and (string-match-p "," fragment)
+                (when (and (< em-end limit-marker)
+                           (not (memq (char-after em-end) '(?\n ?\r)))
+                           (string-match-p "," fragment)
                            (<= (length (split-string fragment "[[:space:]]+" t)) 10)
                            (not (whittle--org-protected-match-p
                                  frag-start em-end
@@ -688,11 +709,14 @@ PROFILE is either `conservative' or `transcript', defaulting to
         (cons "sentence-edge filler removal"
               (lambda (beg end)
                 (whittle--remove-filler-words
-                 beg end whittle/transcript-edge-filler-rules)))
-        ;; Em-dash collapse must run before false-starts/dup-words, since
-        ;; those would otherwise strip the comma that signals the fragment
-        ;; is a stammer rather than a parenthetical.
-        (cons "em-dash false-start detection" #'whittle--collapse-em-dash-false-starts)
+                 beg end whittle/transcript-edge-filler-rules))))
+       ;; Em-dash collapse must run before false-starts/dup-words, since
+       ;; those would otherwise strip the comma that signals the fragment
+       ;; is a stammer rather than a parenthetical.
+       (when whittle/collapse-em-dash-false-starts
+         (list (cons "em-dash false-start detection"
+                     #'whittle--collapse-em-dash-false-starts)))
+       (list
         (cons "false-start collapse" #'whittle--remove-false-starts)
         duplicate
         punctuation
@@ -838,6 +862,22 @@ and are excluded from cleanup."
                 protected))
             protected-spans)))
 
+(defun whittle--restore-unit-start-case (original)
+  "Capitalize an all-lowercase opening word when ORIGINAL began with a capital.
+Removing a paragraph-opening filler (\"Um, the dog ran.\") otherwise
+leaves a lowercase paragraph start. A paragraph that began lowercase is
+left alone, as are mixed-case words such as iPhone and eBay.
+Return non-nil when the buffer changed."
+  (let ((case-fold-search nil)
+        (openers " \t\n\"'([{“‘"))
+    (when (string-match-p (concat "\\`[" openers "]*[[:upper:]]") original)
+      (save-excursion
+        (goto-char (point-min))
+        (skip-chars-forward openers)
+        (when (looking-at "\\([[:lower:]]\\)[[:lower:]]*\\>")
+          (replace-match (upcase (match-string 1)) t t nil 1)
+          t)))))
+
 (defun whittle--transcript-report-run-unit (text profile revert-hazards)
   "Run PROFILE cleanup on TEXT.
 When REVERT-HAZARDS is non-nil, revert a pass that introduces a
@@ -902,6 +942,10 @@ new hazard and record the held-back candidate edit."
                           protected-spans change-span before-pass after-pass))
                    (unless (member label passes)
                      (push label passes)))))))))
+      ;; Not recorded as a case-normalization pass: it only keeps the
+      ;; capital the paragraph already had, and that label would rank
+      ;; every opener removal as high risk.
+      (whittle--restore-unit-start-case original)
       (list :after (buffer-string)
             :passes (nreverse passes)
             :hazards (whittle--transcript-report-hazards
@@ -1788,48 +1832,39 @@ Return a plist with :report, :temp-file, and :entries."
            (whittle--format-count-summary punctuation "punctuation fixes")))
     counts))
 
-(defun whittle-apply (&optional beg end)
-  "Apply conservative cleanup to the region or buffer without copying a report."
-  (interactive (whittle--interactive-bounds))
-  (let* ((filler-counts (whittle--remove-filler-words beg end whittle/conservative-filler-rules))
-         (duplicate-counts (whittle--remove-duplicated-words beg end))
-         (punctuation (whittle--cleanup-punctuation beg end))
-         (case-fixes (whittle--normalize-case beg end)))
+(defun whittle--apply-guarded-cleanup (beg end profile label)
+  "Apply PROFILE cleanup from BEG to END without writing or copying a report.
+Runs the same paragraph-by-paragraph, hazard-gated engine as the report
+commands, so it changes exactly what a dry-run report proposes. LABEL
+prefixes the echo-area summary. Return the report entries."
+  (let* ((entries (whittle--transcript-report-build-entries
+                   (whittle--transcript-report-units beg end) profile))
+         (applied (whittle--transcript-report-applied-entries entries))
+         (held-back (whittle--transcript-report-held-back-records entries)))
+    (whittle--transcript-report-apply-entries entries)
     (whittle--report-summaries
-     "Whittle"
-     (list (whittle--format-table-summary filler-counts "fillers")
-           (whittle--format-table-summary duplicate-counts "duplicates")
-           (whittle--format-count-summary punctuation "punctuation fixes")
-           (whittle--format-count-summary case-fixes "case fixes")))))
+     label
+     (append
+      (list (whittle--format-count-summary (length applied) "paragraphs cleaned")
+            (whittle--format-count-summary
+             (length held-back) "hazardous edits held back"))
+      (mapcar (lambda (count)
+                (whittle--format-count-summary (cdr count) (car count)))
+              (whittle--transcript-report-pass-counts applied profile))))
+    entries))
+
+(defun whittle-apply (&optional beg end)
+  "Apply conservative cleanup to the region or buffer without copying a report.
+Changes exactly what `whittle' changes; only the report is skipped."
+  (interactive (whittle--interactive-bounds))
+  (whittle--apply-guarded-cleanup beg end 'conservative "Whittle"))
 
 (defun whittle-transcript-apply (&optional beg end)
-  "Apply aggressive transcript cleanup to the region or buffer."
+  "Apply transcript cleanup to the region or buffer without copying a report.
+Changes exactly what `whittle-transcript' changes and what
+`whittle-transcript-report' previews; only the report is skipped."
   (interactive (whittle--interactive-bounds))
-  (let* ((line-joins (whittle--join-transcript-lines beg end))
-         (filler-chains (whittle--remove-filler-chains beg end))
-         (conservative-fillers
-          (whittle--remove-filler-words beg end whittle/conservative-filler-rules))
-         (edge-fillers
-          (whittle--remove-filler-words beg end whittle/transcript-edge-filler-rules))
-         ;; Em-dash collapse must run before false-starts/dup-words, since
-         ;; those would otherwise strip the comma that signals the fragment
-         ;; is a stammer rather than a parenthetical.
-         (em-dash-false-starts (whittle--collapse-em-dash-false-starts beg end))
-         (false-starts (whittle--remove-false-starts beg end))
-         (duplicate-counts (whittle--remove-duplicated-words beg end))
-         (punctuation (whittle--cleanup-punctuation beg end))
-         (case-fixes (whittle--normalize-case beg end)))
-    (whittle--report-summaries
-     "Whittle transcript"
-     (list (whittle--format-count-summary line-joins "joined lines")
-           (whittle--format-count-summary filler-chains "filler chains")
-           (whittle--format-count-summary em-dash-false-starts "em-dash false starts")
-           (whittle--format-table-summary conservative-fillers "fillers")
-           (whittle--format-table-summary edge-fillers "edge fillers")
-           (whittle--format-table-summary false-starts "false starts")
-           (whittle--format-table-summary duplicate-counts "duplicates")
-           (whittle--format-count-summary punctuation "punctuation fixes")
-           (whittle--format-count-summary case-fixes "case fixes")))))
+  (whittle--apply-guarded-cleanup beg end 'transcript "Whittle transcript"))
 
 (defun whittle--run-cleanup-with-report (beg end profile command-name)
   "Apply PROFILE cleanup from BEG to END and copy COMMAND-NAME report."

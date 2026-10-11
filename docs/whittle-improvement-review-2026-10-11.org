@@ -1,0 +1,77 @@
+#+title: Whittle Improvement Review — October 11, 2026
+
+* Implementation review and follow-up fixes — 2026-10-11
+
+Claude's two principal changes work on the full committed emoji transcript: both apply commands agree with their respective report engine, speaker headings stay separate, and the company list, October reference, language qualification, and three rhetorical transitions survive. All 41 tests in Claude's patch passed independently.
+
+I found and, at your direction, repaired two gaps. The added capitalization step changed ~Um, iPhone emoji differ.~ into ~IPhone emoji differ.~ and similarly changed ~eBay~ to ~EBay~; it now leaves mixed-case opening words intact while capitalizing ordinary lowercase openings. The optional em-dash rule still deleted ~So the Dumpling Emoji Project, and then—~ when a trailing space followed the dash; it now requires a continuation on the same line and preserves line-final fragments despite trailing spaces or tabs. Two new regression tests failed before these repairs and now pass. All 43 tests pass, the full-transcript preview still matches apply, and the repaired definitions are loaded and checked in the running Emacs.
+
+The two changed capitalization expectations in Claude's tests are appropriate for ordinary words, subject to the name-preservation fix above. The changed performance bound is also justified: it checks at most two protection scans per pass in the paragraph, matching the guarded and ungated runs, and still catches per-match rescanning. A single full-transcript apply check took about 0.23 seconds, compared with about 0.03 seconds for the old unguarded apply. This is an increased cost of the checks, but not a concerning delay on this transcript.
+
+The Bling Bling Dumpling, expressive-repetition, and clause-fusion failures still reproduce; they were not introduced by Claude's patch. They remain recorded as deferred work in [[file+emacs:/Users/jay/Dropbox/roam/velocity/goals/current-focus.org::#capture-whittle-remaining-fixes][Current Focus]]. Preserving a name and preventing ~You can it's very good~ are correctness requirements. The judgment needed is how narrowly to limit automatic deletion while preserving useful cleanup, rather than whether those corruptions are acceptable.
+
+Claude is right that content hashes are unnecessary for fixing the differing engines. A shared engine does not, however, establish that a later report, unsaved buffer, and saved file contain the same input. Hashes could help diagnose that separate problem; they need not be part of this patch. No additional capture item was created.
+
+* Original recommendation
+
+The following records the initial review, before Claude's implementation and the follow-up fixes above.
+
+Start with two changes: disable the broad em-dash false-start deletion by default, and make ~whittle-transcript-apply~ use the same paragraph-based, guarded cleanup engine as ~whittle-transcript-report~ and ~whittle-transcript~. Keep the existing apply-plus-report workflow. Then tighten filler and duplicate removal, which also lose meaning in the guarded path.
+
+This is a review of [[file+emacs:/Users/jay/emacs/emacs-settings/whittle.el][/Users/jay/emacs/emacs-settings/whittle.el]], not an implementation. No code changes were made.
+
+* Evidence
+
+You confirmed that you ran ~whittle-transcript-report~ followed by ~whittle-transcript-apply~. Those commands currently use different execution paths: the preview holds back some edits that the raw apply command performs.
+
+I ran both paths on the pre-cleanup version of [[file+emacs:/Users/jay/Dropbox/github/transcription/transcriptions/Jay-and-Jenny-Emoji-presentation_2026-10-08.org][the emoji presentation transcript]] from transcription commit ~1cf5eea~, in temporary buffers, including Org mode. Both apply paths removed the company list, the October reference, the language qualification, and the second Bling in Bling Bling Dumpling. The raw path additionally merged three speaker headings into preceding paragraphs. The guarded path reported zero applied-output scars. The dry-run command left its input unchanged. All 37 existing ERT tests passed.
+
+* Prioritized changes
+
+** 1. Make preview and apply agree
+
+At lines 1805–1832, ~whittle-transcript-apply~ calls the mutating passes directly, bypassing paragraph segmentation and hazard checks. Route it through the existing report engine's cleanup decisions; suppress report output if needed, rather than changing which edits are accepted. Do the equivalent for ~whittle-apply~ and review the standalone filler and duplicate commands for the same bypass. Retain protection inside the individual helpers as well.
+
+Success means that, for identical input and settings, the dry-run's proposed result and the applied text match exactly. This directly prevents the mismatch you encountered.
+
+** 2. Turn off the broad em-dash deletion by default
+
+At line 421, ~whittle--collapse-em-dash-false-starts~ deletes a fragment when it contains a comma, has at most ten words, and ends with an em dash followed by whitespace. Those conditions do not establish that the fragment is disposable. They delete the Oracle/IBM/Microsoft/Adobe/Google/Apple list, In October, and the qualification that emoji are not technically a language.
+
+Keep ambiguous fragments as review candidates. The existing narrower repeated-prefix cleanup can continue handling its established restart cases. The tradeoff is that some genuine false starts remain for contextual review.
+
+Also preserve the newline before every structural Org line. The current protected range starts at the heading itself, so an earlier deletion can consume its preceding newline without touching the protected characters. That is how the em-dash pass reproduced all three merged headings.
+
+** 3. Separate filler removal from punctuation removal
+
+The rules beginning at line 29 remove surrounding commas or consume arbitrary whitespace and punctuation. In this transcript they produce ~You can it's very good~ and ~We're actually usually I always use~. Remove the filler only when its surrounding syntax remains intact; preserve clause punctuation and prohibit matches crossing paragraph or heading boundaries.
+
+Bare ~kind of like~ should not be an unconditional deletion: it can express comparison or approximation. The existing [[file+emacs:/Users/jay/emacs/emacs-settings/docs/whittle-transcript-review-workflow-plan.org][workflow plan]] already records this problem with an analogy about getting advice from a friend. Sentence-edge discourse markers are already disabled by default; apply the same contextual judgment here.
+
+Use explicit horizontal spacing and deliberately selected punctuation for these rules. Emacs character classes can depend on the buffer's syntax table, another reason to test both actual Org buffers and the temporary buffers used by the report engine. See the [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Char-Classes.html][GNU Emacs character-class documentation]].
+
+** 4. Narrow duplicate collapse
+
+At line 346, the duplicate matcher collapses arbitrary repeated words except for an exclusion list. It changes Bling Bling Dumpling to Bling Dumpling and removes expressive repetition such as whoa, whoa. Adding Bling to the exclusions fixes only this example.
+
+Preserve plausible names and expressive repetition; hold uncertain content-word repeats for review. Continue automatically handling the narrow stutter cases already established by tests. Apply the same policy to the separate false-start pass so one helper cannot undo another helper's protection.
+
+** 5. Make the report describe its evidence precisely
+
+In dry-run mode, label results proposed rather than applied. Replace safe partial with accepted partial, and describe zero scars as no known scar patterns detected. The current scan missed meaningful losses; its result is not a fidelity judgment.
+
+Include the input buffer's content hash, the proposed/applied output hash, the cleanup profile, and the code version. A path alone cannot establish whether a pasted report describes the current saved file or a different buffer state.
+
+As a follow-up, track individual replacements and their locations. The current hazard comparison uses tag presence, while changed-span tracking encompasses everything between the first and last change in a pass. That can conflate separate edits. Risk ranking also marks a whole paragraph high merely because it contains like, even if that word was untouched. Assessing the actual replacement would make the review more useful and allow harmless edits to proceed independently.
+
+** 6. Add regressions from this transcript
+
+Use the real failing passages in [[file+emacs:/Users/jay/emacs/emacs-settings/tests/whittle-tests.el][/Users/jay/emacs/emacs-settings/tests/whittle-tests.el]]. Assert preservation of names, the company list, dates, qualifications, rhetorical transitions, and the ordered speaker-heading sequence. Exercise preview followed by apply, every public mutating entry point, and both Org and temporary-buffer execution. Assert that ordinary filler and stutter cleanup still succeeds; making the command do nothing would not satisfy the purpose.
+
+* Claude's three editorial suggestions
+
+The dumpling pivot and the vampire passage's the funny thing is carry rhetorical meaning. I agree they merit restoration; my earlier repair treated those deletions too generously as false-start cleanup.
+
+For the phoenix passage, restoring So what happens then preserves the transition, but does not itself identify what them refers to. The preceding discussion supports reading this as a return to the people/couples and their skin tones; that is a contextual inference. Do not treat the proposed transition alone as a complete repair of the pronoun ambiguity or insert explanatory words as though they were spoken.
+
+These examples reinforce the code recommendation: a fragment can contain a genuine restart and still carry meaningful framing. A comma, an em dash, and a word count cannot decide how much to remove.

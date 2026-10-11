@@ -476,7 +476,7 @@ is passed through to `whittle--transcript-report-generate'."
         (should-not (string-match-p "- Links::" output))))))
 
 (ert-deftest whittle-raw-apply-caches-org-protection-per-pass ()
-  "Raw whole-buffer cleanup should not rescan org protection per regex match."
+  "Apply cleanup should not rescan org protection per regex match."
   (let* ((line "Um, this is is a draft with punctuation , and i should change.")
          (input (mapconcat #'identity (make-list 80 line) "\n"))
          (scan-count 0)
@@ -486,9 +486,13 @@ is passed through to `whittle--transcript-report-generate'."
                  (setq scan-count (1+ scan-count))
                  (funcall original beg end))))
       (whittle-test--command-output input #'whittle-transcript-apply))
-    ;; `whittle-transcript-apply' has several passes, but protection should be
-    ;; computed once per pass, not once per match or line.
-    (should (< scan-count 20))))
+    ;; The input is one 80-line paragraph with hundreds of matches. The
+    ;; guarded engine runs each pass twice per paragraph (gated and
+    ;; ungated), so protection is computed at most twice per pass, not
+    ;; once per match or line.
+    (should (<= scan-count
+                (* 2 (length (whittle--transcript-report-pass-specs
+                              'transcript)))))))
 
 (ert-deftest whittle-transcript-apply-preserves-src-delimiters ()
   "Line joining should not fuse org source delimiters with quoted prose."
@@ -588,7 +592,7 @@ is passed through to `whittle--transcript-report-generate'."
            (lambda ()
              (let ((buffer-file-name "/tmp/whittle-test-conservative.org"))
                (setq result (whittle (point-min) (point-max)))
-               (should (string= (buffer-string) "this is a draft.\n"))))))
+               (should (string= (buffer-string) "This is a draft.\n"))))))
       (delete-directory temp-dir t))
     (should result)
     (should copied)
@@ -672,7 +676,7 @@ is passed through to `whittle--transcript-report-generate'."
            (lambda ()
              (let ((buffer-file-name "/tmp/whittle-test-compact.org"))
                (setq result (whittle (point-min) (point-max)))
-               (should (string= (buffer-string) "hello\n"))))))
+               (should (string= (buffer-string) "Hello\n"))))))
       (delete-directory temp-dir t))
     (should result)
     (should copied)
@@ -928,6 +932,157 @@ surviving \"you, you\" should push the entry to high, not medium."
     (should (member "false-start collapse" (plist-get entry :passes)))
     (should (string-match-p "you, you" (plist-get entry :after)))
     (should (equal (plist-get entry :risk) "high"))))
+
+;;; Regressions from the October 2026 emoji presentation transcript ------------
+;; A dry-run report was followed by `whittle-transcript-apply', which then ran
+;; the passes ungated over the whole buffer: it applied edits the report had
+;; held back, fused three speaker headings into the paragraphs above them, and
+;; deleted a company list, a date, and a qualification.
+
+(defconst whittle-test--emoji-transcript
+  (mapconcat
+   #'identity
+   '("*** Jenny:"
+     "Of those, like, in— this is 2015, their membership. I was like, oh, it's like 9 of the 15, like, members or 12 members were US multinational tech companies. So you had Oracle, IBM, Microsoft, Adobe, Google, Apple— what was then called Facebook, now called Meta. Um, though, like, kind of a mistake in that name, right?"
+     ""
+     "They're like, oh, we're going to become like a VR company, and now we're not, like, we're doing AI."
+     ""
+     "I was like, I'm gonna do this. And then so I joined the email list, and, um, and like, so that was maybe around August. In October, you— I got the email."
+     ""
+     "There are not technically a language, but let's just— we don't have a better word for it right now."
+     ""
+     "So the Dumpling Emoji Project, and then—"
+     ""
+     "*** Video narration:"
+     "China has potstickers, Nepal and Tibet have momos. Yet somehow, despite their popularity—"
+     ""
+     "*** Jenny:"
+     "I cooked a lot of things for this video."
+     ""
+     "*** Video narration:"
+     "Emoji are global. Isn't it time we brought them together? Oh yeah, I might have—"
+     ""
+     "*** Jenny:"
+     "And yeah, that is— and I'm literally still 2 meetings a week."
+     ""
+     "*** Jay:"
+     "Uh, can I— so I think I still don't know."
+     "")
+   "\n")
+  "Passages from a real transcript that the ungated apply path damaged.")
+
+(defun whittle-test--heading-lines (text)
+  "Return the org heading lines in TEXT, in order."
+  (seq-filter (lambda (line) (string-match-p "\\`\\*+ " line))
+              (split-string text "\n")))
+
+(ert-deftest whittle-apply-commands-change-what-their-reports-preview ()
+  "An apply command must produce exactly the text its dry run proposes."
+  (dolist (case '((whittle-apply . conservative)
+                  (whittle-transcript-apply . transcript)))
+    (let* ((applied (whittle-test--command-output
+                     whittle-test--emoji-transcript (car case)))
+           (previewed
+            (whittle-test--with-text
+             whittle-test--emoji-transcript
+             (lambda ()
+               (let* ((buffer-file-name "/tmp/whittle-test-transcript.org")
+                      (result (whittle--transcript-report-generate
+                               (point-min) (point-max)
+                               "/tmp/whittle-test-report.org" (cdr case))))
+                 ;; The dry run leaves the source alone...
+                 (should (string= (buffer-string)
+                                  whittle-test--emoji-transcript))
+                 ;; ...and its proposed text is what an apply must produce.
+                 (whittle--transcript-report-apply-entries
+                  (plist-get result :entries))
+                 (buffer-string))))))
+      (should (string= applied previewed))
+      (should-not (string= applied whittle-test--emoji-transcript))
+      ;; An edit the report holds back stays held back when applying.
+      (should (string-match-p "now we're not, like, we're doing AI" applied)))))
+
+(ert-deftest whittle-apply-keeps-speaker-headings-on-their-own-lines ()
+  "Cleanup must never pull a heading up onto the preceding paragraph."
+  (let ((headings (whittle-test--heading-lines whittle-test--emoji-transcript)))
+    (dolist (em-dash '(nil t))
+      (let ((whittle/collapse-em-dash-false-starts em-dash))
+        (dolist (command '(whittle-apply
+                           whittle-transcript-apply
+                           whittle--collapse-em-dash-false-starts))
+          (let ((output (whittle-test--command-output
+                         whittle-test--emoji-transcript command)))
+            (should (equal (whittle-test--heading-lines output) headings))
+            (should-not (string-match-p "[^\n]\\*\\*\\* " output))
+            ;; A dash that ends a paragraph is an interruption, not a restart.
+            (should (string-match-p
+                     "and then—\n\n\\*\\*\\* Video narration:" output))
+            (should (string-match-p
+                     "despite their popularity—\n\n\\*\\*\\* Jenny:" output))))))))
+
+(ert-deftest whittle-em-dash-false-start-collapse-is-opt-in ()
+  "By default a comma and a dash must not delete a clause."
+  (let ((default (whittle-test--command-output
+                  whittle-test--emoji-transcript #'whittle-transcript-apply))
+        (reported (car (whittle-test--reported-command-output
+                        whittle-test--emoji-transcript #'whittle-transcript))))
+    (should (string= default reported))
+    (dolist (kept '("So you had Oracle, IBM, Microsoft, Adobe, Google, Apple—"
+                    "In October,"
+                    "There are not technically a language, but let's just—"
+                    "And yeah, that is—"))
+      (should (string-match-p (regexp-quote kept) default)))
+    ;; Ordinary filler cleanup still happens.
+    (should (string-match-p "Though kind of a mistake in that name" default))
+    (should-not (string-match-p "\\<um\\>" default)))
+  ;; Opting in still collapses a genuine restart.
+  (let* ((whittle/collapse-em-dash-false-starts t)
+         (opted-in (whittle-test--command-output
+                    whittle-test--emoji-transcript #'whittle-transcript-apply))
+         (case-fold-search nil))
+    (should (string-match-p "^And I'm literally still 2 meetings a week"
+                            opted-in))
+    (should-not (string-match-p "that is—" opted-in))))
+
+(ert-deftest whittle-cleanup-keeps-paragraph-start-capitalized ()
+  "Removing a paragraph-opening filler must not leave a lowercase start."
+  (dolist (case '(("Uh, can I— so I think I still don't know.\n"
+                   . "\\`Can I— so I think")
+                  ("Um, the dog ran.\n" . "\\`The dog ran\\.")
+                  ;; A paragraph that began lowercase stays lowercase.
+                  ("um, every morning. next sentence\n"
+                   . "\\`every morning\\. Next sentence")))
+    (dolist (command '(whittle-apply whittle-transcript-apply))
+      (let ((output (whittle-test--command-output (car case) command))
+            (case-fold-search nil))
+        (should (string-match-p (cdr case) output))))))
+
+(ert-deftest whittle-opening-case-preserves-mixed-case-words ()
+  "Opening filler removal must preserve spelling such as iPhone and eBay."
+  (dolist (case '(("Um, iPhone emoji differ." . "iPhone emoji differ.")
+                  ("Uh, eBay changed it." . "eBay changed it.")
+                  ("Um, iOS changed it." . "iOS changed it.")))
+    (dolist (command '(whittle whittle-transcript
+                       whittle-apply whittle-transcript-apply))
+      (let ((output (car (whittle-test--reported-command-output
+                         (car case) command))))
+        (should (string= output (cdr case)))))))
+
+(ert-deftest whittle-em-dash-preserves-line-end-with-trailing-blanks ()
+  "Trailing spaces or tabs must not turn an interrupted turn into a restart."
+  (let ((whittle/collapse-em-dash-false-starts t)
+        (fragment "So the Dumpling Emoji Project, and then—"))
+    (dolist (blanks '(" " "\t" " \t "))
+      (dolist (ending '("" "\n" "\r\n"
+                         "\n\n*** Video narration:\nDumplings are universal.\n"))
+        (let ((input (concat fragment blanks ending)))
+          (dolist (command '(whittle--collapse-em-dash-false-starts
+                             whittle-transcript-apply whittle-transcript))
+            (let ((output (car (whittle-test--reported-command-output
+                               input command))))
+              (should (string-prefix-p fragment output))
+              (should (equal (whittle-test--heading-lines input)
+                             (whittle-test--heading-lines output))))))))))
 
 (provide 'whittle-tests)
 
