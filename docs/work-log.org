@@ -1,6 +1,13 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-10-11: Apply Jay's selected Elegant Garamond design
+
+- Jay chose “1 B”, “2 A smaller bullets”, “3 A”, “4 B”, and “5 B” from [[file+emacs:/Users/jay/emacs/emacs-settings/output/pdf/elegant-garamond-isolated-review-2026-10-11/elegant-garamond-isolated-comparisons.pdf][the five isolated comparisons]]. Updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][Elegant Garamond]] to use the original smaller raised bullets and original indents, a true 10pt red condensed level-4 label on its own line, body-size bold Garamond level-5 headings, and 1.375-inch side margins. The selected 8pt paragraph spacing and 1.18 line spacing are now approved rather than a trial. The existing 3pt top-level item spacing remains.
+- The narrower real EDF rendering exposed a consecutive-heading break: the lower heading's unconditional ~Needspace~ guard could force a page break after a preceding subsection. Made the guard respect LaTeX's existing no-break state. Verified that both affected subsection/subsubsection pairs now remain with their opening body text on the same page.
+- Reloaded the class into running Emacs while preserving its compiler setting, checked Elisp syntax and code whitespace, and compiled the combined three-page preview plus the same real EDF excerpt. The source body is identical; the EDF excerpt is 16 pages with the narrower measure. Its one 0.74pt overfull line was inspected and does not clip; no header-height or missing-character warnings occurred. Inspected all three preview pages and the affected EDF pages, and checked PDF integrity.
+- Opened [[file+emacs:/Users/jay/emacs/emacs-settings/output/pdf/elegant-garamond-isolated-review-2026-10-11/elegant-garamond-selected-preview-build/elegant-garamond-selected-preview.pdf][the selected design preview]] and recorded the exact choices in [[file+emacs:/Users/jay/Dropbox/github/vibecoding/preferences/cross-repo-visual-experiment-reactions.org][the visual reaction ledger]].
+
 * 2026-10-11: Separate Elegant Garamond visual decisions after Claude's review
 
 - Claude's second opinion exposed two limits in the first review: its labels named only body spacing although the updated side contained every refinement, and its sample omitted heading levels 4 and 5. Corrected the labels in [[file+emacs:/Users/jay/emacs/emacs-settings/output/pdf/elegant-garamond-review-2026-10-11/elegant-garamond-comparison.pdf][the bundled comparison]]. The implementation was already committed as ~6fbfef40~; Claude's uncommitted status report was stale.

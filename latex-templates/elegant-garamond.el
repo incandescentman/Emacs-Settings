@@ -8,7 +8,7 @@
 \\providecommand{\\DocumentMetadata}[1]{}
 \\DocumentMetadata{lang=en-US}
 \\documentclass[12pt]{article}
-\\usepackage[includeheadfoot, margin=1in, headheight=28pt]{geometry} % Reserve room for a two-line running head
+\\usepackage[includeheadfoot, top=1in, bottom=1in, left=1.375in, right=1.375in, headheight=28pt]{geometry} % Selected reading width; reserve room for a two-line running head
 \\setlength{\\footskip}{0.95in}
 
 % Package Inclusions
@@ -99,6 +99,14 @@
     UprightFont = HelveticaNeueLTPro-BdCn,
     Extension = .otf
   ]{Helvetica Neue LT Pro}
+  \\newfontfamily\\jaylabelfont[
+    Scale = 1.0,
+    Path = /Users/jay/Library/Fonts/,
+    UprightFont = HelveticaNeueLTPro-MdCn,
+    BoldFont = HelveticaNeueLTPro-BdCn,
+    Extension = .otf
+  ]{Helvetica Neue LT Pro}
+  \\newcommand{\\jaycaps}{\\jaylabelfont\\addfontfeatures{LetterSpace=9}}
   \\newcommand{\\jayfooterbrandstyle}[1]{{\\jayfooterbrandfont\\color{jayfooterbrandgrey}\\addfontfeatures{LetterSpace=-5}\\fontsize{50}{50}\\selectfont \\MakeUppercase{#1}}}
 
   % Set main font to Garamond Premier Pro
@@ -124,6 +132,7 @@
 \\else
   \\usepackage[mathletters]{ucs}
   \\usepackage[utf8x]{inputenc}
+  \\newcommand{\\jaycaps}{\\sffamily}
   \\newcommand{\\jayfooterbrandstyle}[1]{{\\sffamily\\bfseries\\color{jayfooterbrandgrey}\\fontsize{50}{50}\\selectfont \\MakeUppercase{#1}}}
 \\fi
 
@@ -149,6 +158,7 @@
 \\definecolor{jayfooterbrandgrey}{HTML}{4F4F4F}
 \\definecolor{jayinksoft}{HTML}{4A4744}
 \\definecolor{jayrule}{HTML}{BDB6B0}
+\\definecolor{jayaccent}{HTML}{C0261F}
 
 \\newcommand{\\labelitemv}{\\textbullet}
 \\newcommand{\\labelitemvi}{\\textbullet}
@@ -249,8 +259,8 @@
 \\setlistdepth{10}
 \\newenvironment{resumeenum}{\\begin{enumerate}[resume*]}{\\end{enumerate}}
 
-% Keep the existing bullet command name for document compatibility.
-\\newcommand{\\raisedtinybullet}{\\textcolor{jayinksoft}{\\small\\textbullet}}
+% Selected smaller bullet, with the original list indents.
+\\newcommand{\\raisedtinybullet}{\\raisebox{0.25ex}{\\tiny$\\bullet$}}
 
 % Redefine Itemize Labels Using the Custom Bullet
 \\renewcommand{\\labelitemi}{\\raisedtinybullet}
@@ -268,9 +278,8 @@
 \\forloop{level}{1}{\\value{level} < 11}{%
   \\setlist[itemize,\\arabic{level}]{label=\\raisedtinybullet}
 }
-\\setlist[itemize,1]{label=\\raisedtinybullet, after=\\vspace{20pt}, itemsep=3pt, leftmargin=1.5em} % Must follow the loop; otherwise its level-1 reset removes the post-list gap
-\\setlist*[itemize,2]{itemsep=1.5pt, leftmargin=1.35em}
-\\setlist*[itemize,3]{leftmargin=1.25em}
+\\setlist[itemize,1]{label=\\raisedtinybullet, after=\\vspace{20pt}, itemsep=3pt} % Must follow the loop; otherwise its level-1 reset removes the post-list gap
+\\setlist*[itemize,2]{itemsep=1.5pt}
 \\setlist*[enumerate,1]{itemsep=3pt}
 
 % Define custom colors for quote environment
@@ -340,7 +349,8 @@
 \\titlespacing*{\\section}{0pt}{48pt}{0pt}
 \\titlespacing*{\\subsection}{0pt}{30pt plus 6pt minus 4pt}{10pt}
 \\titlespacing*{\\subsubsection}{0pt}{26pt plus 5pt minus 3pt}{8pt}
-\\titlespacing{\\paragraph}{0pt}{0pt}{.5em}[]
+\\titlespacing*{\\paragraph}{0pt}{16pt plus 3pt minus 2pt}{-4pt}
+\\titlespacing*{\\subparagraph}{0pt}{12pt plus 2pt}{3pt}
 
 \\newcommand{\\mysectiontitle}[1]{%
   \\markboth{#1}{#1}%
@@ -373,13 +383,23 @@
   {}
   {0em}
   {\\mysubsubsectiontitle}
-\\titleformat*{\\paragraph}{\\ttfamily\\bfseries\\fontsize{19}{12}\\raggedright}
-\\titleformat*{\\subparagraph}{\\sffamily\\fontsize{16}{12}\\raggedright\\ttfamily\\bfseries}
+\\newcommand{\\myparagraphtitle}[1]{\\MakeUppercase{#1}}
+\\titleformat{\\paragraph}[block]
+  {\\normalfont\\jaycaps\\bfseries\\fontsize{10}{12}\\selectfont\\raggedright\\color{jayaccent}}
+  {}{0pt}{\\myparagraphtitle}
+\\titleformat{\\subparagraph}[block]
+  {\\normalfont\\bfseries\\normalsize\\raggedright}
+  {}{0pt}{}
 
-% Keep each smaller heading with the text it introduces.
-\\pretocmd{\\subsubsection}{\\Needspace*{6\\baselineskip}}{}{}
-\\pretocmd{\\paragraph}{\\Needspace*{4\\baselineskip}}{}{}
-\\pretocmd{\\subparagraph}{\\Needspace*{3\\baselineskip}}{}{}
+% Reserve space without breaking a chain of consecutive headings.
+\\makeatletter
+\\newcommand{\\jayheadingneedspace}[1]{%
+  \\if@nobreak\\else\\Needspace*{#1}\\fi
+}
+\\makeatother
+\\pretocmd{\\subsubsection}{\\jayheadingneedspace{6\\baselineskip}}{}{}
+\\pretocmd{\\paragraph}{\\jayheadingneedspace{4\\baselineskip}}{}{}
+\\pretocmd{\\subparagraph}{\\jayheadingneedspace{3\\baselineskip}}{}{}
 
 % Hyperref Configuration
 \\hypersetup{

@@ -2,6 +2,13 @@
 #+DATE: 2025-09-24
 #+DESCRIPTION: Debugging post-mortems and prevention checklists.
 
+* Needspace can split consecutive headings
+Date: 2026-10-11
+
+The real EDF excerpt rendered through [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][Elegant Garamond]] at 1.375-inch side margins left a subsection at the bottom of page 4 and moved its immediately following subsubsection to page 5. The installed ~needspace~ 1.3d implementation inserts a negative penalty and can force a break even when the preceding heading has set LaTeX's ~\if@nobreak~ state. The template's pre-heading guards therefore bypassed titlesec's normal protection of consecutive headings.
+
+The class-local ~\jayheadingneedspace~ helper skips its reservation while ~\if@nobreak~ is true, preserving the existing heading chain; otherwise it applies the original reservation. The same source then kept both consecutive-heading pairs with their opening body text. When adapting this pattern elsewhere, inspect a real adjacent-heading boundary: a guard that helps an isolated heading can strand the heading above it.
+
 * Hunspell dictionary discovery can stall Emacs when launched from home
 Date: 2026-09-28
 
