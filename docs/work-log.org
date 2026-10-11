@@ -1,6 +1,13 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-10-11: Apply Arno spacing and navigation refinements to Elegant Garamond
+
+- At Jay's direction, updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][Elegant Garamond]] with the approved Arno template's subsection and subsubsection spacing, smaller ruled running headers, lower-heading page guards, clearer bullets and nested-list spacing, and lighter table-of-contents dots. Applied the proposed trial of 8pt paragraph spacing and 1.18 line spacing. Kept the existing Garamond Display subsection face and one-inch side margins.
+- The real rendering exposed an overlap between a long section header and the document title after reducing the header font. Used fancyhdr's separate field widths and reserved 28pt for two-line headers in geometry; also made subsection marks consistently omit automatic numbering. With the header space correctly reserved, the reviewed excerpt grows from 13 to 14 pages.
+- Compiled the same excerpt of [[file+emacs:/Users/jay/Dropbox/roam/prosperous/edf/20260925170021-edf_deep_research_prompts.org][the EDF research]] before and after, confirmed identical exported body text apart from generated Org IDs, and inspected the heading, list, contents, and final-page layouts. All four smaller headings retain following body text on the same page. XeLaTeX, PDF integrity, and Elisp syntax checks passed; no overflowing boxes, missing characters, or header-height warnings remain in the updated rendering. Reloaded the class into live Emacs while preserving its PDF compiler setting.
+- Created [[file+emacs:/Users/jay/emacs/emacs-settings/output/pdf/elegant-garamond-review-2026-10-11/elegant-garamond-comparison.pdf][the before-and-after comparison]] for visual review. The new body spacing is an authorized trial, not a recorded visual preference; the source research file was not edited.
+
 * 2026-10-11: Fix two gaps found while reviewing the Whittle patch
 
 - Reviewed Claude's guarded-apply and default-off em-dash changes against the full emoji transcript from transcription commit ~1cf5eea~. Both changes work: preview and apply agree, the ordered speaker headings survive, and the company list, October reference, language qualification, and three rhetorical transitions remain. The revised protection-scan test bound reflects the existing two-pass engine; a single full-transcript apply check took about 0.23 seconds.

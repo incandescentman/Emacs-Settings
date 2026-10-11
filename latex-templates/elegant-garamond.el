@@ -8,7 +8,7 @@
 \\providecommand{\\DocumentMetadata}[1]{}
 \\DocumentMetadata{lang=en-US}
 \\documentclass[12pt]{article}
-\\usepackage[includeheadfoot, margin=1in]{geometry} % Standard proposal/document margins
+\\usepackage[includeheadfoot, margin=1in, headheight=28pt]{geometry} % Reserve room for a two-line running head
 \\setlength{\\footskip}{0.95in}
 
 % Package Inclusions
@@ -48,6 +48,7 @@
 \\usepackage{enumitem}
 \\usepackage{csquotes}
 \\usepackage{titlesec}
+\\usepackage{needspace}
 \\usepackage{lipsum}
 \\usepackage[breaklinks=true, linktocpage, xetex]{hyperref}
 \\usepackage{bookmark}
@@ -68,8 +69,6 @@
 
 \\newcounter{level} % Define the custom counter
 \\usepackage{forloop}
-
-\\setlength{\\headheight}{14.49998pt}
 
 % Table configuration for automatic text wrapping
 \\newcolumntype{Y}{>{\\RaggedRight\\arraybackslash}X}
@@ -148,6 +147,8 @@
 \\definecolor{spacegrey}{HTML}{434346}
 \\definecolor{azure}{HTML}{f2feff}
 \\definecolor{jayfooterbrandgrey}{HTML}{4F4F4F}
+\\definecolor{jayinksoft}{HTML}{4A4744}
+\\definecolor{jayrule}{HTML}{BDB6B0}
 
 \\newcommand{\\labelitemv}{\\textbullet}
 \\newcommand{\\labelitemvi}{\\textbullet}
@@ -158,8 +159,12 @@
 
 % Header and Footer Configuration
 \\fancyhf{} % Clear all header and footer fields
-\\renewcommand{\\headrulewidth}{0pt}
+\\renewcommand{\\headrulewidth}{0.4pt}
+\\renewcommand{\\headrule}{{\\color{jayrule}\\hrule height\\headrulewidth width\\headwidth \\vskip-\\headrulewidth}}
 \\pagestyle{fancy}
+% Give long running heads separate columns so they cannot overlap.
+\\fancyheadwidth[L][tl]{0.30\\headwidth}
+\\fancyheadwidth[R][tr]{0.67\\headwidth}
 \\newtoks\\leftheader
 \\newtoks\\leftheaderurl
 \\newtoks\\coverimage
@@ -168,6 +173,7 @@
 \\def\\jayfooterbrand{}
 \\newcommand{\\footerbrand}[1]{\\def\\jayfooterbrand{#1}\\jayapplyfooter}
 \\renewcommand{\\sectionmark}[1]{\\markboth{#1}{}}
+\\renewcommand{\\subsectionmark}[1]{\\markright{#1}}
 \\makeatletter
 \\def\\jay@leftheader@split#1\\\\#2\\jay@leftheader@end{\\def\\jayresolvedleftheader{#1}}
 \\newcommand{\\jayapplyleftheader}{%
@@ -175,11 +181,11 @@
     {\\expandafter\\jay@leftheader@split\\@title\\\\\\jay@leftheader@end}
     {\\def\\jayresolvedleftheader{\\the\\leftheader}}%
   \\expandafter\\ifstrempty\\expandafter{\\the\\leftheaderurl}
-    {\\lhead{\\scshape\\jayresolvedleftheader}}
-    {\\lhead{\\scshape\\href{\\the\\leftheaderurl}{\\jayresolvedleftheader}}}%
+    {\\lhead{\\scshape\\fontsize{10.1}{12}\\selectfont\\jayresolvedleftheader}}
+    {\\lhead{\\scshape\\fontsize{10.1}{12}\\selectfont\\href{\\the\\leftheaderurl}{\\jayresolvedleftheader}}}%
 }
 \\makeatother
-\\rhead{\\scshape{\\nouppercase{\\rightmark}}}
+\\rhead{\\scshape\\fontsize{10.1}{12}\\selectfont{\\nouppercase{\\rightmark}}}
 \\AtBeginDocument{\\jayapplyleftheader}
 
 % Footer configuration (controlled from org file)
@@ -222,12 +228,14 @@
 
 % Paragraph and Indentation Settings
 \\setlength{\\parindent}{0pt}
-\\setlength{\\parskip}{6.5pt plus 1pt minus 1pt} % Space between paragraphs
-\\setstretch{1.16}
+\\setlength{\\parskip}{8pt plus 1pt minus 1pt} % Space between paragraphs
+\\setstretch{1.18}
 
 % Table of Contents Customization
 \\renewcommand{\\contentsname}{Table of Contents}
 \\renewcommand{\\cftsecleader}{\\cftdotfill{\\cftdotsep}}
+\\renewcommand{\\cftdotsep}{6}
+\\renewcommand{\\cftdot}{\\textcolor{jayrule}{.}}
 
 % Description Environment Customization
 \\renewcommand{\\descriptionlabel}[1]{%
@@ -241,8 +249,8 @@
 \\setlistdepth{10}
 \\newenvironment{resumeenum}{\\begin{enumerate}[resume*]}{\\end{enumerate}}
 
-% Define a Custom Raised Bullet Command
-\\newcommand{\\raisedtinybullet}{\\raisebox{0.25ex}{\\tiny$\\bullet$}}
+% Keep the existing bullet command name for document compatibility.
+\\newcommand{\\raisedtinybullet}{\\textcolor{jayinksoft}{\\small\\textbullet}}
 
 % Redefine Itemize Labels Using the Custom Bullet
 \\renewcommand{\\labelitemi}{\\raisedtinybullet}
@@ -260,7 +268,10 @@
 \\forloop{level}{1}{\\value{level} < 11}{%
   \\setlist[itemize,\\arabic{level}]{label=\\raisedtinybullet}
 }
-\\setlist[itemize,1]{label=\\raisedtinybullet, after=\\vspace{20pt}} % Must follow the loop; otherwise its level-1 reset removes the post-list gap
+\\setlist[itemize,1]{label=\\raisedtinybullet, after=\\vspace{20pt}, itemsep=3pt, leftmargin=1.5em} % Must follow the loop; otherwise its level-1 reset removes the post-list gap
+\\setlist*[itemize,2]{itemsep=1.5pt, leftmargin=1.35em}
+\\setlist*[itemize,3]{leftmargin=1.25em}
+\\setlist*[enumerate,1]{itemsep=3pt}
 
 % Define custom colors for quote environment
 \\definecolor{powderblue}{HTML}{f5f7ff}
@@ -327,8 +338,8 @@
 
 % Titlesec Configuration
 \\titlespacing*{\\section}{0pt}{48pt}{0pt}
-\\titlespacing*{\\subsection}{0pt}{6pt}{0pt}
-\\titlespacing*{\\subsubsection}{0pt}{0pt}{0pt}
+\\titlespacing*{\\subsection}{0pt}{30pt plus 6pt minus 4pt}{10pt}
+\\titlespacing*{\\subsubsection}{0pt}{26pt plus 5pt minus 3pt}{8pt}
 \\titlespacing{\\paragraph}{0pt}{0pt}{.5em}[]
 
 \\newcommand{\\mysectiontitle}[1]{%
@@ -364,6 +375,11 @@
   {\\mysubsubsectiontitle}
 \\titleformat*{\\paragraph}{\\ttfamily\\bfseries\\fontsize{19}{12}\\raggedright}
 \\titleformat*{\\subparagraph}{\\sffamily\\fontsize{16}{12}\\raggedright\\ttfamily\\bfseries}
+
+% Keep each smaller heading with the text it introduces.
+\\pretocmd{\\subsubsection}{\\Needspace*{6\\baselineskip}}{}{}
+\\pretocmd{\\paragraph}{\\Needspace*{4\\baselineskip}}{}{}
+\\pretocmd{\\subparagraph}{\\Needspace*{3\\baselineskip}}{}{}
 
 % Hyperref Configuration
 \\hypersetup{
