@@ -223,7 +223,7 @@
 
 % Paragraph and Indentation Settings
 \\setlength{\\parindent}{0pt}
-\\setlength{\\parskip}{4pt plus 0.75pt minus 0.5pt} % Compact turn-internal paragraph breaks
+\\setlength{\\parskip}{8pt plus 0.75pt minus 0.5pt} % Readable turn-internal paragraph breaks
 \\setstretch{1.14}
 
 % Table of Contents Customization
@@ -325,9 +325,9 @@
 
 % Titlesec Configuration
 \\titlespacing*{\\section}{0pt}{32pt}{0pt}
-\\titlespacing*{\\subsection}{0pt}{4pt}{0pt}
-% Speaker labels (subsubsection): compact but visible turn breaks.
-\\titlespacing*{\\subsubsection}{0pt}{3.5pt plus 1pt minus 0.5pt}{1.5pt plus 0.5pt}
+% Speaker labels at either depth: separate turns from internal paragraphs.
+\\titlespacing*{\\subsection}{0pt}{8pt plus 1pt minus 0.5pt}{2pt}
+\\titlespacing*{\\subsubsection}{0pt}{8pt plus 1pt minus 0.5pt}{2pt}
 \\titlespacing{\\paragraph}{0pt}{0pt}{.5em}[]
 
 \\newcommand{\\mysectiontitle}[1]{%
@@ -338,11 +338,11 @@
 
 \\newcommand{\\mysubsectiontitle}[1]{%
   \\markright{#1}%
-  \\sffamily\\fontsize{14}{18}\\selectfont\\raggedright #1
+  \\rmfamily\\bfseries\\fontsize{14}{18}\\selectfont\\raggedright #1
 }
 
 \\newcommand{\\mysubsubsectiontitle}[1]{%
-  \\ttfamily\\bfseries\\scshape\\fontsize{15.5}{16}\\selectfont\\raggedright\\color{spacegrey} #1
+  \\rmfamily\\bfseries\\fontsize{14}{18}\\selectfont\\raggedright #1
 }
 
 \\titleformat{\\section}

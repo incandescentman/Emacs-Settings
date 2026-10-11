@@ -1,6 +1,13 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-10-11: Distinguish transcript speakers with bold Garamond
+
+- Jay selected bold Garamond in [[file+emacs:/Users/jay/emacs/emacs-settings/output/pdf/transcript-speaker-review-2026-10-11/speaker-label-comparison.pdf][the rendered comparison]]: “i prefer bold garamond”. Updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/transcript-garamond.el][transcript-garamond.el]] so both second- and third-level speaker headings use 14-point bold Garamond, with 8 points before and 2 points after the heading. Second-level headings previously used an unbolded serif style and did not pick up the third-level speaker treatment.
+- At Jay's direction, “try 8 points”, increased paragraph spacing from 4 to 8 points for review. Preserved body type, line spacing, and transcript wording. No alternate speaker color was selected.
+- Reloaded the template in live Emacs while preserving its existing PDF compiler setting. Exported the same narrowed Q&A as the original PDF, compiled successfully with XeLaTeX, passed ~check-parens~ and ~qpdf --check~, and inspected the rendered rapid-turn opening and long-answer page. The Q&A is now 14 pages. Compared the exported document bodies after excluding generated Org label IDs; the dialogue and speaker names are unchanged from the reviewed candidate.
+- Regenerated [[file+emacs:/Users/jay/Dropbox/github/transcription/transcriptions/Jay and Jenny Emoji Presentation — October 8, 2026.pdf][the transcript PDF]], retaining [[file+emacs:/Users/jay/emacs/emacs-settings/output/pdf/transcript-speaker-review-2026-10-11/original-before-formatting.pdf][the previous PDF]] with the review artifacts. The 8-point spacing remains a requested trial awaiting Jay's visual reaction.
+
 * 2026-10-11: Restore transcript-garamond loading during PDF preflight
 
 - Added the missing ~transcript-garamond~ entry to ~jay/org-latex-class-template-files~ in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]]. The template was already included in ~jay-load-latex~, but preflight could not load it on demand when the class was not yet registered.
