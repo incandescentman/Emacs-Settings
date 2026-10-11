@@ -1,10 +1,8 @@
 ;;; transcript-garamond.el --- Org LaTeX class for transcripts -*- lexical-binding: t; -*-
 
-;; v1: straight fork of elegant-garamond.el. Behavior is currently
-;; identical to elegant-garamond; only the class name and prose-defaults
-;; registration differ. Future revisions will diverge to handle
-;; transcript-specific concerns (title page layout, inline rendering for
-;; short turns, pagination tuned for rapid-fire speaker exchanges).
+;; Derived from elegant-garamond; transcript-specific typography and
+;; pagination now use bold Garamond speaker labels and protected turn starts.
+;; Updated 2026-10-11; the two classes have independent layout settings.
 
 (provide 'transcript-garamond)
 
@@ -14,7 +12,7 @@
 \\providecommand{\\DocumentMetadata}[1]{}
 \\DocumentMetadata{lang=en-US}
 \\documentclass[12pt]{article}
-\\usepackage[includeheadfoot, margin=1.15in]{geometry} % Slightly wider than elegant-garamond for sustained-reading line length without forcing too many hyphenations
+\\usepackage[includeheadfoot, top=1.15in, bottom=1.15in, left=1.375in, right=1.375in]{geometry} % Side margins selected 2026-10-11; vertical margins unchanged.
 \\setlength{\\footskip}{0.95in}
 
 % Package Inclusions
@@ -184,7 +182,9 @@
     {\\lhead{\\scshape\\fontsize{10.1}{12}\\selectfont\\href{\\the\\leftheaderurl}{\\jayresolvedleftheader}}}%
 }
 \\makeatother
-\\rhead{\\scshape\\fontsize{10.1}{12}\\selectfont{\\nouppercase{\\rightmark}}}
+% Keep the running section independent of speaker-level marks.
+\\NewMarkClass{transcript-section}
+\\rhead{\\scshape\\fontsize{10.1}{12}\\selectfont{\\nouppercase{\\FirstMark{transcript-section}}}}
 \\AtBeginDocument{\\jayapplyleftheader}
 
 % Footer configuration (controlled from org file)
@@ -229,6 +229,7 @@
 \\setlength{\\parindent}{0pt}
 \\setlength{\\parskip}{8pt plus 0.75pt minus 0.5pt} % Readable turn-internal paragraph breaks
 \\setstretch{1.18}
+\\lefthyphenmin=3 % Avoid short fragments before automatic hyphen breaks.
 
 % Table of Contents Customization
 \\renewcommand{\\contentsname}{Table of Contents}
@@ -335,6 +336,7 @@
 \\titlespacing{\\paragraph}{0pt}{0pt}{.5em}[]
 
 \\newcommand{\\mysectiontitle}[1]{%
+  \\InsertMark{transcript-section}{#1}%
   \\markboth{#1}{#1}%
   \\markright{#1}%
   \\raggedright\\fontsize{24}{30}\\selectfont #1
@@ -368,9 +370,15 @@
 \\titleformat*{\\paragraph}{\\ttfamily\\bfseries\\fontsize{19}{12}\\raggedright}
 \\titleformat*{\\subparagraph}{\\sffamily\\fontsize{16}{12}\\raggedright\\ttfamily\\bfseries}
 
-% Reserve room for a speaker label and the opening dialogue lines.
-\\pretocmd{\\subsection}{\\Needspace*{4\\baselineskip}}{}{}
-\\pretocmd{\\subsubsection}{\\Needspace*{4\\baselineskip}}{}{}
+% Reserve room for a speaker label and the opening dialogue lines,
+% without separating a section title from its first speaker label.
+\\makeatletter
+\\newcommand{\\jayheadingneedspace}[1]{%
+  \\if@nobreak\\else\\Needspace*{#1}\\fi
+}
+\\makeatother
+\\pretocmd{\\subsection}{\\jayheadingneedspace{4\\baselineskip}}{}{}
+\\pretocmd{\\subsubsection}{\\jayheadingneedspace{4\\baselineskip}}{}{}
 
 % Hyperref Configuration
 \\hypersetup{

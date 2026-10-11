@@ -2,6 +2,13 @@
 #+DATE: 2025-09-24
 #+DESCRIPTION: Debugging post-mortems and prevention checklists.
 
+* A review sample hides whatever it does not contain
+Date: 2026-10-11
+
+Three template changes in one night looked finished on their review pages and were not. In [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][Elegant Garamond]], the first before-and-after used the real EDF research excerpt, which has no level-four or level-five headings; both levels had been left untouched, and a five-level fixture showed level five rendering larger than level four. In [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el][Beautiful Racket]], the body-size comparison used a prose excerpt, while the class redefined its whole size ladder around 10pt (~\large~ at 10.95pt, ~\Large~ at 12pt), so a 12pt body would have left captions, ~tagline~, ~fauxtitle~, and ~fauxcenter~ at or below body size. Removing the ladder then raised those three helpers from 1.2 to 1.44 times the body size, which showed only on a helper page rendered before and after. The 1.375-inch margins chosen for Elegant Garamond on isolated pages also changed the full 16-page excerpt in ways the three-page selected preview could not show: line-ending hyphens rose from 20 in the one-inch build to 29 (the two builds also differed in bullet size and list indents), a contents entry broke inside a word, and one list introduction sat alone at the foot of a page.
+
+Before proposing a change to a class's base size, spacing, measure, or heading levels, search the class file for what depends on it: size commands, custom environments, fixed ~\vspace~ offsets, list ~topsep~, and every heading level. Render each dependent, with a small fixture when the real document lacks it. After a selection is applied, re-render the full real document and compare its page count, line-ending hyphens, and overfull and underfull warnings with the previous build; ~pdftotext -layout FILE - | rg -c '[a-z]-$'~ counts the hyphens. The preview pages alone do not establish the result.
+
 * A repaired listings escape can expose a postbreak color error
 Date: 2026-10-11
 
@@ -1535,6 +1542,9 @@ This is fast (~5s per iteration) and rules out both cache-staleness and theoreti
 - =\righthyphenmin=N= is the narrowest knob that actually fixes short-tail runts. Each bump up the scale (=3= → =4= → =5=) forbids more hyphenations whose tails would be shorter than =N=. The default is =3= for English; this codebase uses =5= in prose defaults.
 - =\RaggedRight= from =ragged2e= is *not* a no-hyphenation command — it still permits hyphenation under pressure (finite =\RaggedRightRightskip=). Only standard =\raggedright= eliminates hyphenation by giving =\rightskip= infinite stretch.
 - When an AI collaborator (Codex, Claude, whatever) recommends a theoretical TeX knob confidently, run the empirical test matrix before adopting. Confident theoretical wrong answers are expensive to unwind — three commits this session tried knobs that didn't work.
+
+** Left-side minimum, added 2026-10-11
+~\lefthyphenmin=3~ is the mirror of the right-side knob: it forbids automatic breaks that leave fewer than three letters before the hyphen. Tested on the real 16-page EDF excerpt in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][Elegant Garamond]] at 1.375-inch side margins, it removed every two-letter fragment (~re-~ four times, ~in-~, ~ma-~, ~ap-~, ~an-~) and cut line-ending hyphens from 30 to 21, counting explicit hyphens. Underfull warnings rose from 13 to 16; the page count and the single 0.74pt overfull line were unchanged. Jay selected it for Elegant Garamond and approved Arno that day, as recorded in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/arno-design-rulings.org][Arno's design rulings]], and it was carried into [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el][Beautiful Racket]]. It is set inside those three class files, not in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/jay-latex-prose-defaults.el][the shared prose defaults]], so another prose class does not inherit it.
 
 * Minibuffer Copy Helpers: Copy Contents, Not Prompt Text
   Date: 2026-04-27
