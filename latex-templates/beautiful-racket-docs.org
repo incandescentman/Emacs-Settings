@@ -9,7 +9,7 @@
 
 The ~beautiful-racket~ template is a custom LaTeX class for org-mode export, designed for professional document production with Tufte-inspired typography.
 
-Template location: ~/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el~
+Template location: [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el][Beautiful Racket template]].
 
 * Usage
 
@@ -93,21 +93,21 @@ All links use ~elegantblue~ color (#4380b9):
 
 When compiled with XeTeX:
 - Roman: Garamond Premier Pro
-- Sans: TeX Gyre Pagella
-- Mono: TeX Gyre Heros
+- The ~\sffamily~ slot uses TeX Gyre Pagella, a serif face, for subsection headings.
+- The ~\ttfamily~ slot uses TeX Gyre Heros, a proportional sans-serif face, for the other heading levels. The slot name does not make it monospaced.
 
 ** Tufte-Style Features
 
 - ~\newthought{text}~ - Start a new section with small caps
 - ~\smallcaps{text}~ - Letterspaced small caps
 - ~\allcaps{text}~ - Letterspaced all caps
-- 10pt base font with 14pt baseline (generous leading)
+- 10pt base font with a 14pt baseline before the 1.2 line stretch is applied. The class declares 12pt but explicitly overrides ~\normalsize~ to 10pt.
 
 ** Spacing
 
 - No paragraph indentation
 - 12pt paragraph skip
-- 1.2 line stretch (one-half spacing)
+- 1.2 line stretch; this is not one-half spacing.
 
 * Page Layout
 
@@ -119,7 +119,7 @@ When compiled with XeTeX:
 * Headers and Footers
 
 - Left header: Configurable via ~\leftheader~ token (small caps, small font)
-- Right header: Current section name (small caps, small font)
+- Right header: Current subsection name (small caps, small font)
 - Center footer: Page number
 - No header rule
 - TOC page: No page number
@@ -131,11 +131,11 @@ When compiled with XeTeX:
 
 | Level         | Style                          |
 |---------------+--------------------------------|
-| Section       | 40pt, monospace, small caps    |
-| Subsection    | 24pt, sans-serif               |
-| Subsubsection | 18pt, monospace, small caps    |
-| Paragraph     | 13pt, monospace, semibold      |
-| Subparagraph  | 16pt, monospace, bold          |
+| Section       | 40pt TeX Gyre Heros, small caps, right-aligned |
+| Subsection    | 24pt TeX Gyre Pagella serif |
+| Subsubsection | 18pt TeX Gyre Heros, small caps |
+| Paragraph     | 13pt TeX Gyre Heros, semibold requested, run-in |
+| Subparagraph  | 16pt TeX Gyre Heros, bold requested, run-in |
 
 ** Custom Environments
 
@@ -155,11 +155,13 @@ Block quotes are styled with:
 
 * Code Listings
 
-Code blocks use:
-- Monospace font, small size
+The listing setup requests the following formatting:
+- The ~\ttfamily~ font at ~\small~ size; this template assigns proportional TeX Gyre Heros to that slot.
 - Single frame border
 - Line breaking enabled
 - Red arrow indicator for wrapped lines
+
+Review finding, 2026-10-11: the ~basicstyle~ and ~postbreak~ values contain single backslashes inside the Elisp string. A fresh export confirmed that Emacs converts or removes those escapes before LaTeX receives them. Repair is proposed; the template has not been changed by this documentation update.
 
 * Packages Included
 
@@ -177,28 +179,31 @@ Key packages loaded by this template:
 | fancyhdr   | Header/footer customization                |
 | csquotes   | Smart quote handling                       |
 | fontspec   | Font selection (XeTeX)                     |
-| endnotes   | Works Cited / bibliography at end          |
+| enotez     | Optional endnotes                         |
 
 * Endnotes / Works Cited
 
-The template includes built-in support for endnotes, useful for Works Cited sections in research documents.
+The template loads ~enotez~ but leaves endnotes disabled by default. Ordinary Org footnotes remain page footnotes unless endnotes are explicitly enabled.
 
 ** How It Works
 
-- Inline references: Use org-mode footnote syntax ~[fn:1]~ in body text
-- Footnote definitions: Place at end under ~** Works Cited~ heading
-- Export: References appear as superscript numbers; definitions print at document end
+- Use Org footnote syntax such as ~[fn:1]~ for inline references and define each footnote in the source.
+- Add ~#+LATEX_HEADER: \EnableEndnotes~ to redirect exported footnotes to endnotes.
+- Place ~#+LATEX: \printendnotes~ where the endnotes should appear. A Works Cited heading by itself does not print them.
 
 ** Formatting
 
-- Numbered list with hanging indent (not superscript footnote style)
-- Normal body text size
-- No duplicate heading (use your own ~** Works Cited~ org heading)
-- Page header suppressed on Works Cited page
+The template does not configure a custom endnote list, suppress the package's endnote heading, or suppress the running header on a Works Cited page. Those were incorrectly described as automatic features in the earlier documentation; corrected 2026-10-11.
 
-** Example
+** Minimal endnote export settings
 
-#+begin_example
+Add ~#+LATEX_HEADER: \EnableEndnotes~ to the document settings. After the body, add ~#+LATEX: \printendnotes~. Keep the usual Org footnote references and definitions; no separate hand-written Works Cited heading is required for the package's default heading.
+
+** Reference syntax
+
+The original reference example below illustrates Org syntax only. Its Works Cited heading does not enable or print endnotes; use the export settings above for that behavior.
+
+#+begin_src org
 Some text with a reference.[fn:1] More text.[fn:2]
 
 ** Works Cited
@@ -206,9 +211,13 @@ Some text with a reference.[fn:1] More text.[fn:2]
 [fn:1] Author, "Title," Publication, date, [[url][Link]]
 
 [fn:2] Another source...
-#+end_example
+#+end_src
 
 * Changelog
+
+** 2026-10-11
+- Corrected the actual font families, effective body-size override, line-stretch description, subsection running header, and opt-in ~enotez~ behavior after inspecting the current class and a fresh EDF export.
+- Recorded the confirmed listing-command escape defect as a proposed repair. No Beautiful Racket template changes are approved or applied by this documentation update.
 
 ** 2026-01-09 (continued)
 - Fixed header indentation: wrap in ~\mbox{}~ to prevent list interpretation of "2." etc.
