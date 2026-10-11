@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-10-11: Document the current Garamond font choices
+
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][the LaTeX template reference]] with Elegant Garamond's body and heading families, its explicit Bold mapping, and Garamond Transcript's 12pt body and 14pt bold speaker labels. Recorded Codex's rendered-review recommendation to retain these fonts as an assessment, not a new global preference or template edit.
+- Corrected the main guide's stale Beautiful Racket size description and added the selected 14.4pt helpers, 8pt paragraph spacing, 1.18 line stretch, and observed Semibold mapping. Superseded reference line, verbatim: “- Tufte-style font size definitions (10pt/14pt baseline)”. The detailed Beautiful Racket documentation already reflects the selected B design. No template or live Emacs definition changed.
+
 * 2026-10-11: Select Beautiful Racket display-size B
 
 - Jay selected “B” after Claude compared the original 12pt display lines on a 10pt body, the committed 17.28pt display lines on a 12pt body, and a 14.4pt alternative. Changed only ~tagline~, ~fauxtitle~, and ~fauxcenter~ in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el][Beautiful Racket]] from ~\Large~ to ~\large~, restoring the 1.2 display-to-body proportion. Captions remain 14.4pt and the standard size ladder remains intact.

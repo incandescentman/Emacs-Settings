@@ -609,7 +609,9 @@ A Tufte-inspired template with enhanced typography:
 
 - Letterspaced small caps (=\textsc=, =\smallcaps=, =\allcaps=)
 - Better ragged right with hyphenation (=ragged2e=)
-- Tufte-style font size definitions (10pt/14pt baseline)
+- Garamond Premier Pro body at 12pt, with a 14.5pt baseline before 1.18 line stretch and 8pt paragraph spacing. This replaces the custom 10pt size ladder (2026-10-11).
+- ~tagline~, ~fauxtitle~, and ~fauxcenter~ use 14.4pt, preserving their original 1.2 proportion to the body; captions are also 14.4pt. In the verified XeLaTeX helper PDF, these use Garamond Premier Pro's Subhead faces: italic, semibold, and regular respectively. The generic font-family selection resolves bold text to Semibold.
+- Full settings and selected changes: [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket-docs.org][Beautiful Racket documentation]].
 
 *** newthought Command
 
@@ -624,11 +626,19 @@ first few words in small caps.
 ** elegant-garamond
 
 The default template (=org-latex-default-class=) until 2026-09-27, when arno-claude-design replaced it. Features:
-- Garamond Premier Pro body font and Display variant for subsections
+- Garamond Premier Pro body at 12pt, with explicit Regular, Italic, Bold, and Bold Italic font files; bold selects ~GaramondPremrPro-Bd~.
+- Garamond Premier Pro Display for level-two headings, regular uppercase Garamond for level three, and body-size bold Garamond for level five.
+- Helvetica Neue LT Pro Medium Condensed for level one and Bold Condensed for the red level-four labels.
 - Styled quote blocks (powder blue background, centered)
 - Clean section headings
 - Configurable logo footer via =\EnableLogoFooter=
 - Optional footer wordmark text via =\footerbrand{...}=
+
+** transcript-garamond
+
+Use ~#+LATEX_CLASS: transcript-garamond~ for transcripts. [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/transcript-garamond.el][The template]] uses Garamond Premier Pro Regular at 12pt for dialogue and its explicit Bold face at 14pt for speaker names at heading levels two and three. Speaker names stay black, on their own line, with 8pt before and 2pt after; body paragraphs use an 8pt gap and 1.18 line stretch. Main section headings use Helvetica Neue LT Pro Medium Condensed.
+
+Font review, 2026-10-11: after inspecting the current Elegant Garamond heading preview and the real Jay and Jenny transcript, Codex recommended retaining both templates' font choices. The condensed headings distinguish document structure in Elegant Garamond, and the larger bold speaker names clearly separate turns in the transcript. This records the review assessment; it establishes no new font change or global preference.
 
 ** elegant-arno
 
