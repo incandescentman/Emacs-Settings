@@ -296,7 +296,7 @@ is passed through to `whittle--transcript-report-generate'."
     (should copied)
     (should (string-match-p "Held Back" copied))
     (should (string-match-p "sentence-initial-i-mean" copied))
-    (should (string-match-p "safe partial cleanup applied; hazardous span protected" copied))
+    (should (string-match-p "accepted partial cleanup applied; hazardous span protected" copied))
     (should (string-match-p "duplicate-word collapse" copied))
     (should (string-match-p "I mean, this is is a draft" copied))
     (should (string-match-p "I mean, this is a draft" copied))))
@@ -321,7 +321,7 @@ is passed through to `whittle--transcript-report-generate'."
     (should copied)
     (should (string-match-p "Held Back" copied))
     (should (string-match-p "like-clause-fusion" copied))
-    (should (string-match-p "safe partial cleanup applied; hazardous span protected" copied))
+    (should (string-match-p "accepted partial cleanup applied; hazardous span protected" copied))
     (should (string-match-p "conservative filler removal" copied))
     (should (string-match-p "This is useful" copied))))
 

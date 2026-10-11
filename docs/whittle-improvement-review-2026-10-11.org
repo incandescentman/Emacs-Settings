@@ -2,11 +2,13 @@
 
 * Current decision and completed work — 2026-10-11
 
-Jay chose to catch uncommon repetition mistakes during before/after review. Duplicate-word and repeated-prefix false-start cleanup remain unchanged. The recommendation below to redesign those passes, including automated preservation of Bling Bling Dumpling, is withdrawn. No name-specific exception or preservation test was added. Report redesign and content hashes were not selected for this work.
+Jay chose to catch uncommon repetition mistakes during before/after review. Duplicate-word and repeated-prefix false-start cleanup remain unchanged. The recommendation below to redesign those passes, including automated preservation of Bling Bling Dumpling, is withdrawn. No name-specific exception or preservation test was added. Broader report redesign and content hashes were not selected for this work.
 
 The authorized punctuation fix is complete and loaded in Emacs. Filler removal keeps an existing clause comma in cases such as ~You can, um, it's very good.~ → ~You can, it's very good.~, while still cleaning incidental commas in ~This is, um, useful.~ → ~This is useful.~ Filler matching no longer consumes em dashes, quotes, sentence punctuation, or line breaks. All 45 tests pass. On the full pre-Whittle emoji transcript, preview and apply agree for both profiles and ordered speaker headings remain unchanged. These are local punctuation repairs; abandoned fragments still receive contextual review.
 
 * Implementation review and follow-up fixes — 2026-10-11
+
+Later report wording follow-up, approved by Jay: dry runs now describe proposed changes, accepted partial replaces safe partial, and the outdated preview/apply divergence warning now describes their shared engine. Both report formats and modes were checked against the real transcript; all 45 tests still pass, and the wording is loaded in Emacs. Cleanup behavior is unchanged.
 
 Claude's two principal changes work on the full committed emoji transcript: both apply commands agree with their respective report engine, speaker headings stay separate, and the company list, October reference, language qualification, and three rhetorical transitions survive. All 41 tests in Claude's patch passed independently.
 

@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-10-11: Distinguish Whittle proposals from applied edits
+
+- At Jay's direction, corrected the clipboard and full report wording in [[file+emacs:/Users/jay/emacs/emacs-settings/whittle.el][Whittle]]. Dry runs label changes, counts, scar excerpts, and partial outcomes as proposed; reports after cleanup retain applied wording. Replaced safe partial with accepted partial and the obsolete preview/apply divergence warning with the shared-engine behavior. Cleanup rules are unchanged.
+- All 45 existing tests pass after updating two label expectations. Checked both report formats, both profiles, and both modes against the full pre-Whittle emoji transcript; dry runs describe proposals without claiming edits, and report generation leaves the source unchanged. Loaded and checked the new wording in running Emacs.
+
 * 2026-10-11: Select the three-letter hyphenation minimum for both templates
 
 - Jay approved B for both [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][Elegant Garamond]] and [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-approved-default.el][approved Arno]] after questioning the split recommendation. Set ~\lefthyphenmin=3~ in those two templates, retained the shared right minimum, and updated [[file+emacs:/Users/jay/emacs/emacs-settings/docs/arno-design-rulings.org][Arno's design rulings]] and [[file+emacs:/Users/jay/Dropbox/github/vibecoding/preferences/cross-repo-visual-experiment-reactions.org][the visual reaction ledger]]. The earlier 1B/2A recommendation below is superseded: it put too much weight on one paragraph ending when choosing defaults for reusable templates. Existing purpose-based judgment guidance covers the correction; no additional process rule was needed.
