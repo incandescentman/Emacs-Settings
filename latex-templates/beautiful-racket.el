@@ -528,7 +528,7 @@ Contextuals=Alternate
                \\newenvironment{tagline}% environment name
                {% begin code
                \\vspace{-36pt}
-               \\Large
+               \\large
                \\begin{changemargin}{1cm}{0cm} % Adjust these values as you see fit
                \\begin{itshape}%
                \\par\\vspace{\\baselineskip}\\noindent\\ignorespaces
@@ -541,7 +541,7 @@ Contextuals=Alternate
                \\newenvironment{fauxtitle}% environment name
                {% begin code
                %\\vspace{12pt}
-               \\Large
+               \\large
                \\begin{bfseries}%
                \\par\\vspace{\\baselineskip}\\noindent\\ignorespaces
                }%
@@ -554,7 +554,7 @@ Contextuals=Alternate
                \\newenvironment{fauxcenter}% environment name
                {% begin code
 
-               \\Large
+               \\large
                \\begin{center}
 
                }%

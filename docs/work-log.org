@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-10-11: Select Beautiful Racket display-size B
+
+- Jay selected “B” after Claude compared the original 12pt display lines on a 10pt body, the committed 17.28pt display lines on a 12pt body, and a 14.4pt alternative. Changed only ~tagline~, ~fauxtitle~, and ~fauxcenter~ in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el][Beautiful Racket]] from ~\Large~ to ~\large~, restoring the 1.2 display-to-body proportion. Captions remain 14.4pt and the standard size ladder remains intact.
+- Reloaded the live class while preserving its compiler setting. The same helper page compiles with each helper confirmed at 14.4pt, body at 12pt, and captions at 14.4pt. Inspected [[file+emacs:/Users/jay/emacs/emacs-settings/output/pdf/beautiful-racket-review-2026-10-11/selected-helpers-B-build/selected-helpers-B.pdf][the selected B preview]] against [[file+emacs:/Users/jay/emacs/emacs-settings/output/pdf/beautiful-racket-review-2026-10-11/beautiful-racket-display-sizes-claude.png][Claude's comparison]]; no overfull, underfull, or missing-glyph warnings. Elisp syntax, code whitespace, and PDF integrity checks pass. Updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket-docs.org][template documentation]] and [[file+emacs:/Users/jay/Dropbox/github/vibecoding/preferences/cross-repo-visual-experiment-reactions.org][the exact-choice ledger]].
+
 * 2026-10-11: Apply Beautiful Racket selections and repair all three variants' listings
 
 - Jay selected “1B” and “2B” from [[file+emacs:/Users/jay/emacs/emacs-settings/output/pdf/beautiful-racket-review-2026-10-11/comparison-build/beautiful-racket-comparison.pdf][the two isolated comparisons]]. Updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el][Beautiful Racket]] to 12pt Garamond, 8pt paragraph spacing, and 1.18 stretch; level four is a true 10pt red condensed Helvetica label and level five is body-size bold Garamond, both on separate lines. The 1.5-inch side margins, small bullets, and top three heading designs remain.

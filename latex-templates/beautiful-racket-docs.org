@@ -146,10 +146,12 @@ Levels four and five are Jay's selected 2B treatment. Levels one through three r
 
 - ~subtitle~ - 18pt italic text below section headings (no hyphenation, ragged right)
 - ~subsubtitle~ - Normal italic text below subsection headings
-- ~tagline~ - 17.28pt italic intro text with adjusted margins
-- ~fauxtitle~ - 17.28pt bold display text
-- ~fauxcenter~ - 17.28pt centered display text
+- ~tagline~ - 14.4pt italic intro text with adjusted margins
+- ~fauxtitle~ - 14.4pt bold display text
+- ~fauxcenter~ - 14.4pt centered display text
 - Figure and table captions use 14.4pt bold text.
+
+Jay selected B in the display-size comparison on 2026-10-11. These three helpers use ~\large~ to keep their original 1.2 proportion to the 12pt body; the standard size ladder remains available elsewhere.
 
 * Block Quotes
 
@@ -222,6 +224,9 @@ Some text with a reference.[fn:1] More text.[fn:2]
 #+end_src
 
 * Changelog
+
+** 2026-10-11 — Select display-size B
+- Reduced ~tagline~, ~fauxtitle~, and ~fauxcenter~ from 17.28pt to 14.4pt after Jay selected B in Claude's comparison. Captions remain 14.4pt; the body and heading design are unchanged.
 
 ** 2026-10-11 — Apply selections 1B and 2B
 - Applied the 12pt body, 8pt paragraph gap, 1.18 line stretch, and separate lower headings from [[file+emacs:/Users/jay/emacs/emacs-settings/output/pdf/beautiful-racket-review-2026-10-11/comparison-build/beautiful-racket-comparison.pdf][the approved comparison]]. Restored the complete article size ladder so captions and display helpers scale coherently with the body.
