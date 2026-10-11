@@ -154,6 +154,7 @@
 \\definecolor{nliblue}{HTML}{2f9ed3}
 \\definecolor{elegantblue}{HTML}{4380b9}
 \\definecolor{spacegrey}{HTML}{434346}
+\\definecolor{jaysectionbluegrey}{HTML}{24394A}
 \\definecolor{azure}{HTML}{f2feff}
 \\definecolor{jayfooterbrandgrey}{HTML}{4F4F4F}
 \\definecolor{jayinksoft}{HTML}{4A4744}
@@ -364,11 +365,11 @@
 }
 
 \\newcommand{\\mysubsubsectiontitle}[1]{%
-  \\ttfamily\\bfseries\\scshape\\fontsize{18}{16}\\raggedright\\ttfamily\\color{spacegrey} #1
+  \\normalfont\\fontsize{15}{17}\\selectfont\\ifxetex\\addfontfeatures{LetterSpace=5,Numbers=Lining}\\fi\\raggedright\\color{spacegrey}\\MakeUppercase{#1}
 }
 
 \\titleformat{\\section}
-  {\\normalfont\\ttfamily\\scshape\\color{spacegrey}}
+  {\\normalfont\\ttfamily\\scshape\\color{jaysectionbluegrey}}
   {}
   {0em}
   {\\mysectiontitle}

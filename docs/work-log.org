@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-10-11: Apply the selected Elegant Garamond heading refinements
+
+- Jay approved both B options in [[file+emacs:/Users/jay/emacs/emacs-settings/output/pdf/elegant-garamond-heading-review-2026-10-11/comparison-build/elegant-garamond-heading-comparisons.pdf][the isolated heading comparisons]]: regular uppercase Garamond at 15pt with 5% tracking and lining figures for level-three headings, and dark blue-gray ~#24394A~ for level-one headings. Applied both to [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][Elegant Garamond]], retaining the level-three gray and the existing main heading font. Recorded his exact approval, “agreed. proceed”, in [[file+emacs:/Users/jay/Dropbox/github/vibecoding/preferences/cross-repo-visual-experiment-reactions.org][the visual reaction ledger]].
+- Reloaded the live class while preserving the compiler setting, checked Elisp syntax, and compiled [[file+emacs:/Users/jay/emacs/emacs-settings/output/pdf/elegant-garamond-heading-review-2026-10-11/elegant-garamond-approved-headings-build/elegant-garamond-approved-headings.pdf][the combined approved heading preview]] and the same real EDF excerpt with identical body text. The EDF excerpt remains 16 pages; all four level-three headings keep following text on their page, and the existing 0.74pt body-line overflow is unchanged. Visually checked the combined hierarchy and the longer uppercase headings in the EDF rendering, then opened the approved preview.
+
 * 2026-10-11: Apply Jay's selected Elegant Garamond design
 
 - Jay chose “1 B”, “2 A smaller bullets”, “3 A”, “4 B”, and “5 B” from [[file+emacs:/Users/jay/emacs/emacs-settings/output/pdf/elegant-garamond-isolated-review-2026-10-11/elegant-garamond-isolated-comparisons.pdf][the five isolated comparisons]]. Updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/elegant-garamond.el][Elegant Garamond]] to use the original smaller raised bullets and original indents, a true 10pt red condensed level-4 label on its own line, body-size bold Garamond level-5 headings, and 1.375-inch side margins. The selected 8pt paragraph spacing and 1.18 line spacing are now approved rather than a trial. The existing 3pt top-level item spacing remains.
