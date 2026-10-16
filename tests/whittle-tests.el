@@ -692,7 +692,7 @@ is passed through to `whittle--transcript-report-generate'."
          (input (string-join
                  '("This opening sentence has a lot of harmless setup before"
                    "the risky phrase so the compact report should not copy"
-                   "all of it. The way the assistant works is kind of like"
+                   "all of it. The way the assistant works is, I mean,"
                    "getting advice from a friend who asks questions before"
                    "making suggestions. After that comparison, the speaker"
                    "continues with additional context that should be trimmed"
@@ -714,7 +714,7 @@ is passed through to `whittle--transcript-report-generate'."
     (should copied)
     (should (string-match-p "High/Medium-Risk Changes" copied))
     (should (string-match-p "\\.\\.\\." copied))
-    (should (string-match-p "kind of like" copied))
+    (should (string-match-p "I mean" copied))
     (should-not
      (string-match-p "This opening sentence has a lot of harmless setup"
                      copied))
@@ -1089,9 +1089,9 @@ surviving \"you, you\" should push the entry to high, not medium."
   (dolist (case '(("You can, um, it's very good." . "You can, it's very good.")
                   ("You can, um, uh, it's very good." . "You can, it's very good.")
                   ("They're kind of like, I don't say compound characters."
-                   . "They're, I don't say compound characters.")
+                   . "They're kind of like, I don't say compound characters.")
                   ("We're actually usually kind of like— I always use the girl."
-                   . "We're actually usually — I always use the girl.")
+                   . "We're actually usually kind of like— I always use the girl.")
                   ("This is, um, useful." . "This is useful.")
                   ("Um, \"iPhone\" is the name." . "\"iPhone\" is the name.")))
     (dolist (command '(whittle whittle-transcript whittle-apply
@@ -1112,6 +1112,31 @@ surviving \"you, you\" should push the entry to high, not medium."
     (should (string=
              (whittle-test--command-output (car case) #'whittle--remove-filler-chains)
              (cdr case)))))
+
+(ert-deftest whittle-prose-playground-meaning-regressions ()
+  "Preserve comparisons, grammatical repeats, emphasis, and dashed restarts."
+  (dolist (input '("It's kind of like that."
+                   "I'm sort of of the mind that it helps."
+                   "I'm never gonna ever, ever, ever want to publish."
+                   "The developing world blah blah blah, and my goal is clear."
+                   "Is it or is it— It might be."
+                   "It's kind of like, you know, a conversation."))
+    (dolist (command '(whittle-apply whittle-transcript-apply))
+      (should (equal input (whittle-test--command-output input command))))))
+
+(ert-deftest whittle-prose-playground-punctuation-regressions ()
+  "Keep boundaries for lists, speech introductions, and restarts."
+  (dolist (case '(("Reddit, um, YouTube, and other sources."
+                   . "Reddit, YouTube, and other sources.")
+                  ("Just know, like, say to your beta readers."
+                   . "Just know, say to your beta readers.")
+                  ("And say, like, can I get some beta readers?"
+                   . "And say, can I get some beta readers?")
+                  ("Because, I mean, Oh, I think that's the creativity."
+                   . "Because, Oh, I think that's the creativity.")))
+    (dolist (command '(whittle-apply whittle-transcript-apply))
+      (should (equal (cdr case)
+                     (whittle-test--command-output (car case) command))))))
 
 (provide 'whittle-tests)
 

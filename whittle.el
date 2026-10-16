@@ -5,7 +5,7 @@
 ;; Two entry points:
 ;;
 ;;   `whittle' — conservative pass for any prose. Removes comma-bounded
-;;     interjections (", um, ", ", I mean, ", ", like, ", ", kind of like, "),
+;;     interjections (", um, ", ", I mean, ", ", like, "),
 ;;     collapses accidental duplicated words, normalizes punctuation and case.
 ;;
 ;;   `whittle-transcript' — aggressive pass for speech-to-text output.
@@ -36,9 +36,7 @@
   ;; comma before a likely new clause via `whittle--filler-replacement'.
   ;; Matches consume only horizontal spacing and an optional comma, never
   ;; quotes, sentence punctuation, em dashes, or line breaks.
-  '(("kind of like" ",[[:blank:]]*\\<kind of like\\>[[:blank:]]*,?[[:blank:]]*" " ")
-    ("kind of like" "\\<kind of like\\>[[:blank:]]*,?[[:blank:]]*" "")
-    ("i mean" ",[[:blank:]]*\\<i mean\\>[[:blank:]]*,?[[:blank:]]*" " ")
+  '(("i mean" ",[[:blank:]]*\\<i mean\\>[[:blank:]]*,?[[:blank:]]*" " ")
     ("i mean" "\\<i mean\\>[[:blank:]]*,?[[:blank:]]*" "")
     ("um/uh" ",[[:blank:]]*\\<\\(?:um+\\|uh\\)\\>[[:blank:]]*,?[[:blank:]]*" " ")
     ("um/uh" "\\<\\(?:um+\\|uh\\)\\>[[:blank:]]*,?[[:blank:]]*" "")
@@ -66,7 +64,7 @@ qualification (\"There are not technically a language, but let's just—\").")
 
 (defconst whittle/duplicate-word-exclusions
   '("that" "so" "very" "really" "yes" "no" "ha" "wow" "well" "yeah"
-    "go" "bye" "oh" "had" "have")
+    "go" "bye" "oh" "had" "have" "of" "ever" "blah")
   "Words that can appear twice legitimately (case-insensitive).")
 
 (defconst whittle/duplicate-word-comma-exclusions
@@ -286,6 +284,15 @@ separate from transcript-report held-back spans."
                (whittle--abbreviation-period-p punct-pos))))
      (t nil))))
 
+(defun whittle--comparison-filler-match-p ()
+  "Return non-nil when this filler match would break a kind/sort-of comparison."
+  (save-match-data
+    (and (string-match-p "\\<like\\>" (match-string 0))
+         (save-excursion
+           (goto-char (match-beginning 0))
+           (looking-back "\\<\\(?:kind\\|sort\\) of[[:blank:],]*"
+                         (line-beginning-position))))))
+
 (defun whittle--filler-replacement (replacement)
   "Keep an existing clause comma in the current filler match when needed.
 Otherwise return REPLACEMENT unchanged.  This is a local punctuation
@@ -306,10 +313,21 @@ useful\", the filler's own commas can still be removed."
                  (not (memq (char-before)
                             '(nil ?\n ?\r ?. ?? ?! ?, ?\; ?: ?— ?–
                                   ?\( ?\[ ?\{ ?\" ?“ ?‘))))
-               (save-excursion
-                 (goto-char end)
-                 (looking-at
-                  "\\(?:i\\|you\\|we\\|they\\|he\\|she\\|it\\|there\\|this\\|that\\|these\\|those\\|who\\|what\\|when\\|where\\|why\\|how\\|ask\\|outline\\|tell\\|think\\|forget\\|let\\)\\>\\|[\"“‘]")))
+               (or
+                ;; Capitalized speech/list items and restarts retain their boundary.
+                (save-excursion
+                  (goto-char end)
+                  (let ((case-fold-search nil))
+                    (looking-at-p "[[:upper:]]")))
+                ;; These speech-introducing verbs can precede an unquoted utterance.
+                (save-excursion
+                  (goto-char beg)
+                  (looking-back "\\<\\(?:say\\|saying\\|showing\\|know\\)[[:blank:]]*"
+                                (line-beginning-position)))
+                (save-excursion
+                  (goto-char end)
+                  (looking-at
+                   "\\(?:i\\|you\\|we\\|they\\|he\\|she\\|it\\|there\\|this\\|that\\|these\\|those\\|who\\|what\\|when\\|where\\|why\\|how\\|ask\\|outline\\|tell\\|think\\|forget\\|let\\)\\>\\|[\"“‘]"))))
           ", "
         replacement))))
 
@@ -327,9 +345,10 @@ useful\", the filler's own commas can still be removed."
               (pcase-let ((`(,label ,regexp ,replacement) rule))
                 (goto-char start)
                 (while (re-search-forward regexp limit-marker t)
-                  (unless (whittle--org-protected-match-p
-                           (match-beginning 0) (match-end 0)
-                           start (marker-position limit-marker))
+                  (unless (or (whittle--comparison-filler-match-p)
+                              (whittle--org-protected-match-p
+                               (match-beginning 0) (match-end 0)
+                               start (marker-position limit-marker)))
                     (replace-match (whittle--filler-replacement replacement) t nil)
                     (whittle--increment counts label)))))))
       (set-marker limit-marker nil))
@@ -375,9 +394,10 @@ useful\", the filler's own commas can still be removed."
           (save-excursion
             (goto-char start)
             (while (re-search-forward whittle/transcript-filler-chain-regexp limit-marker t)
-              (unless (whittle--org-protected-match-p
-                       (match-beginning 0) (match-end 0)
-                       start (marker-position limit-marker))
+              (unless (or (whittle--comparison-filler-match-p)
+                          (whittle--org-protected-match-p
+                           (match-beginning 0) (match-end 0)
+                           start (marker-position limit-marker)))
                 (replace-match (whittle--filler-replacement "") t t)
                 (setq count (1+ count))))))
       (set-marker limit-marker nil))
@@ -390,7 +410,7 @@ useful\", the filler's own commas can still be removed."
                (case-fold-search t)
                ;; Comma is a separator too — transcripts often punctuate
                ;; stammered repeats as "your, your" or "I, I".
-               (dup-regexp "\\<\\([[:alpha:]']+\\)\\>\\(?:[[:space:]\n,–—]+\\1\\>\\)+")
+               (dup-regexp "\\<\\([[:alpha:]']+\\)\\>\\(?:[[:space:]\n,]+\\1\\>\\)+")
                (removed (make-hash-table :test #'equal)))
     (unwind-protect
         (whittle--with-org-protected-regions

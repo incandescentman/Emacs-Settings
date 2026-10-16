@@ -2874,3 +2874,8 @@ After any edit here, retangle with an explicit output path and re-run the corpus
 
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.
+
+* 2026-10-15 Whittle Prose Playground review fixes
+Removed default kind-of-like deletion and protected kind/sort-of comparisons from filler-chain cleanup. Duplicate cleanup now preserves dash boundaries and grammatical or emphatic repetitions of of, ever, and blah. Filler removal preserves commas before capitalized list items/restarts and after speech-introducing verbs. These changes address observed damage in the Prose Playground transcript; contextual Codex review remains necessary.
+
+Added regression coverage from the transcript and updated earlier tests that expected comparison deletion. All 47 Whittle ERT tests passed. Reloaded [[file+emacs:/Users/jay/emacs/emacs-settings/whittle.el][whittle.el]] in the running Emacs session, removed the obsolete kind-of-like defaults from its already-bound rule list, and verified comparison/repetition/dash preservation in a temporary buffer. Existing unrelated working-tree edits were preserved.
