@@ -1823,16 +1823,57 @@ With a prefix argument, prompt for an explicit URL override."
     (org-web-tools-read-url-as-org url))
   (jay/org-web-tools-cleanup-buffer))
 
+(defun jay/org-web-tools--capture-entry-p ()
+  "Whether the current heading has the linked-title/Article capture structure."
+  (save-excursion
+    (save-match-data
+      (org-back-to-heading t)
+      (let ((level (org-outline-level)))
+        (and (string-match-p "\\`\\[\\[https?://[^]\n]+\\]\\[.+\\]\\]\\'"
+                             (org-get-heading t t t t))
+             (progn
+               (outline-next-heading)
+               (and (not (eobp))
+                    (= (org-outline-level) (1+ level))
+                    (equal (org-get-heading t t t t) "Article"))))))))
+
+(defun jay/org-web-tools--insertion-context ()
+  "Return (POSITION . LEVEL) for a sibling capture or a section's child.
+Find the enclosing capture even inside its Article descendants.  Without
+a capture ancestor, append a child to the current section.  Before the
+first heading, insert a new top-level entry at point."
+  (save-excursion
+    (if (org-before-first-heading-p)
+        (cons (line-beginning-position) 1)
+      (org-back-to-heading t)
+      (let* ((section (point))
+             (capture
+              (catch 'capture
+                (while t
+                  (when (jay/org-web-tools--capture-entry-p)
+                    (throw 'capture (point)))
+                  (unless (org-up-heading-safe)
+                    (throw 'capture nil))))))
+        (goto-char (or capture section))
+        (let ((level (+ (org-outline-level) (if capture 0 1))))
+          (org-end-of-subtree t t)
+          (cons (point) level))))))
+
 (defun jay/org-web-tools-insert-web-page-as-entry-clean (url)
-  "Insert a clean top-level web capture and leave point after it.
+  "Insert a sibling capture or a section's child, leaving point after it.
 Gets URL from Chrome frontmost tab, or clipboard, or prompts.
 With a prefix argument, prompt for an explicit URL override."
   (interactive (list (jay/get-url-from-clipboard-or-chrome current-prefix-arg)))
   (let ((content (jay/org-web-tools--url-as-readable-org url)))
     (when content
       (setq content (jay/org-web-tools-cleanup-string content))
-      (beginning-of-line)
-      (org-paste-subtree 1 (s-trim content) t))))
+      (let ((context (jay/org-web-tools--insertion-context)))
+        (goto-char (car context))
+        (org-paste-subtree (cdr context) (s-trim content) t)
+        ;; Keep point after the paste and before a blank separator, so the
+        ;; next capture still belongs here when another section follows.
+        (when (org-at-heading-p)
+          (save-excursion (insert "\n")))))))
 #+end_src
 
 ** html2text-clipboard

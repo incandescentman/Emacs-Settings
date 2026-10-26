@@ -60,6 +60,8 @@
        jay/org-web-tools--capture-error-message
        jay/org-web-tools--url-as-readable-org
        jay/get-url-from-clipboard-or-chrome
+       jay/org-web-tools--capture-entry-p
+       jay/org-web-tools--insertion-context
        jay/org-web-tools-insert-web-page-as-entry-clean))))
 
 (jay-capture-cleanup-test--ensure-target-loaded)
@@ -285,41 +287,113 @@
                     (replace-regexp-in-string "\n\n" "\n" input))
                    expected))))
 
+(defun jay-capture-test--real-page ()
+  "Read just the welcome capture from the real note, excluding its next section."
+  (with-temp-buffer
+    (let ((org-mode-hook nil)) (org-mode))
+    (insert-file-contents "/Users/jay/Dropbox/roam/notes/20261026181221-strobist_complete.org")
+    (goto-char (point-min))
+    (re-search-forward "^\\*+ \\[\\[https://strobist\\.blogspot\\.com/2006/02/welcome-to-strobist\\.html")
+    (beginning-of-line)
+    (let ((start (point)))
+      (org-end-of-subtree t t)
+      (buffer-substring-no-properties start (point)))))
+
 (ert-deftest jay-capture-three-pages-stay-siblings-and-point-follows-each ()
-  "Three copies of the real captured article must not nest or leave point behind."
+  "Three real pages stay children of the chosen section, at any section level."
   (require 's)
-  (let ((page (with-temp-buffer
-                (insert-file-contents "/Users/jay/Dropbox/roam/notes/20261026181221-strobist_complete.org")
-                (goto-char (point-min))
-                (re-search-forward "^\\* \\[\\[https://strobist\\.blogspot\\.com/2006/02/welcome-to-strobist\\.html")
-                (beginning-of-line)
-                (let ((start (point)))
-                  (forward-line 1)
-                  (re-search-forward "^\\*+ \\[\\[https://strobist\\.blogspot\\.com/" nil 'move)
-                  (when (match-beginning 0) (beginning-of-line))
-                  (buffer-substring-no-properties start (point))))))
-    (dolist (in-middle '(nil t))
-      (with-temp-buffer
-        (org-mode)
-        (insert "* Strobist: Complete\n\n")
-        (when in-middle
-          (insert "* Existing following entry\nKeep this.\n")
+  (let ((page (jay-capture-test--real-page)))
+    (dolist (section-level '(1 2))
+      (dolist (in-middle '(nil t))
+        (with-temp-buffer
+          (let ((org-mode-hook nil)) (org-mode))
+          (when (= section-level 2) (insert "* Strobist: Complete\n"))
+          (let ((section (point)))
+            (insert (make-string section-level ?*) " Lighting 101\n\n")
+            (when in-middle
+              (insert "* Existing following entry\nKeep this.\n"))
+            (goto-char section))
+          (cl-letf (((symbol-function 'jay/org-web-tools--url-as-readable-org)
+                     (lambda (_url) page)))
+            (dotimes (_ 3)
+              (jay/org-web-tools-insert-web-page-as-entry-clean
+               "https://strobist.blogspot.com/2006/02/welcome-to-strobist.html")
+              (if in-middle
+                  (should (looking-at-p "\n\\* Existing following entry\nKeep this\\.\n\\'"))
+                (should (= (point) (point-max))))))
           (goto-char (point-min))
-          (forward-line 2))
-        (cl-letf (((symbol-function 'jay/org-web-tools--url-as-readable-org)
-                   (lambda (_url) page)))
-          (dotimes (_ 3)
-            (jay/org-web-tools-insert-web-page-as-entry-clean
-             "https://strobist.blogspot.com/2006/02/welcome-to-strobist.html")
-            (if in-middle
-                (should (looking-at-p "\\* Existing following entry"))
-              (should (= (point) (point-max))))))
+          (let ((count 0))
+            (while (re-search-forward "^\\(\\*+\\) \\[\\[https://strobist\\.blogspot\\.com/2006/02/welcome-to-strobist\\.html" nil t)
+              (should (= (length (match-string 1)) (1+ section-level)))
+              (setq count (1+ count))
+              (outline-next-heading)
+              (should (= (org-outline-level) (+ section-level 2)))
+              (should (equal (org-get-heading t t t t) "Article")))
+            (should (= count 3))))))))
+
+(ert-deftest jay-capture-preserves-real-note-and-inserts-at-capture-level ()
+  "Capture siblings from title, Article, body or deep child; append section children."
+  (require 's)
+  (let ((page (jay-capture-test--real-page)))
+    (dolist (location '(section title article body deep-child))
+      (with-temp-buffer
+        (let ((org-mode-hook nil)) (org-mode))
+        (insert-file-contents "/Users/jay/Dropbox/roam/notes/20261026181221-strobist_complete.org")
         (goto-char (point-min))
-        (let ((count 0))
-          (while (re-search-forward "^\\(\\*+\\) \\[\\[https://strobist\\.blogspot\\.com/2006/02/welcome-to-strobist\\.html" nil t)
-            (should (= (length (match-string 1)) 1))
-            (setq count (1+ count)))
-          (should (= count 3)))))))
+        (re-search-forward "^\\* Lighting 101$")
+        (beginning-of-line)
+        (unless (eq location 'section)
+          (outline-next-heading)
+          (unless (eq location 'title)
+            (outline-next-heading)
+            (unless (eq location 'article)
+              (forward-line 1)
+              (when (eq location 'deep-child)
+                (insert "**** Detail\n")
+                (forward-line -1)))))
+        (let* ((original (buffer-string))
+               (expected-start (save-excursion (org-end-of-subtree t t) (point)))
+               (expected-next (buffer-substring-no-properties expected-start (point-max)))
+               (original-size (buffer-size)))
+          (cl-letf (((symbol-function 'jay/org-web-tools--url-as-readable-org)
+                     (lambda (_url) page)))
+            (dotimes (_ 3)
+              (jay/org-web-tools-insert-web-page-as-entry-clean
+               "https://strobist.blogspot.com/2006/02/welcome-to-strobist.html")
+              (should (equal (buffer-substring-no-properties (point) (point-max))
+                             (concat "\n" expected-next)))))
+          (let* ((added (- (buffer-size) original-size))
+                 (end (+ expected-start added))
+                 (count 0))
+            (goto-char expected-start)
+            (while (re-search-forward "^\\(\\*+\\) \\[\\[https://strobist\\.blogspot\\.com/2006/02/welcome-to-strobist\\.html" end t)
+              (should (= (length (match-string 1)) 2))
+              (setq count (1+ count)))
+            (should (= count 3))
+            ;; The insertion must preserve all preexisting source text and links.
+            (delete-region expected-start end)
+            (should (equal (buffer-string) original))))))))
+
+(ert-deftest jay-capture-existing-top-level-page-stays-top-level ()
+  "An existing level-1 capture receives a sibling, not a level-2 child."
+  (require 's)
+  (let ((page (jay-capture-test--real-page)))
+    (with-temp-buffer
+      (let ((org-mode-hook nil)) (org-mode))
+      (insert page)
+      (goto-char (point-min))
+      (cl-letf (((symbol-function 'jay/org-web-tools--url-as-readable-org)
+                 (lambda (_url) page)))
+        (dotimes (_ 3)
+          (jay/org-web-tools-insert-web-page-as-entry-clean
+           "https://strobist.blogspot.com/2006/02/welcome-to-strobist.html")
+          (should (= (point) (point-max)))))
+      (goto-char (point-min))
+      (let ((count 0))
+        (while (re-search-forward "^\\(\\*+\\) \\[\\[https://strobist\\.blogspot\\.com/2006/02/welcome-to-strobist\\.html" nil t)
+          (should (= (length (match-string 1)) 1))
+          (setq count (1+ count)))
+        (should (= count 4))))))
 
 (provide 'capture-cleanup-tests)
 
