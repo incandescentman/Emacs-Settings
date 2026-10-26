@@ -9,7 +9,7 @@ The expanded comparison exposed losses in Defuddle's default filters too. The se
 
 The tradeoff is more peripheral clutter, especially on TIFF and the recipe page. Some styled Strobist section labels remain ordinary text because they are not source HTML headings. The selected Substack image URLs can use a smaller responsive variant; their original full-size image links remain available.
 
-The command now merges repeated prose line breaks into paragraph boundaries and preserves single caption breaks. C-u before either clean capture command prompts for a URL override. If Node or the extraction helper fails, the command reports the diagnostic and uses EWW on the same downloaded page. HTTP failures still stop with the attempted URL and reason; the command never switches to the clipboard after a failed fetch. Pandoc and Lisp errors retain their original diagnostics.
+The command now merges repeated prose line breaks into paragraph boundaries and preserves single caption breaks. C-u before either clean capture command prompts for a URL override. Each inserted capture is a top-level sibling, and the cursor finishes immediately after the inserted text. Standalone break lines are normalized as paragraph boundaries. If Node or the extraction helper fails, the command reports the diagnostic and uses EWW on the same downloaded page. HTTP failures still stop with the attempted URL and reason; the command never switches to the clipboard after a failed fetch. Pandoc and Lisp errors retain their original diagnostics.
 
 Install dependencies on another machine: ~npm ci --prefix /Users/jay/emacs/emacs-settings/scripts/web-capture~.
 

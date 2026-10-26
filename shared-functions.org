@@ -1584,28 +1584,42 @@ cleaner can turn those into ordinary spaces.  Accept either form."
    "[[\\1][\\2]]" content t))
 
 (defun jay/org-web-tools--normalize-paragraph-breaks (content)
-  "Convert repeated prose line breaks into paragraph boundaries.
-Use parsed Org objects, leave single breaks and verse/source blocks alone."
+  "Normalize repeated or standalone breaks into paragraph boundaries.
+Preserve single in-paragraph breaks, including captions, and verse/source blocks."
   (with-temp-buffer
     (insert content)
     (let ((org-mode-hook nil)) (org-mode))
-    (let (runs run-start run-end (run-count 0))
-      (org-element-map (org-element-parse-buffer) 'line-break
-        (lambda (node)
-          (unless (org-element-lineage node '(verse-block))
-            (let ((beg (org-element-property :begin node))
-                  (end (org-element-property :end node)))
-              (if (and run-end
-                       (string-match-p "\\`[ \t\n]*\\'"
-                                       (buffer-substring-no-properties run-end beg)))
-                  (setq run-end end run-count (1+ run-count))
-                (when (> run-count 1) (push (cons run-start run-end) runs))
-                (setq run-start beg run-end end run-count 1))))))
-      (when (> run-count 1) (push (cons run-start run-end) runs))
+    (let (runs run-start run-end run-leading run-standalone (run-count 0))
+      (cl-labels ((finish-run ()
+                    (when (or run-leading run-standalone (> run-count 1))
+                      (push (list run-start run-end
+                                  (cond (run-leading "")
+                                        ((> run-count 1) "\n\n")
+                                        (t "\n"))) runs))))
+        (org-element-map (org-element-parse-buffer) 'line-break
+          (lambda (node)
+            (unless (org-element-lineage node '(verse-block))
+              (let ((beg (org-element-property :begin node))
+                    (end (org-element-property :end node)))
+                (if (and run-end
+                         (string-match-p "\\`[ \t\n]*\\'"
+                                         (buffer-substring-no-properties run-end beg)))
+                    (setq run-end end run-count (1+ run-count))
+                  (finish-run)
+                  (setq run-start beg run-end end run-count 1
+                        run-standalone
+                        (save-excursion
+                          (goto-char beg)
+                          (string-blank-p (buffer-substring-no-properties
+                                           (line-beginning-position) beg)))
+                        run-leading
+                        (eq beg (org-element-property
+                                 :begin (org-element-lineage node '(paragraph))))))))))
+        (finish-run))
       (dolist (range runs)
-        (goto-char (car range))
-        (delete-region (car range) (cdr range))
-        (insert "\n\n")))
+        (goto-char (nth 0 range))
+        (delete-region (nth 0 range) (nth 1 range))
+        (insert (nth 2 range))))
     (buffer-string)))
 
 (defun jay/org-web-tools-cleanup-string (content)
@@ -1810,7 +1824,7 @@ With a prefix argument, prompt for an explicit URL override."
   (jay/org-web-tools-cleanup-buffer))
 
 (defun jay/org-web-tools-insert-web-page-as-entry-clean (url)
-  "Like `org-web-tools-insert-web-page-as-entry' but with cleanup.
+  "Insert a clean top-level web capture and leave point after it.
 Gets URL from Chrome frontmost tab, or clipboard, or prompts.
 With a prefix argument, prompt for an explicit URL override."
   (interactive (list (jay/get-url-from-clipboard-or-chrome current-prefix-arg)))
@@ -1818,7 +1832,7 @@ With a prefix argument, prompt for an explicit URL override."
     (when content
       (setq content (jay/org-web-tools-cleanup-string content))
       (beginning-of-line)
-      (org-paste-subtree nil (s-trim content)))))
+      (org-paste-subtree 1 (s-trim content) t))))
 #+end_src
 
 ** html2text-clipboard

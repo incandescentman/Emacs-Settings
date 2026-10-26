@@ -273,6 +273,54 @@
     (should (equal (jay/org-web-tools--extract-readable "<p>Article</p>" "https://strobist.blogspot.com/")
                    '("Title" . "<p>Article</p>")))))
 
+(ert-deftest jay-capture-cleanup-removes-leading-break-after-strobist-photo ()
+  "Remove the reported standalone break, preserving an inline caption break."
+  (let ((input "[[http://strobist.blogspot.com/2006/03/on-assignment-wind-tunnel.html][https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgupfzhaVm0JjLhrQeGcHCnJI-3_rXo-H7MZTTVYkyym3Oru_7B55YXTxW8okUzzGkgkNQpxWharG9n57dKRUXhH6lgjJw2AWVWtu-OhbEVx4ElawKn1m9_D2Uiup5eLlnySOYrRg/s640/WindTunnel.jpg]]\n\n\\\\\nAnd that's how this site started.\n")
+        (expected "[[http://strobist.blogspot.com/2006/03/on-assignment-wind-tunnel.html][https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgupfzhaVm0JjLhrQeGcHCnJI-3_rXo-H7MZTTVYkyym3Oru_7B55YXTxW8okUzzGkgkNQpxWharG9n57dKRUXhH6lgjJw2AWVWtu-OhbEVx4ElawKn1m9_D2Uiup5eLlnySOYrRg/s640/WindTunnel.jpg]]\n\nAnd that's how this site started.\n")
+        (caption "[[http://strobist.blogspot.com/2006/03/on-assignment-wind-tunnel.html][https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgupfzhaVm0JjLhrQeGcHCnJI-3_rXo-H7MZTTVYkyym3Oru_7B55YXTxW8okUzzGkgkNQpxWharG9n57dKRUXhH6lgjJw2AWVWtu-OhbEVx4ElawKn1m9_D2Uiup5eLlnySOYrRg/s640/WindTunnel.jpg]]\\\\\nAnd that's how this site started.\n"))
+    (should (equal (jay/org-web-tools--normalize-paragraph-breaks input) expected))
+    (should (equal (jay/org-web-tools--normalize-paragraph-breaks expected) expected))
+    (should (equal (jay/org-web-tools--normalize-paragraph-breaks caption) caption))
+    (should (equal (jay/org-web-tools--normalize-paragraph-breaks
+                    (replace-regexp-in-string "\n\n" "\n" input))
+                   expected))))
+
+(ert-deftest jay-capture-three-pages-stay-siblings-and-point-follows-each ()
+  "Three copies of the real captured article must not nest or leave point behind."
+  (require 's)
+  (let ((page (with-temp-buffer
+                (insert-file-contents "/Users/jay/Dropbox/roam/notes/20261026181221-strobist_complete.org")
+                (goto-char (point-min))
+                (re-search-forward "^\\* \\[\\[https://strobist\\.blogspot\\.com/2006/02/welcome-to-strobist\\.html")
+                (beginning-of-line)
+                (let ((start (point)))
+                  (forward-line 1)
+                  (re-search-forward "^\\*+ \\[\\[https://strobist\\.blogspot\\.com/" nil 'move)
+                  (when (match-beginning 0) (beginning-of-line))
+                  (buffer-substring-no-properties start (point))))))
+    (dolist (in-middle '(nil t))
+      (with-temp-buffer
+        (org-mode)
+        (insert "* Strobist: Complete\n\n")
+        (when in-middle
+          (insert "* Existing following entry\nKeep this.\n")
+          (goto-char (point-min))
+          (forward-line 2))
+        (cl-letf (((symbol-function 'jay/org-web-tools--url-as-readable-org)
+                   (lambda (_url) page)))
+          (dotimes (_ 3)
+            (jay/org-web-tools-insert-web-page-as-entry-clean
+             "https://strobist.blogspot.com/2006/02/welcome-to-strobist.html")
+            (if in-middle
+                (should (looking-at-p "\\* Existing following entry"))
+              (should (= (point) (point-max))))))
+        (goto-char (point-min))
+        (let ((count 0))
+          (while (re-search-forward "^\\(\\*+\\) \\[\\[https://strobist\\.blogspot\\.com/2006/02/welcome-to-strobist\\.html" nil t)
+            (should (= (length (match-string 1)) 1))
+            (setq count (1+ count)))
+          (should (= count 3)))))))
+
 (provide 'capture-cleanup-tests)
 
 ;;; capture-cleanup-tests.el ends here
