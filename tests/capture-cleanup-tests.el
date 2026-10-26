@@ -49,6 +49,11 @@
      '(jay/org-web-tools-include-timestamp
        jay/org-web-tools-request-headers
        jay/org-web-tools--repair-linked-images
+       jay/org-web-tools--normalize-paragraph-breaks
+       jay/org-web-tools-extractor
+       jay/org-web-tools-extractor-script
+       jay/org-web-tools--defuddle-html
+       jay/org-web-tools--extract-readable
        jay/org-web-tools-cleanup-string
        jay/org-web-tools--plz-error-object
        jay/org-web-tools--plz-error-status
@@ -132,8 +137,8 @@
                (lambda (_method _url &rest args)
                  (setq seen-headers (plist-get args :headers))
                  'fake-dom))
-              ((symbol-function 'org-web-tools--eww-readable)
-               (lambda (_dom)
+              ((symbol-function 'jay/org-web-tools--extract-readable)
+               (lambda (_html _url)
                  (cons "Example Page" "<main>Article body</main>")))
               ((symbol-function 'org-web-tools--cleanup-title)
                #'identity)
@@ -205,7 +210,7 @@
 
 (ert-deftest jay-org-web-tools-conversion-errors-keep-original-diagnostics ()
   "Readability, title, and Pandoc bugs must not receive fetch-failure advice."
-  (dolist (case '((org-web-tools--eww-readable
+  (dolist (case '((jay/org-web-tools--extract-readable
                    . (void-function missing-readability-function))
                   (org-web-tools--cleanup-title
                    . (invalid-regexp "Unmatched [ or [^"))
@@ -213,8 +218,8 @@
                    . (error "Pandoc failed: conversion error"))))
     (let ((original-error (cdr case)))
       (cl-letf (((symbol-function 'plz) (lambda (&rest _) 'fake-dom))
-                ((symbol-function 'org-web-tools--eww-readable)
-                 (lambda (_) (cons "Strobist: Lighting 101" "<p>Article</p>")))
+                ((symbol-function 'jay/org-web-tools--extract-readable)
+                 (lambda (_html _url) (cons "Strobist: Lighting 101" "<p>Article</p>")))
                 ((symbol-function 'org-web-tools--cleanup-title) #'identity)
                 ((symbol-function 'org-web-tools--html-to-org-with-pandoc)
                  (lambda (_) "Article\n")))
@@ -247,6 +252,26 @@
       (insert (cadr pair))
       (goto-char (point-min))
       (should (eq (org-element-type (org-element-context)) 'link)))))
+
+(ert-deftest jay-capture-url-prefix-overrides-chrome-without-clipboard ()
+  "An explicit URL override must work even with a Chrome tab present."
+  (cl-letf (((symbol-function 'jay/get-url-from-chrome)
+             (lambda () "https://chatgpt.com/"))
+            ((symbol-function 'read-string)
+             (lambda (&rest _) "https://strobist.blogspot.com/2006/03/lighting-101.html"))
+            ((symbol-function 'gui-get-selection)
+             (lambda (&rest _) (ert-fail "Override must not read clipboard"))))
+    (should (equal (jay/get-url-from-clipboard-or-chrome '(4))
+                   "https://strobist.blogspot.com/2006/03/lighting-101.html"))))
+
+(ert-deftest jay-capture-defuddle-unavailable-falls-back-to-eww ()
+  "Missing Node must use EWW on the same HTML, without another fetch."
+  (cl-letf (((symbol-function 'executable-find) (lambda (_) nil))
+            ((symbol-function 'org-web-tools--sanitized-dom) (lambda () 'parsed-dom))
+            ((symbol-function 'org-web-tools--eww-readable)
+             (lambda (dom) (should (eq dom 'parsed-dom)) '("Title" . "<p>Article</p>"))))
+    (should (equal (jay/org-web-tools--extract-readable "<p>Article</p>" "https://strobist.blogspot.com/")
+                   '("Title" . "<p>Article</p>")))))
 
 (provide 'capture-cleanup-tests)
 

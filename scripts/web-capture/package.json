@@ -1,0 +1,9 @@
+{
+  "name": "jay-emacs-web-capture",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "defuddle": "0.19.6",
+    "linkedom": "0.18.14"
+  }
+}

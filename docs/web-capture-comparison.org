@@ -1,0 +1,94 @@
+#+title: Web capture comparison and selected extractor
+#+date: 2026-10-26
+#+startup: overview
+
+* Decision and current behavior
+Keep org-web-tools for the Emacs integration and use Defuddle for article extraction, followed by Pandoc and the existing Org cleanup. Defuddle won the Strobist comparison after paragraph normalization: it retained David Hobby's headshot, which Mozilla Readability removed, and produced the same Lighting 101 body as Readability after cleanup.
+
+The expanded comparison exposed losses in Defuddle's default filters too. The selected configuration disables small-image removal, low-score removal, content-pattern removal, and exact/partial selector removal. Those settings recovered the Photography Life chapter list, the Substack embedded cards, and recipe equipment. A small adapter restores an enclosing image link when Defuddle keeps the image but drops that link. No missing article text fragments or source hrefs remained in the selected HTML for the five downloaded article samples. This is evidence for this corpus, not a guarantee for every page.
+
+The tradeoff is more peripheral clutter, especially on TIFF and the recipe page. Some styled Strobist section labels remain ordinary text because they are not source HTML headings. The selected Substack image URLs can use a smaller responsive variant; their original full-size image links remain available.
+
+The command now merges repeated prose line breaks into paragraph boundaries and preserves single caption breaks. C-u before either clean capture command prompts for a URL override. If Node or the extraction helper fails, the command reports the diagnostic and uses EWW on the same downloaded page. HTTP failures still stop with the attempted URL and reason; the command never switches to the clipboard after a failed fetch. Pandoc and Lisp errors retain their original diagnostics.
+
+Install dependencies on another machine: ~npm ci --prefix /Users/jay/emacs/emacs-settings/scripts/web-capture~.
+
+* Results and complete Org outputs
+The links below contain the actual captures, not summaries of them. EWW is the existing baseline; Readability and the initial Defuddle run show their original behavior. Selected shows the final Defuddle settings, image-link restoration, paragraph cleanup, and production command wrapper.
+
+** Strobist — Lighting 101
+All three retained the article text, three photos, captions, and next-lesson link. EWW retained sidebar material. Defuddle plus the normalizer reduced 66 explicit breaks to the two intentional caption breaks; its article body then matched Readability exactly.
+
+Source selection: [[file+emacs:/Users/jay/Dropbox/roam/notes/20261026181221-strobist_complete.org][Your saved note]].
+
+- [[file+emacs:/Users/jay/emacs/emacs-settings/output/web-capture-comparison-2026-10-26/strobist-lighting-eww.org][EWW baseline]]
+- [[file+emacs:/Users/jay/emacs/emacs-settings/output/web-capture-comparison-2026-10-26/strobist-lighting-readability.org][Mozilla Readability]]
+- [[file+emacs:/Users/jay/emacs/emacs-settings/output/web-capture-comparison-2026-10-26/strobist-lighting-defuddle-normalized.org][Initial Defuddle plus paragraph cleanup]]
+- [[file+emacs:/Users/jay/emacs/emacs-settings/output/web-capture-comparison-2026-10-26/strobist-lighting-selected.org][Selected Defuddle configuration]]
+
+** Strobist — Welcome
+Readability dropped the headshot and its enclosing link. Defuddle retained all four article photos and all article text and links. Paragraph cleanup removed the repeated breaks while retaining the separate navigation lines.
+
+Source selection: [[file+emacs:/Users/jay/Dropbox/roam/notes/20261026181221-strobist_complete.org][Your saved note]].
+
+- [[file+emacs:/Users/jay/emacs/emacs-settings/output/web-capture-comparison-2026-10-26/strobist-welcome-eww.org][EWW baseline]]
+- [[file+emacs:/Users/jay/emacs/emacs-settings/output/web-capture-comparison-2026-10-26/strobist-welcome-readability.org][Mozilla Readability]]
+- [[file+emacs:/Users/jay/emacs/emacs-settings/output/web-capture-comparison-2026-10-26/strobist-welcome-defuddle-normalized.org][Initial Defuddle plus paragraph cleanup]]
+- [[file+emacs:/Users/jay/emacs/emacs-settings/output/web-capture-comparison-2026-10-26/strobist-welcome-selected.org][Selected Defuddle configuration]]
+
+** Photography Life — composition guide
+Both libraries initially removed the eight-item chapter list. Readability also removed the section heading and next-chapter button. The selected Defuddle settings retained the chapter list, heading, and next-chapter button; the adapter restored the two full-resolution photo links. EWW retained the main content but also surrounding site material.
+
+Source selection: [[file+emacs:/Users/jay/Dropbox/roam/photography/20231119181458-composition_in_photography_by_spencer_cox.org][Your saved note]].
+
+- [[file+emacs:/Users/jay/emacs/emacs-settings/output/web-capture-comparison-2026-10-26/photography-life-eww.org][EWW baseline]]
+- [[file+emacs:/Users/jay/emacs/emacs-settings/output/web-capture-comparison-2026-10-26/photography-life-readability.org][Mozilla Readability]]
+- [[file+emacs:/Users/jay/emacs/emacs-settings/output/web-capture-comparison-2026-10-26/photography-life-defuddle-normalized.org][Initial Defuddle plus paragraph cleanup]]
+- [[file+emacs:/Users/jay/emacs/emacs-settings/output/web-capture-comparison-2026-10-26/photography-life-selected.org][Selected Defuddle configuration]]
+
+** Substack — More Than Words
+The initial Defuddle run removed the embedded AI Boosters article card. Readability retained that card but lost the Books by My Blurbers heading and another review-card link. The selected settings retained the source text and hrefs, including both embedded cards. Some subscription/share material consequently remains.
+
+Source selection: [[file+emacs:/Users/jay/Dropbox/roam/AI/20260305184212-writing_pedagogy_in_the_age_of_ai.org][Your saved note]].
+
+- [[file+emacs:/Users/jay/emacs/emacs-settings/output/web-capture-comparison-2026-10-26/substack-eww.org][EWW baseline]]
+- [[file+emacs:/Users/jay/emacs/emacs-settings/output/web-capture-comparison-2026-10-26/substack-readability.org][Mozilla Readability]]
+- [[file+emacs:/Users/jay/emacs/emacs-settings/output/web-capture-comparison-2026-10-26/substack-defuddle-normalized.org][Initial Defuddle plus paragraph cleanup]]
+- [[file+emacs:/Users/jay/emacs/emacs-settings/output/web-capture-comparison-2026-10-26/substack-selected.org][Selected Defuddle configuration]]
+
+** Pressure Cook Recipes — whole chicken
+Both libraries retained the ingredients and cooking instructions. Readability stripped the recipe-card headings and equipment item, leaving an empty checkbox. Defuddle retained the card structure, and the selected settings also restored the separate tools list. Both resolve the source lazy-image placeholders; EWW leaves placeholder image data. The initial Damn Delicious URL returned 403, so this comparison uses another recipe already linked in the same saved note.
+
+Source selection: [[file+emacs:/Users/jay/Dropbox/roam/recipes/20231023164000-instant_pot_whole_chicken.org][Your saved note]].
+
+- [[file+emacs:/Users/jay/emacs/emacs-settings/output/web-capture-comparison-2026-10-26/recipe-alternative-eww.org][EWW baseline]]
+- [[file+emacs:/Users/jay/emacs/emacs-settings/output/web-capture-comparison-2026-10-26/recipe-alternative-readability.org][Mozilla Readability]]
+- [[file+emacs:/Users/jay/emacs/emacs-settings/output/web-capture-comparison-2026-10-26/recipe-alternative-defuddle-normalized.org][Initial Defuddle plus paragraph cleanup]]
+- [[file+emacs:/Users/jay/emacs/emacs-settings/output/web-capture-comparison-2026-10-26/recipe-alternative-selected.org][Selected Defuddle configuration]]
+
+** TIFF — accreditation
+The direct download returned an HTTP 202 challenge, not the accreditation text. Chrome supplied the loaded page. EWW produced an empty body from that snapshot. Both libraries captured the central accreditation notice; the selected conservative settings also retained the contact section, at the cost of navigation and footer clutter. The current page says applications are closed; it is not identical to the older content in the saved note.
+
+Source selection: [[file+emacs:/Users/jay/Dropbox/roam/notes/20260706143536-2026_tiff.org][Your saved note]].
+
+- [[file+emacs:/Users/jay/emacs/emacs-settings/output/web-capture-comparison-2026-10-26/tiff-eww.org][EWW baseline]]
+- [[file+emacs:/Users/jay/emacs/emacs-settings/output/web-capture-comparison-2026-10-26/tiff-readability.org][Mozilla Readability]]
+- [[file+emacs:/Users/jay/emacs/emacs-settings/output/web-capture-comparison-2026-10-26/tiff-defuddle-normalized.org][Initial Defuddle plus paragraph cleanup]]
+- [[file+emacs:/Users/jay/emacs/emacs-settings/output/web-capture-comparison-2026-10-26/tiff-selected.org][Selected Defuddle configuration]]
+
+* Browser capture is a separate decision
+Chrome already allowed JavaScript from Apple Events; no setting was changed. On Lighting 101, downloaded HTML and Chrome's DOM produced identical article outputs with Readability and Defuddle. TIFF demonstrates a benefit of browser capture: Chrome returned real content where a fresh request returned a challenge.
+
+The open ChatGPT page explicitly contained “Loading older messages…”. Its captured main DOM was therefore not proof of a complete conversation. Both article extractors also discarded parts of the text that was loaded. Browser DOM capture is not integrated into the command, and ChatGPT still receives the explicit copy-text/html2org-clipboard advice after a fetch failure. A dedicated conversation exporter needs a separate completeness test.
+
+* Existing Emacs packages
+[[https://github.com/alphapapa/org-web-tools][org-web-tools]] already owns the necessary Org integration and Pandoc conversion. [[https://github.com/alphapapa/org-protocol-capture-html][org-protocol-capture-html]] offers browser-selection capture, but its automatic readability route also uses EWW. [[https://github.com/dmgerman/browser-gt][browser-gt, formerly Browsel]] offers a browser extension, an Emacs WebSocket bridge, and dedicated page/ChatGPT commands; those capabilities have not been tested here. [[https://github.com/charlesroelli/org-board][org-board]] archives HTML and resources with wget rather than providing a better article extractor. None of these packages was installed for this comparison.
+
+* Method and reproducibility
+Tested Defuddle 0.19.6 with linkedom 0.18.14; Mozilla Readability 0.6.0 with jsdom 30.1.3; and the installed org-web-tools EWW extractor. All variants used the same saved source for each page, the existing Pandoc converter, and existing link/whitespace cleanup. Titles come from the source document because the initial Strobist extractor metadata returned a site slogan. Defuddle's async external fetching was disabled. Source text fragments, hrefs, image identities, captions, next links, chapter lists, and recipe structure were inspected; raw counts were only diagnostics.
+
+The paragraph normalizer was checked on the real outputs for idempotence and preservation of the two Lighting 101 caption breaks. The complete selected pipeline passed on six pages plus the alternate Chrome snapshot of Lighting 101. All 17 capture/Pandoc regression tests passed, including failed-fetch behavior, conversion-error diagnostics, the prefix override, and missing-Node fallback.
+
+Official references: [[https://github.com/kepano/defuddle][Defuddle]], [[https://github.com/mozilla/readability][Mozilla Readability]], and [[https://www.chromium.org/developers/applescript/][Chromium AppleScript support]].
+
+Sources, scripts, raw outputs, and audits are retained in [[file+emacs:/Users/jay/emacs/emacs-settings/output/web-capture-comparison-2026-10-26/][the local comparison directory]]. The production adapter lives in [[file+emacs:/Users/jay/emacs/emacs-settings/scripts/web-capture/extract.mjs][extract.mjs]], and the Emacs integration in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]].
