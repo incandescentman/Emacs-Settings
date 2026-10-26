@@ -1677,29 +1677,30 @@ cleaner can turn those into ordinary spaces.  Accept either form."
 This mirrors `org-web-tools--url-as-readable-org' but sends
 browser-style request headers.  Some CloudFront-backed sites reject
 curl's default User-Agent with HTTP 403.
-On failure, signal a user error with the attempted URL and reason;
-do not insert a failure entry or retry another URL from the clipboard."
-  (let ((url (or url (org-web-tools--get-first-url))))
-    (condition-case err
-        (let* ((dom (plz 'get url
-                         :headers jay/org-web-tools-request-headers
-                         :as #'org-web-tools--sanitized-dom))
-               (readable-result (org-web-tools--eww-readable dom))
-               (title (org-web-tools--cleanup-title (or (car readable-result) "")))
-               (converted (org-web-tools--html-to-org-with-pandoc (cdr readable-result)))
-               (link (org-link-make-string url title))
-               (timestamp (format-time-string (org-time-stamp-format 'with-time 'inactive))))
-          (with-temp-buffer
-            (org-mode)
-            (insert converted)
-            (org-web-tools--demote-headings-below 2)
-            (goto-char (point-min))
-            (insert "* " link " :website:" "\n\n"
-                    timestamp "\n\n"
-                    "** Article" "\n\n")
-            (buffer-string)))
-      (error
-       (user-error "%s" (jay/org-web-tools--capture-error-message url err))))))
+On a network or HTTP failure, signal a user error with the attempted
+URL and reason; do not insert a failure entry or retry another URL
+from the clipboard.  Parsing and conversion errors propagate unchanged."
+  (let* ((url (or url (org-web-tools--get-first-url)))
+         (dom (condition-case err
+                  (plz 'get url
+                       :headers jay/org-web-tools-request-headers
+                       :as #'org-web-tools--sanitized-dom)
+                (plz-error
+                 (user-error "%s" (jay/org-web-tools--capture-error-message url err)))))
+         (readable-result (org-web-tools--eww-readable dom))
+         (title (org-web-tools--cleanup-title (or (car readable-result) "")))
+         (converted (org-web-tools--html-to-org-with-pandoc (cdr readable-result)))
+         (link (org-link-make-string url title))
+         (timestamp (format-time-string (org-time-stamp-format 'with-time 'inactive))))
+    (with-temp-buffer
+      (org-mode)
+      (insert converted)
+      (org-web-tools--demote-headings-below 2)
+      (goto-char (point-min))
+      (insert "* " link " :website:" "\n\n"
+              timestamp "\n\n"
+              "** Article" "\n\n")
+      (buffer-string))))
 
 (defun jay/org-web-tools-cleanup-buffer ()
   "Clean up current buffer after org-web-tools insertion."

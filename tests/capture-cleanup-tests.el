@@ -203,6 +203,30 @@
                    (list 'plz-curl-error "Curl error" failure))))
     (should (string-match-p "Could not resolve host" message))))
 
+(ert-deftest jay-org-web-tools-conversion-errors-keep-original-diagnostics ()
+  "Readability, title, and Pandoc bugs must not receive fetch-failure advice."
+  (dolist (case '((org-web-tools--eww-readable
+                   . (void-function missing-readability-function))
+                  (org-web-tools--cleanup-title
+                   . (invalid-regexp "Unmatched [ or [^"))
+                  (org-web-tools--html-to-org-with-pandoc
+                   . (error "Pandoc failed: conversion error"))))
+    (let ((original-error (cdr case)))
+      (cl-letf (((symbol-function 'plz) (lambda (&rest _) 'fake-dom))
+                ((symbol-function 'org-web-tools--eww-readable)
+                 (lambda (_) (cons "Strobist: Lighting 101" "<p>Article</p>")))
+                ((symbol-function 'org-web-tools--cleanup-title) #'identity)
+                ((symbol-function 'org-web-tools--html-to-org-with-pandoc)
+                 (lambda (_) "Article\n")))
+        (cl-letf (((symbol-function (car case))
+                   (lambda (&rest _) (signal (car original-error) (cdr original-error)))))
+          (should
+           (equal
+            (should-error
+             (jay/org-web-tools--url-as-readable-org
+              "https://strobist.blogspot.com/2006/03/lighting-101.html"))
+            original-error)))))))
+
 (ert-deftest jay-capture-cleanup-repairs-strobist-linked-images ()
   "Preserve both URLs in each malformed linked image from the reported note."
   (dolist (pair
