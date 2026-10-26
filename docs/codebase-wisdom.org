@@ -1646,6 +1646,18 @@ Jay's wrappers in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.
 - Test the URL with plain curl and a browser =User-Agent= before changing extraction logic.
 - Catch ~plz-error~ only around the fetch: show the attempted URL and a concise reason without modifying the note. Let parsing and conversion errors propagate with their original condition and data; those errors require debugging, not advice to select another tab. Corrected 2026-10-26 after review caught an overly broad handler.
 
+* Web capture insertion must retain the enclosing page's level
+Date: 2026-10-26
+
+** Trigger
+Repeated captures nested progressively deeper, and the first attempted fix forced every page to level 1, breaking captures organized under course sections.
+
+** Mechanism
+The custom command passed a nil level to ~org-paste-subtree~, leaving the target level dependent on surrounding headings, including the preceding capture's deeper Article section. Passing level 1 stopped escalation but discarded the user's section context. The command now finds the enclosing capture by its linked HTTP(S) title and immediate Article child, inserts after the entire capture at its level, or appends a child to a plain section. The ~for-yank~ argument keeps point after the inserted text. When another heading follows, a blank separator at point prevents the next invocation from treating that following heading as the user's chosen section.
+
+** Actionable insight
+Treat page level, insertion position, and final cursor position as one behavior. Test repeated captures both at end of buffer and before following content, from a section heading and from within a captured page's descendants. The regression tests in [[file+emacs:/Users/jay/emacs/emacs-settings/tests/capture-cleanup-tests.el][capture-cleanup-tests.el]] use real captured content and check that existing text survives unchanged. These are custom-command bugs to fix, not user-facing behavior justified by an upstream default.
+
 * Org-roam Exclusions: File Exclude Beats Directory Exclude
   Date: 2026-07-08
 

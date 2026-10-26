@@ -2875,10 +2875,22 @@ After any edit here, retangle with an explicit output path and re-run the corpus
 * Archive
 See [[file:work-log-2025.org][work-log-2025.org]] for earlier entries.
 
+
+* 2026-10-13 — Pin global UI preferences in the Org-roam finder
+
+Added ~global UI preferences~ to ~jay/org-roam-extra-find-files~ in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][the Org-roam core]], pointing to [[file+emacs:/Users/jay/Dropbox/github/vibecoding/preferences/UI-PREFERENCES.org][the existing global UI preferences file]]. This uses the same pinned-file mechanism as ~global CLAUDE~; the target stays in place and needs no Org-roam ID. Updated [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][the existing pinned-files guide]].
+
+Codex initially answered from standard Org-roam alias behavior without checking this custom finder, incorrectly suggesting the file needed an ID. Jay corrected it with the ~global CLAUDE~ example. The existing pinned-files guide already explained the mechanism; this was a failure to consult the local implementation, not a missing Org-roam feature.
+
+Validation: loaded the new pinned-file entry into the running Emacs session and confirmed its real completion candidate resolves to the readable global UI preferences file. The edited Elisp passes ~check-parens~ and the code-scoped whitespace check. No restart, commit, or push.
+
 * 2026-10-15 Whittle Prose Playground review fixes
 Removed default kind-of-like deletion and protected kind/sort-of comparisons from filler-chain cleanup. Duplicate cleanup now preserves dash boundaries and grammatical or emphatic repetitions of of, ever, and blah. Filler removal preserves commas before capitalized list items/restarts and after speech-introducing verbs. These changes address observed damage in the Prose Playground transcript; contextual Codex review remains necessary.
 
 Added regression coverage from the transcript and updated earlier tests that expected comparison deletion. All 47 Whittle ERT tests passed. Reloaded [[file+emacs:/Users/jay/emacs/emacs-settings/whittle.el][whittle.el]] in the running Emacs session, removed the obsolete kind-of-like defaults from its already-bound rule list, and verified comparison/repetition/dash preservation in a temporary buffer. Existing unrelated working-tree edits were preserved.
+
+* 2026-10-26 — Backblaze troubleshooting finder alias
+Added Backblaze troubleshooting to ~jay/org-roam-extra-find-files~ in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][Org-roam core]], pointing to the [[file+emacs:/Users/jay/Dropbox/github/manifest/docs/backblaze-support-response-handoff-2026-10-26.org][Backblaze support and recovery handoff]]. Activated the entry in the running Emacs session; preserved existing aliases and unrelated edits.
 
 * 2026-10-26: Repair linked images in clean web captures
 - Fixed Pandoc nested-image markup in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] by normalizing it to Org's supported linked-image description format, preserving both the destination and image URL. Handles Pandoc's zero-width spaces and their ordinary-space form after cleanup.
@@ -2912,3 +2924,8 @@ The cursor and escalating hierarchy were bugs in the custom command. Upstream in
 Replaced the forced level-1 policy in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]]. A new capture follows the enclosing captured page at the same level, including when point is in its Article descendants. On a section without a capture ancestor, the command appends a child page. Point stays after the inserted text, with a blank separator before any following heading so repeated captures retain their section context.
 
 Retangled and checked parentheses; all 21 capture/Pandoc tests passed. Loaded the three changed definitions into running Emacs and passed the three hierarchy tests there, including three consecutive captures under level-1 and level-2 sections, insertion within existing pages, and preservation of all preexisting text. Tests used in-memory copies of the real Strobist capture and note; the note itself was not edited. Updated [[file+emacs:/Users/jay/emacs/emacs-settings/docs/web-capture-comparison.org][the capture report]] to describe the corrected behavior.
+
+* 2026-10-26: Update capture documentation and commit existing finder aliases
+Updated [[file+emacs:/Users/jay/emacs/emacs-settings/docs/instructions.org][the usage guide]] for Defuddle with EWW fallback, dependency installation, the explicit URL override, section-aware insertion, cursor placement, and distinct fetch/conversion errors. Recorded the verified Strobist course coverage and current test results in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/web-capture-comparison.org][the comparison report]], and the hierarchy failure and regression checks in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/codebase-wisdom.org][codebase wisdom]]. The capture implementation was already committed in ~5dd2aca2~; no module extraction or note edit was made in this checkpoint.
+
+Included the existing global UI preferences and Backblaze troubleshooting finder aliases, their documentation, and their earlier work-log records. Both target files exist, the changed Org-roam file passed ~check-parens~, and the code-scoped whitespace check passed. Updated local documentation links resolve. Generated comparison/PDF artifacts and the automatically appended startup timing log remain uncommitted. Nothing was pushed.
