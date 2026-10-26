@@ -47,6 +47,7 @@
      jay-capture-cleanup-test--shared-functions-file
      '(jay/org-web-tools-include-timestamp
        jay/org-web-tools-request-headers
+       jay/org-web-tools--repair-linked-images
        jay/org-web-tools-cleanup-string
        jay/org-web-tools--plz-error-object
        jay/org-web-tools--plz-error-status
@@ -154,6 +155,27 @@
     (let ((output (jay/org-web-tools--url-as-readable-org "https://example.com/blocked")))
       (should (string-match-p "Capture failed" output))
       (should (string-match-p "\\[\\[https://example.com/blocked\\]" output)))))
+
+(ert-deftest jay-capture-cleanup-repairs-strobist-linked-images ()
+  "Preserve both URLs in each malformed linked image from the reported note."
+  (dolist (pair
+    '(
+      ("[[https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhwKHyNRi5FCeGU7RJRrHJYgR7zTWGI2ec6TiotwG4p7aQhZykbQ0R4MoAoWC2ctoiK_W8AKHRI991-xgX7tRl69HRmg03F5U67zbFi5xMpN2VnJhCZ-81f6nVtWop6dRZ-faTb/s1600/David_Hobby_Headshot_240.jpg][[[https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhwKHyNRi5FCeGU7RJRrHJYgR7zTWGI2ec6TiotwG4p7aQhZykbQ0R4MoAoWC2ctoiK_W8AKHRI991-xgX7tRl69HRmg03F5U67zbFi5xMpN2VnJhCZ-81f6nVtWop6dRZ-faTb/s200/David_Hobby_Headshot_240.jpg]  ]]]" "[[https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhwKHyNRi5FCeGU7RJRrHJYgR7zTWGI2ec6TiotwG4p7aQhZykbQ0R4MoAoWC2ctoiK_W8AKHRI991-xgX7tRl69HRmg03F5U67zbFi5xMpN2VnJhCZ-81f6nVtWop6dRZ-faTb/s1600/David_Hobby_Headshot_240.jpg][https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhwKHyNRi5FCeGU7RJRrHJYgR7zTWGI2ec6TiotwG4p7aQhZykbQ0R4MoAoWC2ctoiK_W8AKHRI991-xgX7tRl69HRmg03F5U67zbFi5xMpN2VnJhCZ-81f6nVtWop6dRZ-faTb/s200/David_Hobby_Headshot_240.jpg]]")
+      ("[[http://strobist.blogspot.com/2006/03/on-assignment-wind-tunnel.html][[[https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgupfzhaVm0JjLhrQeGcHCnJI-3_rXo-H7MZTTVYkyym3Oru_7B55YXTxW8okUzzGkgkNQpxWharG9n57dKRUXhH6lgjJw2AWVWtu-OhbEVx4ElawKn1m9_D2Uiup5eLlnySOYrRg/s640/WindTunnel.jpg]  ]]]" "[[http://strobist.blogspot.com/2006/03/on-assignment-wind-tunnel.html][https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgupfzhaVm0JjLhrQeGcHCnJI-3_rXo-H7MZTTVYkyym3Oru_7B55YXTxW8okUzzGkgkNQpxWharG9n57dKRUXhH6lgjJw2AWVWtu-OhbEVx4ElawKn1m9_D2Uiup5eLlnySOYrRg/s640/WindTunnel.jpg]]")
+      ("[[http://strobist.blogspot.com/2009/06/on-assignment-hcac-dancer.html][[[https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg5GMXwizpMY3ewqRmYonGo7AVK2HulhkTdePGLaXBDrpkL1iNxFu7wuopcjRZGJqaMNjjK1GRlxCRUzeJiq-DBLhhpoQ_V2YWP60I6h4oQXdZ8_VN6ZMTiK8SolouCvfx-3YPw/s1600/Kassi.jpg]  ]]]" "[[http://strobist.blogspot.com/2009/06/on-assignment-hcac-dancer.html][https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg5GMXwizpMY3ewqRmYonGo7AVK2HulhkTdePGLaXBDrpkL1iNxFu7wuopcjRZGJqaMNjjK1GRlxCRUzeJiq-DBLhhpoQ_V2YWP60I6h4oQXdZ8_VN6ZMTiK8SolouCvfx-3YPw/s1600/Kassi.jpg]]")
+      ("[[http://strobist.blogspot.com/2008/08/on-assignment-50-years.html][[[https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi6UyUwJUvcHc8uNz9etX0ueEfkMjlUpaPtusS5u-E4wCbFW_DAR6Tn6R8CR6Sc_vwqS6689FkiDQDDels0Sl7O_462K9ayZ-Wp6Pof15GgGDtTldb4TS2f6SQ-FrQVG5xRptPu/s1600/MomDad.jpg]  ]]]" "[[http://strobist.blogspot.com/2008/08/on-assignment-50-years.html][https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi6UyUwJUvcHc8uNz9etX0ueEfkMjlUpaPtusS5u-E4wCbFW_DAR6Tn6R8CR6Sc_vwqS6689FkiDQDDels0Sl7O_462K9ayZ-Wp6Pof15GgGDtTldb4TS2f6SQ-FrQVG5xRptPu/s1600/MomDad.jpg]]")
+      ("[[https://www.blogger.com/email-post/23951026/114221855544128764][[[https://resources.blogblog.com/img/icon18_email.gif]  ]]]" "[[https://www.blogger.com/email-post/23951026/114221855544128764][https://resources.blogblog.com/img/icon18_email.gif]]")
+      ("[[https://www.blogger.com/post-edit.g?blogID=23951026&postID=114221855544128764&from=pencil][[[https://resources.blogblog.com/img/icon18_edit_allbkg.gif]  ]]]" "[[https://www.blogger.com/post-edit.g?blogID=23951026&postID=114221855544128764&from=pencil][https://resources.blogblog.com/img/icon18_edit_allbkg.gif]]")))
+    (let ((fixed (jay/org-web-tools--repair-linked-images (car pair))))
+      (should (equal fixed (cadr pair)))
+      (should (equal fixed (jay/org-web-tools--repair-linked-images fixed)))
+      (should (equal fixed (jay/org-web-tools--repair-linked-images
+                            (replace-regexp-in-string "  " "\u200b\u200b" (car pair) t t)))))
+    (with-temp-buffer
+      (org-mode)
+      (insert (cadr pair))
+      (goto-char (point-min))
+      (should (eq (org-element-type (org-element-context)) 'link)))))
 
 (provide 'capture-cleanup-tests)
 

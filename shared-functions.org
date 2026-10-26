@@ -1571,9 +1571,21 @@ Set to t to preserve them.")
     ("Accept-Language" . "en-US,en;q=0.9"))
   "HTTP headers sent by Jay's org-web-tools capture wrappers.")
 
+(defun jay/org-web-tools--repair-linked-images (content)
+  "Normalize Pandoc's nested image links in CONTENT to Org linked images.
+Preserve both the outer destination and image URL.  Pandoc inserts
+zero-width spaces before the inner closing bracket; the whitespace
+cleaner can turn those into ordinary spaces.  Accept either form."
+  (replace-regexp-in-string
+   (rx "[[" (group (+ (not (any "[]\n")))) "][[["
+       (group (or "https://" "http://" "file:")
+              (+ (not (any "[]\n"))))
+       "]" (* (any " \t\n\u200b")) "]]]")
+   "[[\\1][\\2]]" content t))
+
 (defun jay/org-web-tools-cleanup-string (content)
   "Clean up CONTENT string from org-web-tools, removing cruft."
-  (let ((result content))
+  (let ((result (jay/org-web-tools--repair-linked-images content)))
     ;; Reuse the pasteboard cleaner's Unicode-space policy without applying
     ;; its broader typography or Org/Markdown transformations.
     (setq result
