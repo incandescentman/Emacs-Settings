@@ -1739,17 +1739,30 @@ A failed helper reports its diagnostic before the caller uses EWW."
                   nil)))
           (delete-file stderr))))))
 
+(defun jay/org-web-tools--dom-title (dom)
+  "Return the full text of DOM's title element, or nil.
+Blogger puts markup such as <br> and <i> inside <title>; taking only
+the first child truncated titles at the first tag."
+  (when-let* (((consp dom))
+              (node (car (dom-by-tag dom 'title)))
+              (text (string-trim
+                     (replace-regexp-in-string "[ \t\n\r]+" " "
+                                               (dom-texts node "")))))
+    (unless (string-empty-p text) text)))
+
 (defun jay/org-web-tools--extract-readable (html url)
   "Return (TITLE . ARTICLE-HTML) for downloaded HTML at URL.
 Keep the source title: extractors can mistake site slogans for titles."
   (let* ((dom (with-temp-buffer
                 (insert html)
                 (org-web-tools--sanitized-dom)))
+         (title (jay/org-web-tools--dom-title dom))
          (article (when (eq jay/org-web-tools-extractor 'defuddle)
                     (jay/org-web-tools--defuddle-html html url))))
     (if article
-        (cons (cl-caddr (car (dom-by-tag dom 'title))) article)
-      (org-web-tools--eww-readable dom))))
+        (cons title article)
+      (let ((readable (org-web-tools--eww-readable dom)))
+        (cons (or title (car readable)) (cdr readable))))))
 
 (defun jay/org-web-tools--url-as-readable-org (url)
   "Return URL as readable Org using Jay's org-web-tools defaults.

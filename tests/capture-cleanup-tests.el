@@ -53,6 +53,7 @@
        jay/org-web-tools-extractor
        jay/org-web-tools-extractor-script
        jay/org-web-tools--defuddle-html
+       jay/org-web-tools--dom-title
        jay/org-web-tools--extract-readable
        jay/org-web-tools-cleanup-string
        jay/org-web-tools--plz-error-object
@@ -265,6 +266,19 @@
              (lambda (&rest _) (ert-fail "Override must not read clipboard"))))
     (should (equal (jay/get-url-from-clipboard-or-chrome '(4))
                    "https://strobist.blogspot.com/2006/03/lighting-101.html"))))
+
+(ert-deftest jay-capture-title-keeps-text-after-inline-markup ()
+  "Blogger titles with <br> or <i> inside <title> must not truncate."
+  (dolist (case '(("<html><head><title>Strobist: Lighting 101:<br>Balancing Flash With Ambient, Pt 2</title></head><body></body></html>"
+                   . "Strobist: Lighting 101:Balancing Flash With Ambient, Pt 2")
+                  ("<html><head><title>Strobist: SLC-0L-03: <i>Joker</i> Cinematographer <br>On Light &amp; Color</title></head><body></body></html>"
+                   . "Strobist: SLC-0L-03: Joker Cinematographer On Light & Color")
+                  ("<html><head><title>Plain Title</title></head><body></body></html>"
+                   . "Plain Title")))
+    (let ((dom (with-temp-buffer
+                 (insert (car case))
+                 (libxml-parse-html-region (point-min) (point-max)))))
+      (should (equal (jay/org-web-tools--dom-title dom) (cdr case))))))
 
 (ert-deftest jay-capture-defuddle-unavailable-falls-back-to-eww ()
   "Missing Node must use EWW on the same HTML, without another fetch."

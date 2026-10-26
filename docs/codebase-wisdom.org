@@ -1658,6 +1658,42 @@ The custom command passed a nil level to ~org-paste-subtree~, leaving the target
 ** Actionable insight
 Treat page level, insertion position, and final cursor position as one behavior. Test repeated captures both at end of buffer and before following content, from a section heading and from within a captured page's descendants. The regression tests in [[file+emacs:/Users/jay/emacs/emacs-settings/tests/capture-cleanup-tests.el][capture-cleanup-tests.el]] use real captured content and check that existing text survives unchanged. These are custom-command bugs to fix, not user-facing behavior justified by an upstream default.
 
+* Web capture titles truncate at markup inside the HTML title
+Date: 2026-10-26
+
+** Trigger
+Two Strobist captures came out titled "Strobist: Lighting 101:" and "Strobist: SLC-0L-03:", with the rest of the title missing.
+
+** Mechanism
+Blogger writes markup into the page title itself. The raw sources are ~<title>Strobist: Lighting 101:<br>Balancing Flash With Ambient, Pt 2</title>~ and ~<title>Strobist: SLC-0L-03: <i>Joker</i> Cinematographer <br>On Light & Color</title>~. The sanitized DOM parses those tags as child elements, and the title lookup in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] (~(cl-caddr (car (dom-by-tag dom 'title)))~, around line 1751) takes only the first child, the text before the first tag. Verified 2026-10-26 by fetching both pages. Fixed the same day: ~jay/org-web-tools--dom-title~ joins every text node of the title element with ~dom-texts~ and collapses whitespace; the test ~jay-capture-title-keeps-text-after-inline-markup~ covers both raw titles.
+
+** Actionable insight
+Read the title with ~dom-texts~ over the whole title node, then collapse whitespace, so text after an inline tag survives. A regression test can use either Strobist URL above. When checking a batch of captures, look for headings that end in a colon: that is this bug's signature.
+
+* Testing web capture through Chrome without disturbing Jay's browser
+Date: 2026-10-26
+
+** Trigger
+During the browser-capture comparison, AppleScript opened test tabs at the end of Jay's front Chrome window, twice for the same pages. One script also failed after opening a tab, so the tab ID it would have used for cleanup was never returned.
+
+** Mechanism
+~make new tab at end of tabs of front window~ puts test pages into the window Jay is working in. ~result~ is a reserved AppleScript variable, so ~set end of result to …~ raises an execution error after the tab has already opened. Chrome's "Allow JavaScript from Apple Events" was already enabled on Destroyer when this was tested, so DOM capture needs no settings change there.
+
+** Actionable insight
+Run browser tests in a window the script creates (~make new window~), record its window and tab IDs before doing anything else, and close only those IDs when finished. Never close tabs by URL match, because Jay may have the same site open himself. Use a non-reserved variable name such as ~captured~. For headless work, the chrome-devtools browser runs with its own temporary profile and can be stopped without touching Jay's Chrome; confirm the PID's parent is ~chrome-devtools-mcp~ before stopping it.
+
+* Verifying a multi-page series capture
+Date: 2026-10-26
+
+** Trigger
+Jay captured Strobist's Lighting 101–103 courses and the Lighting Cookbook page by page. The first audit found three missing Lighting 101 lessons, one out-of-order lesson, two truncated titles, and an empty Cookbook section (Two Lights, 0 of 15).
+
+** Mechanism
+A capture command checks only the page it captured, so gaps in a series show up only when the note is compared with the site's own list. Strobist publishes those lists: each course's ordered lesson list is an ~<option>~ menu in the sidebar of any post ("Lighting 101 Archive", "Lighting 102 Archive", "Lighting 103 Archive"), and the Cookbook index post lists its recipes by section in the post body.
+
+** Actionable insight
+Compare the note with the site's list in order, and report the count, order, missing and extra pages, wrong heading levels, empty Article sections, and titles that end in a colon. The comparison directory [[file+emacs:/Users/jay/emacs/emacs-settings/output/web-capture-comparison-2026-10-26/][output/web-capture-comparison-2026-10-26]] is untracked but not ignored, and it holds a DOM copy of a private ChatGPT conversation. Never stage ~output/~ in a commit.
+
 * Org-roam Exclusions: File Exclude Beats Directory Exclude
   Date: 2026-07-08
 
