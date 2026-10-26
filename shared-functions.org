@@ -1642,23 +1642,43 @@ cleaner can turn those into ordinary spaces.  Accept either form."
     (when (fboundp 'plz-response-status)
       (plz-response-status response))))
 
-(defun jay/org-web-tools--capture-error-entry (url err)
-  "Return a minimal Org entry for URL when org-web-tools signals ERR."
-  (let* ((status (jay/org-web-tools--plz-error-status err))
-         (status-text (if status
-                          (format "HTTP %s" status)
-                        (error-message-string err)))
-         (link (org-link-make-string url status-text))
-         (open-link (org-link-make-string url "Open in browser")))
-    (format "* %s :website:\n\n** Capture failed\n\norg-web-tools could not fetch this page.\n\n- %s\n- %s\n"
-            link status-text open-link)))
+(defun jay/org-web-tools--capture-error-message (url err)
+  "Explain capture ERR for URL without including response bodies or cookies."
+  (let* ((plz-error (jay/org-web-tools--plz-error-object err))
+         (response (and plz-error (plz-error-response plz-error)))
+         (status (jay/org-web-tools--plz-error-status err))
+         (challenge (and response
+                         (equal (alist-get 'cf-mitigated
+                                           (plz-response-headers response))
+                                "challenge")))
+         (reason (cond
+                  (challenge
+                   (format "HTTP %s: browser verification requires JavaScript and cookies"
+                           status))
+                  ((eq status 403) "HTTP 403: the site refused the request")
+                  (status (format "HTTP %s" status))
+                  (plz-error
+                   (or (cdr (plz-error-curl-error plz-error))
+                       (plz-error-message plz-error)
+                       "The network request failed"))
+                  (t (error-message-string err))))
+         (chatgpt-p
+          (member (url-host (url-generic-parse-url url))
+                  '("chatgpt.com" "www.chatgpt.com" "chat.openai.com"))))
+    (format "Capture failed: %s\n%s\n%s"
+            url reason
+            (if chatgpt-p
+                "Copy the text from ChatGPT in your browser, then run M-x html2org-clipboard in Emacs."
+              "Select the intended page in Chrome and run the capture command again, or copy its text and run M-x html2org-clipboard."))))
 
 (defun jay/org-web-tools--url-as-readable-org (url)
   "Return URL as readable Org using Jay's org-web-tools defaults.
 
 This mirrors `org-web-tools--url-as-readable-org' but sends
 browser-style request headers.  Some CloudFront-backed sites reject
-curl's default User-Agent with HTTP 403."
+curl's default User-Agent with HTTP 403.
+On failure, signal a user error with the attempted URL and reason;
+do not insert a failure entry or retry another URL from the clipboard."
   (let ((url (or url (org-web-tools--get-first-url))))
     (condition-case err
         (let* ((dom (plz 'get url
@@ -1678,9 +1698,8 @@ curl's default User-Agent with HTTP 403."
                     timestamp "\n\n"
                     "** Article" "\n\n")
             (buffer-string)))
-      (plz-error
-       (message "org-web-tools fetch failed for %s: %s" url (error-message-string err))
-       (jay/org-web-tools--capture-error-entry url err)))))
+      (error
+       (user-error "%s" (jay/org-web-tools--capture-error-message url err))))))
 
 (defun jay/org-web-tools-cleanup-buffer ()
   "Clean up current buffer after org-web-tools insertion."

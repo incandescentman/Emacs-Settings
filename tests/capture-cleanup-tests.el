@@ -9,6 +9,7 @@
 (require 'ert)
 (require 'cl-lib)
 (require 'org)
+(require 'plz)
 
 (defconst jay-capture-cleanup-test--shared-functions-file
   (expand-file-name
@@ -51,8 +52,10 @@
        jay/org-web-tools-cleanup-string
        jay/org-web-tools--plz-error-object
        jay/org-web-tools--plz-error-status
-       jay/org-web-tools--capture-error-entry
-       jay/org-web-tools--url-as-readable-org))))
+       jay/org-web-tools--capture-error-message
+       jay/org-web-tools--url-as-readable-org
+       jay/get-url-from-clipboard-or-chrome
+       jay/org-web-tools-insert-web-page-as-entry-clean))))
 
 (jay-capture-cleanup-test--ensure-target-loaded)
 
@@ -145,16 +148,60 @@
         (should (string-match-p "\\* \\[\\[https://example.com/post\\]\\[Example Page\\]\\]" output))
         (should (string-match-p "\\*\\* Article" output))))))
 
-(ert-deftest jay-org-web-tools-readable-fetch-falls-back-on-plz-error ()
-  "A blocked HTTP fetch should produce a minimal Org entry, not a debugger."
-  (unless (get 'plz-error 'error-conditions)
-    (define-error 'plz-error "plz error" 'error))
-  (cl-letf (((symbol-function 'plz)
-             (lambda (&rest _args)
-               (signal 'plz-error '("HTTP error")))))
-    (let ((output (jay/org-web-tools--url-as-readable-org "https://example.com/blocked")))
-      (should (string-match-p "Capture failed" output))
-      (should (string-match-p "\\[\\[https://example.com/blocked\\]" output)))))
+(ert-deftest jay-org-web-tools-chatgpt-failure-stops-without-clipboard-fallback ()
+  "The reported ChatGPT challenge must stop capture without changing the note."
+  (let* ((url "https://chatgpt.com/c/6a7df428-2e28-83ea-9e32-abd9100d68cd")
+         (failure (make-plz-error
+                   :response (make-plz-response
+                              :status 403
+                              :headers '((cf-mitigated . "challenge")))))
+         requests)
+    (with-temp-buffer
+      (insert-file-contents
+       "/Users/jay/Dropbox/roam/notes/20261026181221-strobist_complete.org")
+      (org-mode)
+      (let ((before (buffer-string))
+            (before-point (point))
+            (before-modified (buffer-modified-p)))
+        (cl-letf (((symbol-function 'jay/get-url-from-chrome) (lambda () url))
+                  ((symbol-function 'gui-get-selection)
+                   (lambda (&rest _) (ert-fail "Clipboard must not be consulted")))
+                  ((symbol-function 'org-web-tools--get-first-url)
+                   (lambda () (ert-fail "Kill ring must not be consulted")))
+                  ((symbol-function 'plz)
+                   (lambda (_method requested-url &rest _args)
+                     (push requested-url requests)
+                     (signal 'plz-http-error (list "HTTP error" failure)))))
+          (let* ((err (should-error
+                       (call-interactively #'jay/org-web-tools-insert-web-page-as-entry-clean)
+                       :type 'user-error))
+                 (message (error-message-string err)))
+            (should (string-match-p (regexp-quote url) message))
+            (should (string-match-p "HTTP 403" message))
+            (should (string-match-p "JavaScript and cookies" message))
+            (should (string-match-p "html2org-clipboard" message))))
+        (should (equal requests (list url)))
+        (should (equal before (buffer-string)))
+        (should (= before-point (point)))
+        (should (eq before-modified (buffer-modified-p)))))))
+
+(ert-deftest jay-org-web-tools-http-failure-does-not-invent-a-challenge ()
+  "HTTP status alone must not be reported as a Cloudflare challenge."
+  (let* ((url "https://strobist.blogspot.com/2006/03/lighting-101.html")
+         (failure (make-plz-error :response (make-plz-response :status 403)))
+         (message (jay/org-web-tools--capture-error-message
+                   url (list 'plz-http-error "HTTP error" failure))))
+    (should (string-match-p (regexp-quote url) message))
+    (should (string-match-p "HTTP 403" message))
+    (should-not (string-match-p "JavaScript\\|ChatGPT" message))))
+
+(ert-deftest jay-org-web-tools-network-failure-includes-reason ()
+  "Network failures should retain the actionable curl error."
+  (let* ((failure (make-plz-error :curl-error '(6 . "Could not resolve host")))
+         (message (jay/org-web-tools--capture-error-message
+                   "https://strobist.blogspot.com/2006/03/lighting-101.html"
+                   (list 'plz-curl-error "Curl error" failure))))
+    (should (string-match-p "Could not resolve host" message))))
 
 (ert-deftest jay-capture-cleanup-repairs-strobist-linked-images ()
   "Preserve both URLs in each malformed linked image from the reported note."

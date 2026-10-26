@@ -1639,7 +1639,7 @@ The report unit splitter excluded org headings, but several public commands bypa
 ** Mechanism
 The failure happened at the raw =plz= fetch inside [[file+emacs:/Users/jay/emacs/emacs-settings/org-web-tools-master/org-web-tools.el][org-web-tools-master/org-web-tools.el]], before =eww-readable= or Pandoc ran. Plain curl reproduced the =403=, while the same URL returned =200= when sent with a normal browser =User-Agent=.
 
-Jay's wrappers in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] now route through =jay/org-web-tools--url-as-readable-org=, which sends browser-style request headers. They also catch =plz-error= and insert a minimal Org fallback entry with the URL instead of dropping into the debugger if a site still blocks the request.
+Jay's wrappers in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] now route through =jay/org-web-tools--url-as-readable-org=, which sends browser-style request headers. On capture failure they now signal a user error with the attempted URL and reason, leave the destination untouched, and never retry a clipboard URL. The actual ~cf-mitigated: challenge~ response header identifies a browser verification challenge; HTTP 403 alone does not establish that cause. ChatGPT failures include the browser-copy and ~html2org-clipboard~ route. Updated 2026-10-26, superseding the minimal failure-entry insertion introduced July 6.
 
 ** Actionable insight
 - For =org-web-tools= HTTP failures, first distinguish fetch failures from readability/Pandoc failures. A CloudFront =403= at =plz= time is often request-header rejection, not article parsing.

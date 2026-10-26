@@ -175,7 +175,9 @@ Fetches a URL and extracts the main article content using =eww-readable=.
 
 *Usage:* Just have the page open in Chrome and run the command. No copying needed - it grabs the URL directly from Chrome's frontmost tab.
 
-Falls back to: macOS clipboard → kill-ring → prompt
+If Chrome supplies no URL, falls back to: macOS clipboard → kill-ring → prompt.
+
+If capture fails, the command stops without inserting an entry and shows the attempted URL and reason. It never retries a different clipboard URL after a failure. For ChatGPT, copy the conversation text in the browser and run ~M-x html2org-clipboard~. Select another Chrome tab and rerun the command when you intended to capture a different page. (Updated 2026-10-26.)
 
 *** html2org-clipboard (from copied HTML)
 
