@@ -1824,3 +1824,11 @@ The installed org-rich-yank version 20260924.1340 adds text properties directly 
 
 ** Actionable insight
 The clipboard module now gives ~org-rich-yank--store~ a private copy of the kill-ring string before it adds metadata. Preserve that separation: clearing text properties on the shared string would also erase useful paste metadata, while fixing only database reads would leave future writes vulnerable. Check native SQLite row counts and raw columns separately from ~org-roam-node-list~ when diagnosing this error. Repair the serialized cache records from a backed-up database; a full rebuild is unnecessary for this failure. Test both invariants after changes: the caller’s filename is unchanged and the kill-ring entry retains source metadata.
+
+* Web capture: check media through the final conversion (2026-10-26)
+
+Defuddle retained all five Strobist YouTube iframes, but Pandoc dropped them when converting HTML to Org. Comparing article text and anchor hrefs alone did not detect this content loss. [[file+emacs:/Users/jay/emacs/emacs-settings/scripts/web-capture/extract.mjs][The adapter]] now turns supported retained video embeds into links before Pandoc. Test for the source video identifiers in the final Org output, not just in extracted HTML. Likewise, a filename ending in .jpg can return an HTML image viewer: check the candidate original's GET status and content type before replacing a displayed image.
+
+* XeLaTeX: a bounding-box override can hide an image-resolution failure (2026-10-26)
+
+Five Strobist JPEG originals had JFIF resolution set to 2 DPI. XeLaTeX failed with Dimension too large while measuring their natural sizes, despite explicit output width and height limits. Supplying pixel-sized ~bb~ coordinates bypassed the error but produced an image thousands of points outside the page. Compile success was insufficient. For these five assets, local copies with JFIF resolution corrected by ExifTool to 72 DPI preserved identical decoded pixels and rendered correctly. Keep such source-specific repairs local to the document; verify rendered bounds as well as the compile log. The corrected copies are in [[file+emacs:/Users/jay/Dropbox/roam/images/strobist/][the Strobist image directory]].

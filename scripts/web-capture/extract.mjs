@@ -1,4 +1,5 @@
-// HTML comes from Emacs; extraction never refetches or calls third-party APIs.
+// Page HTML comes from Emacs. Only candidate original images are probed;
+// extraction never refetches the page or calls third-party APIs.
 import fs from 'node:fs';
 import {parseHTML} from 'linkedom';
 import {Defuddle} from 'defuddle/node';
@@ -49,13 +50,65 @@ const result = await Defuddle(document, url, {
 });
 if (!result?.content?.trim()) throw new Error('Defuddle returned no article');
 const output = parseHTML('<html><body>' + result.content + '</body></html>').document;
-for (const img of output.querySelectorAll('img[src]')) {
-  const href = imageLinks.get(new URL(img.getAttribute('src'), url).href);
+const checkedImages = new Map();
+function availableImage(href) {
+  if (!checkedImages.has(href)) checkedImages.set(href, (async () => {
+    try {
+      // Some image-looking URLs serve an HTML viewer or a broken original.
+      // Check GET headers, then cancel the body; Emacs downloads the chosen file.
+      const response = await fetch(href, {signal: AbortSignal.timeout(5000)});
+      const valid = response.ok && /^image\//i.test(response.headers.get('content-type') || '');
+      await response.body?.cancel();
+      return valid;
+    } catch {
+      return false;
+    }
+  })());
+  return checkedImages.get(href);
+}
+await Promise.all([...output.querySelectorAll('img[src]')].map(async img => {
+  const href = img.closest('a')?.getAttribute('href') ||
+    imageLinks.get(new URL(img.getAttribute('src'), url).href);
   if (href && !img.closest('a')) {
     const link = output.createElement('a');
     link.setAttribute('href', href);
     img.replaceWith(link);
     link.appendChild(img);
   }
+  // An enclosing image-file link is the source's full-image target. Article
+  // links remain links; never manufacture a larger URL from a thumbnail name.
+  if (href) {
+    const original = new URL(href, url);
+    if (/^https?:$/.test(original.protocol) &&
+        /\.(?:jpe?g|png|gif|webp|avif|svg)$/i.test(original.pathname) &&
+        original.href !== new URL(img.getAttribute('src'), url).href &&
+        await availableImage(original.href)) {
+      img.setAttribute('src', original.href);
+      img.removeAttribute('srcset');
+    }
+  }
+}));
+// Pandoc drops video embeds. Keep a usable link at the video's position.
+for (const video of output.querySelectorAll('iframe[src],video')) {
+  const src = video.getAttribute('src') || video.querySelector('source[src]')?.getAttribute('src');
+  if (!src) continue;
+  const target = new URL(src, url);
+  if (!/^https?:$/.test(target.protocol)) continue;
+  const youtube = /^(?:www\.)?youtube(?:-nocookie)?\.com$/.test(target.hostname);
+  const vimeo = target.hostname === 'player.vimeo.com';
+  if (video.tagName === 'IFRAME' && !youtube && !vimeo) continue;
+  if (youtube && /^\/embed\/[^/]+$/.test(target.pathname)) {
+    const id = target.pathname.split('/').pop();
+    const start = target.searchParams.get('start');
+    target.href = 'https://www.youtube.com/watch';
+    target.searchParams.set('v', id);
+    if (start) target.searchParams.set('t', start);
+  }
+  const paragraph = output.createElement('p');
+  const link = output.createElement('a');
+  link.setAttribute('href', target.href);
+  link.textContent = video.getAttribute('title')?.trim() || 'Watch video';
+  paragraph.appendChild(link);
+  video.replaceWith(paragraph);
 }
 process.stdout.write(output.body.innerHTML);
