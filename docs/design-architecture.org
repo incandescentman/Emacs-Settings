@@ -42,6 +42,8 @@ These are the heart of the customization. Each =.org= file contains documentatio
 | =fonts-and-themes.org=                    | =fonts-and-themes.el= | Appearance functions              |
 | =spacecraft-mode.org=                     | =spacecraft-mode.el=  | Distraction-free writing mode     |
 
+[[file+emacs:/Users/jay/emacs/emacs-settings/web-capture.org][Web Capture]] tangles to [[file+emacs:/Users/jay/emacs/emacs-settings/web-capture.el][web-capture.el]] and owns URL selection, extraction, cleanup, and insertion. It reuses the [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][pasteboard Unicode-space cleaner]] through an autoload and keeps the [[file+emacs:/Users/jay/emacs/emacs-settings/scripts/web-capture/extract.mjs][Node helper]] separate.
+
 *How it works*:
 1. Edit the =.org= file (contains code + documentation)
 2. Press =C-c C-v t= to "tangle" (extract code blocks → =.el= file)
@@ -86,10 +88,11 @@ Understanding the loading sequence helps debug issues:
 9. Loads spellcheck.el
 10. Loads org-export.el
 11. Loads shared-functions.el (tangled from shared-functions.org)
-12. Loads jay-org-roam-core.el
-13. Loads jay-org-roam-extras.el
-14. Loads other modules (deferred or immediate based on config)
-15. Loads local-config.el (if exists, gitignored for machine-specific settings)
+12. Loads web-capture.el (tangled from web-capture.org)
+13. Loads jay-org-roam-core.el
+14. Loads jay-org-roam-extras.el
+15. Loads other modules (deferred or immediate based on config)
+16. Loads local-config.el (if exists, gitignored for machine-specific settings)
 #+END_SRC
 
 *Why this order matters*:

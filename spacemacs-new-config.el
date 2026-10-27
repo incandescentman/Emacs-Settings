@@ -443,6 +443,7 @@ With prefix arg FIX-HINTS, append actionable remediation commands."
 (jay/org-babel-load-file-with-timing "/Users/jay/emacs/emacs-settings/spellcheck.org")
 (jay/org-babel-load-file-with-timing "/Users/jay/emacs/emacs-settings/org-export.org")
 (jay/org-babel-load-file-with-timing "~/emacs/emacs-settings/shared-functions.org")
+(jay/org-babel-load-file-with-timing "/Users/jay/emacs/emacs-settings/web-capture.org")
 (jay/org-babel-load-file-with-timing "~/emacs/emacs-settings/spacecraft-mode.org")
 (jay/load-with-timing "/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el")
 (jay/org-babel-load-file-with-timing "/Users/jay/emacs/emacs-settings/search-commands.org")

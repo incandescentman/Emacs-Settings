@@ -1,0 +1,385 @@
+#+auto_tangle: t
+#+TITLE: Web Capture
+
+* Purpose and boundaries
+Capture a web page as clean Org text, either in a new buffer or as an entry in the current note. This module owns URL selection, article extraction, cleanup, error reporting, and insertion. Export settings remain in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][Org Export]]; remote-resource trust remains at its existing location in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][Shared Functions]].
+
+The Node extraction helper stays in [[file+emacs:/Users/jay/emacs/emacs-settings/scripts/web-capture/extract.mjs][extract.mjs]]. See [[file+emacs:/Users/jay/emacs/emacs-settings/docs/web-capture-comparison.org][the capture guide]] for dependencies, extraction decisions, and the distinction between recurring capture fixes and document-specific cleanup.
+
+* Dependencies
+The startup loader loads this module immediately after Shared Functions. The shared Unicode-space cleaner belongs to [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][the pasteboard module]], which normally loads later in startup; its autoload also supports using this module independently with the repository on ~load-path~.
+
+#+begin_src emacs-lisp
+;;; web-capture.el --- Web page capture for Jay's Org notes -*- lexical-binding: t; -*-
+(require 'cl-lib)
+(require 'dom)
+(require 'org)
+(require 'org-element)
+(require 'org-web-tools)
+(require 's)
+(require 'subr-x)
+(require 'url-parse)
+
+(autoload 'replace-weird-spaces "pasteboard-copy-and-paste-functions" nil nil)
+#+end_src
+
+* Capture commands and helpers
+Set ~jay/org-web-tools-include-timestamp~ to ~t~ to keep capture timestamps. Command names and the ~s-P~ binding are unchanged.
+
+#+begin_src emacs-lisp
+;; Customization variable for org-web-tools cleanup
+;; Set to t to include timestamps like [2026-02-10 Tue 15:14] in captured pages
+(defvar jay/org-web-tools-include-timestamp nil
+  "If non-nil, keep the capture timestamp in org-web-tools output.
+By default, timestamps like [2026-02-10 Tue 15:14] are stripped.
+Set to t to preserve them.")
+
+(defvar jay/org-web-tools-request-headers
+  '(("User-Agent" . "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36")
+    ("Accept" . "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
+    ("Accept-Language" . "en-US,en;q=0.9"))
+  "HTTP headers sent by Jay's org-web-tools capture wrappers.")
+
+(defun jay/org-web-tools--repair-linked-images (content)
+  "Normalize Pandoc's nested image links in CONTENT to Org linked images.
+Preserve both the outer destination and image URL.  Pandoc inserts
+zero-width spaces before the inner closing bracket; the whitespace
+cleaner can turn those into ordinary spaces.  Accept either form."
+  (replace-regexp-in-string
+   (rx "[[" (group (+ (not (any "[]\n")))) "][[["
+       (group (or "https://" "http://" "file:")
+              (+ (not (any "[]\n"))))
+       "]" (* (any " \t\n\u200b")) "]]]")
+   "[[\\1][\\2]]" content t))
+
+(defun jay/org-web-tools--normalize-paragraph-breaks (content)
+  "Normalize repeated or standalone breaks into paragraph boundaries.
+Preserve single in-paragraph breaks, including captions, and verse/source blocks."
+  (with-temp-buffer
+    (insert content)
+    (let ((org-mode-hook nil)) (org-mode))
+    (let (runs run-start run-end run-leading run-standalone (run-count 0))
+      (cl-labels ((finish-run ()
+                    (when (or run-leading run-standalone (> run-count 1))
+                      (push (list run-start run-end
+                                  (cond (run-leading "")
+                                        ((> run-count 1) "\n\n")
+                                        (t "\n"))) runs))))
+        (org-element-map (org-element-parse-buffer) 'line-break
+          (lambda (node)
+            (unless (org-element-lineage node '(verse-block))
+              (let ((beg (org-element-property :begin node))
+                    (end (org-element-property :end node)))
+                (if (and run-end
+                         (string-match-p "\\`[ \t\n]*\\'"
+                                         (buffer-substring-no-properties run-end beg)))
+                    (setq run-end end run-count (1+ run-count))
+                  (finish-run)
+                  (setq run-start beg run-end end run-count 1
+                        run-standalone
+                        (save-excursion
+                          (goto-char beg)
+                          (string-blank-p (buffer-substring-no-properties
+                                           (line-beginning-position) beg)))
+                        run-leading
+                        (eq beg (org-element-property
+                                 :begin (org-element-lineage node '(paragraph))))))))))
+        (finish-run))
+      (dolist (range runs)
+        (goto-char (nth 0 range))
+        (delete-region (nth 0 range) (nth 1 range))
+        (insert (nth 2 range))))
+    (buffer-string)))
+
+(defun jay/org-web-tools--separate-image-paragraphs (content)
+  "Separate standalone web image lines from immediately following prose."
+  (with-temp-buffer
+    (let ((org-mode-hook nil)) (org-mode))
+    (insert content)
+    (goto-char (point-min))
+    (while (re-search-forward
+            "^\\[\\[\\(https?://[^]\n]+\\)\\]\\(?:\\[\\(https?://[^]\n]+\\)\\]\\)?\\][ \t]*\n" nil t)
+      (let ((image-url (or (match-string 2) (match-string 1)))
+            (begin (match-beginning 0)))
+        (when (and (string-match-p "\\.\\(?:jpe?g\\|png\\|gif\\|svg\\|webp\\)\\(?:[?#].*\\)?\\'" image-url)
+                   (not (eobp)) (not (looking-at-p "[ \t]*$"))
+                   (save-excursion
+                     (goto-char begin)
+                     (let ((node (org-element-context)))
+                       (and (eq (org-element-type node) 'link)
+                            (not (org-element-lineage node '(verse-block)))))))
+          (insert "\n"))))
+    (buffer-string)))
+
+(defun jay/org-web-tools-cleanup-string (content)
+  "Clean up CONTENT string from org-web-tools, removing cruft."
+  (let ((result (jay/org-web-tools--repair-linked-images content)))
+    ;; Reuse the pasteboard cleaner's Unicode-space policy without applying
+    ;; its broader typography or Org/Markdown transformations.
+    (setq result
+          (with-temp-buffer
+            (insert result)
+            (replace-weird-spaces (point-min) (point-max))
+            (buffer-string)))
+    ;; Remove base64-encoded images
+    (setq result (replace-regexp-in-string "\\[\\[data:image[^]]*\\]\\]" "" result))
+    ;; Remove empty link descriptions like [[url][//]]
+    (setq result (replace-regexp-in-string "\\[\\[[^]]+\\]\\[//\\]\\]" "" result))
+    ;; Remove social share links with nested base64 images in description
+    (setq result (replace-regexp-in-string "\\[\\[[^]]+\\]\\[/\\[\\[data:image[^]]*\\]\\]/\\]\\]" "" result))
+    ;; Remove social share mailto links
+    (setq result (replace-regexp-in-string "\\[\\[mailto:\\?subject=[^]]*\\]\\[[^]]*\\]\\]" "" result))
+    ;; Remove common social share domains entirely
+    (setq result (replace-regexp-in-string "\\[\\[https://\\(www\\.\\)?\\(facebook\\.com/sharer\\|twitter\\.com/intent\\|linkedin\\.com/shareArticle\\|pinterest\\.com/pin/create\\|web\\.whatsapp\\.com/send\\|xing\\.com/spi/shares\\)[^]]*\\]\\[[^]]*\\]\\]" "" result))
+    ;; Remove view counts like //6,728 (handles EOF without trailing newline)
+    (setq result (replace-regexp-in-string "^//[0-9,]+\\(?:\n\\|\\'\\)" "" result))
+    ;; Remove relative timestamps like "2 years ago", "3 months ago" (handles EOF)
+    (setq result (replace-regexp-in-string "^\\([0-9]+\\|a\\|an\\) \\(year\\|month\\|week\\|day\\|hour\\|minute\\|second\\)s? ago\\(?:\n\\|\\'\\)" "" result))
+    ;; Remove :website: tag from headings
+    (setq result (replace-regexp-in-string " :website:$" "" result))
+    ;; Optionally remove capture timestamp like [2026-02-10 Tue 15:14]
+    (unless jay/org-web-tools-include-timestamp
+      (setq result (replace-regexp-in-string "^\\[[-0-9]+ [A-Za-z]+ [0-9:]+\\]\n+" "" result)))
+    ;; Remove lines that are only whitespace (consume the newline too)
+    (setq result (replace-regexp-in-string "^[ \t]+\\(?:\n\\|\\'\\)" "" result))
+    ;; Collapse excessive newlines
+    (setq result (replace-regexp-in-string "\n\n\n+" "\n\n" result))
+    ;; Remove blank line between heading and body text (preserve before headings and # directives)
+    (setq result (replace-regexp-in-string "^\\(\\*+ .+\\)\n\n+\\([^*\n#]\\)" "\\1\n\\2" result))
+    ;; Remove trailing asterisks from headings when separated by whitespace
+    ;; (e.g., "** Heading **" -> "** Heading")
+    (setq result (replace-regexp-in-string "^\\(\\*+ .*?\\)\\s-+\\*+\\s-*$" "\\1" result))
+    (jay/org-web-tools--separate-image-paragraphs
+     (jay/org-web-tools--normalize-paragraph-breaks result))))
+
+(defun jay/org-web-tools--plz-error-object (err)
+  "Return the `plz-error' object from condition-case ERR, when present."
+  (let ((items (cdr-safe err))
+        found)
+    (while (and items (not found))
+      (when (and (fboundp 'plz-error-p)
+                 (plz-error-p (car items)))
+        (setq found (car items)))
+      (setq items (cdr items)))
+    found))
+
+(defun jay/org-web-tools--plz-error-status (err)
+  "Return HTTP status from condition-case ERR, when present."
+  (when-let* ((plz-error (jay/org-web-tools--plz-error-object err))
+              (response (and (fboundp 'plz-error-response)
+                             (plz-error-response plz-error))))
+    (when (fboundp 'plz-response-status)
+      (plz-response-status response))))
+
+(defun jay/org-web-tools--capture-error-message (url err)
+  "Explain capture ERR for URL without including response bodies or cookies."
+  (let* ((plz-error (jay/org-web-tools--plz-error-object err))
+         (response (and plz-error (plz-error-response plz-error)))
+         (status (jay/org-web-tools--plz-error-status err))
+         (challenge (and response
+                         (equal (alist-get 'cf-mitigated
+                                           (plz-response-headers response))
+                                "challenge")))
+         (reason (cond
+                  (challenge
+                   (format "HTTP %s: browser verification requires JavaScript and cookies"
+                           status))
+                  ((eq status 403) "HTTP 403: the site refused the request")
+                  (status (format "HTTP %s" status))
+                  (plz-error
+                   (or (cdr (plz-error-curl-error plz-error))
+                       (plz-error-message plz-error)
+                       "The network request failed"))
+                  (t (error-message-string err))))
+         (chatgpt-p
+          (member (url-host (url-generic-parse-url url))
+                  '("chatgpt.com" "www.chatgpt.com" "chat.openai.com"))))
+    (format "Capture failed: %s\n%s\n%s"
+            url reason
+            (if chatgpt-p
+                "Copy the text from ChatGPT in your browser, then run M-x html2org-clipboard in Emacs."
+              "Select the intended page in Chrome and run the capture command again, or copy its text and run M-x html2org-clipboard."))))
+
+(defvar jay/org-web-tools-extractor 'defuddle
+  "Article extractor: `defuddle' (with EWW fallback), or `eww'.")
+
+(defvar jay/org-web-tools-extractor-script
+  (expand-file-name "~/emacs/emacs-settings/scripts/web-capture/extract.mjs")
+  "Node helper for article extraction.")
+
+(defun jay/org-web-tools--defuddle-html (html url)
+  "Extract HTML at URL with Defuddle; return nil on process failure.
+A failed helper reports its diagnostic before the caller uses EWW."
+  (let ((node (executable-find "node")))
+    (if (not (and node (file-readable-p jay/org-web-tools-extractor-script)))
+        (progn (message "Defuddle unavailable; using EWW for %s" url) nil)
+      (let ((stderr (make-temp-file "org-web-tools-defuddle-")))
+        (unwind-protect
+            (with-temp-buffer
+              (insert html)
+              (let ((status (call-process-region
+                             (point-min) (point-max) node t (list t stderr) nil
+                             jay/org-web-tools-extractor-script url)))
+                (if (and (equal status 0) (not (string-empty-p (string-trim (buffer-string)))))
+                    (buffer-string)
+                  (message "Defuddle failed (%s); using EWW for %s: %s"
+                           status url
+                           (with-temp-buffer (insert-file-contents stderr)
+                                             (string-trim (buffer-string))))
+                  nil)))
+          (delete-file stderr))))))
+
+(defun jay/org-web-tools--dom-title (dom)
+  "Return the full text of DOM's title element, or nil.
+Blogger puts markup such as <br> and <i> inside <title>; taking only
+the first child truncated titles at the first tag."
+  (when-let* (((consp dom))
+              (node (car (dom-by-tag dom 'title)))
+              (text (string-trim
+                     (replace-regexp-in-string "[ \t\n\r]+" " "
+                                               (dom-texts node "")))))
+    (unless (string-empty-p text) text)))
+
+(defun jay/org-web-tools--extract-readable (html url)
+  "Return (TITLE . ARTICLE-HTML) for downloaded HTML at URL.
+Keep the source title: extractors can mistake site slogans for titles."
+  (let* ((dom (with-temp-buffer
+                (insert html)
+                (org-web-tools--sanitized-dom)))
+         (title (jay/org-web-tools--dom-title dom))
+         (article (when (eq jay/org-web-tools-extractor 'defuddle)
+                    (jay/org-web-tools--defuddle-html html url))))
+    (if article
+        (cons title article)
+      (let ((readable (org-web-tools--eww-readable dom)))
+        (cons (or title (car readable)) (cdr readable))))))
+
+(defun jay/org-web-tools--url-as-readable-org (url)
+  "Return URL as readable Org using Jay's org-web-tools defaults.
+
+This mirrors `org-web-tools--url-as-readable-org' but sends
+browser-style request headers.  Some CloudFront-backed sites reject
+curl's default User-Agent with HTTP 403.
+On a network or HTTP failure, signal a user error with the attempted
+URL and reason; do not insert a failure entry or retry another URL
+from the clipboard.  Parsing and conversion errors propagate unchanged."
+  (let* ((url (or url (org-web-tools--get-first-url)))
+         (html (condition-case err
+                  (plz 'get url
+                       :headers jay/org-web-tools-request-headers
+                       :as 'string)
+                (plz-error
+                 (user-error "%s" (jay/org-web-tools--capture-error-message url err)))))
+         (readable-result (jay/org-web-tools--extract-readable html url))
+         (title (org-web-tools--cleanup-title (or (car readable-result) "")))
+         (converted (org-web-tools--html-to-org-with-pandoc (cdr readable-result)))
+         (link (org-link-make-string url title))
+         (timestamp (format-time-string (org-time-stamp-format 'with-time 'inactive))))
+    (with-temp-buffer
+      (org-mode)
+      (insert converted)
+      (org-web-tools--demote-headings-below 1)
+      (goto-char (point-min))
+      (insert "* " link " :website:" "\n"
+              ":PROPERTIES:\n:WEB_CAPTURE_URL: " url "\n:END:\n\n"
+              timestamp "\n\n")
+      (buffer-string))))
+
+(defun jay/org-web-tools-cleanup-buffer ()
+  "Clean up current buffer after org-web-tools insertion."
+  (interactive)
+  (save-excursion
+    (let ((content (buffer-string)))
+      (erase-buffer)
+      (insert (jay/org-web-tools-cleanup-string content)))))
+
+(defun jay/get-url-from-chrome ()
+  "Get URL from frontmost Chrome tab, or nil if Chrome not running."
+  (ignore-errors
+    (let* ((as-command "tell application \"Google Chrome\"
+                          set theURL to URL of active tab of front window
+                          return theURL
+                        end tell")
+           (url (string-trim (shell-command-to-string
+                              (concat "osascript -e " (shell-quote-argument as-command))))))
+      (when (string-match-p "^https?://" url)
+        url))))
+
+(defun jay/get-url-from-clipboard-or-chrome (&optional prompt)
+  "Get a capture URL.  With PROMPT, let the user explicitly override it."
+  (if prompt
+      (read-string "Capture URL: " (jay/get-url-from-chrome))
+    (or (jay/get-url-from-chrome)
+      (let ((clipboard (ignore-errors (gui-get-selection 'CLIPBOARD 'STRING))))
+        (when (and clipboard (string-match-p "^https?://" clipboard))
+          (string-trim clipboard)))
+      (org-web-tools--get-first-url)
+      (read-string "URL: "))))
+
+(defun jay/org-web-tools-read-url-as-org-clean (url)
+  "Like `org-web-tools-read-url-as-org' but with cleanup.
+Gets URL from Chrome frontmost tab, or clipboard, or prompts.
+With a prefix argument, prompt for an explicit URL override."
+  (interactive (list (jay/get-url-from-clipboard-or-chrome current-prefix-arg)))
+  (cl-letf (((symbol-function 'org-web-tools--url-as-readable-org)
+             #'jay/org-web-tools--url-as-readable-org))
+    (org-web-tools-read-url-as-org url))
+  (jay/org-web-tools-cleanup-buffer))
+
+(defun jay/org-web-tools--capture-entry-p ()
+  "Recognize an explicit capture property, or the legacy Article structure.
+The property must belong to this heading; never inherit it from a parent."
+  (save-excursion
+    (save-match-data
+      (org-back-to-heading t)
+      (or (org-entry-get nil "WEB_CAPTURE_URL" nil)
+          (let ((level (org-outline-level)))
+            (and (string-match-p "\\`\\[\\[https?://[^]\n]+\\]\\[.+\\]\\]\\'"
+                                 (org-get-heading t t t t))
+                 (progn
+                   (outline-next-heading)
+                   (and (not (eobp))
+                        (= (org-outline-level) (1+ level))
+                        (equal (org-get-heading t t t t) "Article")))))))))
+
+(defun jay/org-web-tools--insertion-context ()
+  "Return (POSITION . LEVEL) for a sibling capture or a section's child.
+Find the enclosing capture even inside its section descendants.  Without
+a capture ancestor, append a child to the current section.  Before the
+first heading, insert a new top-level entry at point."
+  (save-excursion
+    (if (org-before-first-heading-p)
+        (cons (line-beginning-position) 1)
+      (org-back-to-heading t)
+      (let* ((section (point))
+             (capture
+              (catch 'capture
+                (while t
+                  (when (jay/org-web-tools--capture-entry-p)
+                    (throw 'capture (point)))
+                  (unless (org-up-heading-safe)
+                    (throw 'capture nil))))))
+        (goto-char (or capture section))
+        (let ((level (+ (org-outline-level) (if capture 0 1))))
+          (org-end-of-subtree t t)
+          (cons (point) level))))))
+
+(defun jay/org-web-tools-insert-web-page-as-entry-clean (url)
+  "Insert a sibling capture or a section's child, leaving point after it.
+Gets URL from Chrome frontmost tab, or clipboard, or prompts.
+With a prefix argument, prompt for an explicit URL override."
+  (interactive (list (jay/get-url-from-clipboard-or-chrome current-prefix-arg)))
+  (let ((content (jay/org-web-tools--url-as-readable-org url)))
+    (when content
+      (setq content (jay/org-web-tools-cleanup-string content))
+      (let ((context (jay/org-web-tools--insertion-context)))
+        (goto-char (car context))
+        (org-paste-subtree (cdr context) (s-trim content) t)
+        ;; Keep point after the paste and before a blank separator, so the
+        ;; next capture still belongs here when another section follows.
+        (when (org-at-heading-p)
+          (save-excursion (insert "\n")))))))
+
+(provide 'web-capture)
+;;; web-capture.el ends here
+#+end_src

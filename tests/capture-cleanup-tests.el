@@ -11,62 +11,16 @@
 (require 'org)
 (require 'plz)
 
-(defconst jay-capture-cleanup-test--shared-functions-file
+(defconst jay-capture-cleanup-test--module-file
   (expand-file-name
-   "shared-functions.el"
+   "web-capture.el"
    (expand-file-name ".." (file-name-directory (or load-file-name buffer-file-name))))
-  "Absolute path to `shared-functions.el` in this repo.")
+  "Absolute path to the production web-capture module in this repo.")
 
-(defconst jay-capture-cleanup-test--pasteboard-file
-  (expand-file-name
-   "pasteboard-copy-and-paste-functions.el"
-   (expand-file-name ".." (file-name-directory (or load-file-name buffer-file-name))))
-  "Absolute path to the pasteboard whitespace cleaner in this repo.")
-
-(load jay-capture-cleanup-test--pasteboard-file nil 'nomessage)
-
-(defun jay-capture-cleanup-test--load-definitions (file symbols)
-  "Load defuns/defvars named in SYMBOLS from FILE without loading the full config."
-  (with-temp-buffer
-    (insert-file-contents file)
-    (goto-char (point-min))
-    (let ((done nil))
-      (while (not done)
-        (condition-case nil
-            (let ((form (read (current-buffer))))
-              (when (and (consp form)
-                         (memq (car form) '(defun defvar defcustom))
-                         (memq (nth 1 form) symbols))
-                (eval form t)))
-          (end-of-file
-           (setq done t)))))))
-
-(defun jay-capture-cleanup-test--ensure-target-loaded ()
-  "Ensure the capture cleanup function under test is available."
-  (unless (fboundp 'jay/org-web-tools-cleanup-string)
-    (jay-capture-cleanup-test--load-definitions
-     jay-capture-cleanup-test--shared-functions-file
-     '(jay/org-web-tools-include-timestamp
-       jay/org-web-tools-request-headers
-       jay/org-web-tools--repair-linked-images
-       jay/org-web-tools--normalize-paragraph-breaks
-       jay/org-web-tools-extractor
-       jay/org-web-tools-extractor-script
-       jay/org-web-tools--defuddle-html
-       jay/org-web-tools--dom-title
-       jay/org-web-tools--extract-readable
-       jay/org-web-tools--separate-image-paragraphs
-       jay/org-web-tools-cleanup-string
-       jay/org-web-tools--plz-error-object
-       jay/org-web-tools--plz-error-status
-       jay/org-web-tools--capture-error-message
-       jay/org-web-tools--url-as-readable-org
-       jay/get-url-from-clipboard-or-chrome
-       jay/org-web-tools--capture-entry-p
-       jay/org-web-tools--insertion-context
-       jay/org-web-tools-insert-web-page-as-entry-clean))))
-
-(jay-capture-cleanup-test--ensure-target-loaded)
+;; Load the production module, including its real library dependencies.
+;; The pasteboard Unicode-space cleaner is loaded through the module's autoload.
+(add-to-list 'load-path (file-name-directory jay-capture-cleanup-test--module-file))
+(load jay-capture-cleanup-test--module-file nil 'nomessage)
 
 (ert-deftest jay-capture-cleanup-removes-timestamp-by-default ()
   "Default cleanup should strip capture timestamps."
@@ -444,10 +398,6 @@
 
 (ert-deftest jay-capture-new-entry-has-property-and-direct-body ()
   "New captures omit Article and place genuine sections below the page title."
-  (jay-capture-cleanup-test--load-definitions
-   (expand-file-name "org-web-tools-master/org-web-tools.el"
-                     (file-name-directory jay-capture-cleanup-test--shared-functions-file))
-   '(org-web-tools--demote-headings-below))
   (let ((url "https://strobist.blogspot.com/2016/07/lighting-102-controlling-specular.html"))
     (cl-letf (((symbol-function 'plz) (lambda (&rest _) "source"))
               ((symbol-function 'jay/org-web-tools--extract-readable)

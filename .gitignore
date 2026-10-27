@@ -43,6 +43,7 @@ url/cache/
 latex-templates/auto/
 spacecraft-mode.el
 shared-functions.el
+web-capture.el
 gnu-emacs-startup.el
 fonts-and-themes.el
 org-authoring.el

@@ -17,6 +17,8 @@ The command now merges repeated prose line breaks into paragraph boundaries and 
 
 Install dependencies on another machine: ~npm ci --prefix /Users/jay/emacs/emacs-settings/scripts/web-capture~ and ~brew install exiftool~. ExifTool must be on Emacs's PATH for original-image upgrades; otherwise the displayed images remain in use.
 
+The Emacs commands and their helpers live in [[file+emacs:/Users/jay/emacs/emacs-settings/web-capture.org][web-capture.org]], which tangles to [[file+emacs:/Users/jay/emacs/emacs-settings/web-capture.el][web-capture.el]]. The startup loader loads it immediately after Shared Functions; ~s-P~ still runs ~jay/org-web-tools-insert-web-page-as-entry-clean~. The capture tests load the complete module directly. Export settings and remote-resource trust remain outside it.
+
 * Capture fixes versus document cleanup
 Fix recurring capture problems in the tool. Handle unusual, document-specific cleanup manually or with an agent. For example, preserving embedded videos belongs in the capture command; removing Strobist's uncommon ~COMING NEXT~ lines belongs in the individual note. Consider agent-assisted cleanup before adding permanent rules for an isolated page detail. This is Jay's approved scope decision, recorded 2026-10-26.
 

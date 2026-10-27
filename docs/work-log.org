@@ -2966,3 +2966,14 @@ All seven Node tests pass, including the real 2-DPI failure, a real 64 KiB slice
 * 2026-10-26: Put the approved capture-cleanup principle in the capture guide
 
 At Jay's request, added a short section to [[file+emacs:/Users/jay/emacs/emacs-settings/docs/web-capture-comparison.org::*Capture fixes versus document cleanup][the existing capture guide]]: fix recurring capture problems in the tool and handle unusual document-specific cleanup manually or with an agent. The principle was already recorded in this work log; the guide now makes it easier for future sessions to find. No separate file or code change.
+
+* 2026-10-26: Extract the web capture module
+
+Moved the 18 capture functions and four variables verbatim from [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][Shared Functions]] into [[file+emacs:/Users/jay/emacs/emacs-settings/web-capture.org][Web Capture]], with explicit library dependencies and an autoload for the existing pasteboard Unicode-space cleaner. [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs-new-config.el][The startup loader]] loads the new literate module immediately after Shared Functions. Command names and the ~s-P~ binding are unchanged. The Node helper, export settings, trust settings, and Strobist notes were not changed.
+
+The capture suite now loads the complete production module instead of extracting named definitions. Updated [[file+emacs:/Users/jay/emacs/emacs-settings/scripts/emacs_smoke_test.sh][the smoke runner]] to tangle/check the module, activate the installed Spacemacs test dependencies under ~-Q~, and load early-init before init for the full startup check. The old init-only invocation failed with ~void-variable dotspacemacs-directory~ before reaching the changed module. Updated the module inventory, usage/architecture guides, and capture guide.
+
+Validation: all 26 capture/Pandoc ERT tests and seven Node tests passed. Both regenerated Elisp files passed ~check-parens~; a source comparison confirmed the moved functions and variables were unchanged and all other Shared Functions content survived. The full startup smoke check passed after explicitly running ~emacs-startup-hook~, where Spacemacs loads user-config; merely loading init in batch had returned before that phase. The check confirms the command is defined by the new module and ~s-P~ resolves to it. Loaded the module into the running Emacs and verified the same source and binding. Generated Elisp follows the existing ignore policy. Graphical restart confirmation remains the user checkpoint.
+
+** Superseded startup-test instruction, preserved verbatim (2026-10-26)
+- *Startup smoke-test*: After tweaking startup-touching files, run =emacs --batch --load ~/.emacs.d/init.el --eval "(with-temp-buffer (org-mode) (message \"shift %S\" org-support-shift-select))"= to catch regressions like the =shift-select-mode= autoload failure before they land.
