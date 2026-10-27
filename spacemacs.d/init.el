@@ -811,11 +811,11 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   ;; configuration runs.  This can be removed once every machine's Spacemacs
   ;; includes upstream commit f445770f24cfff8622356dc5f90067145be98d79.
   (dolist (aliases '((consult--source-buffer . consult-source-buffer)
-		     (consult--source-hidden-buffer . consult-source-hidden-buffer)
-		     (consult--source-recent-file . consult-source-recent-file)
-		     (consult--source-bookmark . consult-source-bookmark)
-		     (consult--source-project-recent-file-hidden
-		      . consult-source-project-recent-file-hidden)))
+                     (consult--source-hidden-buffer . consult-source-hidden-buffer)
+                     (consult--source-recent-file . consult-source-recent-file)
+                     (consult--source-bookmark . consult-source-bookmark)
+                     (consult--source-project-recent-file-hidden
+                      . consult-source-project-recent-file-hidden)))
     (defvaralias (car aliases) (cdr aliases)))
 
   ;; Spacemacs commit 3bdd13cd2 (2026-08-23, spacemacs-editing) pushes onto
