@@ -179,13 +179,13 @@ If Chrome supplies no URL, falls back to: macOS clipboard → kill-ring → prom
 
 Use ~C-u~ before either command to enter an explicit URL; the prompt starts with Chrome's current URL.
 
-For insertion, put the cursor on a section heading to append a captured page as its child. From anywhere inside an existing captured page, including its Article section, the next page is inserted after that whole page at the same heading level. Under a level-1 Lighting 101 section, successive captured pages therefore stay at level 2, with Article at level 3. The cursor finishes after the inserted text. Before the first heading, a capture starts at level 1.
+For insertion, put the cursor on a section heading to append a captured page as its child. From anywhere inside an existing captured page, including its internal sections, the next page is inserted after that whole page at the same heading level. Under a level-1 Lighting 101 section, successive captured pages therefore stay at level 2, with genuine article sections at level 3. New captures put the text directly under the linked page title and record their source in a ~WEB_CAPTURE_URL~ property; they do not add an Article heading. Older captures with an Article child remain recognized. A plain linked heading alone is not treated as a capture. The cursor finishes after the inserted text. Before the first heading, a capture starts at level 1.
 
 If the network fetch fails, the command stops without inserting an entry and shows the attempted URL and reason. It never retries a different clipboard URL after a failure. For ChatGPT, copy the conversation text in the browser and run ~M-x html2org-clipboard~. Select another Chrome tab and rerun the command when you intended to capture a different page. Parsing and Pandoc conversion errors retain their original diagnostics. This command downloads the URL; it does not capture Chrome's rendered page or signed-in session. (Updated 2026-10-26.)
 
 The cleanup preserves linked images, merges repeated prose breaks into paragraphs, and removes standalone break lines while keeping intentional inline caption breaks. It does not infer headings from visually emphasized text.
 
-On another machine with Node installed, install the pinned extraction dependencies with ~npm ci --prefix /Users/jay/emacs/emacs-settings/scripts/web-capture~. The helper is [[file+emacs:/Users/jay/emacs/emacs-settings/scripts/web-capture/extract.mjs][extract.mjs]]. See [[file+emacs:/Users/jay/emacs/emacs-settings/docs/web-capture-comparison.org][the extraction comparison]] for the selection evidence and known limitations. The Emacs integration currently remains in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]].
+On another machine with Node installed, install the pinned extraction dependencies with ~npm ci --prefix /Users/jay/emacs/emacs-settings/scripts/web-capture~. The helper is [[file+emacs:/Users/jay/emacs/emacs-settings/scripts/web-capture/extract.mjs][extract.mjs]]. See [[file+emacs:/Users/jay/emacs/emacs-settings/docs/web-capture-comparison.org][the extraction comparison]] for the selection evidence and known limitations. Before extraction, the helper preserves standalone legacy HTML font-size headings as semantic headings; it does not promote ordinary bold sentences. Cleanup separates standalone image links from following prose so the paragraph starts below the image in PDF export. The Emacs integration currently remains in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]].
 
 *** html2org-clipboard (from copied HTML)
 
@@ -215,6 +215,12 @@ Smart quotes are enabled globally with =org-export-with-smart-quotes= so HTML an
 Section numbering is backend-specific and enforced by =my-org-export-change-options=: HTML exports always use =num:nil=, while LaTeX exports always use =num:t=. These settings override conflicting document-local =#+OPTIONS: num:= values. For LaTeX output that should look unnumbered, keep the normal section commands needed for table-of-contents participation and suppress visible numbers with =\setcounter{secnumdepth}{0}=.
 
 If Markdown export starts producing quote entities again, check [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] before adding per-file =#+OPTIONS: ':nil= workarounds. The intended repo-wide behavior is plain quotes for Markdown and smart quotes for the other export backends.
+
+*** Web images in PDF exports
+
+LaTeX/PDF export recognizes both HTTP and HTTPS image links, including clickable images whose link description is an image URL. Org downloads the image to its native persistent cache and emits a local image reference for LaTeX; the original Org note and its web links stay unchanged. This uses the regular ~org-export-dispatch~ LaTeX/PDF commands and needs no additional package or manual image-download step.
+
+The Strobist image hosts ~blogger.googleusercontent.com~ and ~photos1.blogger.com~ are trusted in configuration. Other hosts may prompt on first export; Org's ~d~ choice approves that host, and startup preserves these Customize choices. Cached images are reused on later exports. The cache on Destroyer is [[file+emacs:/Users/jay/.cache/org-persist/][Org's persistent cache]]. A missing or refused download still needs to be resolved; enabling image recognition does not make an unavailable source image available. The default image options cap height at 60 percent of the text area and preserve aspect ratio, so tall photos fit on a page.
 
 *** Standard HTML export appearance
 
@@ -260,10 +266,10 @@ Both tools automatically strip:
 - Capture timestamps (by default)
 - =:website:= tags
 
-All paste and capture methods preserve standalone bold lines as bold text. They do not infer Org headings from visual emphasis:
+All paste and capture methods preserve standalone bold lines as bold text. They do not infer Org headings from bold emphasis alone:
 - =*1. Classic Unalome:*= remains =*1. Classic Unalome:*=
 - =*Heading*= remains =*Heading*=
-- Only explicit Markdown headings such as =### Heading= become Org headings.
+- For Markdown paste, only explicit headings such as =### Heading= become Org headings. Web capture also preserves semantic HTML headings and standalone legacy HTML font-size titles.
 
 Adaptive paste converts Markdown blockquotes to Org quote lines while preserving inline formatting. => **Bold quote**= becomes =: *Bold quote*=, and a bare =>= between quoted paragraphs becomes a bare =:=.
 

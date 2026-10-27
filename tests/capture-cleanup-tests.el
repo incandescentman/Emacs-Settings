@@ -55,6 +55,7 @@
        jay/org-web-tools--defuddle-html
        jay/org-web-tools--dom-title
        jay/org-web-tools--extract-readable
+       jay/org-web-tools--separate-image-paragraphs
        jay/org-web-tools-cleanup-string
        jay/org-web-tools--plz-error-object
        jay/org-web-tools--plz-error-status
@@ -154,7 +155,8 @@
       (let ((output (jay/org-web-tools--url-as-readable-org "https://example.com/post")))
         (should (string-match-p "Mozilla/5.0" (cdr (assoc "User-Agent" seen-headers))))
         (should (string-match-p "\\* \\[\\[https://example.com/post\\]\\[Example Page\\]\\]" output))
-        (should (string-match-p "\\*\\* Article" output))))))
+        (should (string-match-p ":WEB_CAPTURE_URL: https://example.com/post" output))
+      (should-not (string-match-p "^\\*+ Article$" output))))))
 
 (ert-deftest jay-org-web-tools-chatgpt-failure-stops-without-clipboard-fallback ()
   "The reported ChatGPT challenge must stop capture without changing the note."
@@ -309,6 +311,7 @@
     (goto-char (point-min))
     (re-search-forward "^\\*+ \\[\\[https://strobist\\.blogspot\\.com/2006/02/welcome-to-strobist\\.html")
     (beginning-of-line)
+    (org-entry-put nil "WEB_CAPTURE_URL" "https://strobist.blogspot.com/2006/02/welcome-to-strobist.html")
     (let ((start (point)))
       (org-end-of-subtree t t)
       (buffer-substring-no-properties start (point)))))
@@ -340,16 +343,14 @@
             (while (re-search-forward "^\\(\\*+\\) \\[\\[https://strobist\\.blogspot\\.com/2006/02/welcome-to-strobist\\.html" nil t)
               (should (= (length (match-string 1)) (1+ section-level)))
               (setq count (1+ count))
-              (outline-next-heading)
-              (should (= (org-outline-level) (+ section-level 2)))
-              (should (equal (org-get-heading t t t t) "Article")))
+              (should (org-entry-get nil "WEB_CAPTURE_URL" nil)))
             (should (= count 3))))))))
 
 (ert-deftest jay-capture-preserves-real-note-and-inserts-at-capture-level ()
-  "Capture siblings from title, Article, body or deep child; append section children."
+  "Capture siblings from title, body or deep child; append section children."
   (require 's)
   (let ((page (jay-capture-test--real-page)))
-    (dolist (location '(section title article body deep-child))
+    (dolist (location '(section title body deep-child))
       (with-temp-buffer
         (let ((org-mode-hook nil)) (org-mode))
         (insert-file-contents "/Users/jay/Dropbox/roam/notes/20261026181221-strobist_complete.org")
@@ -358,15 +359,14 @@
         (beginning-of-line)
         (unless (eq location 'section)
           (outline-next-heading)
+          (org-entry-put nil "WEB_CAPTURE_URL" "https://strobist.blogspot.com/2006/03/lighting-101.html")
           (unless (eq location 'title)
-            (outline-next-heading)
-            (unless (eq location 'article)
-              (forward-line 1)
-              (when (eq location 'deep-child)
-                (insert "**** Detail\n")
-                (forward-line -1)))))
+            (org-end-of-meta-data t)
+            (when (eq location 'deep-child)
+              (insert "*** Detail\n")
+              (forward-line -1))))
         (let* ((original (buffer-string))
-               (expected-start (save-excursion (org-end-of-subtree t t) (point)))
+               (expected-start (car (jay/org-web-tools--insertion-context)))
                (expected-next (buffer-substring-no-properties expected-start (point-max)))
                (original-size (buffer-size)))
           (cl-letf (((symbol-function 'jay/org-web-tools--url-as-readable-org)
@@ -408,6 +408,64 @@
           (should (= (length (match-string 1)) 1))
           (setq count (1+ count)))
         (should (= count 4))))))
+
+(ert-deftest jay-capture-marker-is-local-and-legacy-still-works ()
+  "Plain linked sections are not captures; metadata never inherits."
+  (let ((page (jay-capture-test--real-page)) (org-use-property-inheritance t))
+    (with-temp-buffer
+      (org-mode) (insert page) (goto-char (point-min))
+      (should (jay/org-web-tools--capture-entry-p))
+      (org-end-of-meta-data t) (insert "** Section\n") (forward-line -1)
+      (should-not (jay/org-web-tools--capture-entry-p)))
+    (with-temp-buffer
+      (org-mode) (insert page) (goto-char (point-min))
+      (org-entry-delete nil "WEB_CAPTURE_URL")
+      (should-not (jay/org-web-tools--capture-entry-p))
+      (org-end-of-meta-data t) (insert "** Article\n")
+      (goto-char (point-min))
+      (should (jay/org-web-tools--capture-entry-p)))))
+
+(ert-deftest jay-capture-separates-real-photo-from-prose ()
+  "A standalone photo must not share the first line of the next paragraph."
+  (with-temp-buffer
+    (insert (jay-capture-test--real-page))
+    (goto-char (point-min))
+    (re-search-forward "^\\[\\[https://blogger[^\n]+$")
+    (let* ((photo (match-string 0))
+           (input (concat photo "\nAt its heart, this website is about one thing.\n"))
+           (expected (concat photo "\n\nAt its heart, this website is about one thing.\n")))
+      (should (equal expected (jay/org-web-tools--separate-image-paragraphs input)))
+      (should (equal expected (jay/org-web-tools--separate-image-paragraphs expected)))
+      (dolist (block '("src org" "verse"))
+        (let ((literal (concat "#+begin_" block "\n" input "#+end_" (car (split-string block)) "\n")))
+          (should (equal literal (jay/org-web-tools--separate-image-paragraphs literal)))))
+      (should (equal (concat "See " input)
+                     (jay/org-web-tools--separate-image-paragraphs (concat "See " input)))))))
+
+(ert-deftest jay-capture-new-entry-has-property-and-direct-body ()
+  "New captures omit Article and place genuine sections below the page title."
+  (jay-capture-cleanup-test--load-definitions
+   (expand-file-name "org-web-tools-master/org-web-tools.el"
+                     (file-name-directory jay-capture-cleanup-test--shared-functions-file))
+   '(org-web-tools--demote-headings-below))
+  (let ((url "https://strobist.blogspot.com/2016/07/lighting-102-controlling-specular.html"))
+    (cl-letf (((symbol-function 'plz) (lambda (&rest _) "source"))
+              ((symbol-function 'jay/org-web-tools--extract-readable)
+               (lambda (&rest _) '("Controlling Specular Highlights" . "source")))
+              ((symbol-function 'org-web-tools--cleanup-title) #'identity)
+              ((symbol-function 'org-web-tools--html-to-org-with-pandoc)
+               (lambda (_) "* Product Shot, Same Principle\nHere's a shot of my (then) two-speedlight kit, circa 2016.\n")))
+      (let ((text (jay/org-web-tools-cleanup-string (jay/org-web-tools--url-as-readable-org url))))
+        (should (string-match-p (regexp-quote (concat ":WEB_CAPTURE_URL: " url)) text))
+        (should (string-match-p "^\\*\\* Product Shot, Same Principle$" text))
+        (should-not (string-match-p "^\\*+ Article$" text))))))
+
+(ert-deftest jay-capture-retains-strobist-styled-section-title ()
+  "The actual legacy font-size title survives extraction as a heading."
+  ;; Source: https://strobist.blogspot.com/2016/07/lighting-102-controlling-specular.html
+  (let ((html "<html><body><article><br><font size=4>Product Shot, Same Principle</font><br><br>Here's a shot of my (then) two-speedlight kit, circa 2016. That's eleven different items, all black, on white paper.<br><br>You can't just overexpose your way to surface detail on this, because you'll blow away your whites. And to make matters worse, many of the objects have bright shiny parts, too.</article></body></html>"))
+    (should (string-match-p "<h2[^>]*>Product Shot, Same Principle</h2>"
+                           (jay/org-web-tools--defuddle-html html "https://strobist.blogspot.com/2016/07/lighting-102-controlling-specular.html")))))
 
 (provide 'capture-cleanup-tests)
 

@@ -293,14 +293,12 @@ Contextuals=Alternate
 \\newlist{mylist}{enumerate}{10}
 
 
-% Fix quotation mark handling in LaTeX output
-% csquotes provides smart quote handling that correctly interprets
-% opening vs closing quotes based on context
+% Org handles smart quotes before LaTeX. Active quote characters cannot span
+% formatting groups (for example a quotation ending inside italic text).
 \\usepackage{csquotes}
-% Tell csquotes to treat straight quotes as smart quotes
-% This ensures quoted text renders with proper opening/closing marks
-% instead of two closing marks
-\\MakeOuterQuote{\"}
+% Preserve the wedge character used in captured mathematical expressions.
+\\usepackage{newunicodechar}
+\\newunicodechar{∧}{\\ensuremath{\\wedge}}
 
 
                % control line spacing in bulleted list

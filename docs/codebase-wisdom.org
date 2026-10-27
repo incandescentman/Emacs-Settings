@@ -1694,6 +1694,39 @@ A capture command checks only the page it captured, so gaps in a series show up 
 ** Actionable insight
 Compare the note with the site's list in order, and report the count, order, missing and extra pages, wrong heading levels, empty Article sections, and titles that end in a colon. The comparison directory [[file+emacs:/Users/jay/emacs/emacs-settings/output/web-capture-comparison-2026-10-26/][output/web-capture-comparison-2026-10-26]] is untracked but not ignored, and it holds a DOM copy of a private ChatGPT conversation. Never stage ~output/~ in a commit.
 
+* Org already localizes remote images for LaTeX export
+Date: 2026-10-26
+
+** Trigger
+The Strobist PDF contained zero embedded images and printed image URLs in their place. HTML export showed the pictures correctly.
+
+** Mechanism
+The custom ~org-latex-inline-image-rules~ in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][org-export.org]] recognized only file links, overriding the installed Org 9.8.10 default's HTTPS support. Org's ~org-latex-image-link-filter~ already recognizes image URLs used as link descriptions, and ~org-latex-link~ already calls ~org-export-link-localise~ to download remote image data through ~org-persist~ before emitting ~\\includegraphics~. The fix adds HTTP and HTTPS image rules alongside the existing file rule. HTTP matters for older captured image URLs. No custom download hook or source-note rewrite is needed.
+
+** Actionable insight
+Check the installed exporter's image recognition and localization support before adding a download subsystem. Verify both standalone images and linked image descriptions against the real document, then compare image references in the generated TeX with embedded images in the PDF. Keep Org's existing remote-resource approval policy; cached images can be reused without changing the source links.
+
+** Related traps verified in the Strobist export
+
+- The resource trust ~setq~ in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] replaced Customize's saved host approvals. Add known hosts to the existing list instead; preserve the special value ~t~ and anchor host patterns at a slash or end of string. The two Blogger hosts are configured explicitly, and redundant individual-image approvals were removed from Customize.
+- A fixed image width without a height bound produced a 1106pt page overflow for a tall source image. An 85 percent height bound prevented overflow; Jay subsequently chose ~height=.6\textheight,keepaspectratio~ globally so portrait images can share a page with text while retaining the chosen width limit and proportions.
+- [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el][Beautiful Racket]] activated straight double quotes with ~\MakeOuterQuote~. A real quotation starting outside italic markup and ending inside it caused a csquotes grouping error. Org already handles smart quotes; removing the active-character declaration allows that unchanged source passage to compile.
+- For isolated batch checks, do not point an ~emacs -Q~ process at the live ~org-persist-directory~ after loading Org. The installed Org's ~org-persist--disable-when-emacs-Q~ cleanup removes its persistence directory on exit. Use an isolated cache, or set that variable to ~nil~ before loading Org when persistence is intended; avoid concurrent exporters sharing the live cache during verification.
+
+* Preserve capture structure without a synthetic Article heading
+Date: 2026-10-26
+
+** Trigger
+Every captured lesson printed an uninformative Article heading, while real Strobist section titles printed as body text. Removing Article also removed the old insertion-context marker.
+
+** Mechanism
+New entries carry a local ~WEB_CAPTURE_URL~ property; detection never inherits it and still recognizes older linked-title/Article captures. A linked title alone is insufficient evidence of a capture. The body starts directly below the page title, and its real headings remain descendants. Three consecutive insertions were checked under level-1 and level-2 sections and within existing captures.
+
+Strobist marks many section titles with ~<font size=4>~ rather than heading tags. Defuddle removed the size attribute before Pandoc could preserve the visual distinction. [[file+emacs:/Users/jay/emacs/emacs-settings/scripts/web-capture/extract.mjs][The extraction helper]] now promotes standalone enlarged-font titles before extraction, preserving their inline contents; inline enlarged text and ordinary bold text do not qualify. All 272 non-navigation styled titles survived extraction across the 100 source pages checked. Standalone image links also need a blank line before the following prose: otherwise Org/LaTeX puts the first words beside the image. Six cases occurred in the full Strobist note, including the three reported by Claude.
+
+** Actionable insight
+Inspect the original HTML before blaming the PDF exporter or inferring headings from short prose. When replacing a visible structure used for identification, add explicit metadata and legacy detection in the same change. Source-check a note repair, apply incremental edits against a verified live-buffer snapshot, and verify that authored text and links differ only by the exact authorized removals.
+
 * Org-roam Exclusions: File Exclude Beats Directory Exclude
   Date: 2026-07-08
 

@@ -1622,6 +1622,26 @@ Preserve single in-paragraph breaks, including captions, and verse/source blocks
         (insert (nth 2 range))))
     (buffer-string)))
 
+(defun jay/org-web-tools--separate-image-paragraphs (content)
+  "Separate standalone web image lines from immediately following prose."
+  (with-temp-buffer
+    (let ((org-mode-hook nil)) (org-mode))
+    (insert content)
+    (goto-char (point-min))
+    (while (re-search-forward
+            "^\\[\\[\\(https?://[^]\n]+\\)\\]\\(?:\\[\\(https?://[^]\n]+\\)\\]\\)?\\][ \t]*\n" nil t)
+      (let ((image-url (or (match-string 2) (match-string 1)))
+            (begin (match-beginning 0)))
+        (when (and (string-match-p "\\.\\(?:jpe?g\\|png\\|gif\\|svg\\|webp\\)\\(?:[?#].*\\)?\\'" image-url)
+                   (not (eobp)) (not (looking-at-p "[ \t]*$"))
+                   (save-excursion
+                     (goto-char begin)
+                     (let ((node (org-element-context)))
+                       (and (eq (org-element-type node) 'link)
+                            (not (org-element-lineage node '(verse-block)))))))
+          (insert "\n"))))
+    (buffer-string)))
+
 (defun jay/org-web-tools-cleanup-string (content)
   "Clean up CONTENT string from org-web-tools, removing cruft."
   (let ((result (jay/org-web-tools--repair-linked-images content)))
@@ -1660,7 +1680,8 @@ Preserve single in-paragraph breaks, including captions, and verse/source blocks
     ;; Remove trailing asterisks from headings when separated by whitespace
     ;; (e.g., "** Heading **" -> "** Heading")
     (setq result (replace-regexp-in-string "^\\(\\*+ .*?\\)\\s-+\\*+\\s-*$" "\\1" result))
-    (jay/org-web-tools--normalize-paragraph-breaks result)))
+    (jay/org-web-tools--separate-image-paragraphs
+     (jay/org-web-tools--normalize-paragraph-breaks result))))
 
 (defun jay/org-web-tools--plz-error-object (err)
   "Return the `plz-error' object from condition-case ERR, when present."
@@ -1788,11 +1809,11 @@ from the clipboard.  Parsing and conversion errors propagate unchanged."
     (with-temp-buffer
       (org-mode)
       (insert converted)
-      (org-web-tools--demote-headings-below 2)
+      (org-web-tools--demote-headings-below 1)
       (goto-char (point-min))
-      (insert "* " link " :website:" "\n\n"
-              timestamp "\n\n"
-              "** Article" "\n\n")
+      (insert "* " link " :website:" "\n"
+              ":PROPERTIES:\n:WEB_CAPTURE_URL: " url "\n:END:\n\n"
+              timestamp "\n\n")
       (buffer-string))))
 
 (defun jay/org-web-tools-cleanup-buffer ()
@@ -1837,22 +1858,24 @@ With a prefix argument, prompt for an explicit URL override."
   (jay/org-web-tools-cleanup-buffer))
 
 (defun jay/org-web-tools--capture-entry-p ()
-  "Whether the current heading has the linked-title/Article capture structure."
+  "Recognize an explicit capture property, or the legacy Article structure.
+The property must belong to this heading; never inherit it from a parent."
   (save-excursion
     (save-match-data
       (org-back-to-heading t)
-      (let ((level (org-outline-level)))
-        (and (string-match-p "\\`\\[\\[https?://[^]\n]+\\]\\[.+\\]\\]\\'"
-                             (org-get-heading t t t t))
-             (progn
-               (outline-next-heading)
-               (and (not (eobp))
-                    (= (org-outline-level) (1+ level))
-                    (equal (org-get-heading t t t t) "Article"))))))))
+      (or (org-entry-get nil "WEB_CAPTURE_URL" nil)
+          (let ((level (org-outline-level)))
+            (and (string-match-p "\\`\\[\\[https?://[^]\n]+\\]\\[.+\\]\\]\\'"
+                                 (org-get-heading t t t t))
+                 (progn
+                   (outline-next-heading)
+                   (and (not (eobp))
+                        (= (org-outline-level) (1+ level))
+                        (equal (org-get-heading t t t t) "Article")))))))))
 
 (defun jay/org-web-tools--insertion-context ()
   "Return (POSITION . LEVEL) for a sibling capture or a section's child.
-Find the enclosing capture even inside its Article descendants.  Without
+Find the enclosing capture even inside its section descendants.  Without
 a capture ancestor, append a child to the current section.  Before the
 first heading, insert a new top-level entry at point."
   (save-excursion
@@ -7734,9 +7757,13 @@ c-u s-L
                (org-timestamp-custom-formats "<%B %d" . "<%d/%m/%Y %a %H:%M>")))
   (add-to-list 'safe-local-variable-values var))
 
-;; 6) Mark remote Org resources as safe (unrelated to eval, but good to keep).
-(setq org-safe-remote-resources
-      '("\\`https://fniessen\\.github\\.io/org-html-themes/org/theme-bigblow\\.setup\\'"))
+;; 6) Preserve Customize's trusted resources while adding our known hosts.
+;; Never reset this list: Org saves the user's per-domain download approvals here.
+(unless (eq org-safe-remote-resources t)
+  (dolist (resource '("\\`https://fniessen\\.github\\.io/org-html-themes/org/theme-bigblow\\.setup\\'"
+                      "\\`https?://blogger\\.googleusercontent\\.com\\(?:/\\|\\'\\)"
+                      "\\`https?://photos1\\.blogger\\.com\\(?:/\\|\\'\\)"))
+    (add-to-list 'org-safe-remote-resources resource)))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 #+end_src

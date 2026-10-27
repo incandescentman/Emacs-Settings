@@ -1184,6 +1184,8 @@ This function is called at the very end of Spacemacs initialization."
    '(org-list-demote-modify-bullet nil)
    '(org-noter-auto-save-last-location t)
    '(org-noter-insert-note-no-questions t)
+   '(org-safe-remote-resources
+     '("\\`https://photos1\\.blogger\\.com\\(?:/\\|\\'\\)" "\\`https://blogger\\.googleusercontent\\.com\\(?:/\\|\\'\\)" "\\`https://fniessen\\.github\\.io/org-html-themes/org/theme-bigblow\\.setup\\'"))
    '(org-sidebar-jump-indirect t)
    '(org-sidebar-tree-jump-fn 'org-sidebar-tree-jump-source)
    '(org-superstar-headline-bullets-list '(42 42 42 42))

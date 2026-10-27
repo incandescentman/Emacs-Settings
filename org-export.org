@@ -13,7 +13,7 @@
                                    (strike-through . "<del>%s</del>")
                                    (underline . "<span class=\"underline\">%s</span>")
                                    (verbatim . "<code>%s</code>"))
-      org-latex-image-default-option "width=20.5cm"
+      org-latex-image-default-option "height=.6\\textheight,keepaspectratio"
       org-export-time-stamp-file nil
       org-export-with-clocks t
       org-html-head-include-default-style nil
@@ -66,7 +66,12 @@
 
 (setq org-latex-default-class "arno-claude-design")
 
-(setq org-latex-inline-image-rules '(("file" . "\\.\\(pdf\\|jpeg\\|jpg\\|png\\|ps\\|eps\\|tikz\\|pgf\\|svg\\|gif\\)\\'")))
+;; Org localizes remote images through org-persist before LaTeX includes them.
+;; Include HTTP for older captured pages as well as current HTTPS images.
+(setq org-latex-inline-image-rules
+      '(("file" . "\\.\\(pdf\\|jpeg\\|jpg\\|png\\|ps\\|eps\\|tikz\\|pgf\\|svg\\|gif\\)\\'")
+        ("http" . "\\.\\(jpeg\\|jpg\\|png\\|ps\\|eps\\|tikz\\|pgf\\|svg\\)\\'")
+        ("https" . "\\.\\(jpeg\\|jpg\\|png\\|ps\\|eps\\|tikz\\|pgf\\|svg\\)\\'")))
 
 ;; (setq org-export-html-style-include-default t)
  (setq org-latex-date-format "%d %B %Y.")
