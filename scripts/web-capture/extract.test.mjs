@@ -2,11 +2,29 @@ import assert from 'node:assert/strict';
 import {test} from 'node:test';
 import {spawnSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
+import fs from 'node:fs';
 import {parseHTML} from 'linkedom';
 
-function extract(body, response = {ok: true, type: 'image/jpeg'}) {
+// Real 64 KiB prefixes, not complete photos; JFIF declares 2 and 240 DPI.
+const lowDpiImage = fs.readFileSync(new URL('./fixtures/strobist-tardis-2dpi-header.jpg', import.meta.url));
+const highDpiImage = fs.readFileSync(new URL('./fixtures/strobist-kassi-240dpi-header.jpg', import.meta.url));
+function withResolution(x, y, unit = 'inches') {
+  const result = spawnSync('exiftool', [`-JFIF:XResolution=${x}`, `-JFIF:YResolution=${y}`,
+    `-JFIF:ResolutionUnit=${unit}`, '-o', '-', '-'], {input: lowDpiImage});
+  assert.equal(result.status, 0, result.stderr.toString());
+  return result.stdout;
+}
+const normalImage = withResolution(72, 72);
+
+function extract(body, response = {ok: true, type: 'image/jpeg'}, bytes = normalImage) {
   const script = fileURLToPath(new URL('./extract.mjs', import.meta.url));
-  const setup = `globalThis.fetch = async () => ({ok: ${response.ok}, headers: new Headers({'content-type': ${JSON.stringify(response.type)}}), body: null});
+  const setup = `globalThis.fetch = async (_url, options) => {
+      if (options.headers.Range !== 'bytes=0-65535') throw new Error('Unbounded image request');
+      const bytes = Buffer.from(${JSON.stringify(bytes.toString('base64'))}, 'base64');
+      return {status: ${response.status ?? (response.ok ? 206 : 404)},
+        headers: new Headers({'content-type': ${JSON.stringify(response.type)}, 'content-range': 'bytes 0-' + (bytes.length - 1) + '/${response.total ?? 124966}'}),
+        body: ${response.status === 200 ? "{cancel: async () => {}, getReader: () => {process.exitCode = 71; throw new Error('Read ignored range response')}}" : 'new Response(bytes).body'}};
+    };
     process.argv = [process.execPath, ${JSON.stringify(script)}, 'https://strobist.blogspot.com/2019/11/slc-0l-03-joker-cinematographer-on.html'];
     await import(${JSON.stringify(script)});`;
   const result = spawnSync(process.execPath, ['--input-type=module', '--eval', setup], {
@@ -50,4 +68,34 @@ test('unavailable originals and HTML image viewers keep the displayed image', ()
     const doc = parseHTML(`<html><body>${html}</body></html>`).document;
     assert.equal(doc.querySelector('img').getAttribute('src'), displayed);
   }
+});
+
+const umbrella = 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjX8vGPtKqNkIrbYH0x0lShYF7dl5ce-gV5iG7gm9ye8_yXWXWpiEJD-p8fCi2c_HjNOdH8zoOksAcoHKNRiScnwkMW0zDjs8cHWqNgLLeLn413oQ_pi3gKrgfCrRXg219wisdp/s1600/UMBRELLA_0320.jpg';
+const umbrellaThumbnail = umbrella.replace('/s1600/', '/s400/');
+const umbrellaHtml = `<p>To gel your umbrella and spill kill, tape it across the front as shown.</p><a href="${umbrella}"><img src="${umbrellaThumbnail}"></a>`;
+function selectedImage(bytes, response) {
+  const html = extract(umbrellaHtml, response, bytes);
+  return parseHTML(`<html><body>${html}</body></html>`).document.querySelector('img').getAttribute('src');
+}
+
+test('the real 2-DPI original keeps its thumbnail; a 72-DPI copy is selected', () => {
+  assert.equal(selectedImage(lowDpiImage), umbrellaThumbnail);
+  assert.equal(selectedImage(normalImage), umbrella);
+});
+
+test('a real 64 KiB slice of a 240-DPI original still upgrades', () => {
+  assert.equal(highDpiImage.length, 65536);
+  assert.equal(selectedImage(highDpiImage, {ok: true, type: 'image/jpeg', total: 135302}), umbrella);
+});
+
+test('the guard checks both axes and physical units without rejecting aspect ratios', () => {
+  assert.equal(selectedImage(withResolution(72, 2)), umbrellaThumbnail);
+  assert.equal(selectedImage(withResolution(10, 10)), umbrella);
+  assert.equal(selectedImage(withResolution(2, 2, 'cm')), umbrellaThumbnail);
+  assert.equal(selectedImage(withResolution(4, 4, 'cm')), umbrella);
+  assert.equal(selectedImage(withResolution(1, 1, 'None')), umbrella);
+});
+
+test('a server that ignores Range keeps the thumbnail without reading its body', () => {
+  assert.equal(selectedImage(normalImage, {ok: true, status: 200, type: 'image/jpeg'}), umbrellaThumbnail);
 });

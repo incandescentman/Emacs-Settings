@@ -1,0 +1,8 @@
+#+title: Web capture image-header fixtures
+
+These files contain only the first 65,536 bytes of larger Strobist JPEGs. They are partial binary fixtures for the range-limited resolution check, not complete photographs. The metadata was not changed.
+
+- [[file+emacs:/Users/jay/emacs/emacs-settings/scripts/web-capture/fixtures/strobist-tardis-2dpi-header.jpg][strobist-tardis-2dpi-header.jpg]]: [[https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgIzforygZQCHL5BkALGy_ELGZ-tSGbIVzztsW8Ohtxi0q-g-keYErzqwDHEzR7QqBn-_F4I-26kyu6L1cGmr2AiWoURRnZP97ra7Wfvgh6iRCeBd6saTT6KQTkTpQ9euwU6p7q/s1600/2-TARDIS.jpg][source original]], 124,966 bytes in the original, JFIF 2 DPI. Prefix SHA-256: ~ce8f10ec727f20e1f124e1bb3042f81c708c278e39ae60da75c06556e5263e35~.
+- [[file+emacs:/Users/jay/emacs/emacs-settings/scripts/web-capture/fixtures/strobist-kassi-240dpi-header.jpg][strobist-kassi-240dpi-header.jpg]]: [[https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg5GMXwizpMY3ewqRmYonGo7AVK2HulhkTdePGLaXBDrpkL1iNxFu7wuopcjRZGJqaMNjjK1GRlxCRUzeJiq-DBLhhpoQ_V2YWP60I6h4oQXdZ8_VN6ZMTiK8SolouCvfx-3YPw/s1600/Kassi.jpg][source original]], 135,302 bytes in the original, JFIF 240 DPI. Prefix SHA-256: ~6cc20aa44f20797afa66bbd3aea9125d8872e93d65791faad355f841b4bbbb58~.
+
+The tests use ExifTool to create metadata variants in memory. They never modify the fixtures or the five corrected images in [[file+emacs:/Users/jay/Dropbox/roam/images/strobist/][the Strobist note image directory]].

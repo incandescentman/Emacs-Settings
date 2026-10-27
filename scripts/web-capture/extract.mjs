@@ -1,6 +1,7 @@
 // Page HTML comes from Emacs. Only candidate original images are probed;
 // extraction never refetches the page or calls third-party APIs.
 import fs from 'node:fs';
+import {spawnSync} from 'node:child_process';
 import {parseHTML} from 'linkedom';
 import {Defuddle} from 'defuddle/node';
 
@@ -51,15 +52,64 @@ const result = await Defuddle(document, url, {
 if (!result?.content?.trim()) throw new Error('Defuddle returned no article');
 const output = parseHTML('<html><body>' + result.content + '</body></html>').document;
 const checkedImages = new Map();
+function usableResolution(bytes, complete) {
+  const metadata = spawnSync('exiftool', ['-j', '-G1', '-a',
+    '-FileType', '-Warning', '-Error',
+    '-XResolution', '-YResolution', '-ResolutionUnit',
+    '-PixelsPerUnitX', '-PixelsPerUnitY', '-PixelUnits', '-'],
+  {input: bytes, encoding: 'utf8', timeout: 5000, maxBuffer: 1024 * 1024});
+  if (metadata.error || metadata.status !== 0) return false;
+  const tags = JSON.parse(metadata.stdout)[0];
+  if (!tags || Object.keys(tags).some(key => /(?:^|:)(Error|Warning)$/.test(key))) return false;
+  // JPEG resolution lives in its header. Other formats can store metadata
+  // later in the file; a truncated prefix cannot establish its absence.
+  if (!complete && tags['File:FileType'] !== 'JPEG') return false;
+  for (const [key, value] of Object.entries(tags)) {
+    const match = key.match(/^(.*):(XResolution|YResolution|PixelsPerUnitX|PixelsPerUnitY)$/);
+    // IFD1 describes an embedded thumbnail, not the original image.
+    if (!match || match[1] === 'IFD1') continue;
+    const pixelsPerUnit = match[2].startsWith('PixelsPerUnit');
+    const unit = String(tags[`${match[1]}:${pixelsPerUnit ? 'PixelUnits' : 'ResolutionUnit'}`] || '').toLowerCase();
+    const factor = {inches: 1, cm: 2.54, meters: 0.0254}[unit];
+    // Missing or unitless density is an aspect ratio, not a physical DPI.
+    if (!factor) continue;
+    const dpi = Number(value) * factor;
+    if (!Number.isFinite(dpi) || dpi < 10) return false;
+  }
+  return true;
+}
 function availableImage(href) {
   if (!checkedImages.has(href)) checkedImages.set(href, (async () => {
     try {
       // Some image-looking URLs serve an HTML viewer or a broken original.
-      // Check GET headers, then cancel the body; Emacs downloads the chosen file.
-      const response = await fetch(href, {signal: AbortSignal.timeout(5000)});
-      const valid = response.ok && /^image\//i.test(response.headers.get('content-type') || '');
-      await response.body?.cancel();
-      return valid;
+      // Read the original's metadata before choosing it: bogus low DPI can
+      // overflow XeLaTeX's natural image dimensions despite output size limits.
+      const response = await fetch(href, {
+        headers: {Range: 'bytes=0-65535'}, signal: AbortSignal.timeout(5000),
+      });
+      const range = response.headers.get('content-range')?.match(/^bytes 0-(\d+)\/(\d+)$/i);
+      const valid = response.status === 206 && range && Number(range[1]) < 65536 &&
+        Number(range[2]) > Number(range[1]) && /^image\//i.test(response.headers.get('content-type') || '');
+      if (!valid) {
+        await response.body?.cancel();
+        return false;
+      }
+      const reader = response.body.getReader();
+      const chunks = [];
+      let length = 0;
+      try {
+        while (true) {
+          const {done, value} = await reader.read();
+          if (done) break;
+          length += value.length;
+          if (length > 65536) return false;
+          chunks.push(value);
+        }
+      } finally {
+        await reader.cancel();
+      }
+      if (length !== Number(range[1]) + 1) return false;
+      return usableResolution(Buffer.concat(chunks), length === Number(range[2]));
     } catch {
       return false;
     }
