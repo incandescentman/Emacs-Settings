@@ -4799,6 +4799,10 @@ To use this function, highlight the region you want to add numbering to and then
 (setq openwith-associations '(("\\.pdf\\'" "open" (file))))
 (openwith-mode t)
 
+;; OpenWith signals this success message to abort the Emacs file visit.
+;; Keep that control-flow signal out of the debugger, without hiding failures.
+(add-to-list 'debug-ignored-errors "\\`Opened .* in external program\\'")
+
 ;; Prevent OpenWith from interfering with non-interactive file reads
 ;; during Org exports/publishing (e.g., resolving file: links to PDFs).
 ;; Some Org backends briefly open linked files to inspect them; OpenWith

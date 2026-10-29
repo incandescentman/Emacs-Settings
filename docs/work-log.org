@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-10-29: Keep successful external PDF opening out of the debugger
+
+- Added an anchored ~debug-ignored-errors~ entry for OpenWith's deliberate success signal in [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]]. The installed package raises this signal after launching the external viewer to abort the Emacs file visit; genuine errors remain eligible for debugging.
+- Retangled [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.el][shared-functions.el]], passed ~check-parens~ and the full-init smoke test, and activated the setting in running Emacs. Reopened the reported PhotoUno PDF through ~org-open-file~ with the ~emacs~ application argument and verified its success signal matches the exemption while ~debug-on-error~ remains enabled.
+
 * 2026-10-11: Repair repeated and long Transcript Garamond headers
 
 - Jay authorized the repair after Claude demonstrated that the section-title header from ~da16e1b5~ overprinted the title in transcripts whose level-one section repeats the document title. In [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/transcript-garamond.el][the template]], exact title/section equality now leaves the right header empty and gives the left title the full width. Distinct sections keep a measured field capped at 40% of the header, separated from the left field by 1em; both wrap. No fuzzy matching or fallback to the next heading is used.
