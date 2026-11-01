@@ -28,8 +28,9 @@ if [ "$FAIL" -ne 0 ]; then
   exit 1
 fi
 
-if [ -x /Applications/Emacs.app/Contents/MacOS/Emacs ]; then
-  EMACS_BIN=/Applications/Emacs.app/Contents/MacOS/Emacs
+EMACS_APP="$(/Users/jay/Dropbox/apps/bash-profile/bin/emacs-app 2>/dev/null || echo /Applications/Emacs.app)"
+if [ -x "$EMACS_APP/Contents/MacOS/Emacs" ]; then
+  EMACS_BIN="$EMACS_APP/Contents/MacOS/Emacs"
 elif command -v emacs >/dev/null 2>&1; then
   EMACS_BIN="$(command -v emacs)"
 else

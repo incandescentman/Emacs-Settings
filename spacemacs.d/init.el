@@ -353,7 +353,9 @@ It should only modify the values of Spacemacs settings."
    ;; If non-nil, a form that evaluates to a package directory. For example, to
    ;; use different package directories for different Emacs versions, set this
    ;; to `emacs-version'. (default 'emacs-version)
-   dotspacemacs-elpa-subdirectory nil
+   ;; Emacs 29 uses elpa/develop; Emacs 31 keeps its own compiled packages in
+   ;; elpa/31/develop. See docs/emacs-31-installation-plan.org.
+   dotspacemacs-elpa-subdirectory '(if (>= emacs-major-version 31) "31" "")
 
    ;; One of `vim', `emacs' or `hybrid'.
    ;; `hybrid' is like `vim' except that `insert state' is replaced by the
