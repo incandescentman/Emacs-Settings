@@ -7719,7 +7719,10 @@ enable tab-bar-based notch hiding on that display as well."
                (y (nth 1 geometry))
                (width (nth 2 geometry))
                (height (nth 3 geometry)))
+          ;; A batch or terminal frame has no numeric position.
           (when (and geometry
+                     (numberp frame-x)
+                     (numberp frame-y)
                      (>= frame-x x)
                      (<= frame-x (+ x width))
                      (>= frame-y y)

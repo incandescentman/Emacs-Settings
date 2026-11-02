@@ -84,7 +84,16 @@ if [[ "$FULL_INIT" -eq 1 ]]; then
                     (eq (lookup-key key-minor-mode-map (kbd \"s-P\"))
                         'jay/org-web-tools-insert-web-page-as-entry-clean))
          (error \"Web capture module or s-P binding did not load\"))
-       (princ \"Web capture module and s-P startup checks passed\n\"))"
+       (princ \"Web capture module and s-P startup checks passed\n\")
+       ;; Emacs 31 warns for every loaded file without a lexical-binding
+       ;; cookie. Fail here so a package update that drops one is noticed.
+       (let ((log (if (get-buffer \"*Warnings*\")
+                      (with-current-buffer \"*Warnings*\"
+                        (buffer-substring-no-properties (point-min) (point-max)))
+                    \"\")))
+         (when (string-match-p \"Missing .lexical-binding. cookie\" log)
+           (error \"Startup logged missing lexical-binding cookies:\n%s\" log)))
+       (princ \"No missing lexical-binding cookie warnings\n\"))"
 else
   echo "[5/5] Skipping full-init check (pass --full-init to enable)."
 fi

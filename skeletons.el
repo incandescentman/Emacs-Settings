@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: nil; -*-
 (define-skeleton my-orgfootnote "Docstring." nil
   "[fn:: " _ "] ")
 

@@ -4,6 +4,7 @@
 
 This customization with the big blocky boxy red cursor makes me so happy.
 #+BEGIN_SRC emacs-lisp
+;;; -*- lexical-binding: nil; -*-
 
 (setq-default cursor-type 'hbar)
 (set-cursor-color "red")

@@ -17,8 +17,10 @@ for rel in "${STAGED_EL[@]}"; do
   file="$ROOT/$rel"
   [ -f "$file" ] || continue
   first_line="$(head -n 1 "$file" || true)"
-  if ! grep -Eq 'lexical-binding:[[:space:]]*t' <<<"$first_line"; then
-    echo "[pre-commit] Missing lexical-binding header on first line: $rel"
+  # An explicit nil cookie is allowed: it keeps a dynamically scoped file's
+  # behavior while declaring the choice, which Emacs 31 otherwise warns about.
+  if ! grep -Eq 'lexical-binding:[[:space:]]*(t|nil)([[:space:];]|$)' <<<"$first_line"; then
+    echo "[pre-commit] Missing lexical-binding cookie (t or nil) on first line: $rel"
     FAIL=1
   fi
 done

@@ -1,4 +1,4 @@
-;;; prelude-key-chord.el --- Key chord setup
+;;; prelude-key-chord.el --- Key chord setup  -*- lexical-binding: nil; -*-
 ;;
 ;; Copyright © 2011-2013 Bozhidar Batsov
 ;;

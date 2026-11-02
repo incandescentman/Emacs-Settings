@@ -1,4 +1,4 @@
-;;; reveal-in-finder.el --- Reveal the file associated with the buffer in the OS X Finder
+;;; reveal-in-finder.el --- Reveal the file associated with the buffer in the OS X Finder  -*- lexical-binding: nil; -*-
 
 ;; Copyright (C) 2014  Kazuki YOSHIDA
 

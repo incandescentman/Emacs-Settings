@@ -52,6 +52,24 @@ Switching Destroyer from the cask's Emacs 29 to a separate Emacs-31.app (see [[f
 ** Actionable insight
 Before running any AppleScript or JXA that names an app, ask whether it can launch the app; with two Emacs versions installed, an accidental launch runs two editors on the same files. Set file defaults with ~setdefault~, not ~duti~, and confirm with its ~get~ mode. When a route is an Automator app, test it with ~open -a APP FILE~ and confirm the file actually opened in Emacs (~find-buffer-visiting~ over ~emacsclient~), since an app that runs and exits looks the same whether or not it opened anything. In scripts, run Emacs as ~"$(emacs-app)/Contents/MacOS/Emacs"~ rather than plain ~emacs~. Before editing Alfred, read its sync folder setting and edit that copy; and after any route change, search the live configs for the old bundle ID.
 
+* Emacs 31 warns for every loaded file without a lexical-binding cookie
+Date: 2026-11-01
+
+** Trigger
+The first Emacs 31 startup on the real configuration logged "Missing ‘lexical-binding’ cookie" for 17 files: Jay's own files, six tangled from Org, files vendored into this repo, and files in other checkouts (Spacemacs, the prelude fork, ox-astro, [[file+emacs:/Users/jay/emacs/local-config.el][local-config.el]]). Tracing the warnings in batch then hit three traps.
+
+** Mechanism
+- The warning comes from ~internal--get-default-lexical-binding~ in Emacs 31's files.el, which runs only when a loaded source file has no ~lexical-binding~ setting on its first line. An explicit ~lexical-binding: nil~ cookie stops the warning and keeps the dynamic binding those files have always had; ~t~ would change how their variables behave.
+- In a tangled file the cookie has to be the first line of the first tangled src block in the Org source, so it becomes line 1 of the .el. Tangle with an explicit output path and diff the new .el against the old one; the diff should be the cookie line alone.
+- Files this repo does not own carry a local cookie too: [[file+emacs:/Users/jay/emacs/spacemacs/layers/+spacemacs/spacemacs-visual/local/zoom-frm/frame-fns.el][frame-fns.el]] in the Spacemacs checkout, [[file+emacs:/Users/jay/emacs/external-packages/prelude/core/prelude-core.el][prelude-core.el]], [[file+emacs:/Users/jay/Dropbox/github/ox-astro/ox-astro-config.el][ox-astro-config.el]], and the vendored copies under elpa-supplement and tufte-org-mode-master. An update or re-vendoring can drop the cookie, so [[file+emacs:/Users/jay/emacs/emacs-settings/scripts/emacs_smoke_test.sh][emacs_smoke_test.sh]] ~--full-init~ now fails when startup logs any missing-cookie warning.
+- The init sets ~warning-minimum-level~ to ~:error~, so in batch the warnings never reach stderr; they are still logged in ~*Warnings*~, and that buffer is what the check reads.
+- An agent shell opened before ~homebrew-overrides~ joined PATH still finds Emacs 29 for a bare ~emacs~, and Emacs 29 does not warn, so a batch run there passes for the wrong reason. Name the Emacs 31 binary or run through ~bash -lc~, and print ~emacs-version~.
+- The full init used to abort in batch when the one-second timer behind ~jay/setup-display-aware-tab-bar~ fired while the startup hook waited on hunspell: a batch frame has no numeric position, on Emacs 29 and 31 alike. ~jay/current-display-attributes~ now skips displays when the position is not a number.
+- Batch never fires idle timers, and its frames have no GUI behavior, so a warning that only appears in the GUI session cannot be traced in batch. The ~org-element-at-point~ warning in ~*spacemacs*~ from the same startup was not reproduced by the startup hook, every idle timer, the dashboard redraw, or the mode line and window hooks run with ~*spacemacs*~ current.
+
+** Actionable insight
+Give every new .el file, and every new tangled Org source, a cookie on line 1. Run ~scripts/emacs_smoke_test.sh --full-init~ from a login shell after updating Spacemacs, prelude, or a vendored file. To trace a GUI-only warning, load a probe that records a backtrace into a variable (not one that prints) with ~open -a /Applications/Emacs-31.app --args -l PROBE.el~; command-line ~-l~ files load after the init file and before ~emacs-startup-hook~ and its timers. (Passing ~-l~ through ~open --args~ to this build is untested as of 2026-11-01.)
+
 * A review sample hides whatever it does not contain
 Date: 2026-10-11
 

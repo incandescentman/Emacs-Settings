@@ -10,6 +10,7 @@
 * environment settings
 ** Handle Emacs UTF-8 input
 #+BEGIN_SRC emacs-lisp
+;;; -*- lexical-binding: nil; -*-
 ;; early-init.el  ── locale in one place
 (set-language-environment "UTF-8")   ; everything speaks UTF-8
 (setenv "LANG" "en_US.UTF-8")        ; tell subprocesses

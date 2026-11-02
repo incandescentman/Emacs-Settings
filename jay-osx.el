@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: nil; -*-
 ;; Provide the shared override keymap early; `keys.el' owns the global minor mode.
 (defvar key-minor-mode-map (make-sparse-keymap) "key-minor-mode keymap.")
 

@@ -5,6 +5,7 @@
 
 * reflash-indentation
 #+BEGIN_SRC emacs-lisp
+;;; -*- lexical-binding: nil; -*-
 (defun reflash-indentation ()
   "Fix spacing on the screen."
   (interactive)

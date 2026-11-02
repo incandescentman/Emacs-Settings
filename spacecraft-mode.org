@@ -40,6 +40,7 @@ https://chatgpt.com/share/e/67a6e6b2-a1b4-8001-b66a-a60df4a01948
 
 * Captain
 #+begin_src emacs-lisp
+;;; -*- lexical-binding: nil; -*-
 (require 'captain)   ;; load Captain
 (add-hook 'text-mode-hook
           (lambda ()

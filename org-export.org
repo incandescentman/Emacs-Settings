@@ -3,6 +3,7 @@
 
 * Org Export Defaults
 #+BEGIN_SRC emacs-lisp
+;;; -*- lexical-binding: nil; -*-
 (setq org-html-container-element "div"
       org-html-head-include-scripts nil
       org-html-html5-fancy t

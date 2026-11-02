@@ -5,6 +5,7 @@
 
 ** flyspell setup
 #+BEGIN_SRC emacs-lisp
+;;; -*- lexical-binding: nil; -*-
 (defun jay/fix-ispell-contraction ()
   "Fix ispell handling of contractions like shouldn't."
   (add-to-list 'ispell-local-dictionary-alist

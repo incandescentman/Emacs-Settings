@@ -1,4 +1,4 @@
-;;; ox-tufte-latex.el --- Tufte LaTeX Back-End for Org Export Engine
+;;; ox-tufte-latex.el --- Tufte LaTeX Back-End for Org Export Engine  -*- lexical-binding: nil; -*-
 
 ;; Copyright (C) 2016 Thomas S. Dye
 
