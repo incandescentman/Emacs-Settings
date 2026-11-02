@@ -68,7 +68,7 @@ The first Emacs 31 startup on the real configuration logged "Missing ‘lexical-
 - Batch never fires idle timers, and its frames have no GUI behavior, so a warning that only appears in the GUI session cannot be traced in batch. The ~org-element-at-point~ warning in ~*spacemacs*~ from the same startup was not reproduced by the startup hook, every idle timer, the dashboard redraw, or the mode line and window hooks run with ~*spacemacs*~ current.
 
 ** Actionable insight
-Give every new .el file, and every new tangled Org source, a cookie on line 1. Run ~scripts/emacs_smoke_test.sh --full-init~ from a login shell after updating Spacemacs, prelude, or a vendored file. To trace a GUI-only warning, load a probe that records a backtrace into a variable (not one that prints) with ~open -a /Applications/Emacs-31.app --args -l PROBE.el~; command-line ~-l~ files load after the init file and before ~emacs-startup-hook~ and its timers. (Passing ~-l~ through ~open --args~ to this build is untested as of 2026-11-01.)
+Give every new .el file, and every new tangled Org source, a cookie on line 1. Run ~scripts/emacs_smoke_test.sh --full-init~ from a login shell after updating Spacemacs, prelude, or a vendored file. To trace a GUI-only warning, load a probe that records a backtrace into a variable (not one that prints) with ~open -a /Applications/Emacs-31.app --args -l PROBE.el~; command-line ~-l~ files load after the init file and before ~emacs-startup-hook~ and its timers. (Verified 2026-11-02: launched this way, Emacs 31.1.50 ran with ~-l PROBE.el~ in its process arguments and the probe was active after startup.)
 
 * A review sample hides whatever it does not contain
 Date: 2026-10-11
