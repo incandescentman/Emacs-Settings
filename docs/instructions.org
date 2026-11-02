@@ -140,14 +140,14 @@ The clipboard system automatically cleans up text from the web:
 
 *Copying the current file:*
 1. Open the file in Emacs.
-2. Press ~Cmd-Shift-c~ (~s-C~), or run ~M-x pasteboard-copy-file~.
+2. Press ~Control-Command-C~ (~C-s-c~), or run ~M-x pasteboard-copy-file~.
 3. Paste normally in Finder, Mail, Messages, or another app that accepts files.
 
 Emacs gets the current file's path automatically, including from the base buffer of an indirect buffer, then calls the existing [[file+emacs:/Users/jay/Dropbox/apps/bash-scripts/copy-file][copy-file script]]. No manual path-copy step is needed. It copies the saved local file and reports when the buffer has unsaved edits; it does not save those edits automatically. Buffers without a saved local file produce a clear error. The script location is configurable with ~pasteboard-copy-file-program~.
 
-Outside Emacs, ~Option-Cmd-c~ runs the [[file+emacs:/Users/jay/Dropbox/apps/bash-scripts/docs/alfred-workflows.org][Alfred Copy File to Clipboard workflow]], which requires the file's path to be on the clipboard first. Alfred excludes ~org.gnu.Emacs~, so it does not intercept Emacs shortcuts. In Emacs, ~Option-Cmd-c~ (~M-s-c~) runs ~ox-clip-formatted-copy~ for formatted text.
+Outside Emacs, ~Option-Cmd-c~ runs the [[file+emacs:/Users/jay/Dropbox/apps/bash-scripts/docs/alfred-workflows.org][Alfred Copy File to Clipboard workflow]], which requires the file's path to be on the clipboard first. Alfred excludes ~org.gnu.Emacs~ and ~org.gnu.Emacs.31~, so it does not intercept Emacs shortcuts. In Emacs, ~Option-Cmd-c~ (~M-s-c~) runs ~ox-clip-formatted-copy~ for formatted text.
 
-~Control-Cmd-c~ belongs to Fantastical system-wide; Fantastical and the Emacs file copy swapped chords on 2026-09-26. The cross-application inventory is [[file+emacs:/Users/jay/Dropbox/roam/notes/20260904033029-jay_s_global_keyboard_shortcuts.org][Global Keyboard Shortcuts]].
+Updated 2026-11-02: ~Control-Cmd-c~ (~C-s-c~) copies the current saved file in Emacs, following the November 1 shortcut correction. Fantastical was recorded on this chord on September 26; this Emacs change does not change Fantastical’s preferences. The cross-application inventory is [[file+emacs:/Users/jay/Dropbox/roam/notes/20260904033029-jay_s_global_keyboard_shortcuts.org][Global Keyboard Shortcuts]].
 
 *Copying from web to org-mode:*
 1. Select text on a webpage

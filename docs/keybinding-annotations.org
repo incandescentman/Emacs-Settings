@@ -14,6 +14,9 @@ with these annotations merged in.
 
 * Annotations
 
+- C-s-c::pasteboard-copy-file :: Control-Command-C copies the current saved file (corrected 2026-11-01); replaces Command-Shift-C and the interim Control-Shift-C binding.
+- M-s-c::ox-clip-formatted-copy :: Option-Command-C copies formatted text in Emacs.
+
 - s-d::org-todo :: Primary TODO toggle — fastest single key
 - s-j::org-todo :: Alternative TODO toggle (redundant with s-d)
 - s-r::counsel-recentf :: Most frequently used file-finding command

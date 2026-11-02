@@ -275,8 +275,8 @@
     ("M-t"           . titlecase-dwim)
     ("C-w"           . copy-region-as-kill-and-push-to-clipboard)
     ("s-c"           . pasteboard-copy-adaptive) ; <–– Fix: now active everywhere
-    ;; C-s-c is Fantastical's system-wide shortcut; Jay swapped it with s-C on 2026-09-26.
-    ("s-C"         . pasteboard-copy-file)
+    ;; Control-Command-C copies the current saved file.
+    ("C-s-c"       . pasteboard-copy-file)
     ("s-v"           . pasteboard-paste-adaptive)
     ("s-V"           . pasteboard-paste-verbatim)
     ("s-x"           . pasteboard-cut-adaptive)

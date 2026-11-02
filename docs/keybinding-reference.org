@@ -156,7 +156,7 @@ Annotations from [[file+emacs:/Users/jay/emacs/emacs-settings/docs/keybinding-an
 - *[NEW]* - ~M-t~ :: =titlecase-dwim=
 - *[NEW]* - ~C-w~ :: =copy-region-as-kill-and-push-to-clipboard=
 - *[NEW]* - ~s-c~ :: =pasteboard-copy-adaptive=
-- ~s-C~ (Cmd-Shift-c) :: ~pasteboard-copy-file~ — copy the current buffer's file to the clipboard. (Moved from ~C-s-c~ on 2026-09-26; Fantastical owns that chord.)
+- ~C-s-c~ (Control-Command-C) :: ~pasteboard-copy-file~ — copy the current buffer's file to the clipboard. (Moved from ~s-C~ on 2026-11-01.)
 - *[NEW]* - ~s-v~ :: =pasteboard-paste-adaptive=
 - *[NEW]* - ~s-V~ :: =pasteboard-paste-verbatim=
 - *[NEW]* - ~s-x~ :: =pasteboard-cut-adaptive=

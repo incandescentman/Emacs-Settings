@@ -8,6 +8,18 @@
 - ~scripts/emacs_smoke_test.sh --full-init~ on Emacs 31.1.50 passes, 26 of 26 tests, with no obsolete-macro warnings.
 - Your second relaunch confirmed the checkpoint: no startup errors or warnings, obsolete-macro ones included, and both servers running. It was launched with ~open -a /Applications/Emacs-31.app --args -l~ and the probe, which shows that route works; the probe has caught no ~org-element-at-point~ call outside Org so far. Corrected the "untested" note in codebase-wisdom.org accordingly.
 
+* 2026-11-02: Align file-copy shortcut guides
+
+- Documented Control-Command-C (~C-s-c~) for ~pasteboard-copy-file~ in the usage guide, persistent keybinding annotations, global shortcut inventory, and Alfred workflow guide. The keybinding reference and clipboard architecture already show this binding. Preserved dated shortcut history and the May 3 generated keybinding snapshot; the annotations hold the current correction. Option-Command-C remains formatted-text copying in Emacs.
+
+* 2026-11-01: Correct file-copy shortcut to Control-Command-C
+
+- You clarified that the intended shortcut is Control-Command-C (~C-s-c~). Updated the binding and usage documentation, removed the interim Control-Shift-C binding, and activated the corrected shortcut in the running Emacs session.
+
+* 2026-11-01: Copy file with Control-Shift-C
+
+- Changed ~pasteboard-copy-file~ from Command-Shift-C to Control-Shift-C in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]], at your request, and updated the shortcut documentation.
+
 * 2026-11-01: Lexical-binding cookies and the full-init check on Emacs 31
 
 - Emacs 31 logged "Missing ‘lexical-binding’ cookie" for 17 files at startup. Each now starts with an explicit ~lexical-binding: nil~ cookie, which keeps the dynamic binding they have always loaded with. Six are tangled: the cookie is the first line of the first block in gnu-emacs-startup.org, org-authoring.org, spellcheck.org, org-export.org, spacecraft-mode.org, and fonts-and-themes.org, and each retangled .el differs from the old one by that line alone. In this repo: jay-osx.el, skeletons.el, prelude-key-chord.el, reveal-in-finder.el, elpa-supplement/buffer-stack.el, elpa-supplement/frame-cmds.el, tufte-org-mode-master/ox-tufte-latex.el. Outside it, not committed here: Spacemacs's zoom-frm/frame-fns.el, prelude-core.el in the prelude fork, ox-astro-config.el, and /Users/jay/emacs/local-config.el. spacecraft-mode.org still has a stray ~;; -*- lexical-binding: t -*-~ comment on line 8, outside any block; it never reached the .el, and was left as it is.
@@ -3018,3 +3030,7 @@ Validation: all 26 capture/Pandoc ERT tests and seven Node tests passed. Both re
 
 ** Superseded startup-test instruction, preserved verbatim (2026-10-26)
 - *Startup smoke-test*: After tweaking startup-touching files, run =emacs --batch --load ~/.emacs.d/init.el --eval "(with-temp-buffer (org-mode) (message \"shift %S\" org-support-shift-select))"= to catch regressions like the =shift-select-mode= autoload failure before they land.
+
+* 2026-11-02: Correct Emacs 31 Karabiner migration record
+
+Corrected the false claim that Karabiner had no Emacs rules in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/emacs-31-installation-plan.org][the Emacs 31 installation plan]]. Recorded the Control-D diagnosis, all 19 exclusion additions, validation, and physical Control-D confirmation from Jay on 2026-11-02. The actual configuration change is recorded in [[file+emacs:/Users/jay/.config/karabiner/docs/work-log.org][the Karabiner work log]].
