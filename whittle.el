@@ -1439,12 +1439,12 @@ applied; they help Codex inspect suspicious applied output."
 
 (defun whittle--transcript-report-hazard-line (entry)
   "Return an org hazard line for ENTRY, or nil."
-  (when-let ((hazards (plist-get entry :hazards)))
+  (when-let* ((hazards (plist-get entry :hazards)))
     (format "- Held-back hazards :: %s\n" (string-join hazards ", "))))
 
 (defun whittle--transcript-report-scar-line (entry)
   "Return an org scar line for ENTRY, or nil."
-  (when-let ((scars (whittle--transcript-report-scar-tags entry)))
+  (when-let* ((scars (whittle--transcript-report-scar-tags entry)))
     (format "- Output scars :: %s\n" (string-join scars ", "))))
 
 (defun whittle--transcript-report-scar-excerpt (entry)

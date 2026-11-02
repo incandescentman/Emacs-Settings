@@ -197,7 +197,7 @@ COUNT is non-nil, return at most that many items."
          (ranges (cadr data))
          items)
     (dolist (range ranges)
-      (when-let ((item (my-timeline--range-agenda-item range today-abs)))
+      (when-let* ((item (my-timeline--range-agenda-item range today-abs)))
         (push item items)))
     (dolist (entry entries)
       (when (>= (plist-get entry :abs) today-abs)
@@ -428,7 +428,7 @@ PRESERVE-POSITION keeps point and scroll positions when extending the range."
         (if selected-items
             (dolist (item selected-items) (my-timeline--insert-preview-item item selected t))
           (insert "No entries. Press i to add one.\n")
-          (when-let ((next (car (my-timeline--agenda-items (1+ selected)))))
+          (when-let* ((next (car (my-timeline--agenda-items (1+ selected)))))
             (let ((next-start (point)))
               (insert "Next: " (my-timeline--date-label (plist-get next :date)) " — "
                       (if (eq (plist-get next :kind) 'range)

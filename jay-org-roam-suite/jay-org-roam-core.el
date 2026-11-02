@@ -575,7 +575,7 @@ The car is the display string, the cdr the expanded file name."
 
 (defun jay/org-roam-node-find--annotation (candidate)
   "Return Org-roam's annotation for node CANDIDATE, or nil for a pinned file."
-  (when-let ((node (get-text-property 0 'node candidate)))
+  (when-let* ((node (get-text-property 0 'node candidate)))
     (funcall org-roam-node-annotation-function node)))
 
 (defun jay/org-roam-node-find-recent (&optional other-window)
@@ -686,7 +686,7 @@ Passing OTHER-WINDOW mirrors `org-roam-node-find' prefix behavior."
 (defun jay/embark-org-roam-visit (target)
   "Visit org-roam TARGET node or open TARGET when it is a pinned file."
   (interactive)
-  (if-let ((path (jay/org-roam-extra-find--target-path target)))
+  (if-let* ((path (jay/org-roam-extra-find--target-path target)))
       (find-file path)
     (jay/with-org-roam
       (org-roam-node-visit

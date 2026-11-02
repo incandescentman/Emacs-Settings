@@ -57,7 +57,7 @@ Otherwise, save the current date and jump to today."
         (erase-buffer)
         (insert "#+TITLE: Timeline calendar keys\n\n* Calendar\n\n")
         (dolist (entry my-calendar--help-commands)
-          (when-let ((keys (where-is-internal (car entry) calendar-mode-map)))
+          (when-let* ((keys (where-is-internal (car entry) calendar-mode-map)))
             (insert "- " (mapconcat #'key-description keys ", ") " — " (cdr entry) "\n")))
         (insert "\n* Diary editor\n\n")
         (dolist (entry '((my-calendar-focus-calendar-window . "Focus the grid; keep editing paused")
@@ -67,7 +67,7 @@ Otherwise, save the current date and jump to today."
           (insert "- " (mapconcat #'key-description (where-is-internal (car entry) my-diary-mode-map) ", ")
                   " — " (cdr entry) "\n"))
         (insert "\n* Capture from anywhere\n\n- ")
-        (when-let ((keys (and (boundp 'key-minor-mode-map)
+        (when-let* ((keys (and (boundp 'key-minor-mode-map)
                              (where-is-internal 'my-timeline-capture
                                                 key-minor-mode-map))))
           (insert (mapconcat #'key-description keys ", ") " / "))
@@ -136,7 +136,7 @@ Otherwise, save the current date and jump to today."
 (defun my-calendar--close-diary-display ()
   "Remove any fancy diary display windows so layouts stay stable."
   (dolist (buffer '("*Fancy Diary Entries*" "*Diary Entries*"))
-    (when-let ((buf (get-buffer buffer)))
+    (when-let* ((buf (get-buffer buffer)))
       (dolist (win (get-buffer-window-list buf nil t))
         (when (window-live-p win)
           (condition-case nil

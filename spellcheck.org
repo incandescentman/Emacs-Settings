@@ -107,7 +107,7 @@ Accepted corrections are also saved as abbrevs, like the old Flyspell path."
                 (word (buffer-substring-no-properties
                        (overlay-start ov) (overlay-end ov)))
                 (suggestions (jinx--correct-suggestions word)))
-      (when-let ((choice (car suggestions)))
+      (when-let* ((choice (car suggestions)))
         (jay/jinx-log-correction word suggestions)
         (jay/jinx-save-correction-as-abbrev word choice)
         (jinx--correct-replace ov choice)))))

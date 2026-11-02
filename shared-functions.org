@@ -5100,7 +5100,7 @@ PREFIX >1 ⇒ dirs only,  PREFIX <0 ⇒ files only,  none ⇒ both."
   "Register a newly captured org-roam file in fasd/recentf."
   (my/fasd--add
    (or buffer-file-name
-       (when-let ((base (buffer-base-buffer)))
+       (when-let* ((base (buffer-base-buffer)))
          (buffer-file-name base)))))
 
 (with-eval-after-load 'org-roam
@@ -5409,7 +5409,7 @@ On macOS this uses birth time as a fast Date Added proxy, falling back to mtime.
   (advice-add 'org-attach-attach :around #'jay/org-attach-attach-from-downloads))
 
 (defun org-roam-show-attachments (node)
-  (when-let ((id (org-roam-node-id node))
+  (when-let* ((id (org-roam-node-id node))
              (folder (org-attach-dir-from-id id t))
              (attached-files (org-attach-file-list folder)))
     (magit-insert-section (org-roam-show-attachments)
