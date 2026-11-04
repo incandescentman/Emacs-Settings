@@ -1,6 +1,10 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-11-04: Open beautiful-racket body line spacing
+
+- Increased beautiful-racket body line spacing from 1.18 to 1.22 at your direction, preserving justified text. Your earlier request for reversal instructions applied only to the G heading change, not subsequent adjustments.
+
 * 2026-11-04: Preserve blank lines and smart quotes; enlarge level-three headings
 
 - Fixed [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][the PDF source-block filter]] to preserve each empty line with an empty box, set paragraph spacing locally to zero so gaps correspond to source blank lines, and apply Org’s contextual smart-quote conversion to literal text without interpreting it as Org markup. Protected the replacement callback’s match data because smart-quote processing performs its own regex searches.

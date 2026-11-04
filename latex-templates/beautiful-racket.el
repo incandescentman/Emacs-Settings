@@ -263,7 +263,7 @@ Contextuals=Alternate
 % Paragraph glue prefers 8pt, with up to 1pt of stretch or shrink.
 %       This is one example of the concept of, 'glue', in TeX
 
-\\setstretch{1.18}
+\\setstretch{1.22}
 \\lefthyphenmin=3 % Avoid short fragments before automatic hyphen breaks.
 
 \\usepackage{fancyvrb}
