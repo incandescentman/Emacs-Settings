@@ -320,6 +320,7 @@
     after skip=1em,
     before upper={\\setlength{\\parskip}{1em}\\footnotesize\\raggedright\\frenchspacing},
     breakable,
+    lines before break=12, % Keep short boxes together; long boxes may split.
     pad at break*=1em,
     vfill before first
   }
@@ -370,11 +371,13 @@
 \\titlespacing*{\\paragraph}{0pt}{16pt plus 3pt minus 2pt}{-4pt}
 \\titlespacing*{\\subparagraph}{0pt}{12pt plus 2pt}{3pt}
 
+\\makeatletter
 \\newcommand{\\mysectiontitle}[1]{%
   \\markboth{#1}{#1}%
   \\markright{#1}%
-  \\raggedright\\fontsize{40}{26}\\selectfont\\ifPDFTeX\\else\\addfontfeatures{LetterSpace=-3.5}\\fi #1
+  \\raggedright\\ifdefstring{\\@title}{#1}{\\fontsize{40}{26}}{\\fontsize{28}{34}}\\selectfont\\ifPDFTeX\\else\\addfontfeatures{LetterSpace=-3.5}\\fi #1
 }
+\\makeatother
 
 \\ifPDFTeX
   \\newcommand{\\jayhtwofont}{\\bfseries}
@@ -395,6 +398,15 @@
   {}
   {0em}
   {\\mysectiontitle}
+
+% A title-matching heading is a display title, not a TOC section.
+\\makeatletter
+\\let\\jayoriginalsection\\section
+\\RenewDocumentCommand{\\section}{s o m}{%
+  \\IfBooleanTF{#1}{\\jayoriginalsection*{#3}}{%
+    \\ifdefstring{\\@title}{#3}{\\jayoriginalsection*{#3}}{%
+      \\IfNoValueTF{#2}{\\jayoriginalsection{#3}}{\\jayoriginalsection[#2]{#3}}}}}
+\\makeatother
 
 \\titleformat{\\subsection}
   {}

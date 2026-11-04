@@ -439,9 +439,10 @@ Contextuals=Alternate
                before skip=1em,
                after skip=1em,
                parskip=1em,
-               fontupper={\\normalsize},
+               fontupper={\\fontsize{9.5}{12}\\selectfont},
                before upper={\\raggedright\\frenchspacing},
-               breakable,              % Add this line!
+               breakable,
+               lines before break=12, % Keep short boxes together; long boxes may split.
                pad at break*=1em,      % Optional: padding at break points
                vfill before first      % Optional: avoid breaking immediately
                }
@@ -478,15 +479,29 @@ Contextuals=Alternate
                \\titlespacing*{\\paragraph}{0pt}{16pt plus 3pt minus 2pt}{-4pt}
                \\titlespacing*{\\subparagraph}{0pt}{12pt plus 2pt}{3pt}
 
+               % Preserve a title-matching Org heading as the document title.
+               \\makeatletter
                \\newcommand{\\mysectiontitle}[1]{%
-               \\parbox{10cm}{\\raggedleft\\fontsize{40}{48}\\selectfont #1}
+               \\ifdefstring{\\@title}{#1}
+               {\\parbox{10cm}{\\raggedleft\\fontsize{40}{48}\\selectfont #1}}
+               {\\parbox{10cm}{\\raggedleft\\fontsize{28}{34}\\selectfont #1}}
                }
+               \\makeatother
 
                \\titleformat{\\section}
                {\\normalfont\\ttfamily\\scshape\\color{spacegrey}}
                {}
                {0em}
                {\\thispagestyle{plain}\\hfill\\mysectiontitle}
+
+               % A title-matching heading is a display title, not a TOC section.
+               \\makeatletter
+               \\let\\jayoriginalsection\\section
+               \\RenewDocumentCommand{\\section}{s o m}{%
+                 \\IfBooleanTF{#1}{\\jayoriginalsection*{#3}}{%
+                   \\ifdefstring{\\@title}{#3}{\\jayoriginalsection*{#3}}{%
+                     \\IfNoValueTF{#2}{\\jayoriginalsection{#3}}{\\jayoriginalsection[#2]{#3}}}}}
+               \\makeatother
 
 
                \\titleformat*{\\subsection}{\\jayhtwofont\\setstretch{0.7}\\fontsize{24}{36}\\raggedright\\jayhtwofont}

@@ -3092,3 +3092,13 @@ At Jay’s direction, corrected the codebase-wisdom entry to identify the startu
 * 2026-11-04: Clean up XeLaTeX intermediate files
 
 At Jay’s direction, added ~xdv~ to Org’s export cleanup extensions and activated it in the running session. Removed the specifically identified generated Horace Mann XDV file. Retangled Org Export and passed check-parens. Heading alternatives remain review artifacts only; no heading-template change has been applied.
+
+* 2026-11-04: Distinguish title and top-level headings
+
+Jay selected A: beautiful-racket now renders a heading matching the document title at 40/48 pt and other top-level headings at 28/34 pt. At Jay’s direction, the title-matching heading uses the starred section path, excluding the redundant title entry from the TOC while preserving ordinary section entries. Exported the real document with the live two-pass command, without a compiler override; visually verified page 2 and confirmed that the TOC starts with ChatGPT. Arno heading and boxed-text size comparisons remain pending Jay’s selection.
+
+* 2026-11-04: Final box size and short-box page breaking
+
+Jay selected 9.5 pt for beautiful-racket’s shared boxed text after reviewing 10.5, 10, and 9.5 pt on the real page 4. Applied 9.5/12 pt to user blocks, student prompts, and quotations; body remains 11.5/14 pt with 1.22 stretch. Jay also approved the Arno comparison’s 28 pt top-level headings, retaining its 40 pt title treatment. Both templates omit the title-matching heading from the TOC.
+
+Claude’s review correctly identified that the short three-item block’s earlier placement was incidental: Arno split it after three lines. Added tcolorbox’s documented ~lines before break=12~ to both quote styles. A box that fits is still placed normally; otherwise, it moves to the next page unless at least twelve baseline lines fit before the split. This keeps short boxes together while allowing long ones to split. Verified the actual eight-page sample set (pages 2–5 in both templates): the three-item block is intact on page 3, and the long block continues cleanly from page 4 to page 5. Both TOCs are populated and omit the title entry. The real beautiful-racket export ran with live settings, without a compiler let-binding. Arno used the same real source in an export-only buffer, leaving the document’s class selection unchanged. Both templates passed check-parens.
