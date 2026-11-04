@@ -1020,7 +1020,10 @@ process the whole buffer."
         (when (file-exists-p full-path)
           (load full-path))))
     ;; Also load the subtitle processing configuration
-    (load "/Users/jay/emacs/emacs-settings/latex-subtitles/latex-subtitles.el")))
+    (load "/Users/jay/emacs/emacs-settings/latex-subtitles/latex-subtitles.el")
+    ;; Templates set this global too; restore multipass compilation last.
+    (setq org-latex-pdf-process
+          '("latexmk -xelatex -shell-escape -interaction=nonstopmode -output-directory=%o %f"))))
 #+END_SRC
 
 *** preflight checks before PDF export
@@ -1129,24 +1132,34 @@ process the whole buffer."
 #+BEGIN_SRC emacs-lisp
 
 (defun org-latex-filter-fancyvrb (text backend info)
-  "Render verbatim blocks as wrapping quotes, preserving lines and blank lines."
+  "Render literal blocks with smart quotes, source spacing and hanging bullets."
   (when (org-export-derived-backend-p backend 'latex)
     (replace-regexp-in-string
      "\\\\begin{verbatim}\n\\(\\(?:.\\|\n\\)*?\\)\\\\end{verbatim}"
      (lambda (block)
        (save-match-data
-        (let* ((body (match-string 1 block))
-              ;; Give Org a plain-text parent for contextual smart quotes,
-              ;; without parsing the user's literal text as Org markup.
-              (paragraph (org-element-create 'paragraph nil body))
-              (literal (car (org-element-contents paragraph)))
-              (text-info (list :with-smart-quotes t
-                               :language (or (plist-get info :language) "en"))))
-         (concat "\\begin{quote}\\setlength{\\parskip}{0pt}\\obeylines\n"
-                 (replace-regexp-in-string
-                  "^[ \t]*\n" "\\mbox{}\n"
-                  (org-latex-plain-text literal text-info) t t)
-                 "\\end{quote}"))))
+         (let* ((body (match-string 1 block))
+                ;; A plain-text parent enables contextual smart quotes without
+                ;; interpreting the user's literal text as Org markup.
+                (paragraph (org-element-create 'paragraph nil body))
+                (literal (car (org-element-contents paragraph)))
+                (text-info (list :with-smart-quotes t
+                                 :language (or (plist-get info :language) "en")))
+                (escaped (org-latex-plain-text literal text-info))
+                (lines (split-string (string-remove-suffix "\n" escaped) "\n")))
+           (concat "\\begin{quote}\\raggedright\\frenchspacing"
+                   "\\setlength{\\parskip}{0pt}\\setlength{\\parindent}{0pt}\n"
+                   (mapconcat
+                    (lambda (line)
+                      (cond
+                       ((string-match-p "\\`[ \t]*\\'" line)
+                        "\\mbox{}\\par")
+                       ((string-prefix-p "- " line)
+                        (concat "{\\setbox0=\\hbox{- }\\hangindent=\\wd0"
+                                "\\hangafter=1\\noindent " line "\\par}"))
+                       (t (concat line "\\par"))))
+                    lines "\n")
+                   "\n\\end{quote}"))))
      text t t)))
 
  (add-to-list 'org-export-filter-final-output-functions

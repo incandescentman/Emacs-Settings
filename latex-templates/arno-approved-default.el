@@ -318,7 +318,7 @@
     right=1em,
     before skip=1em,
     after skip=1em,
-    before upper={\\setlength{\\parskip}{1em}\\footnotesize\\raggedright},
+    before upper={\\setlength{\\parskip}{1em}\\footnotesize\\raggedright\\frenchspacing},
     breakable,
     pad at break*=1em,
     vfill before first

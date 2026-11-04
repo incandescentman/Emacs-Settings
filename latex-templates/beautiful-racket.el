@@ -436,6 +436,7 @@ Contextuals=Alternate
                before skip=1em,
                after skip=1em,
                parskip=1em,
+               before upper={\\raggedright\\frenchspacing},
                breakable,              % Add this line!
                pad at break*=1em,      % Optional: padding at break points
                vfill before first      % Optional: avoid breaking immediately
