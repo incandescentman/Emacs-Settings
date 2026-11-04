@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-11-04: Restore PDF table of contents by escaping source-block text
+
+- The effective export options already enabled numbering and the TOC. Literal ~#~, ~&~, and ~$~ inside source blocks became LaTeX syntax after the verbatim-to-quote filter ran, causing compilation errors that stopped latexmk before the TOC pass. The earlier line-break checkpoint verified the visible block but did not establish error-free compilation.
+- Updated ~org-latex-filter-fancyvrb~ in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][Org Export]] to escape each block body with Org's ~org-latex-plain-text~ before wrapping it in the line-preserving quote. Activated the function in running Emacs.
+- Full-document compilation completed with zero LaTeX errors; all 21 exported headings appear in the TOC. Regenerated the PDF, visually checked the TOC and user block, and passed the full-init smoke test. The source document was not edited.
+
 * 2026-11-04: Preserve source-block line breaks in PDF exports
 
 - Fixed ~org-latex-filter-fancyvrb~ in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][Org Export]]: its existing verbatim-to-quote conversion discarded single source line breaks. Converted quote blocks now enable ~\obeylines~, keeping explicit lines separate while allowing long lines to wrap. The source document is unchanged.

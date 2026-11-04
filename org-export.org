@@ -1129,15 +1129,16 @@ process the whole buffer."
 #+BEGIN_SRC emacs-lisp
 
 (defun org-latex-filter-fancyvrb (text backend _info)
-  "Render verbatim blocks as wrapping quotes, preserving source line breaks."
+  "Render verbatim blocks as wrapping quotes with literal text and line breaks."
   (when (org-export-derived-backend-p backend 'latex)
     (replace-regexp-in-string
-     "\\\\end{verbatim}" "\\end{quote}"
-     (replace-regexp-in-string
-      "\\\\begin{verbatim}"
-      "\\begin{quote}\\obeylines"
-      text t t)
-     t t)))
+     "\\\\begin{verbatim}\n\\(\\(?:.\\|\n\\)*?\\)\\\\end{verbatim}"
+     (lambda (block)
+       (let ((body (match-string 1 block)))
+         (concat "\\begin{quote}\\obeylines\n"
+                 (org-latex-plain-text body nil)
+                 "\\end{quote}")))
+     text t t)))
 
  (add-to-list 'org-export-filter-final-output-functions
      'org-latex-filter-fancyvrb)
