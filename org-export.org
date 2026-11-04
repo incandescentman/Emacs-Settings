@@ -1128,16 +1128,25 @@ process the whole buffer."
   Source: [[https://lists.gnu.org/archive/html/emacs-orgmode/2013-04/msg01035.html][Re: {O} {patch} ox-latex.el to allow customization of verbatim environment]]
 #+BEGIN_SRC emacs-lisp
 
-(defun org-latex-filter-fancyvrb (text backend _info)
-  "Render verbatim blocks as wrapping quotes with literal text and line breaks."
+(defun org-latex-filter-fancyvrb (text backend info)
+  "Render verbatim blocks as wrapping quotes, preserving lines and blank lines."
   (when (org-export-derived-backend-p backend 'latex)
     (replace-regexp-in-string
      "\\\\begin{verbatim}\n\\(\\(?:.\\|\n\\)*?\\)\\\\end{verbatim}"
      (lambda (block)
-       (let ((body (match-string 1 block)))
-         (concat "\\begin{quote}\\obeylines\n"
-                 (org-latex-plain-text body nil)
-                 "\\end{quote}")))
+       (save-match-data
+        (let* ((body (match-string 1 block))
+              ;; Give Org a plain-text parent for contextual smart quotes,
+              ;; without parsing the user's literal text as Org markup.
+              (paragraph (org-element-create 'paragraph nil body))
+              (literal (car (org-element-contents paragraph)))
+              (text-info (list :with-smart-quotes t
+                               :language (or (plist-get info :language) "en"))))
+         (concat "\\begin{quote}\\setlength{\\parskip}{0pt}\\obeylines\n"
+                 (replace-regexp-in-string
+                  "^[ \t]*\n" "\\mbox{}\n"
+                  (org-latex-plain-text literal text-info) t t)
+                 "\\end{quote}"))))
      text t t)))
 
  (add-to-list 'org-export-filter-final-output-functions

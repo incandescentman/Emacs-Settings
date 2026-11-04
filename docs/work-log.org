@@ -1,6 +1,13 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-11-04: Preserve blank lines and smart quotes; enlarge level-three headings
+
+- Fixed [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][the PDF source-block filter]] to preserve each empty line with an empty box, set paragraph spacing locally to zero so gaps correspond to source blank lines, and apply Org’s contextual smart-quote conversion to literal text without interpreting it as Org markup. Protected the replacement callback’s match data because smart-quote processing performs its own regex searches.
+- Earlier checks were too narrow: they established the reported line-break fix but missed blank-line collapse and incorrect opening quotes. Reviewed all eight user blocks in the actual document, including both pages of the long block, after these repairs; checked spacing, quote direction, wrapping, and clipping. The final compilation completed without LaTeX errors. The existing requirement to assess the actual work in context covers this failure; no new global rule is needed.
+- Enlarged level-three headings in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el][beautiful-racket.el]] from 18/16 to 20/22 points, and in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-approved-default.el][arno-approved-default.el]] from 15/17 to 17/20 points (font size/leading). The document selected Arno by the final export; that selection was preserved. Body justification and body line spacing were not changed.
+- Rollback: restore those two size/leading pairs and reload the applicable template. For source-block behavior, restore the previous filter from the preceding Git revision, retangle, and evaluate its definition; that would reintroduce the blank-line and quote defects. The source document’s prose was not edited.
+
 * 2026-11-04: Apply G headings; retain justified body text
 
 - You selected G, Arno Semibold Display in black, and then explicitly requested it for beautiful-racket: “i like justified text. yes, apply G. make a note in case we want to reverse it later”. Justified body text is your preference and remains unchanged.

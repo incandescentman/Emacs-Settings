@@ -486,7 +486,7 @@ Contextuals=Alternate
 
                \\titleformat*{\\subsection}{\\jayhtwofont\\setstretch{0.7}\\fontsize{24}{36}\\raggedright\\jayhtwofont}
 
-               \\titleformat*{\\subsubsection}{\\ttfamily\\scshape\\fontsize{18}{16}\\raggedright\\ttfamily\\color{spacegrey}}
+               \\titleformat*{\\subsubsection}{\\ttfamily\\scshape\\fontsize{20}{22}\\raggedright\\ttfamily\\color{spacegrey}}
 
                \\newcommand{\\myparagraphtitle}[1]{\\MakeUppercase{#1}}
                \\titleformat{\\paragraph}[block]
