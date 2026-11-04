@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-11-04: Preserve source-block line breaks in PDF exports
+
+- Fixed ~org-latex-filter-fancyvrb~ in [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][Org Export]]: its existing verbatim-to-quote conversion discarded single source line breaks. Converted quote blocks now enable ~\obeylines~, keeping explicit lines separate while allowing long lines to wrap. The source document is unchanged.
+- Retangled and checked parentheses, activated the function in running Emacs, exported [[file+emacs:/Users/jay/Dropbox/roam/notes/20261104113121-horace_mann_ai_brainstorming.org][Horace Mann AI Brainstorming]], and visually verified the affected block. Full-init smoke test passed, including 26 capture tests.
+- Rollback: restore the previous filter definition from Git, retangle Org Export, and evaluate that definition in the running session.
+
 * 2026-11-02: Replace obsolete when-let and if-let for Emacs 31
 
 - Emacs 31 marks ~when-let~ and ~if-let~ obsolete and printed a warning for each use at startup. Replaced all 13 uses with ~when-let*~ and ~if-let*~: shared-functions.org (2), spellcheck.org (1), whittle.el (2), timeline/timeline-agenda.el (2), timeline/timeline-calendar.el (3), jay-org-roam-suite/jay-org-roam-core.el (2), and org-web-tools-master/org-web-tools.el (1), the vendored copy this repo already patches and web capture loads. Every use had the full binding-list form, which the starred macros accept unchanged; the one-binding shorthand ~(when-let (x form) ...)~, which they do not accept, appears nowhere. The retangled .el files differ by those lines alone.

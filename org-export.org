@@ -1128,15 +1128,16 @@ process the whole buffer."
   Source: [[https://lists.gnu.org/archive/html/emacs-orgmode/2013-04/msg01035.html][Re: {O} {patch} ox-latex.el to allow customization of verbatim environment]]
 #+BEGIN_SRC emacs-lisp
 
- (defun org-latex-filter-fancyvrb (text backend info)
-  "Convert begin/end{verbatim} to begin/end{Verbatim}.
- Allows use of the fancyvrb latex package."
-  (when
-    (org-export-derived-backend-p backend 'latex)
-  (replace-regexp-in-string
-   "\\\\\\(begin\\|end\\){verbatim}"
-   "\\\\\\1{quote}"
-   text)))
+(defun org-latex-filter-fancyvrb (text backend _info)
+  "Render verbatim blocks as wrapping quotes, preserving source line breaks."
+  (when (org-export-derived-backend-p backend 'latex)
+    (replace-regexp-in-string
+     "\\\\end{verbatim}" "\\end{quote}"
+     (replace-regexp-in-string
+      "\\\\begin{verbatim}"
+      "\\begin{quote}\\obeylines"
+      text t t)
+     t t)))
 
  (add-to-list 'org-export-filter-final-output-functions
      'org-latex-filter-fancyvrb)
