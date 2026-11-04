@@ -3,7 +3,7 @@
 
 * 2026-11-04: Open beautiful-racket body line spacing
 
-- Increased beautiful-racket body line spacing from 1.18 to 1.22 at your direction, preserving justified text. Your earlier request for reversal instructions applied only to the G heading change, not subsequent adjustments.
+- Increased beautiful-racket body line spacing from 1.18 to 1.22 at Jay’s direction, preserving justified text. Jay’s earlier request for reversal instructions applied only to the G heading change, not subsequent adjustments.
 
 * 2026-11-04: Preserve blank lines and smart quotes; enlarge level-three headings
 
@@ -14,7 +14,7 @@
 
 * 2026-11-04: Apply G headings; retain justified body text
 
-- You selected G, Arno Semibold Display in black, and then explicitly requested it for beautiful-racket: “i like justified text. yes, apply G. make a note in case we want to reverse it later”. Justified body text is your preference and remains unchanged.
+- Jay selected G, Arno Semibold Display in black, and then explicitly requested it for beautiful-racket: “i like justified text. yes, apply G. make a note in case we want to reverse it later”. Justified body text is Jay’s preference and remains unchanged.
 - In [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el][beautiful-racket.el]], second-level headings (~\\subsection~) now use ~\\jayhtwofont~, defined as Arno Pro Semibold Display with common ligatures and old-style numerals. The previous font was TeX Gyre Pagella via ~\\sffamily~. Retained the existing 24/36 font size, 0.7 stretch, black color, heading alignment, and spacing.
 - The earlier G selection also updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-approved-default.el][the Arno template]] with the same font at its existing 22/26 size. This document continues to select beautiful-racket; its source and prose were not edited.
 
@@ -3084,3 +3084,7 @@ Applied the approved 12 pt to 11.5 pt body-size reduction, with a 14 pt base lea
 
 * 2026-11-04 Explicit reading size for boxed text
 The shared beautiful-racket quote-box style now explicitly selects normalsize so user blocks, student prompts, and quotations use the same 11.5 pt reading setting as the body, independently of surrounding font state. Rebuilt the real document, checked the rendered bullet box and PDF font records for body and prompt text, and opened the updated PDF.
+
+* 2026-11-04: Correct TOC diagnosis and verify the live export route
+
+At Jay’s direction, corrected the codebase-wisdom entry to identify the startup single-pass assignment in [[file+emacs:/Users/jay/emacs/local-emacs-config/local-config.el::452][local-config.el]], distinguish it from the templates’ two-pass assignments, and explain why compiler let-bindings did not verify Jay’s real export command. Ran the real document through ~org-latex-export-to-pdf~ with the live two-pass settings and no compiler override; the resulting TOC was populated. The startup override remains unchanged, so this is current-session verification, not proof of persistence across restart. Converted today’s second-person narration to third person while preserving Jay’s quoted wording.

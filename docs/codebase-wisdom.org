@@ -1909,9 +1909,13 @@ Loading init alone in batch failed because ~dotspacemacs-directory~ is defined b
 
 A PDF returned by Org export does not establish that latexmk completed successfully. In [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][Org Export]], converting raw verbatim bodies to quote environments exposed literal TeX metacharacters. LaTeX produced a partial PDF but returned an error, so latexmk stopped before the pass that populated the TOC. Preserve literal bodies with ~org-latex-plain-text~ and check the compiler exit status and log when the TOC is unexpectedly empty despite normal section commands. The Horace Mann document reproduced this with ~#~, ~&~, and ~$~; escaping the bodies produced zero errors and all 21 TOC entries.
 
-** Class loading can replace the multipass compiler
+** Startup override and misleading test exports
 
-A separate recurrence had a live ~org-latex-pdf-process~ containing only one XeLaTeX invocation. Inspect the live value as well as the source configuration. Template files assign this global during loading; ~jay-load-latex~ now restores latexmk after loading the templates and subtitle configuration. A successful first pass alone does not establish a populated TOC: verify the final PDF contents.
+The single-pass setting comes from [[file+emacs:/Users/jay/emacs/local-emacs-config/local-config.el::452][local-config.el, line 452]], which assigns one XeLaTeX invocation at startup. The beautiful-racket and Arno templates assign two passes; their assignments still overwrite the global ~org-latex-pdf-process~ whenever those files load. ~jay-load-latex~ restores latexmk after its complete loading sequence, but that does not remove the separate startup override or prevent an individual template load from replacing the command later.
+
+Test exports that let-bind ~org-latex-pdf-process~ to latexmk test that substituted compiler command, not Jay's live export configuration. Successful test PDFs therefore did not prove that Jay's own exports would populate the TOC. Inspect the live command and export the real document through ~org-latex-export-to-pdf~ without binding ~org-latex-pdf-process~; inspect the resulting TOC.
+
+Verification on 2026-11-04: the live command contained two XeLaTeX invocations. Exported the full Horace Mann document with those settings and no compiler override; the resulting PDF had a populated TOC. This verifies the current two-pass session, not persistence across startup. The single-pass startup assignment remains in local-config.el.
 
 ** Literal boxes need a distinct conversion contract
 
