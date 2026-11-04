@@ -1908,3 +1908,19 @@ Loading init alone in batch failed because ~dotspacemacs-directory~ is defined b
 * PDF exists but TOC is empty after verbatim conversion (2026-11-04)
 
 A PDF returned by Org export does not establish that latexmk completed successfully. In [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][Org Export]], converting raw verbatim bodies to quote environments exposed literal TeX metacharacters. LaTeX produced a partial PDF but returned an error, so latexmk stopped before the pass that populated the TOC. Preserve literal bodies with ~org-latex-plain-text~ and check the compiler exit status and log when the TOC is unexpectedly empty despite normal section commands. The Horace Mann document reproduced this with ~#~, ~&~, and ~$~; escaping the bodies produced zero errors and all 21 TOC entries.
+
+** Class loading can replace the multipass compiler
+
+A separate recurrence had a live ~org-latex-pdf-process~ containing only one XeLaTeX invocation. Inspect the live value as well as the source configuration. Template files assign this global during loading; ~jay-load-latex~ now restores latexmk after loading the templates and subtitle configuration. A successful first pass alone does not establish a populated TOC: verify the final PDF contents.
+
+** Literal boxes need a distinct conversion contract
+
+The final-output filter handles both user source blocks and Org fixed-width text; fixed-width text can contain student prompts, quotations, or model progress notes. Formatting alone does not establish authorship. The six progress notes removed from the Horace Mann source were explicitly authorized removals, not a general deletion policy.
+
+Use ~org-latex-plain-text~ on literal paragraph contents for TeX escaping and smart quotes, and preserve the surrounding replacement's match data with ~save-match-data~. Render source lines separately: ordinary lines end in ~\par~, empty lines use ~\mbox{}\par~, and dash-prefixed lines use a hanging indent measured from the dash and following space. Zero paragraph spacing inside these blocks prevents an empty source line from accumulating extra paragraph spacing. Scope ~\raggedright~ and ~\frenchspacing~ to boxes; the body remains justified.
+
+Review every affected box and continuation in the real exported document. The first reported block did not expose the later quotation and blank-line defects. Check the TOC, smart quotation marks, literal special characters, blank lines, wrapped list items, and body/box font sizes in the rendered PDF.
+
+** Approved beautiful-racket reading settings
+
+As of 2026-11-04, [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el][beautiful-racket]] uses an 11.5 pt normalsize setting, a 14 pt base leading, and a 1.22 stretch multiplier. The shared quote-box style explicitly selects normalsize for user blocks, prompts, and quotations. These are TeX size settings; the existing fontspec scaling also affects the font size reported by PDF inspection tools. Second-level headings retain the approved black Arno Semibold Display treatment. The request to record reversal instructions applied specifically to that heading choice, not subsequent typography edits.
