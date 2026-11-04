@@ -329,7 +329,7 @@ Only applies to LaTeX exports from Org files tagged with :contract:."
 [[https://emacs.stackexchange.com/questions/23982/cleanup-org-mode-export-intermediary-file][Cleanup org-mode export intermediary file - Emacs Stack Exchange]]
 
 #+begin_src emacs-lisp
-(setq org-latex-logfiles-extensions (quote ("lof" "lot" "tex" "odt" "aux" "idx" "log" "out" "toc" "nav" "snm" "vrb" "dvi" "fdb_latexmk" "blg" "brf" "fls" "entoc" "ps" "spl" "bbl" "ent")))
+(setq org-latex-logfiles-extensions (quote ("lof" "lot" "tex" "odt" "aux" "idx" "log" "out" "toc" "nav" "snm" "vrb" "dvi" "xdv" "fdb_latexmk" "blg" "brf" "fls" "entoc" "ps" "spl" "bbl" "ent")))
 #+end_src
 
 ** org export preserve line breaks

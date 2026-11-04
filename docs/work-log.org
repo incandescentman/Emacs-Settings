@@ -3088,3 +3088,7 @@ The shared beautiful-racket quote-box style now explicitly selects normalsize so
 * 2026-11-04: Correct TOC diagnosis and verify the live export route
 
 At Jay’s direction, corrected the codebase-wisdom entry to identify the startup single-pass assignment in [[file+emacs:/Users/jay/emacs/local-emacs-config/local-config.el::452][local-config.el]], distinguish it from the templates’ two-pass assignments, and explain why compiler let-bindings did not verify Jay’s real export command. Ran the real document through ~org-latex-export-to-pdf~ with the live two-pass settings and no compiler override; the resulting TOC was populated. The startup override remains unchanged, so this is current-session verification, not proof of persistence across restart. Converted today’s second-person narration to third person while preserving Jay’s quoted wording.
+
+* 2026-11-04: Clean up XeLaTeX intermediate files
+
+At Jay’s direction, added ~xdv~ to Org’s export cleanup extensions and activated it in the running session. Removed the specifically identified generated Horace Mann XDV file. Retangled Org Export and passed check-parens. Heading alternatives remain review artifacts only; no heading-template change has been applied.
