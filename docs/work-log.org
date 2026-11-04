@@ -3106,3 +3106,9 @@ Claude’s review correctly identified that the short three-item block’s earli
 * 2026-11-04: Reconcile final PDF documentation
 
 Updated the approved reading-settings entry to state the final 9.5/12 pt boxed-text setting, resolved the earlier pending-comparison wording, and narrowed the compiler-restoration record to what was actually changed. Preserved the distinction between successful live-session exports and the unresolved single-pass startup override. No configuration or PDF changes were made in this documentation checkpoint.
+
+* 2026-11-04: Align startup PDF compilation and require complete element review
+
+At Jay’s direction, changed the single-pass compiler assignment in [[file+emacs:/Users/jay/emacs/local-emacs-config/local-config.el][local-config.el]] to the same latexmk command used by ~jay-load-latex~. Evaluated only that assignment in the running session, exported the real Horace Mann document using the live command without a compiler let-binding, and visually verified the populated TOC. Local-config passed check-parens, and the full-init smoke test passed. The existing lexical-binding edit and amx state changes in the local configuration repository were preserved separately.
+
+Added Jay’s exact requested PDF verification sentence under Guidance for AI/LLM Editing Sessions in [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.org][the shared project instructions]]. Confirmed that both AGENTS.md and CLAUDE.md resolve to this source and expose the new rule. Updated the TOC diagnosis to distinguish the historical startup failure from the corrected configuration.

@@ -1911,11 +1911,11 @@ A PDF returned by Org export does not establish that latexmk completed successfu
 
 ** Startup override and misleading test exports
 
-The single-pass setting comes from [[file+emacs:/Users/jay/emacs/local-emacs-config/local-config.el::452][local-config.el, line 452]], which assigns one XeLaTeX invocation at startup. The beautiful-racket and Arno templates assign two passes; their assignments still overwrite the global ~org-latex-pdf-process~ whenever those files load. ~jay-load-latex~ restores latexmk after its complete loading sequence, but that does not remove the separate startup override or prevent an individual template load from replacing the command later.
+The single-pass setting originally came from [[file+emacs:/Users/jay/emacs/local-emacs-config/local-config.el::452][local-config.el, line 452]], which assigned one XeLaTeX invocation at startup. At Jay’s direction on 2026-11-04, that assignment was changed to the same latexmk command used by jay-load-latex. The beautiful-racket and Arno templates assign two passes; their assignments still overwrite the global ~org-latex-pdf-process~ whenever those files load. ~jay-load-latex~ restores latexmk after its complete loading sequence, and the startup assignment now agrees with it. An individual template load can still replace the command with its own two-pass setting.
 
 Test exports that let-bind ~org-latex-pdf-process~ to latexmk test that substituted compiler command, not Jay's live export configuration. Successful test PDFs therefore did not prove that Jay's own exports would populate the TOC. Inspect the live command and export the real document through ~org-latex-export-to-pdf~ without binding ~org-latex-pdf-process~; inspect the resulting TOC.
 
-Verification on 2026-11-04: the live command contained two XeLaTeX invocations. Exported the full Horace Mann document with those settings and no compiler override; the resulting PDF had a populated TOC. This verifies the current two-pass session, not persistence across startup. The single-pass startup assignment remains in local-config.el.
+Verification on 2026-11-04: the live command contained two XeLaTeX invocations. Exported the full Horace Mann document with those settings and no compiler override; the resulting PDF had a populated TOC. This verifies the current two-pass session, not persistence across startup. Later on 2026-11-04, the startup assignment was corrected to latexmk; the real document was exported again using that live command without a compiler let-binding, and its populated TOC was visually checked. The full-init smoke test passed.
 
 ** Literal boxes need a distinct conversion contract
 
