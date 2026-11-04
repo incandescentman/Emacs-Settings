@@ -1,6 +1,18 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-11-04: Apply G headings; retain justified body text
+
+- You selected G, Arno Semibold Display in black, and then explicitly requested it for beautiful-racket: “i like justified text. yes, apply G. make a note in case we want to reverse it later”. Justified body text is your preference and remains unchanged.
+- In [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el][beautiful-racket.el]], second-level headings (~\\subsection~) now use ~\\jayhtwofont~, defined as Arno Pro Semibold Display with common ligatures and old-style numerals. The previous font was TeX Gyre Pagella via ~\\sffamily~. Retained the existing 24/36 font size, 0.7 stretch, black color, heading alignment, and spacing.
+- The earlier G selection also updated [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/arno-approved-default.el][the Arno template]] with the same font at its existing 22/26 size. This document continues to select beautiful-racket; its source and prose were not edited.
+
+- Validation: checked Emacs Lisp parentheses, reloaded the template in running Emacs, regenerated the document, and visually confirmed G on page 7 with justified body text retained.
+
+** Rollback of beautiful-racket headings
+
+In [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el][beautiful-racket.el]], restore the subsection format to ~\\titleformat*{\\subsection}{\\sffamily\\setstretch{0.7}\\fontsize{24}{36}\\raggedright\\sffamily}~. These are the doubled backslashes as stored inside the Emacs Lisp string. The unused ~\\jayhtwofont~ declaration may remain. Reload the template into the current Emacs session (preserving ~org-latex-pdf-process~ if needed), then export again. No change to body justification is needed. For the Arno template, remove ~\\jayhtwofont~ from ~\\mysubsectiontitle~ to restore the previous regular serif heading. Restore only these heading changes rather than reverting unrelated template edits.
+
 * 2026-11-04: Restore PDF table of contents by escaping source-block text
 
 - The effective export options already enabled numbering and the TOC. Literal ~#~, ~&~, and ~$~ inside source blocks became LaTeX syntax after the verbatim-to-quote filter ran, causing compilation errors that stopped latexmk before the TOC pass. The earlier line-break checkpoint verified the visible block but did not establish error-free compilation.

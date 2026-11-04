@@ -60,6 +60,7 @@ Ligatures = {Common},
 Contextuals=Alternate
 ]{Garamond Premier Pro}
  \\setsansfont{TeX Gyre Pagella}
+ \\newfontfamily\\jayhtwofont[Path=/Users/jay/Library/Fonts/, Extension=.otf, Ligatures={Common}, Numbers=OldStyle]{Arno Pro Semibold Display}
   \\setmonofont{TeX Gyre Heros}
   \\newfontfamily\\jaylabelfont[
     Scale=1.0,
@@ -483,7 +484,7 @@ Contextuals=Alternate
                {\\thispagestyle{plain}\\hfill\\mysectiontitle}
 
 
-               \\titleformat*{\\subsection}{\\sffamily\\setstretch{0.7}\\fontsize{24}{36}\\raggedright\\sffamily}
+               \\titleformat*{\\subsection}{\\jayhtwofont\\setstretch{0.7}\\fontsize{24}{36}\\raggedright\\jayhtwofont}
 
                \\titleformat*{\\subsubsection}{\\ttfamily\\scshape\\fontsize{18}{16}\\raggedright\\ttfamily\\color{spacegrey}}
 

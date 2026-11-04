@@ -376,9 +376,14 @@
   \\raggedright\\fontsize{40}{26}\\selectfont\\ifPDFTeX\\else\\addfontfeatures{LetterSpace=-3.5}\\fi #1
 }
 
+\\ifPDFTeX
+  \\newcommand{\\jayhtwofont}{\\bfseries}
+\\else
+  \\newfontfamily\\jayhtwofont[Path=/Users/jay/Library/Fonts/, Extension=.otf, Ligatures={Common}, Numbers=OldStyle]{Arno Pro Semibold Display}
+\\fi
 \\newcommand{\\mysubsectiontitle}[1]{%
   \\markright{#1}%
-  \\normalfont\\fontsize{22}{26}\\selectfont\\raggedright #1
+  \\normalfont\\jayhtwofont\\fontsize{22}{26}\\selectfont\\raggedright #1
 }
 
 \\newcommand{\\mysubsubsectiontitle}[1]{%
