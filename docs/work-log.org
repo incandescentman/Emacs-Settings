@@ -3081,3 +3081,6 @@ The live export process had one XeLaTeX invocation and the saved PDF had an empt
 
 * 2026-11-04 Smaller beautiful-racket body text
 Applied the approved 12 pt to 11.5 pt body-size reduction, with a 14 pt base leading and the existing 1.22 stretch and justified alignment. Reloaded the class, rebuilt the real Horace Mann document, checked the rendered reading page and populated TOC, and opened the updated PDF. Template check-parens and compilation passed.
+
+* 2026-11-04 Explicit reading size for boxed text
+The shared beautiful-racket quote-box style now explicitly selects normalsize so user blocks, student prompts, and quotations use the same 11.5 pt reading setting as the body, independently of surrounding font state. Rebuilt the real document, checked the rendered bullet box and PDF font records for body and prompt text, and opened the updated PDF.
