@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: nil -*-
 (require 'ox-latex)
 
 ;; Find LaTeX on my system

@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: nil -*-
 (defun my-org-latex-subtitle-filter (contents backend info)
   "Convert lines starting with ~ to subtitle environment in LaTeX export.
    Also fixes subtitle environments to use correct levels:

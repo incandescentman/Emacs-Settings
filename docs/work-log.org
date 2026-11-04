@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-11-04: Declare binding dialect in LaTeX export helpers
+
+- Added first-line ~lexical-binding: nil~ headers to [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/jay-latex-yosemite-setup.el][Yosemite setup]] and [[file+emacs:/Users/jay/emacs/emacs-settings/latex-subtitles/latex-subtitles.el][the subtitle filter]]. This removes Emacs 31's missing-cookie warnings while preserving dynamic binding and existing export behavior.
+- Both files passed parentheses checks and loaded without warnings in fresh Emacs 31 batch mode. Reloaded both in running Emacs without new warnings, preserving the current PDF compiler commands and executable search path.
+- Rollback: remove only the added first-line headers; that restores the warnings without changing binding behavior. Earlier PDF-error messages were not suppressed or cleared.
+
 * 2026-11-04: Open beautiful-racket body line spacing
 
 - Increased beautiful-racket body line spacing from 1.18 to 1.22 at Jay’s direction, preserving justified text. Jay’s earlier request for reversal instructions applied only to the G heading change, not subsequent adjustments.
