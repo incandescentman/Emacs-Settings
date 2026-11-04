@@ -1927,7 +1927,7 @@ Review every affected box and continuation in the real exported document. The fi
 
 ** Approved beautiful-racket reading settings
 
-As of 2026-11-04, [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el][beautiful-racket]] uses an 11.5 pt normalsize setting, a 14 pt base leading, and a 1.22 stretch multiplier. The shared quote-box style explicitly selects normalsize for user blocks, prompts, and quotations. These are TeX size settings; the existing fontspec scaling also affects the font size reported by PDF inspection tools. Second-level headings retain the approved black Arno Semibold Display treatment. The request to record reversal instructions applied specifically to that heading choice, not subsequent typography edits.
+As of 2026-11-04, [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/beautiful-racket.el][beautiful-racket]] uses an 11.5 pt normalsize setting, a 14 pt base leading, and a 1.22 stretch multiplier. The shared quote-box style uses 9.5 pt text with 12 pt base leading for user blocks, prompts, and quotations, following Jay’s final selection on 2026-11-04; this supersedes the earlier normalsize box setting. These are TeX size settings; the existing fontspec scaling also affects the font size reported by PDF inspection tools. Second-level headings retain the approved black Arno Semibold Display treatment. The request to record reversal instructions applied specifically to that heading choice, not subsequent typography edits.
 
 ** Short boxes must not depend on accidental page placement (2026-11-04)
 
