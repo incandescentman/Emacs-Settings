@@ -136,7 +136,10 @@ Contextuals=Alternate
   \\removelastskip\\penalty-100\\vspace{\\tufteskipamount}\\fi}
 \\newcommand{\\newthought}[1]{\\tuftebreak\\noindent\\textsc{#1}}
 
-% Use article's complete 12pt size ladder, including captions and display helpers.
+% Keep article's size ladder; use a slightly smaller reading size.
+\\let\\jayoriginalnormalsize\\normalsize
+\\renewcommand{\\normalsize}{\\jayoriginalnormalsize\\fontsize{11.5}{14}\\selectfont}
+\\normalsize
 
 
 
