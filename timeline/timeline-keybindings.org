@@ -4,8 +4,16 @@
 
 This reference lists the active keybindings that connect the Emacs Calendar buffer with the Markdown timeline maintained by ~timeline.el~.
 
+* Open Calendar and Diary
+
+~s-.~ (Command-.)   ~my-timeline-open-diary~
+     - Open the calendar grid with the selected date ready to edit in the diary below it. Preserve an already active diary editor's position. Inside the diary, Command-. instead focuses the grid, keeping both panes visible.
+
 * Calendar Mode Bindings
 These bindings live in ~calendar-mode-map~.
+
+~r~, ~m~   ~diary-mark-entries~
+     - Refresh highlighting for dates with diary entries, clearing outdated marks.
 
 ~j~, ~g d~   ~my-timeline-jump~
      - Jump with Org's natural-language date prompt; the other ~g~ prefix commands are preserved.

@@ -3134,3 +3134,7 @@ Added mandatory-read links to [[file+emacs:/Users/jay/Dropbox/github/timeless/da
 * 2026-11-08: Document the calendar-event session launcher
 
 Documented the existing [[file+emacs:/Users/jay/Library/CloudStorage/Dropbox/apps/bash-scripts/timeline][timeline launcher]] in [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.org][the shared project instructions]]. When asked where to manage events, agents should direct the user to run ~timeline~, which starts Codex in [[file+emacs:/Users/jay/Dropbox/github/timeless/data/][the calendar data folder]]. This repository remains the home for Emacs calendar behavior and code changes. Verified the launcher's destination and that both AGENTS.md and CLAUDE.md expose this instruction through the shared source.
+
+* 2026-11-08: Complete the shortcut reference
+
+Added the global Command-. behavior and calendar ~r~/~m~ refresh binding to [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-keybindings.org][the keybinding reference]]. The calendar guide and project instructions already cover the final behavior, scheduling rules, and session launcher. Checked the additions against the bindings implemented and verified earlier in this session.
