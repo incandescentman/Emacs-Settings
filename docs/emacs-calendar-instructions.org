@@ -27,6 +27,7 @@ Opening Calendar saves your current window layout, then shows the previous, curr
 - ~q~ --- Restore the window layout you had before opening Calendar. If you are still editing the diary, quit closes the grid and keeps that editor visible.
 
 * Navigation
+- ~r~ or ~m~ --- Refresh the highlighting of dates with diary entries.
 Standard Emacs calendar motion still works (~C-f~/~f~/~→~ day forward,
 ~C-b~/~b~/~←~ day back, ~C-n~/~↓~ week down, ~C-p~/~↑~ week up, ~.~ to today,
 ~j~ or ~g d~ to jump with an Org date prompt). The =timeline= module adds these:

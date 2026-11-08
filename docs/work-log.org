@@ -3122,3 +3122,7 @@ Added Jay’s exact requested PDF verification sentence under Guidance for AI/LL
 * 2026-11-08: Command-. opens the calendar and diary editor
 
 Changed the global Command-. binding in [[file+emacs:/Users/jay/emacs/emacs-settings/keys.el][keys.el]] to ~my-timeline-open-diary~ in [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline-calendar.el][timeline-calendar.el]]. It opens the selected date for editing below the calendar and preserves an already active editor's position. The diary-local Command-. shortcut still focuses the grid. Updated the calendar guide and extended the existing real-diary-copy lifecycle test. All 23 Timeline tests and the full-init smoke test passed. Activated the function and binding in running Emacs and confirmed both calendar and diary windows with editing active.
+
+* 2026-11-08: Calendar refresh shortcut
+
+Added ~r~ as an alias for ~diary-mark-entries~ in [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline.el][timeline.el]], retaining ~m~. Updated the calendar guide and activated the binding in running Emacs; verified both keys resolve to the same command in the Calendar buffer.

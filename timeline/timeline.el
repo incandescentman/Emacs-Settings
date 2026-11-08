@@ -17,6 +17,7 @@
 
 (with-eval-after-load 'calendar
   ;; Editing / viewing bindings
+  (define-key calendar-mode-map (kbd "r") #'diary-mark-entries)
   (define-key calendar-mode-map (kbd "RET") #'my-calendar-edit-diary-entry)
   (define-key calendar-mode-map (kbd "e")   #'my-calendar-edit-diary-entry)
   (define-key calendar-mode-map (kbd "v")   #'my-calendar-view-diary-entry)
