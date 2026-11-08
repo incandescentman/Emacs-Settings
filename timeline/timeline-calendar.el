@@ -270,6 +270,19 @@ After showing the listing, jump to the Markdown diary entry for that date."
   (interactive)
   (let ((my-timeline--open-requested t)) (calendar)))
 
+(defun my-timeline-open-diary ()
+  "Open the calendar with its selected date ready to edit below it.
+Preserve the position of a diary editor that is already active."
+  (interactive)
+  (my-timeline-open)
+  (let* ((session (my-timeline--session))
+         (window (plist-get session :content-window)))
+    (if (and (plist-get session :editing)
+             (window-live-p window)
+             (eq (window-buffer window) (find-file-noselect diary-file)))
+        (select-window window)
+      (my-calendar-edit-diary-entry))))
+
 (defun my-timeline--around-calendar (original &rest args)
   "Give an explicitly opened calendar a stacked itinerary and reversible layout."
   (if (or my-timeline--inhibit-layout

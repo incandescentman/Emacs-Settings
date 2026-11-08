@@ -454,7 +454,7 @@
     ("s-k k o"       . load-koma-letter)
     ("s-<"           . load-shared-functions)
     ("s-?"           . load-spacecraft-mode)
-    ("s-."           . calendar)
+    ("s-."           . my-timeline-open-diary)
     ("] ci"          . load-spacemacs-config)
     ("] cr"          . load-roam-config)
     ("] cs"          . load-search-config)

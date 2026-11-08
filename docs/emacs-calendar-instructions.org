@@ -16,6 +16,7 @@ Opening Calendar saves your current window layout, then shows the previous, curr
 
 * Quick Start
 
+- ~s-.~ (Command-.) opens the calendar with the shared Markdown diary ready to edit beneath it. From inside the diary, the same shortcut focuses the calendar grid while keeping the editor open.
 - Capture without leaving your work: ~s-k c c~, then the date and event text. ~s-k c s~ continues to schedule an Org item.
 - Browse: ~M-x calendar~, then ~j~ and a date such as ~oct 12~. The itinerary follows automatically; ~V~ toggles following.
 - Edit: ~RET~/~e~ opens the diary in the lower pane; ~C-c C-c~ returns to browsing.
