@@ -3130,3 +3130,7 @@ Added ~r~ as an alias for ~diary-mark-entries~ in [[file+emacs:/Users/jay/emacs/
 * 2026-11-08: Route calendar event work to scheduling instructions
 
 Added mandatory-read links to [[file+emacs:/Users/jay/Dropbox/github/timeless/data/CLAUDE.org][Scheduling Jay's Calendar]] in [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.org][the shared project instructions]] and [[file+emacs:/Users/jay/emacs/emacs-settings/docs/emacs-calendar-instructions.org][the Calendar and Timeline guide]]. This closes the missing route from Emacs calendar work to the separate calendar-data rules after flight details were mistakenly placed in the text diary. Those entries were corrected to untimed routes; the timed flights already existed in Google Calendar. Verified that the destination exists and both project instruction symlinks expose the new pointer.
+
+* 2026-11-08: Document the calendar-event session launcher
+
+Documented the existing [[file+emacs:/Users/jay/Library/CloudStorage/Dropbox/apps/bash-scripts/timeline][timeline launcher]] in [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.org][the shared project instructions]]. When asked where to manage events, agents should direct the user to run ~timeline~, which starts Codex in [[file+emacs:/Users/jay/Dropbox/github/timeless/data/][the calendar data folder]]. This repository remains the home for Emacs calendar behavior and code changes. Verified the launcher's destination and that both AGENTS.md and CLAUDE.md expose this instruction through the shared source.
