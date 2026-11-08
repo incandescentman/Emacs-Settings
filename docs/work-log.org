@@ -3126,3 +3126,7 @@ Changed the global Command-. binding in [[file+emacs:/Users/jay/emacs/emacs-sett
 * 2026-11-08: Calendar refresh shortcut
 
 Added ~r~ as an alias for ~diary-mark-entries~ in [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/timeline.el][timeline.el]], retaining ~m~. Updated the calendar guide and activated the binding in running Emacs; verified both keys resolve to the same command in the Calendar buffer.
+
+* 2026-11-08: Route calendar event work to scheduling instructions
+
+Added mandatory-read links to [[file+emacs:/Users/jay/Dropbox/github/timeless/data/CLAUDE.org][Scheduling Jay's Calendar]] in [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.org][the shared project instructions]] and [[file+emacs:/Users/jay/emacs/emacs-settings/docs/emacs-calendar-instructions.org][the Calendar and Timeline guide]]. This closes the missing route from Emacs calendar work to the separate calendar-data rules after flight details were mistakenly placed in the text diary. Those entries were corrected to untimed routes; the timed flights already existed in Google Calendar. Verified that the destination exists and both project instruction symlinks expose the new pointer.

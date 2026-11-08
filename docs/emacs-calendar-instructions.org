@@ -3,6 +3,8 @@
 #+AUTHOR: Claude
 
 * Overview
+Before adding, moving, or checking calendar events, read [[file+emacs:/Users/jay/Dropbox/github/timeless/data/CLAUDE.org][Scheduling Jay's Calendar]] for the rules governing the text calendar and Google Calendar. This guide covers the Emacs interface; the linked instructions govern event placement and details.
+
 This guide covers the custom Calendar + Markdown-diary workflow provided by the
 =timeline= module. The module lives in
 [[file+emacs:/Users/jay/emacs/emacs-settings/timeline/][/Users/jay/emacs/emacs-settings/timeline/]] and is loaded from
