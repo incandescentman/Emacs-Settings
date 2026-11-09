@@ -1,3 +1,4 @@
+;;; fiverr-koma.el --- KOMA letter preset -*- lexical-binding: nil; -*-
 (eval-after-load 'ox '(require 'ox-koma-letter))
 (eval-after-load 'ox-latex '(add-to-list 'org-latex-packages-alist '("english" "babel" t) t))
 
@@ -12,7 +13,6 @@
                     "\\documentclass[foldmarks=false,refline=dateleft,fromrule=afteraddress,enlargefirstpage=on,fontsize=10pt,fromalign=center,subject=left,parskip=full]\{scrlttr2\}
      \\usepackage[english]{babel}
      \\usepackage{utopia}
-     \\setkomavar{frombank}{(1234)\\,567\\,890}
      \\nonfrenchspacing
      \\setkomafont{backaddress}{\\normalsize \\usekomafont{fromaddress}}
      \\setkomafont{fromrule}{\\vspace{0.2in}}
