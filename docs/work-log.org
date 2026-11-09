@@ -3142,3 +3142,9 @@ Added the global Command-. behavior and calendar ~r~/~m~ refresh binding to [[fi
 * 2026-11-08: Remove placeholder bank number from KOMA letters
 
 Removed the dummy bank number from [[file+emacs:/Users/jay/emacs/emacs-settings/fiverr-koma.el][the KOMA letter preset]] at Sunjay’s explicit request. Syntax checked; exported the Toronto Police request through the KOMA backend as a one-page US Letter PDF and inspected the rendering. Document-local settings handle layout; the shared preset removes the placeholder and explicitly retains dynamic binding with the header required by the repository commit hook.
+
+* 2026-11-09: Adobe Garamond Pro default and KOMA export guide
+
+At Sunjay’s approval, replaced Utopia with fontspec and Adobe Garamond Pro in [[file+emacs:/Users/jay/emacs/emacs-settings/fiverr-koma.el][the shared KOMA preset]], retaining its centered sender default. Added [[file+emacs:/Users/jay/emacs/emacs-settings/docs/koma-letter-export-guide.org][the letter export guide]] and linked it from the template documentation. The guide covers explicit dates, metadata, signatures, US paper options, page-count judgment, and rendered verification; the Toronto letter’s spacing and manual break remain document-local.
+
+Verified syntax and a real two-page export with the document’s font override removed only in memory. The PDF embeds Adobe Garamond Pro Regular and Semibold, compiles without errors or overfull boxes, and both rendered pages were inspected. Reloaded the preset in the running Emacs session and confirmed its active class contains the new font.

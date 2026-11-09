@@ -1,5 +1,9 @@
 #+TITLE: LaTeX Templates Documentation
 
+* Letters
+
+For formal correspondence, follow [[file+emacs:/Users/jay/emacs/emacs-settings/docs/koma-letter-export-guide.org][Exporting Letters with KOMA and Adobe Garamond Pro]]. The shared KOMA preset uses a centered sender block and Adobe Garamond Pro.
+
 * Header Configuration
 
 Templates that use =fancyhdr= (e.g., =elegant-garamond=, =elegant-helvetica=) define =\leftheader= and =\leftheaderurl=. For =elegant-garamond=, =elegant-garamond-tabularray=, and =elegant-arno=, if you omit =\leftheader{...}= the top-left page header falls back to the document title. Add =\leftheaderurl{...}= only when you want that left header text linked:

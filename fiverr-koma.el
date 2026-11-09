@@ -12,13 +12,14 @@
                   '("my-letter"
                     "\\documentclass[foldmarks=false,refline=dateleft,fromrule=afteraddress,enlargefirstpage=on,fontsize=10pt,fromalign=center,subject=left,parskip=full]\{scrlttr2\}
      \\usepackage[english]{babel}
-     \\usepackage{utopia}
      \\nonfrenchspacing
      \\setkomafont{backaddress}{\\normalsize \\usekomafont{fromaddress}}
      \\setkomafont{fromrule}{\\vspace{0.2in}}
      \\setkomavar{placeseparator}{\\\\}
      \[DEFAULT-PACKAGES]
      \[PACKAGES]
+     \\usepackage{fontspec}
+     \\setmainfont{Adobe Garamond Pro}
      \[EXTRA]
      \\KOMAoption{backaddress}{false}"))
 

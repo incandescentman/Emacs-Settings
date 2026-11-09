@@ -1,0 +1,35 @@
+#+TITLE: Exporting Letters with KOMA and Adobe Garamond Pro
+
+* Shared defaults and scope
+
+Load ~M-x load-koma-letter~ before exporting. This loads [[file+emacs:/Users/jay/emacs/emacs-settings/ox-koma-letter.el][the KOMA exporter]] and then [[file+emacs:/Users/jay/emacs/emacs-settings/fiverr-koma.el][the shared my-letter preset]]. The preset uses a centered sender block and Adobe Garamond Pro, approved November 9, 2026. Export with XeLaTeX; the font must be installed on the exporting machine. A document-specific font declaration can override the shared default.
+
+The loader matters: [[file+emacs:/Users/jay/emacs/emacs-settings/org-export.org][Org export configuration]] also registers an older ~my-letter~ definition. Use ~load-koma-letter~ so the intended preset takes precedence.
+
+* Prepare the real letter
+
+Preserve the writer’s wording. Move the sender, recipient, subject, greeting, closing, and signature into the exporter’s fields so they appear once. Set ~#+LATEX_CLASS: my-letter~. Use ~#+AUTHOR:~, ~#+FROM_ADDRESS:~, ~#+EMAIL:~, ~#+PHONE_NUMBER:~, ~#+TO_ADDRESS:~, ~#+OPENING:~, ~#+CLOSING:~, and ~#+SIGNATURE:~. Separate address lines with LaTeX double backslashes. The exporter uses ~#+TITLE:~ for the subject.
+
+Set an explicit ~#+DATE:~ to preserve the intended letter date across later exports. Enable the intended sender fields through ~#+OPTIONS:~. For US Letter correspondence, specify ~letterpaper~ in ~#+LATEX_CLASS_OPTIONS:~ and ~#+LCO: UScommercial9~; the exporter otherwise defaults to the A4-oriented ~NF~ option file. An empty ~#+LCO:~ attempts to load a nonexistent option file and is not a way to disable it.
+
+Choose readable type size and spacing for the actual letter. The Toronto Police example uses 12-point Adobe Garamond Pro. Preserve the centered sender layout unless a different layout is requested. Do not impose a one-page limit or shrink the type to meet an invented page-count requirement. Inspect the page breaks and keep the closing coherent.
+
+* Signature and enclosures
+
+Use the supplied signature image, not a generated imitation. XeLaTeX can include PNG; convert a TIFF to PNG without modifying the original. Put an ~\includegraphics~ command followed by a line break and the typed name in ~#+SIGNATURE:~. Choose the image size and ~sigbeforevskip~ together so the result does not reserve an additional blank handwritten-signature area. Include a signature only when authorized for that letter.
+
+Put enclosure text under a heading tagged ~:encl:~. To retain the label “Enclosures,” use ~\setkomavar*{enclseparator}{Enclosures}~ in a LaTeX header.
+
+* Export and inspect
+
+Run ~M-x org-koma-letter-export-to-pdf~. Keep the PDF alongside the Org source. Check the compilation result and inspect every rendered page, including the sender block, addresses, subject, paragraph breaks, signature, enclosure list, and page numbers. Verify the embedded PDF fonts when changing font settings. Open the finished PDF in Preview.
+
+The exporter hard-codes several spacing values immediately before the document begins. Document-local ~\AtBeginDocument{...}~ overrides can adjust them. Do not copy one letter’s address positions, signature spacing, or manual page break into the shared preset without evaluating their suitability for other letters.
+
+The ~.xdv~ file is a generated XeLaTeX intermediate used to produce the PDF. The finished PDF does not depend on it; it can be regenerated. Follow the existing deletion-authorization rule for cleanup. Keep the Org source and signature asset needed for reproducible exports.
+
+* Working reference and technical sources
+
+[[file+emacs:/Users/jay/Dropbox/roam/lemonade-claim/toronto-police-confirmation-letter-request.org][Toronto Police confirmation request]] is the real working example with a centered sender, explicit date, Adobe Garamond Pro, and an authorized signature. Its addresses and wording are private correspondence, not boilerplate for other letters.
+
+Documented font capability: [[https://latex3.github.io/fontspec/][fontspec]] supports OpenType font selection with XeLaTeX and LuaLaTeX; [[https://latex3.github.io/fontspec/user.html][its user-command reference]] documents ~\setmainfont~. The shared template uses this mechanism. A [[https://tex.stackexchange.com/questions/663806/use-non-system-font-in-invoice-environment][community scrlttr2 example]] also uses fontspec; it is implementation context, not authority for the visual design of these letters.
