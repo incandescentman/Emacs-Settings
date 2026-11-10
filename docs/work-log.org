@@ -1,6 +1,13 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-11-10: Guard live server calls and disconnected-client errors
+
+- Added the approved live-server rule beside safe live loading in [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.org][the project instructions]]. Assertions, tests, and compilation run in batch; stalled clients are not timed out or terminated without authorized recovery. Both [[file+emacs:/Users/jay/emacs/emacs-settings/AGENTS.md][AGENTS.md]] and [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.md][CLAUDE.md]] resolve to that shared source.
+- Added a narrowly anchored ~debug-ignored-errors~ pattern in ~dotspacemacs/user-init~, alongside the debugging setting in [[file+emacs:/Users/jay/emacs/emacs-settings/spacemacs.d/init.el][Spacemacs startup]]. It matches only the numbered server-client broken-peer error, with an optional trailing newline. The newline is present in the reported original error; the earlier proposed pattern without it would miss that form.
+- Batch checks verified matching with and without the newline, and rejection of other process names and extra suffixes. ~scripts/emacs_smoke_test.sh --full-init~ passed. Loaded only the new setting into running Emacs and read back ~debug-ignored-errors~, confirming the exact entry without reloading startup or changing ~debug-on-error~.
+- Rollback: remove that ~add-to-list~ form and remove its exact string from the live ~debug-ignored-errors~ list. This restores debugger entry for that server disconnection error; it does not undo the separate clipboard fixes.
+
 * 2026-11-10: Preserve lowercase response comments
 
 - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][the comment protector]] with the approved uppercase requirement. Single-hash lines remain heading candidates only when they start uppercase, have bodies of at most 60 characters, and do not end in ~.?!:~. The case check is explicitly case-sensitive, independent of the caller's search settings. The Org-context rule remains, and other Markdown heading levels do not affect this classification.

@@ -835,6 +835,10 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (setq org-enable-bootstrap-support t)
 
   ;; (setq debug-on-error t)
+  ;; A disconnected server client must not open the debugger and block
+  ;; subsequent requests.  Match only this error, including its optional newline.
+  (add-to-list 'debug-ignored-errors
+               "\\`Process server <[0-9]+> not running: connection broken by remote peer\n?\\'")
 
   ;; Native compilation settings (only when Emacs has native-comp support)
   ;; macOS cask build currently disables native-comp for stability
