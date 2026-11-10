@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-11-10: Preserve response comments when pasting Org
+
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][the clipboard detector]] so single-hash comment lines contribute Markdown points only when no Org structure is present. The reported clipboard had five comments scoring 15 Markdown points against one two-star Org heading scoring two Org points.
+- Checked the real clipboard through the clean-paste pipeline: all five comments and the Org heading survive. Existing Markdown and Org fixtures still classify correctly, and a plain Markdown single-hash heading still classifies as Markdown. Parentheses validation and byte compilation passed; evaluated the changed detector in running Emacs. No restart required.
+- Limitation: single-hash lines without any Org structure remain inherently ambiguous; this change retains their prior Markdown interpretation. Rollback: restore the detector from the preceding Git revision and reload it.
+
 * 2026-11-04: Declare binding dialect in LaTeX export helpers
 
 - Added first-line ~lexical-binding: nil~ headers to [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/jay-latex-yosemite-setup.el][Yosemite setup]] and [[file+emacs:/Users/jay/emacs/emacs-settings/latex-subtitles/latex-subtitles.el][the subtitle filter]]. This removes Emacs 31's missing-cookie warnings while preserving dynamic binding and existing export behavior.

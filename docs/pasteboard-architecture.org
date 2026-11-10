@@ -233,6 +233,8 @@ Detect when clipboard text is Markdown using `* ` for unordered lists, convert t
 - *Markdown signals*: `^#` headings, `-` / `+` bullets, ordered lists, blockquotes, fenced code, inline links, `**bold**`. Single-`*` bullets are NOT scored directly here — they are classified separately (see below).
 - *Org signals*: `#+` directives, TODO keywords, property drawers, multi-star headings (`\\*\\{2,\\}`), `SCHEDULED:` / `DEADLINE:` markers.
 
+Single-~#~ lines are ambiguous: they can be Markdown headings or Org comments (see [[https://orgmode.org/manual/Comment-Lines.html][the Org manual]]). As of 2026-11-10, they contribute Markdown points only when no Org structure is detected. This preserves interspersed comments in Org responses without letting their number overwhelm an Org heading. Text with no Org structure remains ambiguous and uses the existing Markdown interpretation.
+
 After the regex-driven scoring, the analyser walks every top-level `^\\* ` line and classifies it by neighbor context (using `pasteboard--neighbor-nonblank-kind`):
 - Indented OR list-neighbored → counted as `asterisk-bullets` (markdown-bullet-like).
 - Surrounded by paragraph text or other Org headings → scored as `org-score += 1` (single-star Org heading).

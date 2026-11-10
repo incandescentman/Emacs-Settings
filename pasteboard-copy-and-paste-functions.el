@@ -817,7 +817,7 @@ Both backtick and tilde fences are supported.  Unclosed fences remain unchanged.
             (asterisk-bullets 0)
             (case-fold-search nil))
         (dolist (spec
-                 '((md-score "^[ \t]*#\\{1,6\\} " 3)
+                 '((md-score "^[ \t]*#\\{2,6\\} " 3)
                    (md-score "^[ \t]*[-+] \\S-" 1)
                    (md-score "^[ \t]*\\d+\\. \\S-" 1)
                    (md-score "^[ \t]*> " 1)
@@ -853,6 +853,11 @@ Both backtick and tilde fences are supported.  Unclosed fences remain unchanged.
                     (memq next listish))
                 (cl-incf asterisk-bullets)
                 (cl-incf org-score 1))))
+        ;; A single hash followed by whitespace is also an Org comment.
+        ;; Let actual Org structure disambiguate it before counting Markdown
+        ;; headings, so repeated user comments cannot outvote that structure.
+        (when (= org-score 0)
+          (cl-incf md-score (* 3 (length heading-lines))))
         (let ((style
                (cond
                 ((>= md-score (+ org-score 2)) 'markdown)
