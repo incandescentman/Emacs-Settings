@@ -60,3 +60,16 @@ Open the Org source in Emacs and the final PDF in Preview for Jay. Delete agent-
 - [[https://orgmode.org/manual/Export-Settings.html][Official Org manual: Export Settings]] documents ~EXPORT_FILE_NAME~ and per-file settings. The same-directory placement above is Jay's decision, not an Org requirement.
 - [[https://raw.githubusercontent.com/emacs-mirror/emacs/master/lisp/time-stamp.el][GNU Emacs time-stamp source]] documents ~before-save-hook~ integration and that ~time-stamp-active~ set to nil prevents timestamp updates. The invoice-specific pattern is Jay's local configuration.
 - Community practice was reviewed in [[https://emacs.stackexchange.com/questions/9893/how-can-i-export-to-latex-every-time-i-save-an-org-mode-buffer][Emacs Stack Exchange: export on save]]. This is background, not the authority for the workflow; no automatic export hook was added.
+
+* How to use the Socratic invoice redesign
+Added November 9, 2026 at Sunjay's request. The separate [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/socratic-invoice.el][socratic-invoice template]] uses installed Arno Pro, ink text, pink section rules, a horizontal logo, and a contact/page footer. The existing blue invoice classes remain available. Select the new class explicitly:
+
+#+begin_src org
+#+LATEX_CLASS: socratic-invoice
+#+LATEX_COMPILER: xelatex
+#+OPTIONS: toc:nil author:nil date:nil title:nil num:nil
+#+end_src
+
+Remove the old icon-only ~\letterheadlogo~ override when adopting the horizontal header; the new class supplies its own default. It does not use ~\letterheadbrand~. For the service/fee table, retain ~:booktabs t :environment tabularx :width \textwidth :align Xr~. Mark total cells bold in the Org source; the template does not infer which row is the total. It does not change the global PDF compilation command. The normal loader and export preflight recognize the new class.
+
+The EDF review copy at [[file+emacs:/Users/jay/emacs/emacs-settings/output/socratic-invoice-review/edf-invoice-socratic-preview.org][the preview source]] retains the real invoice's content and uses the new template; the original invoice is unchanged. Review assets contain payment details and are not committed. Logo provenance and its print conversion are in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/assets/socratic-ai-logo-horizontal-print.org][the asset record]].

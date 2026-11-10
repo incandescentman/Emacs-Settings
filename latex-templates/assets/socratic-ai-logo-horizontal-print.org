@@ -1,0 +1,10 @@
+#+TITLE: Socratic AI Invoice Print Logo Provenance
+
+* Source and conversion
+The print logo is a format-converted copy of [[file+emacs:/Users/jay/Dropbox/github/astro-monorepo/apps/socratic/src/assets/images/brand/socratic-ai-logo-horizontal-2400x600.png][the existing horizontal Socratic AI logo]]. On November 9, 2026, Codex converted its channel depth from 16 bits to 8 bits with ImageMagick, retaining its 2400 × 600 dimensions and transparency, for [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/socratic-invoice.el][the invoice template]]. No artwork was generated or redesigned. The source remains unchanged.
+
+The original rendered almost white in the tested XeLaTeX PDF; the 8-bit derivative rendered correctly. The underlying renderer defect is not established.
+
+#+begin_src sh
+magick /Users/jay/Dropbox/github/astro-monorepo/apps/socratic/src/assets/images/brand/socratic-ai-logo-horizontal-2400x600.png -depth 8 /Users/jay/emacs/emacs-settings/latex-templates/assets/socratic-ai-logo-horizontal-print.png
+#+end_src
