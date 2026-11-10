@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-11-10: Remove Markdown prose backslashes on clean paste
+
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][the clipboard module]] to clean escaped numbered-list dots and single-backslash line breaks in Markdown prose. Protected comments and code blocks retain their contents; ordinary paths, doubled backslashes, and Org-mode input remain unchanged by this pass.
+- All six batch regression tests passed, covering the reported three numbered points and sign-off alongside preservation checks. Lisp-mode parentheses checking and byte compilation passed. The initial parentheses check used the wrong buffer syntax mode; rerunning in Emacs Lisp mode passed.
+- Loaded the module through the live server and read back cleaned Markdown: the number became ~1.~, the sign-off became two lines without a backslash, and ~# yes~ remained a comment. No live assertions, timeout, or GUI interaction.
+
 * 2026-11-10: Guard live server calls and disconnected-client errors
 
 - Added the approved live-server rule beside safe live loading in [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.org][the project instructions]]. Assertions, tests, and compilation run in batch; stalled clients are not timed out or terminated without authorized recovery. Both [[file+emacs:/Users/jay/emacs/emacs-settings/AGENTS.md][AGENTS.md]] and [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.md][CLAUDE.md]] resolve to that shared source.

@@ -269,3 +269,8 @@ Located in =debug/=:
 - Keep macOS-specific shell invocations isolated so Linux builds can fall back to `xclip` in the future.
 - Update `/docs/instructions.org` whenever key bindings or cleaner order changes to prevent drift.
 - See `/docs/codebase-wisdom.org` for detailed debugging post-mortems on markdown conversion and emoji handling issues.
+
+
+** Markdown prose escapes (2026-11-10)
+
+For pastes classified as Markdown, clean paste removes the backslash from escaped numbered markers such as ~1\. ~ and removes a single backslash immediately before a newline, retaining the newline. This handles the numbered points and ~Best,~ sign-off in the reported referral-email response. It does not globally strip backslashes: code blocks and protected hash comments are restored unchanged, ordinary paths retain their backslashes, and doubled line-ending backslashes remain intact. Org-classified pastes do not run this cleanup. The syntax reference is [[https://spec.commonmark.org/spec#backslash-escapes][CommonMark backslash escapes]]; converting escaped numbered markers into Org lists is the clean-paste behavior chosen for this workflow.

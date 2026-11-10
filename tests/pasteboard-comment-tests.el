@@ -81,3 +81,26 @@ I'd start with Joel or Jenny, whichever relationship is stronger.
     (should (equal (pasteboard--clean-string "# Title") "* Title"))
     ;; Known edge case: a capitalized, unpunctuated comment looks like a title.
     (should (equal (pasteboard--clean-string "# Love this") "* Love this"))))
+
+
+(ert-deftest pasteboard-markdown-prose-backslashes ()
+  (let* ((text "1\\. You're using his own enthusiasm as the foundation for the request.\n\n2\\. The Shruti anecdote is the heart of the email. Don't cut it.\n\n3\\. You make the referral feel like a low-stakes introduction.\n\n## My suggested revision\n\nBest,\\\nJay\n")
+         (output (pasteboard--clean-string text)))
+    (should (eq (plist-get (pasteboard--analyse-clipboard-text text) :style) 'markdown))
+    (should (string-match-p "1\\. You're using" output))
+    (should (string-match-p "2\\. The Shruti" output))
+    (should (string-match-p "3\\. You make" output))
+    (should (string-match-p "Best,\nJay" output))
+    (should-not (string-match-p (regexp-quote "\\") output)))
+  (dolist (literal '("# yes, keep 1\\. and this\\"
+                     "#+begin_src text\n1\\. item\nBest,\\\nJay\n#+end_src"
+                     "Path C:\\Users\\jay"
+                     "Two slashes\\\\\nnext"
+                     "Literal \\command"))
+    (should (string-match-p (regexp-quote literal)
+                            (pasteboard--clean-string (concat "## Details\n\n" literal)))))
+  (should (string-match-p
+           (regexp-quote "#+begin_src text\n1\\. item\nBest,\\\nJay\n#+end_src")
+           (pasteboard--clean-string "## Details\n\n```text\n1\\. item\nBest,\\\nJay\n```")))
+  (should (equal (pasteboard--clean-string "1\\. item\nBest,\\\nJay" 'org)
+                 "1\\. item\nBest,\\\nJay")))

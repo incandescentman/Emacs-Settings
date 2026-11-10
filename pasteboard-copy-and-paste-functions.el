@@ -996,6 +996,23 @@ Transforms lines like \"| --- | --- |\" into \"|---|---|\" while leaving data ro
         (forward-line 1)
         (setq end (point-max))))))
 
+(defun pasteboard--clean-markdown-prose-escapes ()
+  "Remove escaped list dots and single-backslash line breaks in prose.
+Call only for Markdown, after code blocks and Org comments are protected.
+Do not strip arbitrary backslashes, including doubled line-ending slashes."
+  (save-excursion
+    (goto-char (point-min))
+    (while (re-search-forward "^[ \t]*[0-9]+\\\\\\.[ \t]+" nil t)
+      (save-excursion
+        (goto-char (match-beginning 0))
+        (search-forward "\\")
+        (delete-char -1)))
+    (goto-char (point-min))
+    (while (search-forward "\\\n" nil t)
+      (let ((slash (- (point) 2)))
+        (unless (eq (char-before slash) ?\\)
+          (delete-region slash (1+ slash)))))))
+
 (defun pasteboard--clean-string (text &optional style-override)
   "Return cleaned TEXT for Org/text pastes.
 This function is pure text transformation and does not insert into buffers.
@@ -1037,7 +1054,9 @@ the clipboard analyser's result."
               ;; analyser resolved the payload as Markdown.  In Org input,
               ;; a line such as "# #+LATEX_HEADER: ..." is a comment.
               (when (eq style 'markdown)
-                (convert-markdown-headings-to-org beg end))
+                (convert-markdown-headings-to-org beg end)
+                (pasteboard--clean-markdown-prose-escapes)
+                (setq end (point-max)))
               (replace-smart-quotes beg end)
               (replace-smart-quotes-regexp beg end)
               ;; Decode the HTML space escape emitted by copied LLM prose.
