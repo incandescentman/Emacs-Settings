@@ -72,6 +72,8 @@ Added November 9, 2026 at Sunjay's request. The separate [[file+emacs:/Users/jay
 
 Remove the old icon-only ~\letterheadlogo~ override when adopting the horizontal header; the new class supplies its own default. It does not use ~\letterheadbrand~. For the service/fee table, retain ~:booktabs t :environment tabularx :width \textwidth :align Xr~. Mark total cells bold in the Org source; the template does not infer which row is the total. It does not change the global PDF compilation command. The normal loader and export preflight recognize the new class.
 
+Some labels, such as ~Attn:~ in the client block and ~Bank:~ in the payment details, export in bold automatically while others do not. Jay confirmed on November 9, 2026 that this bolding is intentional: do not report it as an inconsistency or change it.
+
 The EDF review copy at [[file+emacs:/Users/jay/emacs/emacs-settings/output/socratic-invoice-review/edf-invoice-socratic-preview.org][the preview source]] retains the real invoice's content and uses the new template; the original invoice is unchanged. Review assets contain payment details and are not committed. Logo provenance and its print conversion are in [[file+emacs:/Users/jay/emacs/emacs-settings/latex-templates/assets/socratic-ai-logo-horizontal-print.org][the asset record]].
 
 * How to number invoices
