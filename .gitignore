@@ -50,3 +50,6 @@ org-authoring.el
 spellcheck.el
 org-export.el
 org-srs/goals-over-urges-srs.org
+
+# Local previews and export builds; may contain private invoice details
+/output/
