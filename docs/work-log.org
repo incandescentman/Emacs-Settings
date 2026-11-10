@@ -1,10 +1,16 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-11-10: Protect sentence-like response comments in mixed Markdown
+
+- Retained the Org-context rule and added per-line protection in [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][the clipboard module]]. Single-hash comment bodies longer than 60 characters or ending in sentence punctuation are excluded from scoring and restored verbatim after all cleanup. Fixed both ordered-list regexes to use ~[0-9]+~ instead of unsupported ~\d+~.
+- All four tests in [[file+emacs:/Users/jay/emacs/emacs-settings/tests/pasteboard-comment-tests.el][the regression suite]] pass in batch Emacs, including the actual clipboard with and without its Org heading, mixed Markdown conversion, verbatim comments, and the documented short-comment limitation. Both Markdown detection samples remain Markdown; the existing Org sample remains ambiguous with equal scores of 17. Parentheses checks and byte compilation passed.
+- This update has not been loaded into the live editor: testing was batch-only, and no GUI or live-server calls were made. The compiled module is ready for the next reload. Short unpunctuated comments remain a known limitation, documented in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/pasteboard-architecture.org][the pasteboard architecture guide]]. The proposed uppercase and heading-level heuristics have not been applied.
+
 * 2026-11-10: Clean the HTML space escape from pasted prose
 
 - The clean pipeline in [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][the clipboard module]] now replaces literal ~&#x20;~ with a space before its trailing-whitespace cleanup. Code blocks remain protected by the existing protect/restore pipeline; verbatim paste is unchanged.
-- Verified entity cleanup, protected code, Markdown heading detection, parentheses, and byte compilation. Loaded both changed functions through the running Emacs command interface and observed ~Paste fixes loaded: Test.~. Socket verification stopped responding; its two waiting clients were terminated without stopping the active Emacs.
+- Verified entity cleanup, protected code, Markdown heading detection, parentheses, and byte compilation. Loaded both changed functions through the running Emacs command interface and observed ~Paste fixes loaded: Test.~. Correction (2026-11-10): socket verification stopped responding. The termination command targeted waiting clients 18882 and 19471 AND process 21367, the old /Applications/Emacs.app instance accidentally launched by the GUI lookup. The two clients exited, but process 21367 remained running on recheck. The main Emacs 31 process 92875 was not targeted. Both changed functions were loaded by typing M-: into the live Emacs GUI; the displayed result confirmed the encoded-space check, not server recovery.
 
 * 2026-11-10: Preserve response comments when pasting Org
 

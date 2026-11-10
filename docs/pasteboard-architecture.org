@@ -233,7 +233,11 @@ Detect when clipboard text is Markdown using `* ` for unordered lists, convert t
 - *Markdown signals*: `^#` headings, `-` / `+` bullets, ordered lists, blockquotes, fenced code, inline links, `**bold**`. Single-`*` bullets are NOT scored directly here — they are classified separately (see below).
 - *Org signals*: `#+` directives, TODO keywords, property drawers, multi-star headings (`\\*\\{2,\\}`), `SCHEDULED:` / `DEADLINE:` markers.
 
-Single-~#~ lines are ambiguous: they can be Markdown headings or Org comments (see [[https://orgmode.org/manual/Comment-Lines.html][the Org manual]]). As of 2026-11-10, they contribute Markdown points only when no Org structure is detected. This preserves interspersed comments in Org responses without letting their number overwhelm an Org heading. Text with no Org structure remains ambiguous and uses the existing Markdown interpretation.
+Single-~#~ lines are ambiguous: they can be Markdown headings or Org comments (see [[https://orgmode.org/manual/Comment-Lines.html][the Org manual]]). As of 2026-11-10, a line whose body exceeds 60 characters or ends in ~.~, ~?~, ~!~, or ~:~ is protected as a sentence-like comment. The trailing whitespace is ignored for classification but preserved in the result. Its entire line is replaced with an inert placeholder before scoring and cleanup, then restored verbatim afterward, including quotes, links, emphasis, HTML escapes, and whitespace. It contributes no Markdown points, even when its body contains Markdown syntax. Source blocks are protected first.
+
+The existing Org-context rule remains: unprotected single-hash lines contribute Markdown points only when no Org structure is detected. In Markdown text, a short ~# Title~ still converts, including alongside ~###~ headings. Known limitation: short unpunctuated comments such as ~# yes~ and ~# agreed~ can still become headings. Conversely, a long Markdown title or ~# What next?~ is preserved as a comment by this heuristic.
+
+Regression tests in [[file+emacs:/Users/jay/emacs/emacs-settings/tests/pasteboard-comment-tests.el][the pasteboard comment tests]] cover the actual reported clipboard with and without its Org heading, mixed Markdown and comments, the known short-comment limitation, ordered-list detection, and code-block preservation. Run them with ~emacs --batch -Q -l tests/pasteboard-comment-tests.el -f ert-run-tests-batch-and-exit~ from the repository.
 
 After the regex-driven scoring, the analyser walks every top-level `^\\* ` line and classifies it by neighbor context (using `pasteboard--neighbor-nonblank-kind`):
 - Indented OR list-neighbored → counted as `asterisk-bullets` (markdown-bullet-like).
@@ -247,7 +251,7 @@ Style selection (cascade in order):
 5. =asterisk-bullets >= 3= and =org-score = 0= → Markdown (catches plain `* a / * b / * c` bullet lists)
 6. Otherwise → =nil= (ambiguous — skip the markdown→org transforms)
 
-Override: if =pasteboard--text-contains-markdown-headings-p= matches any =##=–=######= heading in the text, the style is *forced* to markdown regardless of scoring.
+Multi-hash Markdown headings contribute three points per line in the same scoring cascade; there is no separate forced-Markdown override in the current detector.
 
 ** Conversion Workflow
 1. Headings convert first (=convert-markdown-headings-to-org=)

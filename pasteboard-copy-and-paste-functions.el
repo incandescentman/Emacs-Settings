@@ -800,10 +800,36 @@ Both backtick and tilde fences are supported.  Unclosed fences remain unchanged.
     (insert protected-text)
     (pasteboard--restore-markdown-fences replacements)))
 
+(defun pasteboard--protect-sentence-comments (text)
+  "Protect sentence-like single-hash comments in TEXT from all cleanup.
+A comment body is sentence-like when longer than 60 characters or ending
+in period, question mark, exclamation mark, or colon.  This is a heuristic:
+short comments without punctuation remain indistinguishable from headings."
+  (with-temp-buffer
+    (insert text)
+    (goto-char (point-min))
+    (let ((counter 0) replacements)
+      (while (re-search-forward "^[ \t]*#[ \t]+\\(.*\\)$" nil t)
+        (let ((body (string-trim-right (match-string-no-properties 1)))
+              (original (match-string-no-properties 0))
+              (beg (match-beginning 0))
+              (end (match-end 0)))
+          (when (or (> (length body) 60)
+                    (string-match-p "[.?!:]\\'" body))
+            (let* ((data (pasteboard--next-fence-placeholder
+                          (buffer-string) counter))
+                   (placeholder (car data)))
+              (setq counter (cdr data))
+              (push (cons placeholder original) replacements)
+              (delete-region beg end)
+              (goto-char beg)
+              (insert placeholder)))))
+      (list :text (buffer-string) :replacements (nreverse replacements)))))
+
 (defun pasteboard--analyse-clipboard-text (text)
   "Return a plist describing TEXT, detecting whether it looks like Markdown or Org."
   (with-temp-buffer
-    (insert text)
+    (insert (plist-get (pasteboard--protect-sentence-comments text) :text))
     (goto-char (point-min))
     (let ((line-number 1)
           (heading-lines '()))
@@ -819,7 +845,7 @@ Both backtick and tilde fences are supported.  Unclosed fences remain unchanged.
         (dolist (spec
                  '((md-score "^[ \t]*#\\{2,6\\} " 3)
                    (md-score "^[ \t]*[-+] \\S-" 1)
-                   (md-score "^[ \t]*\\d+\\. \\S-" 1)
+                   (md-score "^[ \t]*[0-9]+\\. \\S-" 1)
                    (md-score "^[ \t]*> " 1)
                    (md-score "^[ \t]*`\\{3\\}" 2)
                    (md-score "\\[[^][]+\\](https?://[^)]+)" 1)
@@ -882,7 +908,7 @@ Both backtick and tilde fences are supported.  Unclosed fences remain unchanged.
      ((looking-at "^[ \t]*\\*\\{2,\\} \\S-") 'org-heading)
      ((looking-at "^[ \t]*\\* \\S-") 'asterisk-bullet)
      ((looking-at "^[ \t]*[-+] \\S-") 'dash-bullet)
-     ((looking-at "^[ \t]*\\d+\\. \\S-") 'ordered-bullet)
+     ((looking-at "^[ \t]*[0-9]+\\. \\S-") 'ordered-bullet)
      ((looking-at "^[ \t]*:") 'definition)
      (t 'text))))
 
@@ -978,10 +1004,14 @@ the clipboard analyser's result."
          (protected-fences
           (pasteboard--protect-markdown-fences
            (plist-get protected-org-blocks :text)))
-         (protected-text (plist-get protected-fences :text))
+         (protected-comments
+          (pasteboard--protect-sentence-comments
+           (plist-get protected-fences :text)))
+         (protected-text (plist-get protected-comments :text))
          (fence-replacements
           (append (plist-get protected-org-blocks :replacements)
-                  (plist-get protected-fences :replacements)))
+                  (plist-get protected-fences :replacements)
+                  (plist-get protected-comments :replacements)))
          (analysis (pasteboard--analyse-clipboard-text protected-text))
          (style (or style-override (plist-get analysis :style)))
          (heading-line-numbers (plist-get analysis :markdown-heading-lines)))
