@@ -1,6 +1,11 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-11-10: Clean escaped numbers in Org and unclassified pastes
+
+- The previous fix depended on Markdown detection; the newly reported two-point response has no other Markdown signals and reproduced the failure. Per Jay's direction, numbered-marker cleanup now runs for all clean pastes, including Org and unclassified prose. Protected comments and code remain unchanged; line-ending backslash cleanup remains Markdown-specific.
+- Added the full reported response and a single-item excerpt to [[file+emacs:/Users/jay/emacs/emacs-settings/tests/pasteboard-comment-tests.el][the regression tests]], checking automatic and explicit Org paths. All seven batch tests and byte compilation passed. Loaded the module live and read back corrected numbered markers on both paths with protected comment backslashes intact.
+
 * 2026-11-10: Remove Markdown prose backslashes on clean paste
 
 - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][the clipboard module]] to clean escaped numbered-list dots and single-backslash line breaks in Markdown prose. Protected comments and code blocks retain their contents; ordinary paths, doubled backslashes, and Org-mode input remain unchanged by this pass.

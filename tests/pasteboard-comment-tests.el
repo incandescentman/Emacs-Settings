@@ -103,4 +103,12 @@ I'd start with Joel or Jenny, whichever relationship is stronger.
            (regexp-quote "#+begin_src text\n1\\. item\nBest,\\\nJay\n#+end_src")
            (pasteboard--clean-string "## Details\n\n```text\n1\\. item\nBest,\\\nJay\n```")))
   (should (equal (pasteboard--clean-string "1\\. item\nBest,\\\nJay" 'org)
-                 "1\\. item\nBest,\\\nJay")))
+                 "1. item\nBest,\\\nJay")))
+
+(ert-deftest pasteboard-escaped-list-without-other-markdown ()
+  (dolist (text (list "Yes. They're two distinct competitive advantages, and we should articulate both rather than collapsing them into one.\n\n1\\. You can reach people who are skeptical of AI. Your sincerity, warmth, and non-threatening manner lower their defenses. You take their concerns seriously rather than trying to convert them into AI enthusiasts. Shruti's experience illustrates this beautifully.\n\n2\\. You're a creative professional teaching other creative professionals. You're a successful nonfiction writer and writing professor, not a technologist or management consultant. Writers, editors, artists, and other creatives recognize you as one of their own. You understand their values, their craft, and what they fear losing to AI. That gives you credibility that a conventional AI trainer may lack.\n\nThese advantages overlap, but they're not interchangeable. Plenty of creative professionals are enthusiastic about AI already. Your ability to connect with them doesn't depend on their skepticism.\n\nFor Joel's email, I'd preserve the Shruti anecdote as the illustration of the first advantage, then explicitly introduce the second when describing the audiences you want to reach.\n\nThat gives Joel two different reasons someone in his network might benefit from meeting you, and two different kinds of people to think of."
+                      "1\\. You can reach people who are skeptical of AI."))
+    (should (equal (pasteboard--clean-string text)
+                   (replace-regexp-in-string (regexp-quote "\\.") "." text t t)))
+    (should (equal (pasteboard--clean-string text 'org)
+                   (replace-regexp-in-string (regexp-quote "\\.") "." text t t)))))
