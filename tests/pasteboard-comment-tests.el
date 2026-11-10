@@ -45,14 +45,14 @@ I'd start with Joel or Jenny, whichever relationship is stronger.
 (ert-deftest pasteboard-mixed-markdown-and-comments ()
   (let* ((comment "# yes, keep **this** and [this](https://example.com), “quotes”, and &#x20; exactly as written.  ")
          (text (concat "# Title\n\n### Details\n\n**bold**\n\n- first\n- second\n\n"
-                       comment "\n# yes\n"))
+                       comment "\n# yes\n# agreed\n"))
          (output (pasteboard--clean-string text)))
     (should (eq (plist-get (pasteboard--analyse-clipboard-text text) :style) 'markdown))
     (should (member comment (split-string output "\n")))
     (should (member "* Title" (split-string output "\n")))
     (should (member "*** Details" (split-string output "\n")))
-    ;; Known limitation: short, unpunctuated comments still look like headings.
-    (should (member "* yes" (split-string output "\n")))
+    (should (member "# yes" (split-string output "\n")))
+    (should (member "# agreed" (split-string output "\n")))
     (should (= (plist-get (pasteboard--analyse-clipboard-text comment) :md-score) 0))))
 
 (ert-deftest pasteboard-org-context-and-ordered-lists ()
@@ -71,3 +71,13 @@ I'd start with Joel or Jenny, whichever relationship is stronger.
   (let ((code "#+begin_src text\n# Keep this.&#x20;\n#+end_src\n"))
     (should (equal (pasteboard--clean-string code) code)))
   (should (equal (pasteboard--clean-string "Test.&#x20;") "Test.")))
+
+(ert-deftest pasteboard-uppercase-heading-boundary ()
+  ;; Bind case-fold-search true to verify the classifier is explicitly case-sensitive.
+  (let ((case-fold-search t))
+    (dolist (comment '("# yes" "# agreed" "# yes, agreed. that said…" "# I'll email both today." "# What next?"))
+      (should (equal (pasteboard--clean-string comment) comment))
+      (should (= (plist-get (pasteboard--analyse-clipboard-text comment) :md-score) 0)))
+    (should (equal (pasteboard--clean-string "# Title") "* Title"))
+    ;; Known edge case: a capitalized, unpunctuated comment looks like a title.
+    (should (equal (pasteboard--clean-string "# Love this") "* Love this"))))

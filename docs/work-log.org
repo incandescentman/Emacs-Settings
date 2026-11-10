@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-11-10: Preserve lowercase response comments
+
+- Updated [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][the comment protector]] with the approved uppercase requirement. Single-hash lines remain heading candidates only when they start uppercase, have bodies of at most 60 characters, and do not end in ~.?!:~. The case check is explicitly case-sensitive, independent of the caller's search settings. The Org-context rule remains, and other Markdown heading levels do not affect this classification.
+- All five batch regression tests pass, including ~# yes~, ~# agreed~, the original clipboard, mixed heading levels, ordered lists, source blocks, and encoded-space cleanup. Parentheses and byte compilation also passed. Recorded ~# Love this~ and ~# What next?~ as remaining edge cases in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/pasteboard-architecture.org][the architecture guide]].
+- Compiled on disk; not loaded into the running editor. No live-editor testing or GUI interaction was used.
+
 * 2026-11-10: Protect sentence-like response comments in mixed Markdown
 
 - Retained the Org-context rule and added per-line protection in [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][the clipboard module]]. Single-hash comment bodies longer than 60 characters or ending in sentence punctuation are excluded from scoring and restored verbatim after all cleanup. Fixed both ordered-list regexes to use ~[0-9]+~ instead of unsupported ~\d+~.
