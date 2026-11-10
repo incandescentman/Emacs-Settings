@@ -1,0 +1,50 @@
+#+TITLE: Invoice Research and Proposed Research-Guidance Amendment
+#+DATE: 2026-11-09
+
+* Recommendation for your invoices
+Codex recommendation: Use ~2027-001~, ~2027-002~, and so on across both brands. The invoice heading already identifies the document; an ~INV~ prefix adds no useful information here. Assign each number from one register when the invoice is finalized for sending. Retain existing 2026 identifiers. This recommendation is not a source-mandated format or an approved policy yet.
+
+Facts supplied by you: Socratic AI and Storytelling.NYC both bill through Sunjay E. Dixit as a sole proprietor, and payments go to your personal bank account. There are no agreed-upon payment terms for Horace Mann. No Net 15 deadline should be added as an agreed term.
+
+* What the sources establish, and what I recommend
+** Invoice identifiers
+Source finding: [[https://stripe.com/resources/more/what-is-an-invoice-number-what-it-is-used-for-and-how-it-is-created][Stripe's invoice-number guide]] describes sequential, chronological, customer-specific, and hybrid methods. It explicitly includes ~INV~ as an optional prefix and emphasizes uniqueness. It does not establish that ~INV~ is the best choice for your clients. My earlier claim that the prefix was purely my invention was incorrect; describing it as merely a software default also goes beyond the evidence.
+
+Codex judgment: The mistake was promoting a generic option into a recommendation without assessing its usefulness for your actual invoices or clearly separating the source's guidance from my choice. A prefix being permitted does not make it useful. Your preferred plain year-and-sequence format does the job.
+
+** Payee identity and W-9
+Source finding: The [[https://www.irs.gov/pub/irs-pdf/fw9.pdf][IRS Form W-9 instructions]] place a sole proprietor's individual name on line 1 and the business/trade name on line 2. [[https://kippneworleans.org/procurement/][KIPP New Orleans Schools]] requires a W-9 from new vendors. [[https://www.palomar.edu/businessservices/independent-contractor-info/][Palomar College's contractor workflow]] requires a W-9 and vendor registration before its purchase-order process.
+
+Codex recommendation: Keep Sunjay E. Dixit identified as supplier, with the appropriate brand in the letterhead. Establish whether each new school needs your W-9 or vendor onboarding, using its designated submission route. These examples establish real institutional practices, not Horace Mann's specific requirements.
+
+** Billing destination, purchase orders, and ACH
+Source finding: KIPP directs invoices to Accounts Payable, requests the purchasing contact and service address, and requires a purchase-order number when applicable. It requires a separate authorization form for ACH. Palomar directs invoices to Accounts Payable and explicitly warns that missing purchase-order numbers delay processing.
+
+Codex recommendation: Confirm the school's actual billing destination and required reference with the person booking you. Supply its PO number if applicable; do not invent one. Do not assume that putting bank details on the invoice completes the school's ACH enrollment. Horace Mann's requirements and current vendor-registration status remain unverified; no public AP instructions were found in the targeted search.
+
+** Payment timing
+Source finding: KIPP publishes its own Net 30 minimum, demonstrating that payer procedures can specify timing. This is not evidence of Horace Mann's terms.
+
+Codex recommendation: For future engagements, establish payment arrangements before the work. For Horace Mann, ask about its payment process and expected timing without claiming an agreed deadline exists. Keep the invoice free of fabricated payment terms.
+
+* Existing guidance and the admission test
+Existing instruction in [[file+emacs:/Users/jay/.claude/CLAUDE.org][the global instructions]], Hard Rule 9: “Never guess or fabricate a missing fact—especially what a source says or anything about Jay's business, services, or workshops.” The Verify Before Asserting section also says: “Do not state a cause, mechanism, or explanation you have not actually checked. A plausible story is not a finding.” These already govern source fidelity. I had these instructions; the record establishes failure to apply them adequately, not a missing instruction load. It does not establish a deeper causal explanation.
+
+1. Existing rule: Amend Verify Before Asserting with a focused paragraph rather than create a separate research protocol.
+2. Mechanism: Generic guidance and source examples were treated as sufficient grounds for a specific recommendation, while citation placement blurred evidence and judgment. The subsequent correction also failed to recheck the source.
+3. Recurrence: This can happen in any researched recommendation. Explicitly separating applicability, source support, and agent judgment addresses a recurring decision.
+4. Goal: The amendment preserves the ability to recommend and invent; it requires making the basis clear, not obtaining permission for every suggestion.
+5. Scope: Cross-project research belongs in global guidance. School billing procedures belong in the invoice guide; this incident does not justify a global ban on prefixes.
+6. Full brief: The amendment requires both source accuracy and useful contextual judgment. It does not let accurate citation substitute for choosing what works for you.
+
+* Earlier proposed amendment — superseded November 9, 2026
+Location: [[file+emacs:/Users/jay/.claude/CLAUDE.org::*Verify Before Asserting][Verification, Git, Processes, and File Safety → Verify Before Asserting]], immediately after the opening paragraph.
+
+*Researched recommendations.* When Jay asks for best practices, research the actual situation and intended outcome, including relevant authoritative requirements and practitioner experience. Read the passages that support the answer; a search snippet or generic vendor checklist is not a completed assessment. Clearly distinguish what each source establishes from your own inference or recommendation, and place citations so they support only the claims actually sourced. A source's example, permitted option, or product default is not evidence that it is the best choice for Jay: explain why the recommendation serves his purpose. When challenged, recheck the source and the judgment separately; do not invent a concession or use source accuracy to evade the judgment question.
+
+* Basis and tradeoff for the amendment
+Official guidance: [[https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-hallucinations][Anthropic's hallucination guidance]] recommends grounding claims in source passages and checking support claim by claim. This is a prompting recommendation, not a guarantee against errors.
+
+Practitioner experience: [[https://simonwillison.net/2025/Jan/24/anthropics-new-citations-api/][Simon Willison's hands-on citation discussion]] explains the value of traceable quotations for checking answers and distinguishes finding relevant documents from attaching citations. [[https://bond.libanswers.com/faq/273165][Bond University's library guidance]] calls for consulting original sources and assessing their context and relevance.
+
+Codex recommendation: Adopt the paragraph. It adds always-loaded text, but names the missing decisions more precisely than the existing general prohibition on fabrication. It requires no new tooling, mandatory research quota, or separate approval workflow. The two client-loading links currently resolve to the shared source: [[file+emacs:/Users/jay/.codex/AGENTS.md][Codex AGENTS.md]] and [[file+emacs:/Users/jay/.claude/CLAUDE.md][Claude CLAUDE.md]]. The invoice numbering policy remains a recommendation. The longer proposal above was superseded by the shorter Researched answers bullet approved and applied to the shared global instructions on November 9, 2026.
