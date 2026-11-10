@@ -1,10 +1,15 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-11-10: Clean the HTML space escape from pasted prose
+
+- The clean pipeline in [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][the clipboard module]] now replaces literal ~&#x20;~ with a space before its trailing-whitespace cleanup. Code blocks remain protected by the existing protect/restore pipeline; verbatim paste is unchanged.
+- Verified entity cleanup, protected code, Markdown heading detection, parentheses, and byte compilation. Loaded both changed functions through the running Emacs command interface and observed ~Paste fixes loaded: Test.~. Socket verification stopped responding; its two waiting clients were terminated without stopping the active Emacs.
+
 * 2026-11-10: Preserve response comments when pasting Org
 
 - Updated [[file+emacs:/Users/jay/emacs/emacs-settings/pasteboard-copy-and-paste-functions.el][the clipboard detector]] so single-hash comment lines contribute Markdown points only when no Org structure is present. The reported clipboard had five comments scoring 15 Markdown points against one two-star Org heading scoring two Org points.
-- Checked the real clipboard through the clean-paste pipeline: all five comments and the Org heading survive. Existing Markdown and Org fixtures still classify correctly, and a plain Markdown single-hash heading still classifies as Markdown. Parentheses validation and byte compilation passed; evaluated the changed detector in running Emacs. No restart required.
+- Checked the real clipboard through the clean-paste pipeline: all five comments and the Org heading survive. Correction (2026-11-10): the Markdown fixture classifies as Markdown; the existing Org fixture returns ambiguous (~nil~), rather than Org. Its scores are unchanged because it contains no single-hash lines. Parentheses validation and byte compilation passed; evaluated the changed detector in running Emacs. No restart required.
 - Limitation: single-hash lines without any Org structure remain inherently ambiguous; this change retains their prior Markdown interpretation. Rollback: restore the detector from the preceding Git revision and reload it.
 
 * 2026-11-04: Declare binding dialect in LaTeX export helpers

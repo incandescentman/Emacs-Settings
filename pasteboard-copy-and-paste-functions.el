@@ -1009,6 +1009,12 @@ the clipboard analyser's result."
                 (convert-markdown-headings-to-org beg end))
               (replace-smart-quotes beg end)
               (replace-smart-quotes-regexp beg end)
+              ;; Decode the HTML space escape emitted by copied LLM prose.
+              ;; Protected code blocks are restored after prose cleanup.
+              (goto-char (point-min))
+              (while (search-forward "&#x20;" nil t)
+                (replace-match " " t t))
+              (setq end (point-max))
               (replace-weird-spaces beg end)
               (pasteboard--strip-cite-markers beg end)
               (convert-markdown-blockquotes-to-org beg end)
