@@ -147,6 +147,26 @@ checkbox marker."
 
 * Browsing
 
+** Adaptive child templates
+#+begin_src emacs-lisp
+(defun jay/org-child-template (template &optional text-only)
+  "Insert TEMPLATE beneath the current heading, preserving its hierarchy.
+Outside a heading, start at level one.  With TEXT-ONLY, return the
+formatted text without changing the buffer."
+  (let* ((level (1+ (or (org-current-level) 0)))
+         (base (if (string-match "^\\(\\*+\\) " template)
+                   (length (match-string 1 template))
+                 (user-error "Template must contain an Org heading")))
+         (text (concat
+                (if (bolp) "" "\n")
+                (replace-regexp-in-string
+                 "^\\*+ "
+                 (lambda (heading)
+                   (concat (make-string (+ level (- (1- (length heading)) base)) ?*) " "))
+                 template t t))))
+    (if text-only text (insert text))))
+#+end_src
+
 ** smart insertion of headings and subheadings
 ** smart-org-meta-return-dwim
  #+BEGIN_SRC emacs-lisp

@@ -480,13 +480,11 @@ Aquamacs:
 *** Create new buffer as org-mode subtree in current file
 #+BEGIN_SRC emacs-lisp
 (defun org-new-scratch-buffer ()
-  "Create a new scratch buffer as an Org-mode subtree with a timestamp."
+  "Create and narrow to a timestamped child subtree at point."
   (interactive)
-  (insert "* oh hi there! " (format-time-string "%F %l:%M%P\n\n"))
-;; (org-tree-to-indirect-buffer 'current-window)
-(org-narrow-to-subtree)
-
-  )
+  (jay/org-child-template
+   (concat "* oh hi there! " (format-time-string "%F %l:%M%P\n\n")))
+  (org-narrow-to-subtree))
 #+END_SRC
 
 *** Disable autocorrect in minibuffer
@@ -1574,12 +1572,10 @@ URL selection, extraction, cleanup, and insertion now live in [[file+emacs:/User
   )
 
 (defun jd-org-today ()
-  "insert a new heading with today's date"
+  "Insert today's date as a child heading."
   (interactive)
-(smart-org-meta-return-dwim)
-  (org-insert-time-stamp (current-time))
-(insert "\n")
-)
+  (jay/org-child-template
+   (concat "* " (yas/org-get-time-stamp (current-time)) "\n")))
 
 (defun yas/jd-org-today ()
   "Return the Org text `jd-org-today' would insert at point.
@@ -1596,81 +1592,85 @@ the result without changing its expansion buffer."
         (buffer-substring-no-properties start (point))))))
 
 (defun jd-org-approach ()
- "insert a new heading with today's date"
- (interactive)
-(insert "\n** ")
- (org-insert-time-stamp (current-time))
-(insert "\n")
-(insert "*** TODO morning pages\n")
-(insert "*** TODO meditate\n")
-(insert "*** TODO work on book\n")
-(insert "**** TODO pomodoro #1\n")
-(insert "**** TODO pomodoro #2\n")
-(insert "*** TODO an approach\n")
-)
-
-(defun jd-org-today-and-accountability ()
-  "insert a new heading with today's date"
+  "Insert today's template as a child, preserving descendant levels."
   (interactive)
-(insert "\n** committed actions: ")
-  (org-insert-time-stamp (current-time))
-  (insert " [0%]\n")
+  (jay/org-child-template
+   (concat "** "
+           (yas/org-get-time-stamp (current-time))
+           "\n"
+           "*** TODO morning pages\n"
+           "*** TODO meditate\n"
+           "*** TODO work on book\n"
+           "**** TODO pomodoro #1\n"
+           "**** TODO pomodoro #2\n"
+           "*** TODO an approach\n")))
 
-(insert "*** TODO wake up by 8:30am\n")
-(insert "*** TODO blue light\n")
-
-(insert "*** TODO morning pages\n")
-(insert "*** TODO bookwriting [0/8]\n")
-(insert "**** TODO bookwriting #1\n")
-(insert "**** TODO bookwriting #2\n")
-(insert "**** TODO bookwriting #3\n")
-(insert "**** TODO bookwriting #4\n")
-(insert "**** TODO bookwriting #5\n")
-(insert "**** TODO bookwriting #6\n")
-(insert "**** TODO bookwriting #7\n")
-(insert "**** TODO bookwriting #8\n")
-(insert "*** TODO ")
-; (left-char)
-  )
+(defun jd-org-today-and-accountability (&optional text-only)
+  "Insert today's template as a child, preserving descendant levels.
+With TEXT-ONLY, return its text without insertion or timer side effects."
+  (interactive)
+  (jay/org-child-template
+   (concat "** committed actions: "
+           (yas/org-get-time-stamp (current-time))
+           " [0%]\n"
+           "*** TODO wake up by 8:30am\n"
+           "*** TODO blue light\n"
+           "*** TODO morning pages\n"
+           "*** TODO bookwriting [0/8]\n"
+           "**** TODO bookwriting #1\n"
+           "**** TODO bookwriting #2\n"
+           "**** TODO bookwriting #3\n"
+           "**** TODO bookwriting #4\n"
+           "**** TODO bookwriting #5\n"
+           "**** TODO bookwriting #6\n"
+           "**** TODO bookwriting #7\n"
+           "**** TODO bookwriting #8\n"
+           "*** TODO ") text-only))
 
 (defun jd-org-2-book-and-accountability ()
- "insert a new heading with today's date"
- (interactive)
-(insert "\n** ")
- (org-insert-time-stamp (current-time))
-(insert "\n")
-(insert "*** TODO bookwriting [0/2]\n")
-(insert "**** TODO bookwriting #1\n")
-(insert "**** TODO bookwriting #2\n")
-(left-char)
- )
+  "Insert today's template as a child, preserving descendant levels."
+  (interactive)
+  (jay/org-child-template
+   (concat "** "
+           (yas/org-get-time-stamp (current-time))
+           "\n"
+           "*** TODO bookwriting [0/2]\n"
+           "**** TODO bookwriting #1\n"
+           "**** TODO bookwriting #2\n"))
+  (left-char))
 
 (defun jd-org-today-and-book ()
- "Insert a new heading with today's date and start a prolific sprint."
- (interactive)
- (insert "\n** ")
- (org-insert-time-stamp (current-time))
- (insert "\n")
- (insert "*** TODO bookwriting\n")
- (pomodoro-start))
+  "Insert today's bookwriting template as a child and start a sprint."
+  (interactive)
+  (jay/org-child-template
+   (concat "** "
+           (yas/org-get-time-stamp (current-time))
+           "\n"
+           "*** TODO bookwriting\n"))
+  (pomodoro-start))
 
 (defun pomidor-start ()
- "Insert a new heading with today's date and start a prolific sprint."
- (interactive)
- (insert "\n** ")
- (org-insert-time-stamp (current-time))
- (insert "\n")
- (insert "*** TODO bookwriting\n")
- (pomodoro-start))
+  "Insert today's bookwriting template as a child and start a sprint."
+  (interactive)
+  (jay/org-child-template
+   (concat "** "
+           (yas/org-get-time-stamp (current-time))
+           "\n"
+           "*** TODO bookwriting\n"))
+  (pomodoro-start))
 
-(defun jd-pomodoro-sprint ()
- "Insert a new heading with today's date and pomodoro sprint subheading, then start timer."
- (interactive)
- (insert "\n** ")
- (org-insert-time-stamp (current-time))
- (insert "\n")
- (insert "*** TODO pomodoro sprint\n")
- (pomodoro-start))
+(defun jd-pomodoro-sprint (&optional text-only)
+  "Insert today's template as a child, preserving descendant levels.
+With TEXT-ONLY, return its text without insertion or timer side effects."
+  (interactive)
+  (let ((text (jay/org-child-template
+               (concat "** "
+                       (yas/org-get-time-stamp (current-time))
+                       "\n"
+                       "*** TODO pomodoro sprint\n")
+               text-only)))
+    (unless text-only (pomodoro-start))
+    text))
 
 #+END_SRC
 
