@@ -2770,8 +2770,8 @@ checkbox in the current list."
   ;; Fix cl deprecation warning
   (require 'cl-lib)
 
-  ;; Add your custom wrapper
-  (wrap-region-add-wrapper "\n#+BEGIN_QUOTE\n" "\n#+END_QUOTE\n" ";")
+  ;; Semicolon is prose punctuation, including when wrap-region is enabled.
+  (define-key wrap-region-mode-map (kbd ";") #'smart-semicolon)
 
   ;; Define your wrapper function
   (defun wrap-region-define-wrappers ()
