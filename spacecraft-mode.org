@@ -977,9 +977,11 @@ Also converts full stops to commas."
                 (replace-match (or (when (and was-after-punct
                                               (not (string= old-punct "")))
                                      (let ((potential-new-punct (concat old-punct new-punct)))
-                                       (find-if (lambda (exception)
-                                                  (search potential-new-punct exception))
-                                                ,*smart-punctuation-exceptions*)))
+                                       (if (string-match-p "\\`\\.+\\'" potential-new-punct)
+                                           potential-new-punct
+                                         (find-if (lambda (exception)
+                                                    (search potential-new-punct exception))
+                                                  ,*smart-punctuation-exceptions*))))
                                    new-punct)
                                nil t nil 2)
                 (if was-after-space
@@ -1001,7 +1003,7 @@ Also converts full stops to commas."
 (setq *smart-punctuation-marks* ".,;:!?—-")
 
 (setq *smart-punctuation-exceptions*
-  (list "?!" ".." "..." "............................................." "---" "--" ";;" "!!" "!!!" "??" "???" "! :" ". :" ") ; "))
+  (list "?!" ".." "..." "---" "--" ";;" "!!" "!!!" "??" "???" "! :" ". :" ") ; "))
 
    #+END_SRC
 
@@ -1014,9 +1016,9 @@ Also converts full stops to commas."
  (progn (delete-region (mark) (point)))))
 (unless
       (or
-(looking-back "\\bvs.[ ]*") ; Don't add extra periods to vs.
-(looking-back "\\bi\.e[[:punct:]]*[ ]*") ; don't add extra periods to ie.
-(looking-back "\\be\.\g[[:punct:]]*[ ]*") ; don't add extra periods to eg.
+(looking-back "\\bvs\\.[ ]*") ; Don't add extra periods to vs.
+(looking-back "\\bi\\.e[[:punct:]]*[ ]*") ; don't add extra periods to ie.
+(looking-back "\\be\\.g[[:punct:]]*[ ]*") ; don't add extra periods to eg.
 
        )
   (smart-punctuation ".")
