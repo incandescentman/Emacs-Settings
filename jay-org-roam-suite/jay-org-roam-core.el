@@ -551,6 +551,7 @@ Default is `jay/revenue-block-default-sprints' (3 sprints ~= 90 minutes)."
   '(("global CLAUDE" . "/Users/jay/.claude/CLAUDE.org")
     ("global UI preferences" . "/Users/jay/Dropbox/github/vibecoding/preferences/UI-PREFERENCES.org")
     ("Backblaze troubleshooting" . "/Users/jay/Dropbox/github/manifest/docs/backblaze-support-response-handoff-2026-10-26.org")
+    ("Glasses plan and vision coverage" . "/Users/jay/Dropbox/reference/health-reference/vsp-vision-coverage-summary.org")
     ("Jay's Goals" . "/Users/jay/.claude/jays-goals.org"))
   "Non-Org-roam files offered by `jay/org-roam-node-find-recent'.
 Each entry is a cons cell (LABEL . PATH).  LABEL is the text you type
