@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-11-14: Weekly intentions display and daily review reminder
+
+[[file+emacs:/Users/jay/emacs/emacs-settings/jay-goals-system.el][The goals module]] now reads compact labels and full wording from a private Org source. Only Current intentions is displayed. Saving refreshes the mode line immediately; external edits appear within five minutes. Invalid input preserves the last good display. A nonblocking reminder begins on day eight and uses a persisted local date to avoid duplicate daily prompts across restarts. Explicit reaffirmation resets the review date. Existing rep commands remain separate.
+
+[[file+emacs:/Users/jay/emacs/emacs-settings/docs/goals-system.org][The documentation]] records the file format and commands and routes agents to the private review procedure. Prior implementation records are retained in the private source rather than this repository. Current Focus links directly to that procedure. The three local implementation commits were consolidated after verifying the exact range and absence from fetched origin refs. Four intentions tests and the full startup smoke test passed after the documentation move.
+
 * 2026-11-10: Clean escaped numbers in Org and unclassified pastes
 
 - The previous fix depended on Markdown detection; the newly reported two-point response has no other Markdown signals and reproduced the failure. Per Jay's direction, numbered-marker cleanup now runs for all clean pastes, including Org and unclassified prose. Protected comments and code remain unchanged; line-ending backslash cleanup remains Markdown-specific.

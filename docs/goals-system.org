@@ -11,7 +11,7 @@ The goals tooling is split into two modules that work together:
 
 2. *Rep Counter Module* ([[file+emacs:/Users/jay/emacs/emacs-settings/jay-goals-system.el][jay-goals-system.el]])
    - Prefix: =s-M-g=
-   - Purpose: track weekly input metrics in the mode-line and [[file+emacs:/Users/jay/Dropbox/roam/velocity/tracking/weekly-reps.org][weekly-reps.org]]
+   - Purpose: show weekly intentions in the mode line and track weekly input metrics in [[file+emacs:/Users/jay/Dropbox/roam/velocity/tracking/weekly-reps.org][weekly-reps.org]]
 
 Note: =s-g= remains =isearch-repeat-forward=.
 
@@ -94,14 +94,27 @@ Notes:
 | =s-M-g S= | =jay-goals-open-scoreboard-file=  | Open data file |
 | =s-M-g r= | =jay-goals-reset-scoreboard=      | Manual reset |
 
-Mode-line example:
-#+begin_example
-[O:3/10 F:8/15 C:1/5 P:1/2]
-#+end_example
+** Mode-line intentions
 
-Behavior:
-- Counters roll over by ISO week.
-- Data persists in [[file+emacs:/Users/jay/Dropbox/roam/velocity/tracking/weekly-reps.org][weekly-reps.org]].
+The mode line reads [[file+emacs:/Users/jay/Dropbox/roam/velocity/goals/20261113191152-weekly-intentions.org][Weekly Intentions]]. Compact labels appear together; hovering shows the full wording. Saving the file in Emacs refreshes the display immediately; external edits appear within five minutes. Rep commands remain separate.
+
+** How to update weekly intentions
+
+Follow [[file+emacs:/Users/jay/Dropbox/roam/velocity/goals/20261113191152-weekly-intentions.org::*How to review weekly intentions][the private review procedure]] for agent interactions. Keep personal content and review triggers in that private file, not in this repository.
+
+Under ~* Current intentions~, each level-two heading is a compact mode-line label; its body contains the full wording, including nested bullets. Only that subtree is displayed. Previous versions belong under ~* History~ with their review dates and appropriately nested headings.
+
+Update ~#+REVIEWED: YYYY-MM-DD~ only after an explicit change or reaffirmation. Opening the file, editing labels, or displaying a prompt does not reset the date. Use the actual local review date.
+
+More than seven calendar days after ~REVIEWED~ means day eight onward. Emacs prompts at most once per local calendar day, including across restarts. It checks after sixty seconds idle, with focus and no active minibuffer, and shows a nonblocking review buffer. The existing intentions stay visible until updated. Reminders operate while Emacs is running.
+
+The last-prompt date is stored in [[file+emacs:/Users/jay/.emacs.d/weekly-intentions-last-prompt.txt][the prompt-date file]]. Its live path is ~jay-goals-intentions-prompt-file~; agents share this record to avoid duplicate daily reminders.
+
+Use ~M-x jay-goals-review-intentions~ to open the review. ~M-x jay-goals-confirm-intentions~ explicitly reaffirms the saved intentions and refuses to overwrite an unsaved or externally changed visiting buffer. ~jay-goals--update-mode-line~ refreshes after external edits; otherwise those edits appear within five minutes. Saving the source in Emacs refreshes immediately.
+
+** Implementation references
+
+Documented capability: [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Idle-Timers.html][Emacs idle timers]] run after inactivity; [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Displaying-Buffers.html][display-buffer]] can show a buffer without selecting it. The implementation uses these existing primitives rather than adding a scheduler. Practitioner context: [[https://doc.norang.ca/org-mode.html#WeeklyReviewProcess][Bernt Hansen's weekly review]] uses an explicit Org review routine. The eight-day threshold and once-daily reminder are configured behavior, not claims from that source.
 
 * Use Cases (What To Do When)
 
