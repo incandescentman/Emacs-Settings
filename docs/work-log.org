@@ -3226,3 +3226,6 @@ Regenerated [[file:/Users/jay/emacs/emacs-settings/spacecraft-mode.el][the runti
 
 * 2026-11-13 - Glasses plan alias in the Org-roam finder
 Added ~Glasses plan and vision coverage~ to ~jay/org-roam-extra-find-files~ in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][Org-roam core]], pointing to [[file+emacs:/Users/jay/Dropbox/reference/health-reference/vsp-vision-coverage-summary.org][the glasses plan and VSP coverage summary]]. The label includes glasses, plan, and vision as requested. Activated the entry in running Emacs and verified that the finder resolves it to the existing target. The full-init smoke test passed, including 26 ERT tests and syntax checks.
+
+* 2026-11-17 - Speak at Schools goal alias in the Org-roam finder
+Added ~Goal: Speak at Schools~ to ~jay/org-roam-extra-find-files~ in [[file+emacs:/Users/jay/emacs/emacs-settings/jay-org-roam-suite/jay-org-roam-core.el][Org-roam core]], pointing to [[file+emacs:/Users/jay/Dropbox/the-dixit-system/goals/socratic/speak/speak-at-schools/20261117164302-goal_speak_at_schools.org][the Speak at Schools goal]]. The label is the file's own title. Activated the entry in running Emacs and verified that the finder resolves it to the existing target. ~check-parens~ and the full-init smoke test passed.
