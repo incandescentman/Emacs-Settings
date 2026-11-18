@@ -289,7 +289,11 @@ Only applies to LaTeX exports from Org files tagged with :contract:."
 
 (defun my-org-inline-css-hook (exporter)
   "Insert custom inline CSS for Org HTML export."
-  (when (eq exporter 'html)
+  (when (org-export-derived-backend-p exporter 'html)
+    (let ((my-org-selected-css
+           (if (org-export-derived-backend-p exporter 'socratic-html)
+               jay/org-socratic-css
+             my-org-selected-css)))
     ;; Force export to use only the manually selected stylesheet.
     ;; Without this, Org can still inject additional style blocks from other
     ;; export variables, which then override the chosen Gmail CSS.
@@ -322,14 +326,14 @@ Only applies to LaTeX exports from Org files tagged with :contract:."
                  (insert-file-contents my-org-selected-css)
                  (buffer-string)))
              "/*]]>*/-->\n"
-             "</style>\n"))))))
+             "</style>\n")))))))
 
 (add-hook 'org-export-before-processing-functions 'my-org-inline-css-hook)
 #+END_SRC
 
 
 ** How to export standalone Socratic conversations
-Run ~M-x jay/org-export-socratic-html~ to export and open the current file. With a prefix argument, export the current subtree. Alternatively, run ~M-x select-org-export-css~, choose [[file:/Users/jay/emacs/emacs-settings/styles/socratic-conversations.css][socratic-conversations.css]], and use ordinary HTML export. Styles, fonts, and model icons are embedded at export time; Tiempos files are read from the local Socratic font directory and are not stored in this repository; images and other linked document attachments retain normal Org export behavior.
+Use ~C-c C-e S h~ to export Socratic HTML, or ~C-c C-e S o~ to export and open it. ~M-x jay/org-export-socratic-html~ also exports and opens it; a prefix argument selects the current subtree. Org respects narrowing automatically. If narrowing begins at a heading, the Socratic commands also use its subtree title and export settings. Alternatively, run ~M-x select-org-export-css~, choose [[file:/Users/jay/emacs/emacs-settings/styles/socratic-conversations.css][socratic-conversations.css]], and use ordinary HTML export. Styles, fonts, and model icons are embedded at export time; Tiempos files are read from the local Socratic font directory and are not stored in this repository; images and other linked document attachments retain normal Org export behavior.
 
 ~#+THEME: chatgpt~ and ~#+THEME: claude~ style the following content; ~default~, ~jay~, ~author~, and ~human~ reset it. Themes continue across headings until the next directive. ~#+MODEL:~ makes a model banner. User and prompt source blocks become wrapped prompt bubbles without executing Babel. Assistant blocks remain readable, literal text. Headings and model names are preserved, including Codex and Claude Code labels.
 
@@ -366,8 +370,9 @@ producing a different typeface or an HTML file with external font links."
 
 (defun jay/org-socratic-active-p (backend)
   "Whether BACKEND is HTML with the Socratic stylesheet selected."
-  (and (eq backend 'html)
-       (equal my-org-selected-css jay/org-socratic-css)))
+  (and (org-export-derived-backend-p backend 'html)
+       (or (org-export-derived-backend-p backend 'socratic-html)
+           (equal my-org-selected-css jay/org-socratic-css))))
 
 (defun jay/org-socratic-prepare (backend)
   "Preserve conversation blocks before Babel processes the export copy."
@@ -442,16 +447,42 @@ producing a different typeface or an HTML file with external font links."
         nil nil 'section)))
   tree)
 
+(defun jay/org-socratic-export-to-html
+    (&optional async subtreep visible-only body-only)
+  "Export Socratic HTML, preserving Org's narrowing and export options.
+When narrowing starts at a heading, use that subtree's title and settings."
+  (save-excursion
+    (when (buffer-narrowed-p)
+      (goto-char (point-min))
+      (when (org-at-heading-p) (setq subtreep t)))
+    (let ((org-export-use-babel nil)
+          (org-export-with-section-numbers nil)
+          (org-export-with-toc nil)
+          (org-html-postamble nil)
+          (org-export-coding-system org-html-coding-system))
+      (org-export-to-file
+       'socratic-html (org-export-output-file-name ".html" subtreep)
+       async subtreep visible-only body-only))))
+
+(defun jay/org-socratic-export-and-open
+    (&optional async subtreep visible-only body-only)
+  "Export Socratic HTML and open it, or queue an ASYNC export."
+  (let ((file (jay/org-socratic-export-to-html
+               async subtreep visible-only body-only)))
+    (unless async (org-open-file file 'system))
+    file))
+
 (defun jay/org-export-socratic-html (&optional subtreep)
-  "Export a self-styled HTML file and open it; prefix exports SUBTREEP."
+  "Export and open Socratic HTML; prefix explicitly selects SUBTREEP."
   (interactive "P")
-  (require 'ox-html)
-  (let ((my-org-selected-css jay/org-socratic-css)
-        (org-export-use-babel nil)
-        (org-export-with-section-numbers nil)
-        (org-export-with-toc nil)
-        (org-html-postamble nil))
-    (org-open-file (org-html-export-to-html nil subtreep) 'system)))
+  (jay/org-socratic-export-and-open nil subtreep))
+
+(require 'ox-html)
+(org-export-define-derived-backend 'socratic-html 'html
+  :menu-entry
+  '(?S "Export to Socratic HTML"
+       ((?h "As HTML file" jay/org-socratic-export-to-html)
+        (?o "As HTML file and open" jay/org-socratic-export-and-open))))
 
 (add-hook 'org-export-before-processing-functions #'jay/org-socratic-prepare)
 (add-hook 'org-export-filter-parse-tree-functions #'jay/org-socratic-tree)
