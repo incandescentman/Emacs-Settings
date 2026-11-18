@@ -3253,3 +3253,6 @@ The real-journal test drives ~org-export-dispatch~ with ~S o~ and separately cal
 
 * 2026-11-17 — Codex and Claude Code section themes
 Added ~codex~ and ~claude-code~ to the Socratic adapter with identical light terminal styling. [[file:/Users/jay/Dropbox/roam/journal/2026-11-17.org][The Kristen journal tree]] now uses those section directives; replies remain ordinary prose and all six prompts and the four-emails line remain intact. The terminal CSS matches [[file:/Users/jay/Dropbox/github/astro-monorepo/packages/astro-utils/src/styles/coding-agent-themes.css][the shared site stylesheet]]. Re-ran the real-journal and narrowed dispatcher/direct-command tests; both pass. Regenerated [[file:/Users/jay/Dropbox/roam/journal/2026-11-17-kristen.html][the standalone Kristen export]], checked its offline rendering, and activated the adapter in running Emacs.
+
+* 2026-11-17 — Compact coding-agent headers
+Applied the approved one-line agent and model treatment, with dark agent names, quieter model metadata, and reduced phone prompt padding. At 390px the model wraps intact with its separator attached.

@@ -673,6 +673,7 @@ details.foldable-block summary.foldable-summary > * {
   border-radius: 10px;
   overflow: hidden;
   flex: 0 0 auto;
+  width: auto !important;
   border: 1px solid var(--post-border, #e5e7eb);
   background: var(--post-surface, #ffffff);
   display: flex;
@@ -2625,4 +2626,62 @@ body.theme-claude {
   )
   li {
   margin: 0.5em 0;
+}
+
+/* Agent and model share a header; the model wraps as one unit. */
+:root .terminal-header {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin: 32px 0 24px !important;
+  color: #0f172a !important;
+  font: 700 28px/1.25 "SFMono-Regular", Consolas, monospace !important;
+}
+:root .terminal-header :is(h2, h3, h4, h5, h6) {
+  margin: 0 !important;
+  color: #0f172a !important;
+  font: inherit !important;
+}
+:root .terminal-header .terminal-model {
+  display: inline-block;
+  flex: 0 0 auto;
+  width: auto !important;
+  white-space: nowrap;
+  margin: 0 !important;
+  padding: 0 !important;
+  color: #64748b !important;
+  font: 400 16px/1.4 "SFMono-Regular", Consolas, monospace !important;
+  background: none !important;
+}
+:root .terminal-header .terminal-model::before {
+  content: "·";
+  position: static;
+  display: inline;
+  margin-right: 12px;
+  background: none;
+}
+:root .terminal-header .terminal-model::after { display: none; }
+@media (max-width: 600px) {
+  :is(.codex-theme-section, .claude-code-theme-section, .codex-theme-wrapper, .claude-code-theme-wrapper) .user-block {
+    padding-left: 2rem !important;
+  }
+}
+
+/* MDX emits the model before its heading; lay them out in reading order. */
+:is(.codex-theme-section,.claude-code-theme-section):has(> .model-banner + :is(h2,h3,h4)) {
+ display:grid; grid-template-columns:max-content minmax(0,1fr); column-gap:12px; align-items:baseline;
+}
+:is(.codex-theme-section,.claude-code-theme-section):has(> .model-banner + :is(h2,h3,h4)) > * {grid-column:1 / -1;}
+:root :is(.codex-theme-section,.claude-code-theme-section) > .model-banner + :is(h2,h3,h4) {
+ grid-column:1; grid-row:1; color:#0f172a!important; font:700 28px/1.25 "SFMono-Regular",Consolas,monospace!important; margin:32px 0 24px!important;
+}
+:root :is(.codex-theme-section,.claude-code-theme-section) > .model-banner:has(+ :is(h2,h3,h4)) {
+ grid-column:2;grid-row:1;white-space:nowrap;color:#64748b!important;font:400 16px/1.4 "SFMono-Regular",Consolas,monospace!important;margin:0!important;padding:0!important;background:none!important;
+}
+:root :is(.codex-theme-section,.claude-code-theme-section) > .model-banner:has(+ :is(h2,h3,h4))::before {content:"·";position:static;display:inline;margin-right:12px;background:none;}
+:root :is(.codex-theme-section,.claude-code-theme-section) > .model-banner:has(+ :is(h2,h3,h4))::after {display:none;}
+@media(max-width:600px){
+ :root :is(.codex-theme-section,.claude-code-theme-section) > .model-banner + :is(h2,h3,h4){margin-bottom:8px!important;}
+ :root :is(.codex-theme-section,.claude-code-theme-section) > .model-banner:has(+ :is(h2,h3,h4)){grid-row:2;grid-column:1 / -1;margin-bottom:24px!important;}
 }

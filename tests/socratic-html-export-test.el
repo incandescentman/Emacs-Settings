@@ -32,8 +32,8 @@
         (should (string-match-p (regexp-quote (org-html-encode-plain-text prompt)) html)))
       (should (string-match-p "class=\"prose codex-theme-section" html))
       (should (string-match-p "class=\"prose claude-code-theme-section" html))
-      (should (string-match-p "class=\"model-banner\">GPT-6-Astra medium" html))
-      (should (string-match-p "class=\"model-banner\">Claude Opus 5.5" html))
+      (should (string-match-p "class=\"model-banner terminal-model\">GPT-6-Astra medium" html))
+      (should (string-match-p "class=\"model-banner terminal-model\">Claude Opus 5.5" html))
       (should (string-match-p "data:font/woff2;base64," html))
       (let ((css (with-temp-buffer
                    (insert-file-contents jay/org-socratic-css)

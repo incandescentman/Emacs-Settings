@@ -408,7 +408,24 @@ producing a different typeface or an HTML file with external font links."
                                 (equal (org-element-property :key first) "THEME")
                                 (downcase (string-trim (org-element-property :value first))))))
                 (org-element-put-property node :HTML_HEADLINE_CLASS
-                                          (concat "socratic-heading-" (or next theme))))
+                                          (concat "socratic-heading-" (or next theme)))
+                (when (member (or next theme) '("codex" "claude-code"))
+                  (let ((model (cl-find-if
+                                (lambda (child)
+                                  (and (eq (org-element-type child) 'keyword)
+                                       (equal (org-element-property :key child) "MODEL")))
+                                (org-element-contents section))))
+                    (when model
+                      (org-element-put-property node :HTML_HEADLINE_CLASS
+                                                (concat "terminal-header socratic-heading-" (or next theme)))
+                      (org-element-put-property node :title
+                        (append (org-element-property :title node)
+                                (list (org-element-create 'export-snippet
+                                        (list :back-end "html" :value
+                                              (format "<span class=\"model-banner terminal-model\">%s</span>"
+                                                      (org-html-encode-plain-text
+                                                       (string-trim (org-element-property :value model)))))))))
+                      (org-element-put-property model :socratic-header-model t)))))
             (let (result group)
               (cl-labels
                   ((flush-group
@@ -431,6 +448,7 @@ producing a different typeface or an HTML file with external font links."
                         (setq theme (if (member value '("default" "jay" "author" "human")) "default" value))
                         (unless (member theme '("chatgpt" "claude" "codex" "claude-code" "default"))
                           (user-error "Unsupported Socratic HTML theme: %s" value))))
+                     ((org-element-property :socratic-header-model child) nil)
                      ((equal key "MODEL")
                       (push (org-element-create
                              'export-block
