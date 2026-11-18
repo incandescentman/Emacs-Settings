@@ -337,7 +337,7 @@ Use ~C-c C-e S h~ to export Socratic HTML, or ~C-c C-e S o~ to export and open i
 
 ~#+THEME: chatgpt~ and ~#+THEME: claude~ style the following content; ~default~, ~jay~, ~author~, and ~human~ reset it. Themes continue across headings until the next directive. ~#+MODEL:~ makes a model banner. User and prompt source blocks become wrapped prompt bubbles without executing Babel. Assistant blocks remain readable, literal text. Headings and model names are preserved, including Codex and Claude Code labels.
 
-The adapter uses the existing shared Socratic styles; it does not define a separate command-line visual theme. Source: [[https://orgmode.org/manual/Advanced-Export-Configuration.html][Org export hooks and parse-tree filters]].
+The adapter uses the existing shared Socratic chat styles. ~#+THEME: codex~ and ~#+THEME: claude-code~ share a light terminal treatment for ordinary prose replies and user blocks, so individual replies do not need source-block wrappers. Source: [[https://orgmode.org/manual/Advanced-Export-Configuration.html][Org export hooks and parse-tree filters]].
 
 #+begin_src emacs-lisp
 (defconst jay/org-socratic-css
@@ -429,7 +429,7 @@ producing a different typeface or an HTML file with external font links."
                       (flush-group)
                       (let ((value (downcase (string-trim (org-element-property :value child)))))
                         (setq theme (if (member value '("default" "jay" "author" "human")) "default" value))
-                        (unless (member theme '("chatgpt" "claude" "default"))
+                        (unless (member theme '("chatgpt" "claude" "codex" "claude-code" "default"))
                           (user-error "Unsupported Socratic HTML theme: %s" value))))
                      ((equal key "MODEL")
                       (push (org-element-create

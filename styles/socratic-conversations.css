@@ -2521,3 +2521,108 @@ body.theme-claude {
 .model-banner { box-sizing:border-box; overflow-wrap:anywhere; }
 @media(max-width:600px) { div.user-block { max-width: 100%; } .model-banner { font-size:1.5rem; } }
 @media print { #content { max-width:none; padding:0; } .user-block { break-inside:avoid; } }
+
+/* Coding-agent conversation themes: identical light terminal presentation.
+   Keep replies as ordinary HTML paragraphs/lists/links rather than log blocks. */
+:is(
+  .codex-theme-section,
+  .claude-code-theme-section,
+  .codex-theme-wrapper,
+  .claude-code-theme-wrapper
+) {
+  --terminal-font:
+    "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  --user-block-bg: #f3f4f6;
+  --user-block-text: #20242b;
+  --user-block-radius: 4px;
+  --user-block-padding: 1rem 1rem 1rem 2.5rem;
+  --user-block-padding-top: 1rem;
+  --user-block-padding-left: 2.5rem;
+  --user-block-max-width: 100%;
+  --user-block-font: var(--terminal-font);
+  --model-banner-font: var(--terminal-font);
+  --model-banner-font-size: 1.125rem;
+  --model-banner-font-weight: 600;
+  --model-banner-padding-left: 0;
+  --model-banner-icon-url: none;
+  --model-banner-text: #4b5563;
+  --model-banner-line-gradient: none;
+  font-family: var(--terminal-font);
+  font-size: 18px;
+  line-height: 1.65;
+  color: #20242b;
+  background: #fff;
+  padding: 0.5rem 0 2rem;
+  overflow-wrap: anywhere;
+}
+:is(
+    .codex-theme-section,
+    .claude-code-theme-section,
+    .codex-theme-wrapper,
+    .claude-code-theme-wrapper
+  )
+  .user-block {
+  width: 100%;
+  margin: 1.75rem 0;
+}
+:is(
+    .codex-theme-section,
+    .claude-code-theme-section,
+    .codex-theme-wrapper,
+    .claude-code-theme-wrapper
+  )
+  .user-block::before {
+  content: "❯";
+  position: absolute;
+  left: 0.8rem;
+  top: 1rem;
+  color: #4b5563;
+}
+:is(.socratic-heading-codex, .socratic-heading-claude-code) {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+/* Override inherited editorial/chat typography without changing their rules. */
+@layer theme {
+  :root
+    :is(
+      .codex-theme-section,
+      .claude-code-theme-section,
+      .codex-theme-wrapper,
+      .claude-code-theme-wrapper
+    )
+    :is(p, li, blockquote, .conversation-text) {
+    font-family: var(--terminal-font) !important;
+    font-size: 18px !important;
+    line-height: 1.65 !important;
+    color: #20242b !important;
+  }
+  :root
+    :is(
+      .codex-theme-section,
+      .claude-code-theme-section,
+      .codex-theme-wrapper,
+      .claude-code-theme-wrapper
+    )
+    :is(h1, h2, h3, h4, h5, h6, .model-banner) {
+    font-family: var(--terminal-font) !important;
+  }
+}
+:is(
+    .codex-theme-section,
+    .claude-code-theme-section,
+    .codex-theme-wrapper,
+    .claude-code-theme-wrapper
+  )
+  p {
+  margin: 1em 0;
+}
+:is(
+    .codex-theme-section,
+    .claude-code-theme-section,
+    .codex-theme-wrapper,
+    .claude-code-theme-wrapper
+  )
+  li {
+  margin: 0.5em 0;
+}
