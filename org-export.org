@@ -316,14 +316,146 @@ Only applies to LaTeX exports from Org files tagged with :contract:."
             (concat
              "<style type=\"text/css\">\n"
              "<!--/*--><![CDATA[/*><!--*/\n"
-             (with-temp-buffer
-               (insert-file-contents my-org-selected-css)
-               (buffer-string))
+             (if (equal my-org-selected-css jay/org-socratic-css)
+                 (jay/org-socratic-stylesheet)
+               (with-temp-buffer
+                 (insert-file-contents my-org-selected-css)
+                 (buffer-string)))
              "/*]]>*/-->\n"
              "</style>\n"))))))
 
 (add-hook 'org-export-before-processing-functions 'my-org-inline-css-hook)
 #+END_SRC
+
+
+** How to export standalone Socratic conversations
+Run ~M-x jay/org-export-socratic-html~ to export and open the current file. With a prefix argument, export the current subtree. Alternatively, run ~M-x select-org-export-css~, choose [[file:/Users/jay/emacs/emacs-settings/styles/socratic-conversations.css][socratic-conversations.css]], and use ordinary HTML export. Styles, fonts, and model icons are embedded at export time; Tiempos files are read from the local Socratic font directory and are not stored in this repository; images and other linked document attachments retain normal Org export behavior.
+
+~#+THEME: chatgpt~ and ~#+THEME: claude~ style the following content; ~default~, ~jay~, ~author~, and ~human~ reset it. Themes continue across headings until the next directive. ~#+MODEL:~ makes a model banner. User and prompt source blocks become wrapped prompt bubbles without executing Babel. Assistant blocks remain readable, literal text. Headings and model names are preserved, including Codex and Claude Code labels.
+
+The adapter uses the existing shared Socratic styles; it does not define a separate command-line visual theme. Source: [[https://orgmode.org/manual/Advanced-Export-Configuration.html][Org export hooks and parse-tree filters]].
+
+#+begin_src emacs-lisp
+(defconst jay/org-socratic-css
+  (expand-file-name "styles/socratic-conversations.css"
+                    (file-name-directory (or load-file-name buffer-file-name))))
+(add-to-list 'my-org-css-options jay/org-socratic-css)
+
+(defvar jay/org-socratic-local-font-directory
+  "/Users/jay/Dropbox/github/astro-monorepo/apps/socratic/public/fonts/tiempos-text/"
+  "Local Tiempos font directory; font bytes must never be committed here.")
+
+(defun jay/org-socratic-stylesheet ()
+  "Read the stylesheet and embed local Tiempos fonts only in export output.
+Fail explicitly when a required font is unavailable rather than silently
+producing a different typeface or an HTML file with external font links."
+  (with-temp-buffer
+    (insert-file-contents jay/org-socratic-css)
+    (goto-char (point-min))
+    (while (re-search-forward
+            "url('/fonts/tiempos-text/\\([^/']+\\)')" nil t)
+      (let* ((font (expand-file-name (match-string 1)
+                                     jay/org-socratic-local-font-directory))
+             (data (with-temp-buffer
+                     (set-buffer-multibyte nil)
+                     (insert-file-contents-literally font)
+                     (base64-encode-string (buffer-string) t))))
+        (replace-match (concat "url('data:font/otf;base64," data "')") t t)))
+    (buffer-string)))
+
+
+(defun jay/org-socratic-active-p (backend)
+  "Whether BACKEND is HTML with the Socratic stylesheet selected."
+  (and (eq backend 'html)
+       (equal my-org-selected-css jay/org-socratic-css)))
+
+(defun jay/org-socratic-prepare (backend)
+  "Preserve conversation blocks before Babel processes the export copy."
+  (when (jay/org-socratic-active-p backend)
+    (require 'ox-html)
+    (let (edits)
+      (org-element-map (org-element-parse-buffer) 'src-block
+        (lambda (node)
+          (let ((lang (downcase (or (org-element-property :language node) ""))))
+            (when (member lang '("user" "prompt" "assistant"))
+              (push (list (org-element-property :begin node)
+                          (org-element-property :end node)
+                          (format "#+begin_export html\n<div class=\"%s\"><pre class=\"conversation-text\">%s</pre></div>\n#+end_export\n\n"
+                                  (if (equal lang "assistant") "assistant-block" "user-block")
+                                  (org-html-encode-plain-text
+                                   (org-element-property :value node))))
+                    edits)))))
+      (dolist (edit edits)
+        (goto-char (nth 0 edit))
+        (delete-region (nth 0 edit) (nth 1 edit))
+        (insert (nth 2 edit))))))
+
+(defun jay/org-socratic-tree (tree backend _info)
+  "Wrap section contents in themed groups without crossing HTML headings."
+  (when (jay/org-socratic-active-p backend)
+    (let ((theme "default"))
+      (org-element-map tree '(headline section)
+        (lambda (node)
+          (if (eq (org-element-type node) 'headline)
+              (let* ((section (car (org-element-contents node)))
+                     (first (car (org-element-contents section)))
+                     (next (and (eq (org-element-type first) 'keyword)
+                                (equal (org-element-property :key first) "THEME")
+                                (downcase (string-trim (org-element-property :value first))))))
+                (org-element-put-property node :HTML_HEADLINE_CLASS
+                                          (concat "socratic-heading-" (or next theme))))
+            (let (result group)
+              (cl-labels
+                  ((flush-group
+                    ()
+                    (when group
+                      (let ((wrapper (org-element-create
+                                      'special-block
+                                      (list :type "div" :attr_html
+                                            (list (concat ":class prose " theme "-theme-section"))))))
+                        (apply #'org-element-adopt wrapper (nreverse group))
+                        (push wrapper result)
+                        (setq group nil)))))
+                (dolist (child (org-element-contents node))
+                  (let ((key (and (eq (org-element-type child) 'keyword)
+                                  (org-element-property :key child))))
+                    (cond
+                     ((equal key "THEME")
+                      (flush-group)
+                      (let ((value (downcase (string-trim (org-element-property :value child)))))
+                        (setq theme (if (member value '("default" "jay" "author" "human")) "default" value))
+                        (unless (member theme '("chatgpt" "claude" "default"))
+                          (user-error "Unsupported Socratic HTML theme: %s" value))))
+                     ((equal key "MODEL")
+                      (push (org-element-create
+                             'export-block
+                             (list :type "HTML" :value
+                                   (format "<div class=\"model-banner\">%s</div>\n"
+                                           (org-html-encode-plain-text
+                                            (string-trim (org-element-property :value child))))))
+                            group))
+                     (t (push child group)))))
+                (flush-group)
+                (apply #'org-element-set-contents node (nreverse result))
+                (dolist (child (org-element-contents node))
+                  (org-element-put-property child :parent node))))))
+        nil nil 'section)))
+  tree)
+
+(defun jay/org-export-socratic-html (&optional subtreep)
+  "Export a self-styled HTML file and open it; prefix exports SUBTREEP."
+  (interactive "P")
+  (require 'ox-html)
+  (let ((my-org-selected-css jay/org-socratic-css)
+        (org-export-use-babel nil)
+        (org-export-with-section-numbers nil)
+        (org-export-with-toc nil)
+        (org-html-postamble nil))
+    (org-open-file (org-html-export-to-html nil subtreep) 'system)))
+
+(add-hook 'org-export-before-processing-functions #'jay/org-socratic-prepare)
+(add-hook 'org-export-filter-parse-tree-functions #'jay/org-socratic-tree)
+#+end_src
 
 ** clean up tex files
 [[https://emacs.stackexchange.com/questions/23982/cleanup-org-mode-export-intermediary-file][Cleanup org-mode export intermediary file - Emacs Stack Exchange]]
