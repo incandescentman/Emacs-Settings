@@ -27,7 +27,7 @@
            (org-babel-default-header-args:user '((:exports . "results")))
            (html (org-export-as 'html nil nil nil '(:with-toc nil))))
       (should (equal before (buffer-string)))
-      (should (= (length prompts) 6))
+      (should (= (length prompts) 7))
       (dolist (prompt prompts)
         (should (string-match-p (regexp-quote (org-html-encode-plain-text prompt)) html)))
       (should (string-match-p "class=\"prose codex-theme-section" html))
@@ -91,7 +91,7 @@
           (should-not (string-match-p "write to Eva" html))
           (should (string-match-p "class=\"prose codex-theme-section" html))
           (should (string-match-p "class=\"prose claude-code-theme-section" html))
-          (should (= 6 (with-temp-buffer
+          (should (= 7 (with-temp-buffer
                          (insert html) (goto-char (point-min))
                          (let ((count 0))
                            (while (search-forward "class=\"user-block\"" nil t)

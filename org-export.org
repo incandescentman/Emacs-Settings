@@ -506,6 +506,47 @@ When narrowing starts at a heading, use that subtree's title and settings."
 (add-hook 'org-export-filter-parse-tree-functions #'jay/org-socratic-tree)
 #+end_src
 
+** How to insert a Codex or Claude Code session
+Pasted prompts are cleaned automatically: the converter strips a leading terminal prompt marker (~❯ ~ or ~› ~), removes the shared two-space paste margin and rejoins long prose continuations inside that pattern. Words and paragraph breaks remain intact; fenced code, lists, quotations, and relative indentation remain structured. No cleanup option or extra Emacs prompt is required.
+
+~M-x jay/insert-agent-session~ lists recent Codex and Claude Code sessions, newest first, and inserts the one you pick at point as Org: ~#+THEME~ and ~#+MODEL~ lines, each prompt in a ~#+begin_src user~ block, and each reply with its bold, links, lists, and code intact. It reads the session files on disk through [[file:/Users/jay/Dropbox/apps/bash-scripts/text/agent-session-to-org][agent-session-to-org]], because text copied from a terminal loses the Markdown. With a prefix argument it asks which turns to keep, counting prompts from 1. Codex's progress notes are included; ~agent-session-to-org SESSION --no-progress~ leaves them out.
+
+#+begin_src emacs-lisp
+(defvar jay/agent-session-to-org-script
+  "/Users/jay/Dropbox/apps/bash-scripts/text/agent-session-to-org"
+  "Script that converts a Codex or Claude Code session file to Org.")
+
+(defun jay/insert-agent-session (path &optional turns)
+  "Insert the Codex or Claude Code session at PATH as Org at point.
+With a prefix argument, ask which TURNS to keep, such as 3,4."
+  (interactive
+   (let* ((rows (process-lines jay/agent-session-to-org-script "--list" "40"))
+          (cands (mapcar
+                  (lambda (row)
+                    (let* ((f (split-string row "\t"))
+                           (file (nth 3 f)))
+                      (cons (format "%s  %-11s  %s  %s" (nth 0 f) (nth 1 f) (nth 2 f)
+                                    (substring (file-name-base file) -8))
+                            file)))
+                  rows))
+          (choice (completing-read
+                   "Session: "
+                   (lambda (str pred action)
+                     (if (eq action 'metadata)
+                         '(metadata (display-sort-function . identity))
+                       (complete-with-action action cands str pred)))
+                   nil t)))
+     (list (cdr (assoc choice cands))
+           (when current-prefix-arg (read-string "Turns (e.g. 3,4): ")))))
+  (insert
+   (with-temp-buffer
+     (unless (zerop (apply #'call-process jay/agent-session-to-org-script nil t nil
+                           path (unless (string-empty-p (or turns ""))
+                                  (list "--turns" turns))))
+       (error "agent-session-to-org failed: %s" (buffer-string)))
+     (buffer-string))))
+#+end_src
+
 ** clean up tex files
 [[https://emacs.stackexchange.com/questions/23982/cleanup-org-mode-export-intermediary-file][Cleanup org-mode export intermediary file - Emacs Stack Exchange]]
 

@@ -2523,7 +2523,7 @@ body.theme-claude {
 @media(max-width:600px) { div.user-block { max-width: 100%; } .model-banner { font-size:1.5rem; } }
 @media print { #content { max-width:none; padding:0; } .user-block { break-inside:avoid; } }
 
-/* Coding-agent conversation themes: identical light terminal presentation.
+/* Coding-agent conversation themes: identical softened dark terminal presentation.
    Keep replies as ordinary HTML paragraphs/lists/links rather than log blocks. */
 :is(
   .codex-theme-section,
@@ -2533,12 +2533,12 @@ body.theme-claude {
 ) {
   --terminal-font:
     "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-  --user-block-bg: #f3f4f6;
-  --user-block-text: #20242b;
-  --user-block-radius: 4px;
-  --user-block-padding: 1rem 1rem 1rem 2.5rem;
-  --user-block-padding-top: 1rem;
-  --user-block-padding-left: 2.5rem;
+  --user-block-bg: #252f3a;
+  --user-block-text: #bdcbd1;
+  --user-block-radius: 8px;
+  --user-block-padding: 16px 20px 16px 42px;
+  --user-block-padding-top: 16px;
+  --user-block-padding-left: 42px;
   --user-block-max-width: 100%;
   --user-block-font: var(--terminal-font);
   --model-banner-font: var(--terminal-font);
@@ -2546,13 +2546,13 @@ body.theme-claude {
   --model-banner-font-weight: 600;
   --model-banner-padding-left: 0;
   --model-banner-icon-url: none;
-  --model-banner-text: #4b5563;
+  --model-banner-text: #94adb7;
   --model-banner-line-gradient: none;
   font-family: var(--terminal-font);
   font-size: 18px;
   line-height: 1.65;
-  color: #20242b;
-  background: #fff;
+  color: #bdcbd1;
+  background: #202932;
   padding: 0.5rem 0 2rem;
   overflow-wrap: anywhere;
 }
@@ -2564,7 +2564,7 @@ body.theme-claude {
   )
   .user-block {
   width: 100%;
-  margin: 1.75rem 0;
+  margin: 24px 0;
 }
 :is(
     .codex-theme-section,
@@ -2575,9 +2575,9 @@ body.theme-claude {
   .user-block::before {
   content: "❯";
   position: absolute;
-  left: 0.8rem;
-  top: 1rem;
-  color: #4b5563;
+  left: 17px;
+  top: 16px;
+  color: #8fcfc6;
 }
 :is(.socratic-heading-codex, .socratic-heading-claude-code) {
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
@@ -2596,7 +2596,7 @@ body.theme-claude {
     font-family: var(--terminal-font) !important;
     font-size: 18px !important;
     line-height: 1.65 !important;
-    color: #20242b !important;
+    color: #bdcbd1 !important;
   }
   :root
     :is(
@@ -2635,12 +2635,12 @@ body.theme-claude {
   flex-wrap: wrap;
   gap: 8px 12px;
   margin: 32px 0 24px !important;
-  color: #0f172a !important;
+  color: #8fcfc6 !important;
   font: 700 28px/1.25 "SFMono-Regular", Consolas, monospace !important;
 }
 :root .terminal-header :is(h2, h3, h4, h5, h6) {
   margin: 0 !important;
-  color: #0f172a !important;
+  color: #8fcfc6 !important;
   font: inherit !important;
 }
 :root .terminal-header .terminal-model {
@@ -2650,7 +2650,7 @@ body.theme-claude {
   white-space: nowrap;
   margin: 0 !important;
   padding: 0 !important;
-  color: #64748b !important;
+  color: #9cb6b9 !important;
   font: 400 16px/1.4 "SFMono-Regular", Consolas, monospace !important;
   background: none !important;
 }
@@ -2666,6 +2666,9 @@ body.theme-claude {
   :is(.codex-theme-section, .claude-code-theme-section, .codex-theme-wrapper, .claude-code-theme-wrapper) .user-block {
     padding-left: 2rem !important;
   }
+  :is(.codex-theme-section, .claude-code-theme-section, .codex-theme-wrapper, .claude-code-theme-wrapper) .user-block::before {
+    left: 11px;
+  }
 }
 
 /* MDX emits the model before its heading; lay them out in reading order. */
@@ -2674,10 +2677,10 @@ body.theme-claude {
 }
 :is(.codex-theme-section,.claude-code-theme-section):has(> .model-banner + :is(h2,h3,h4)) > * {grid-column:1 / -1;}
 :root :is(.codex-theme-section,.claude-code-theme-section) > .model-banner + :is(h2,h3,h4) {
- grid-column:1; grid-row:1; color:#0f172a!important; font:700 28px/1.25 "SFMono-Regular",Consolas,monospace!important; margin:32px 0 24px!important;
+ grid-column:1; grid-row:1; color:#8fcfc6!important; font:700 28px/1.25 "SFMono-Regular",Consolas,monospace!important; margin:32px 0 24px!important;
 }
 :root :is(.codex-theme-section,.claude-code-theme-section) > .model-banner:has(+ :is(h2,h3,h4)) {
- grid-column:2;grid-row:1;white-space:nowrap;color:#64748b!important;font:400 16px/1.4 "SFMono-Regular",Consolas,monospace!important;margin:0!important;padding:0!important;background:none!important;
+ grid-column:2;grid-row:1;white-space:nowrap;color:#9cb6b9!important;font:400 16px/1.4 "SFMono-Regular",Consolas,monospace!important;margin:0!important;padding:0!important;background:none!important;
 }
 :root :is(.codex-theme-section,.claude-code-theme-section) > .model-banner:has(+ :is(h2,h3,h4))::before {content:"·";position:static;display:inline;margin-right:12px;background:none;}
 :root :is(.codex-theme-section,.claude-code-theme-section) > .model-banner:has(+ :is(h2,h3,h4))::after {display:none;}
@@ -2685,3 +2688,30 @@ body.theme-claude {
  :root :is(.codex-theme-section,.claude-code-theme-section) > .model-banner + :is(h2,h3,h4){margin-bottom:8px!important;}
  :root :is(.codex-theme-section,.claude-code-theme-section) > .model-banner:has(+ :is(h2,h3,h4)){grid-row:2;grid-column:1 / -1;margin-bottom:24px!important;}
 }
+
+/* Keep restored Markdown emphasis, links and code legible in both renderers. */
+@layer theme {
+ :root :is(.codex-theme-section,.claude-code-theme-section,.codex-theme-wrapper,.claude-code-theme-wrapper) :is(strong,b) {color:#dfc28b!important;font-weight:700;}
+ :root :is(.codex-theme-section,.claude-code-theme-section,.codex-theme-wrapper,.claude-code-theme-wrapper) a {color:#8dc9bd!important;text-decoration:underline;text-underline-offset:3px;}
+ :root :is(.codex-theme-section,.claude-code-theme-section,.codex-theme-wrapper,.claude-code-theme-wrapper) a:hover {color:#b1e0d4!important;}
+ :root :is(.codex-theme-section,.claude-code-theme-section,.codex-theme-wrapper,.claude-code-theme-wrapper) :is(code,pre) {color:#bdcbd1!important;background:#2a3640!important;}
+ :root :is(.codex-theme-section,.claude-code-theme-section,.codex-theme-wrapper,.claude-code-theme-wrapper) :is(h1,h2,h3,h4,h5,h6) {color:#e0e9e7!important;}
+ :root :is(.codex-theme-section,.claude-code-theme-section,.codex-theme-wrapper,.claude-code-theme-wrapper) li::marker {color:#94adb7!important;}
+ /* Prompt text sits on the panel fill, not the code background. */
+ :root :is(.codex-theme-section,.claude-code-theme-section,.codex-theme-wrapper,.claude-code-theme-wrapper) .conversation-text {background:transparent!important;}
+ :root :is(.codex-theme-section,.claude-code-theme-section,.codex-theme-wrapper,.claude-code-theme-wrapper) .user-block .conversation-text {padding:0!important;margin:0!important;border:0!important;line-height:1.55!important;}
+}
+:is(.codex-theme-section,.claude-code-theme-section,.codex-theme-wrapper,.claude-code-theme-wrapper) {color-scheme:dark;}
+:is(.codex-theme-section,.claude-code-theme-section,.codex-theme-wrapper,.claude-code-theme-wrapper) .user-block {border:1px solid #3a4d58;box-shadow:none;}
+:is(.codex-theme-section,.claude-code-theme-section,.codex-theme-wrapper,.claude-code-theme-wrapper) .user-block::before {color:#8fcfc6;}
+/* Site sections need their own gutters when embedded in a light article. */
+.post-content :is(.codex-theme-section,.claude-code-theme-section) {padding:1.5rem;border-radius:8px;}
+.post-page:is(.codex-theme-wrapper,.claude-code-theme-wrapper) {--post-ink:#e0e9e7;--post-ink-body:#bdcbd1;--post-muted:#94adb7;}
+
+:root .post-page:is(.codex-theme-wrapper,.claude-code-theme-wrapper) {--post-bg:#202932;--post-surface:#2a3640;--post-border:#3a505c;--post-ink:#e0e9e7;--post-ink-body:#bdcbd1;--post-muted:#94adb7;}
+:is(.codex-theme-section,.claude-code-theme-section,.codex-theme-wrapper,.claude-code-theme-wrapper) code::before,
+:is(.codex-theme-section,.claude-code-theme-section,.codex-theme-wrapper,.claude-code-theme-wrapper) code::after {content:none!important;}
+
+/* All-terminal standalone documents use the same dark canvas as the preview. */
+body:has(.codex-theme-section,.claude-code-theme-section):not(:has(.chatgpt-theme-section,.claude-theme-section,.default-theme-section)) {background:#202932;color:#bdcbd1;color-scheme:dark;}
+body:has(.codex-theme-section,.claude-code-theme-section):not(:has(.chatgpt-theme-section,.claude-theme-section,.default-theme-section)) .title {color:#8fcfc6;}
