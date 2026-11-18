@@ -122,6 +122,20 @@ The following documentation files provide detailed information about various asp
 - *Durable guidance belongs in the repo, not in tool-specific private memory*: Claude Code has its own per-project memory (=~/.claude/projects/.../memory/=) and other AI tools have their own equivalents. None of them are visible to the others — guidance Claude saves to its private memory is invisible to Codex, and vice versa. Any rule, trap, or debugging lesson that applies to work *on this codebase* belongs in [[file+emacs:/Users/jay/emacs/emacs-settings/CLAUDE.org][CLAUDE.org]] (for AI-facing rules) or [[file+emacs:/Users/jay/emacs/emacs-settings/docs/codebase-wisdom.org][docs/codebase-wisdom.org]] (for debugging post-mortems), where every AI session and Jay himself can see it. Use tool-specific memory only for things that are genuinely tool-specific and not about this codebase: Claude's response style, terseness preferences, cross-project communication habits. Concrete example: during the 2026-04-23 hyphenation session, Codex confidently recommended =\finalhyphendemerits=1000000= as the surgical fix; the empirical tests showed it didn't work in this codebase's Garamond + tight enumitem measure. That countermeasure now lives in [[file+emacs:/Users/jay/emacs/emacs-settings/docs/codebase-wisdom.org][codebase-wisdom.org]] + this file — not in Claude-only memory — so Codex will see it too and won't repeat the same theoretical mistake. When in doubt, err toward the repo.
 - *Startup smoke-test*: After tweaking startup-touching files, run ~scripts/emacs_smoke_test.sh --full-init~ from [[file+emacs:/Users/jay/emacs/emacs-settings/][the repository]]. It loads Spacemacs early-init before init, runs the startup hook, and checks that the capture module and ~s-P~ binding load, in addition to syntax and capture tests. (Updated 2026-10-26.)
 
+** How to document keybindings
+Jay's ruling, 2025-10-14. Moved here on 2026-11-18 from a formatting note in the vibecoding repository, which was otherwise obsolete and has been deleted.
+
+Use the two-line block format below when documenting keybindings:
+
+~e~   ~my-calendar-edit-diary-entry~
+     - Jump to the diary entry for the selected date and stay there.
+
+Additional rules:
+- Insert a blank line between each binding block so entries breathe.
+- Avoid Org tables, definition lists (~term :: value~), and lists that lead with a hyphen; present bindings as plain lines instead.
+- The command name is also wrapped in tildes.
+- The second line starts with four spaces, a hyphen, and a space (~"     - "~).
+
 ** Checkpoint Protocol
 - At each checkpoint, update [[file+emacs:docs/work-log.org][📄 work-log.org]] before handing off.
 - Then commit the current checkpoint in git before moving on.
