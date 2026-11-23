@@ -127,7 +127,8 @@
          requests)
     (with-temp-buffer
       (insert-file-contents
-       "/Users/jay/Dropbox/roam/notes/20261026181221-strobist_complete.org")
+       (expand-file-name "strobist-welcome-capture.org"
+                         jay-capture-test--fixtures-directory))
       (org-mode)
       (let ((before (buffer-string))
             (before-point (point))
