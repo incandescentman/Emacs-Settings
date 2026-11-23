@@ -270,98 +270,79 @@
       (org-end-of-subtree t t)
       (buffer-substring-no-properties start (point)))))
 
-(ert-deftest jay-capture-three-pages-stay-siblings-and-point-follows-each ()
-  "Three real pages stay children of the chosen section, at any section level."
-  (require 's)
+(ert-deftest jay-capture-at-cursor-preserves-real-columbia-note ()
+  "Insert at the chosen line, preserving real text and repeated page levels."
   (let ((page (jay-capture-test--real-page)))
-    (dolist (section-level '(1 2))
-      (dolist (in-middle '(nil t))
-        (with-temp-buffer
-          (let ((org-mode-hook nil)) (org-mode))
-          (when (= section-level 2) (insert "* Strobist: Complete\n"))
-          (let ((section (point)))
-            (insert (make-string section-level ?*) " Lighting 101\n\n")
-            (when in-middle
-              (insert "* Existing following entry\nKeep this.\n"))
-            (goto-char section))
-          (cl-letf (((symbol-function 'jay/org-web-tools--url-as-readable-org)
-                     (lambda (_url) page)))
-            (dotimes (_ 3)
-              (jay/org-web-tools-insert-web-page-as-entry-clean
-               "https://strobist.blogspot.com/2006/02/welcome-to-strobist.html")
-              (if in-middle
-                  (should (looking-at-p "\n\\* Existing following entry\nKeep this\\.\n\\'"))
-                (should (= (point) (point-max))))))
-          (goto-char (point-min))
-          (let ((count 0))
-            (while (re-search-forward "^\\(\\*+\\) \\[\\[https://strobist\\.blogspot\\.com/2006/02/welcome-to-strobist\\.html" nil t)
-              (should (= (length (match-string 1)) (1+ section-level)))
-              (setq count (1+ count))
-              (should (org-entry-get nil "WEB_CAPTURE_URL" nil)))
-            (should (= count 3))))))))
-
-(ert-deftest jay-capture-preserves-real-note-and-inserts-at-capture-level ()
-  "Capture siblings from title, body or deep child; append section children."
-  (require 's)
-  (let ((page (jay-capture-test--real-page)))
-    (dolist (location '(section title body deep-child))
+    (dolist (location '(blank middle end section))
       (with-temp-buffer
         (let ((org-mode-hook nil)) (org-mode))
-        (insert-file-contents "/Users/jay/Dropbox/roam/notes/20261026181221-strobist_complete.org")
+        (insert-file-contents
+         "/Users/jay/Dropbox/roam/notes/20261123153952-columbia_sps_course_proposal.org")
         (goto-char (point-min))
-        (re-search-forward "^\\* Lighting 101$")
-        (beginning-of-line)
-        (unless (eq location 'section)
-          (outline-next-heading)
-          (org-entry-put nil "WEB_CAPTURE_URL" "https://strobist.blogspot.com/2006/03/lighting-101.html")
-          (unless (eq location 'title)
-            (org-end-of-meta-data t)
-            (when (eq location 'deep-child)
-              (insert "*** Detail\n")
-              (forward-line -1))))
-        (let* ((original (buffer-string))
-               (expected-start (car (jay/org-web-tools--insertion-context)))
-               (expected-next (buffer-substring-no-properties expected-start (point-max)))
-               (original-size (buffer-size)))
+        (pcase location
+          ('section (re-search-forward (rx line-start "* Columbia SPS Course Proposal")))
+          (_ (re-search-forward "^xxx$")
+             (pcase location
+               ('blank (forward-line 1))
+               ('middle (backward-char 2)))))
+        ;; Compute expectations independently of the production context helper.
+        (let* ((position (save-excursion
+                           (unless (eq location 'blank) (end-of-line))
+                           (point)))
+               (prefix (buffer-substring-no-properties (point-min) position))
+               (suffix (buffer-substring-no-properties position (point-max)))
+               (newline (if (eq location 'blank) "" "\n"))
+               (original (buffer-string)))
           (cl-letf (((symbol-function 'jay/org-web-tools--url-as-readable-org)
-                     (lambda (_url) page)))
-            (dotimes (_ 3)
+                     (lambda (_url)
+                       ;; Fetching must not determine the destination.
+                       (goto-char (point-max))
+                       page)))
+            (dotimes (index 3)
               (jay/org-web-tools-insert-web-page-as-entry-clean
                "https://strobist.blogspot.com/2006/02/welcome-to-strobist.html")
               (should (equal (buffer-substring-no-properties (point) (point-max))
-                             (concat "\n" expected-next)))))
-          (let* ((added (- (buffer-size) original-size))
-                 (end (+ expected-start added))
-                 (count 0))
-            (goto-char expected-start)
-            (while (re-search-forward "^\\(\\*+\\) \\[\\[https://strobist\\.blogspot\\.com/2006/02/welcome-to-strobist\\.html" end t)
+                             (concat (make-string (1+ index) ?\n) suffix)))))
+          (should (equal prefix (buffer-substring-no-properties (point-min) position)))
+          (goto-char position)
+          (should (looking-at-p (regexp-quote (concat newline "** [[https://strobist"))))
+          (let ((count 0))
+            (while (re-search-forward (rx line-start (group (+ "*")) " [[https://strobist.blogspot.com/2006/02/welcome-to-strobist.html") nil t)
               (should (= (length (match-string 1)) 2))
               (setq count (1+ count)))
-            (should (= count 3))
-            ;; The insertion must preserve all preexisting source text and links.
-            (delete-region expected-start end)
-            (should (equal (buffer-string) original))))))))
+            (should (= count 3)))
+          ;; Removing only the inserted interval restores the source exactly.
+          (delete-region position (+ position (- (buffer-size) (length original))))
+          (should (equal original (buffer-string))))))))
 
-(ert-deftest jay-capture-existing-top-level-page-stays-top-level ()
-  "An existing level-1 capture receives a sibling, not a level-2 child."
-  (require 's)
+(ert-deftest jay-capture-repeated-real-pages-retain-level ()
+  "Repeat captures at several depths, including before an existing heading."
   (let ((page (jay-capture-test--real-page)))
-    (with-temp-buffer
-      (let ((org-mode-hook nil)) (org-mode))
-      (insert page)
-      (goto-char (point-min))
-      (cl-letf (((symbol-function 'jay/org-web-tools--url-as-readable-org)
-                 (lambda (_url) page)))
-        (dotimes (_ 3)
-          (jay/org-web-tools-insert-web-page-as-entry-clean
-           "https://strobist.blogspot.com/2006/02/welcome-to-strobist.html")
-          (should (= (point) (point-max)))))
-      (goto-char (point-min))
-      (let ((count 0))
-        (while (re-search-forward "^\\(\\*+\\) \\[\\[https://strobist\\.blogspot\\.com/2006/02/welcome-to-strobist\\.html" nil t)
-          (should (= (length (match-string 1)) 1))
-          (setq count (1+ count)))
-        (should (= count 4))))))
+    (dolist (level '(1 2 3))
+      (dolist (following '(nil t))
+        (with-temp-buffer
+          (let ((org-mode-hook nil)) (org-mode))
+          (org-paste-subtree level page t)
+          (when following
+            (save-excursion
+              (insert "\n")
+              (insert-file-contents
+               "/Users/jay/Dropbox/roam/notes/20261123153952-columbia_sps_course_proposal.org")))
+          (let ((suffix (buffer-substring-no-properties (point) (point-max))))
+            (cl-letf (((symbol-function 'jay/org-web-tools--url-as-readable-org)
+                       (lambda (_url) page)))
+              (dotimes (index 3)
+                (jay/org-web-tools-insert-web-page-as-entry-clean
+                 "https://strobist.blogspot.com/2006/02/welcome-to-strobist.html")
+                (should (equal (buffer-substring-no-properties (point) (point-max))
+                               (concat (make-string (1+ index) ?\n) suffix))))))
+          (goto-char (point-min))
+          (let ((count 0))
+            (while (re-search-forward
+                    (rx line-start (group (+ "*")) " [[https://strobist.blogspot.com/2006/02/welcome-to-strobist.html") nil t)
+              (should (= (length (match-string 1)) level))
+              (setq count (1+ count)))
+            (should (= count 4))))))))
 
 (ert-deftest jay-capture-marker-is-local-and-legacy-still-works ()
   "Plain linked sections are not captures; metadata never inherits."

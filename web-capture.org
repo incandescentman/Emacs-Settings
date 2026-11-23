@@ -343,42 +343,56 @@ The property must belong to this heading; never inherit it from a parent."
                         (equal (org-get-heading t t t t) "Article")))))))))
 
 (defun jay/org-web-tools--insertion-context ()
-  "Return (POSITION . LEVEL) for a sibling capture or a section's child.
-Find the enclosing capture even inside its section descendants.  Without
-a capture ancestor, append a child to the current section.  Before the
-first heading, insert a new top-level entry at point."
+  "Return (POSITION . LEVEL) without relocating to a subtree boundary.
+On a nonempty line, insert after that whole line.  Use the enclosing
+capture's level, or a child level in an ordinary section."
   (save-excursion
-    (if (org-before-first-heading-p)
-        (cons (line-beginning-position) 1)
-      (org-back-to-heading t)
-      (let* ((section (point))
-             (capture
-              (catch 'capture
-                (while t
-                  (when (jay/org-web-tools--capture-entry-p)
-                    (throw 'capture (point)))
-                  (unless (org-up-heading-safe)
-                    (throw 'capture nil))))))
-        (goto-char (or capture section))
-        (let ((level (+ (org-outline-level) (if capture 0 1))))
-          (org-end-of-subtree t t)
-          (cons (point) level))))))
+    (unless (looking-at-p "^[ \t]*$") (end-of-line))
+    (let ((position (point)))
+      (if (org-before-first-heading-p)
+          (cons position 1)
+        (org-back-to-heading t)
+        (let* ((section (point))
+               (capture
+                (catch 'capture
+                  (while t
+                    (when (jay/org-web-tools--capture-entry-p)
+                      (throw 'capture (point)))
+                    (unless (org-up-heading-safe)
+                      (throw 'capture nil))))))
+          (goto-char (or capture section))
+          (cons position (+ (org-outline-level) (if capture 0 1))))))))
 
 (defun jay/org-web-tools-insert-web-page-as-entry-clean (url)
-  "Insert a sibling capture or a section's child, leaving point after it.
+  "Insert a capture at point, or after the current nonempty line.
+Preserve surrounding text and leave point after the capture.  Repeated
+captures retain the enclosing capture's level.
 Gets URL from Chrome frontmost tab, or clipboard, or prompts.
 With a prefix argument, prompt for an explicit URL override."
   (interactive (list (jay/get-url-from-clipboard-or-chrome current-prefix-arg)))
-  (let ((content (jay/org-web-tools--url-as-readable-org url)))
-    (when content
-      (setq content (jay/org-web-tools-cleanup-string content))
-      (let ((context (jay/org-web-tools--insertion-context)))
-        (goto-char (car context))
-        (org-paste-subtree (cdr context) (s-trim content) t)
-        ;; Keep point after the paste and before a blank separator, so the
-        ;; next capture still belongs here when another section follows.
-        (when (org-at-heading-p)
-          (save-excursion (insert "\n")))))))
+  (let* ((context (jay/org-web-tools--insertion-context))
+         (destination (copy-marker (car context)))
+         (level (cdr context)))
+    (unwind-protect
+        (let ((content (jay/org-web-tools--url-as-readable-org url)))
+          (when content
+            ;; org-paste-subtree seeks a heading boundary even with FOR-YANK.
+            ;; Use it only to prepare the heading levels in an empty buffer.
+            (setq content
+                  (with-temp-buffer
+                    (let ((org-mode-hook nil)) (org-mode))
+                    (org-paste-subtree
+                     level (s-trim (jay/org-web-tools-cleanup-string content)) t)
+                    (buffer-string)))
+            (with-current-buffer (marker-buffer destination)
+              (goto-char destination)
+              (atomic-change-group
+                (unless (bolp) (insert "\n"))
+                (insert content)
+                ;; Keep point before the separator, including before an
+                ;; existing heading, so the next capture stays a sibling.
+                (save-excursion (insert "\n"))))))
+      (set-marker destination nil))))
 
 (provide 'web-capture)
 ;;; web-capture.el ends here
