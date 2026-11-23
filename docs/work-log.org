@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration Work Log
 #+STARTUP: showall
 
+* 2026-11-23: Let small text and manual toggles disable Olivetti
+
+Updated [[file+emacs:/Users/jay/emacs/emacs-settings/shared-functions.org][shared-functions.org]] so ~ensmallen-text~ disables Olivetti at text scale zero or below. The split-window hook now restores Olivetti only when it previously suspended it, rather than enabling it after every wide-window configuration change. It measures total window width so Olivetti's own margins do not affect the split threshold.
+
+Retangled and checked parentheses; batch behavior checks passed for the cutoff, manual off, narrow-to-wide restoration, and shrinking while suspended. The full startup smoke test passed. Loaded only the changed definitions into the running session. In ~buffer69~, disabled Olivetti and visual wrapping and enabled line truncation to allow horizontal reading of the wide table; live values showed no margins.
+
 * 2026-11-14: Weekly intentions display and daily review reminder
 
 [[file+emacs:/Users/jay/emacs/emacs-settings/jay-goals-system.el][The goals module]] now reads compact labels and full wording from a private Org source. Only Current intentions is displayed. Saving refreshes the mode line immediately; external edits appear within five minutes. Invalid input preserves the last good display. A nonblocking reminder begins on day eight and uses a persisted local date to avoid duplicate daily prompts across restarts. Explicit reaffirmation resets the review date. Existing rep commands remain separate.

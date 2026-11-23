@@ -4244,9 +4244,13 @@ In collapsed view, hide empty lines between subtrees
  )
 
 (defun ensmallen-text ()
- (interactive)
- (text-scale-decrease 1)
- )
+  "Shrink text, removing Olivetti margins at normal size or below."
+  (interactive)
+  (text-scale-decrease 1)
+  (when (<= text-scale-mode-amount 0)
+    (setq-local jay/olivetti-disabled-for-split nil)
+    (when (bound-and-true-p olivetti-mode)
+      (olivetti-mode -1))))
 
 #+END_SRC
 
@@ -5771,11 +5775,21 @@ Emacs sessions are independent of each other, so global variables like move-or-c
 
 * disable Olivetti on split
 #+begin_SRC emacs-lisp
+(defvar-local jay/olivetti-disabled-for-split nil
+  "Non-nil when the split-window hook temporarily disabled Olivetti.")
+
 (defun activate-olivetti-in-split ()
- (when (not (bound-and-true-p disable-olivetti-auto-toggle))
-  (if (< (window-width) 80)
-    (olivetti-mode -1)
-   (olivetti-mode 1))))
+  "Suspend Olivetti in narrow windows without overriding a manual off.
+Only restore the mode if this hook previously suspended it.  Measure
+the whole window, since Olivetti's own margins reduce `window-width'."
+  (unless (bound-and-true-p disable-olivetti-auto-toggle)
+    (if (< (window-total-width) 80)
+        (when (bound-and-true-p olivetti-mode)
+          (setq jay/olivetti-disabled-for-split t)
+          (olivetti-mode -1))
+      (when jay/olivetti-disabled-for-split
+        (setq jay/olivetti-disabled-for-split nil)
+        (olivetti-mode 1)))))
 
 (add-hook 'org-mode-hook (lambda ()
               (add-hook 'window-configuration-change-hook 'activate-olivetti-in-split nil t)))
