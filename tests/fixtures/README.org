@@ -1,0 +1,5 @@
+#+title: Web Capture Regression Fixtures
+
+* Sources
+- [[file:capture-insertion-context.org][Insertion context]] contains invented text and example.org links. It covers body text around the insertion marker, a following capture with WEB_CAPTURE_URL metadata, and a separate following section. It contains no private correspondence.
+- [[file:strobist-welcome-capture.org][Strobist welcome capture]] contains the public [[https://strobist.blogspot.com/2006/02/welcome-to-strobist.html][Strobist welcome article]], saved with capture metadata. It is retained for public-article formatting regressions.

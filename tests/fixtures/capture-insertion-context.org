@@ -1,0 +1,23 @@
+#+title: Capture Insertion Test
+
+* Course Research
+Notes about a possible course.
+
+[[https://example.org/programs][Program directory]]
+
+xxx
+
+This paragraph must stay after the insertion.
+
+[[https://example.org/curriculum][Curriculum]]
+
+** [[https://example.org/earlier-page][Earlier capture]]
+:PROPERTIES:
+:WEB_CAPTURE_URL: https://example.org/earlier-page
+:END:
+
+*** Details
+Existing captured text.
+
+* Following Section
+This separate section must survive unchanged.

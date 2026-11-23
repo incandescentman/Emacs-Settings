@@ -1,0 +1,47 @@
+* [[https://strobist.blogspot.com/2006/02/welcome-to-strobist.html][What is Strobist?]]
+:PROPERTIES:
+:WEB_CAPTURE_URL: https://strobist.blogspot.com/2006/02/welcome-to-strobist.html
+:END:
+#+ATTR_LATEX: :width 1.6in
+[[https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhwKHyNRi5FCeGU7RJRrHJYgR7zTWGI2ec6TiotwG4p7aQhZykbQ0R4MoAoWC2ctoiK_W8AKHRI991-xgX7tRl69HRmg03F5U67zbFi5xMpN2VnJhCZ-81f6nVtWop6dRZ-faTb/s1600/David_Hobby_Headshot_240.jpg][https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhwKHyNRi5FCeGU7RJRrHJYgR7zTWGI2ec6TiotwG4p7aQhZykbQ0R4MoAoWC2ctoiK_W8AKHRI991-xgX7tRl69HRmg03F5U67zbFi5xMpN2VnJhCZ-81f6nVtWop6dRZ-faTb/s200/David_Hobby_Headshot_240.jpg]]
+
+At its heart, this website is about one thing: Learning how to use off-camera flash to elevate your photography.
+
+I'm David Hobby, the photographer behind Strobist. Over the course of my 25+ year career as a staff photojournalist, I completed over 10,000 editorial assignments. One of my strengths in that job was in using small speedlights to elevate the quality of my location work.
+
+In 2006, I returned from a typical assignment for /The Baltimore Sun/ with the photo below. Adding the small flash in the background took a problem lighting environment (ugly industrial sodium vapors) and turned it into much stronger photo. After getting permission from my Director of Photography, I [[http://strobist.blogspot.com/2006/03/on-assignment-wind-tunnel.html][wrote a post]] describing how I lit it.
+
+[[http://strobist.blogspot.com/2006/03/on-assignment-wind-tunnel.html][https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgupfzhaVm0JjLhrQeGcHCnJI-3_rXo-H7MZTTVYkyym3Oru_7B55YXTxW8okUzzGkgkNQpxWharG9n57dKRUXhH6lgjJw2AWVWtu-OhbEVx4ElawKn1m9_D2Uiup5eLlnySOYrRg/s640/WindTunnel.jpg]]
+
+And that's how this site started.
+
+I started diagramming more assignments, and writing down tips and techniques. Soon this little project grew to be far bigger than I ever planned. Two years later I left /The Sun/ to publish Strobist full-time. Fourteen years, 2,000+ posts and ~220 million page views later, here we are.
+
+If you are just arriving, I envy you the door that you are about to walk through. When you learn how to light, your photography will explode with new possibilities.
+
+If you are a complete beginner, you are in the right place. More than four million photographers from all around the world have taken the plunge before you.
+
+Strobist's [[http://strobist.blogspot.com/2006/03/lighting-101.html][Free Lighting 101 course]] starts from absolute zero, and is considered to be the best resource of its kind on the web. It is updated regularly, as the gear we use continues to get better and cheaper.
+
+Compared to most other facets of photography, lighting gear is refreshingly affordable. And all of the information on this site is free. (If you want to grow into more powerful lighting equipment later, fine. We'll talk about the big lights, too. But hot shoe-based speedlights are the perfect starting point: small, simple and inexpensive.)
+
+[[http://strobist.blogspot.com/2009/06/on-assignment-hcac-dancer.html][https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg5GMXwizpMY3ewqRmYonGo7AVK2HulhkTdePGLaXBDrpkL1iNxFu7wuopcjRZGJqaMNjjK1GRlxCRUzeJiq-DBLhhpoQ_V2YWP60I6h4oQXdZ8_VN6ZMTiK8SolouCvfx-3YPw/s1600/Kassi.jpg]]
+
+In addition to our free Lighting 101, 102 and 103 courses, we also have an [[http://strobist.blogspot.com/2006/03/on-assignment.html][On Assignment]] series, where you'll be guided through more than 170 real-world assignments, showing exactly how they were lit.
+
+There is also the [[https://strobist.blogspot.com/2017/11/strobist-lighting-cookbook.html][Strobist Lighting Cookbook]], in progress now, which will help you to tie various concepts together and build on your experience. And there's a lot more, which you'll see as you scroll down the [[http://www.strobist.com/][front page]].
+
+** Questions? No Problem.
+
+You can always ask me directly [[https://www.twitter.com/strobist][via Twitter]]. Or join the [[http://www.flickr.com/groups/strobist][Strobist discussion group]] on Flickr and fire away. But please, search the relevant terms in your question as it has probably been asked and answered before.
+
+[[http://strobist.blogspot.com/2008/08/on-assignment-50-years.html][https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi6UyUwJUvcHc8uNz9etX0ueEfkMjlUpaPtusS5u-E4wCbFW_DAR6Tn6R8CR6Sc_vwqS6689FkiDQDDels0Sl7O_462K9ayZ-Wp6Pof15GgGDtTldb4TS2f6SQ-FrQVG5xRptPu/s1600/MomDad.jpg]]
+
+You can post your successes there to show off, or your failures when you need help. It's a place of peer-to-peer learning.
+
+Okay then! Pick a place to jump in:
+
+[[http://strobist.blogspot.com/2006/03/lighting-101.html][Lighting 101]] (Most people start here)\\
+[[http://strobist.blogspot.com/2006/03/on-assignment.html][On Assignment]]\\
+[[http://www.strobist.blogspot.com/][Front Page]]
+

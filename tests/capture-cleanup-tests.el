@@ -17,6 +17,11 @@
    (expand-file-name ".." (file-name-directory (or load-file-name buffer-file-name))))
   "Absolute path to the production web-capture module in this repo.")
 
+(defconst jay-capture-test--fixtures-directory
+  (expand-file-name "tests/fixtures/"
+                    (file-name-directory jay-capture-cleanup-test--module-file))
+  "Stable test documents, independent of editable working notes.")
+
 ;; Load the production module, including its real library dependencies.
 ;; The pasteboard Unicode-space cleaner is loaded through the module's autoload.
 (add-to-list 'load-path (file-name-directory jay-capture-cleanup-test--module-file))
@@ -258,29 +263,25 @@
                    expected))))
 
 (defun jay-capture-test--real-page ()
-  "Read just the welcome capture from the real note, excluding its next section."
+  "Read the saved real Strobist welcome capture, independent of the live note."
   (with-temp-buffer
-    (let ((org-mode-hook nil)) (org-mode))
-    (insert-file-contents "/Users/jay/Dropbox/roam/notes/20261026181221-strobist_complete.org")
-    (goto-char (point-min))
-    (re-search-forward "^\\*+ \\[\\[https://strobist\\.blogspot\\.com/2006/02/welcome-to-strobist\\.html")
-    (beginning-of-line)
-    (org-entry-put nil "WEB_CAPTURE_URL" "https://strobist.blogspot.com/2006/02/welcome-to-strobist.html")
-    (let ((start (point)))
-      (org-end-of-subtree t t)
-      (buffer-substring-no-properties start (point)))))
+    (insert-file-contents
+     (expand-file-name "strobist-welcome-capture.org"
+                       jay-capture-test--fixtures-directory))
+    (buffer-string)))
 
-(ert-deftest jay-capture-at-cursor-preserves-real-columbia-note ()
-  "Insert at the chosen line, preserving real text and repeated page levels."
+(ert-deftest jay-capture-at-cursor-preserves-surrounding-text ()
+  "Insert at the chosen line, preserving surrounding text and page levels."
   (let ((page (jay-capture-test--real-page)))
     (dolist (location '(blank middle end section))
       (with-temp-buffer
         (let ((org-mode-hook nil)) (org-mode))
         (insert-file-contents
-         "/Users/jay/Dropbox/roam/notes/20261123153952-columbia_sps_course_proposal.org")
+         (expand-file-name "capture-insertion-context.org"
+                           jay-capture-test--fixtures-directory))
         (goto-char (point-min))
         (pcase location
-          ('section (re-search-forward (rx line-start "* Columbia SPS Course Proposal")))
+          ('section (re-search-forward (rx line-start "* Course Research")))
           (_ (re-search-forward "^xxx$")
              (pcase location
                ('blank (forward-line 1))
@@ -327,7 +328,8 @@
             (save-excursion
               (insert "\n")
               (insert-file-contents
-               "/Users/jay/Dropbox/roam/notes/20261123153952-columbia_sps_course_proposal.org")))
+               (expand-file-name "capture-insertion-context.org"
+                           jay-capture-test--fixtures-directory))))
           (let ((suffix (buffer-substring-no-properties (point) (point-max))))
             (cl-letf (((symbol-function 'jay/org-web-tools--url-as-readable-org)
                        (lambda (_url) page)))

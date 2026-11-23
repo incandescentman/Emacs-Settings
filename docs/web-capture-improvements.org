@@ -1,0 +1,19 @@
+#+title: Queued Web Capture Improvements
+#+date: 2026-11-23
+
+* Scope
+Keep the conservative extraction settings. Fix reusable conversion losses in [[file+emacs:/Users/jay/emacs/emacs-settings/scripts/web-capture/extract.mjs][the extraction adapter]] and [[file+emacs:/Users/jay/emacs/emacs-settings/web-capture.org][the Emacs capture module]]. Page-specific heading and navigation cleanup remains manual. These improvements are queued, not implemented.
+
+* TODO Preserve meaningful links inside headings
+The public [[https://sps.columbia.edu/academics/masters][Columbia program directory]] contains 20 linked program headings. All 20 destinations disappear during Defuddle extraction, before Pandoc. The installed Defuddle heading transform assigns textContent to replacement headings. Preserve source-backed HTTP(S) links in retained headings without restoring redundant same-page permalink icons or guessing ambiguous matches. Verify all 20 destinations and rerun the existing article corpus checks, including image links and embedded cards.
+
+* TODO Handle nested encoded icon images
+Pandoc converts retained inline SVG icons into base64 image links. The existing Org cleanup misses nested link descriptions containing these images and spacing characters. Repair the HTML-to-Org boundary while keeping surrounding link labels and destinations usable; do not broadly discard meaningful diagrams or photographs. Test a public social-link example from [[https://sps.columbia.edu/academics/masters/strategic-communication/full-time-master-science/curriculum-courses][the Columbia curriculum page]].
+
+* TODO Remove the specific new-window accessibility label
+Remove the interface label “(opens in a new window)” when identified as a link’s accessibility annotation. Preserve meaningful hidden text and collapsed article content. The Columbia curriculum marks its course-description containers aria-hidden=true, so removing hidden elements generally would lose wanted material.
+
+* Evidence and boundaries
+On 2026-11-23, all 20 program summaries and 29 course-description paragraphs compared against the two public source pages survived the extraction adapter. The mixed program heading levels and the curriculum’s skipped heading levels already occur in the source HTML; do not impose a global hierarchy rewrite to repair this site. Source tags include h2 and h3 on equivalent program cards and h5 on course metadata below h3 course titles.
+
+Test fixtures committed to this public repository use invented document context or public source material. The insertion-context fixture contains no private correspondence and has no dependency on a working note.
