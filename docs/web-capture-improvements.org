@@ -1,19 +1,24 @@
-#+title: Queued Web Capture Improvements
+#+title: Web Capture Improvements
 #+date: 2026-11-23
 
 * Scope
-Keep the conservative extraction settings. Fix reusable conversion losses in [[file+emacs:/Users/jay/emacs/emacs-settings/scripts/web-capture/extract.mjs][the extraction adapter]] and [[file+emacs:/Users/jay/emacs/emacs-settings/web-capture.org][the Emacs capture module]]. Page-specific heading and navigation cleanup remains manual. These improvements are queued, not implemented.
+Keep the conservative extraction settings. Fix reusable conversion losses in [[file+emacs:/Users/jay/emacs/emacs-settings/scripts/web-capture/extract.mjs][the extraction adapter]] and [[file+emacs:/Users/jay/emacs/emacs-settings/web-capture.org][the Emacs capture module]]. Page-specific heading and navigation cleanup remains manual. Implemented 2026-11-23. The Node helper is executed fresh for every Defuddle capture, so the running Emacs session uses these changes without reloading. The EWW fallback is unchanged.
 
-* TODO Preserve meaningful links inside headings
-The public [[https://sps.columbia.edu/academics/masters][Columbia program directory]] contains 20 linked program headings. All 20 destinations disappear during Defuddle extraction, before Pandoc. The installed Defuddle heading transform assigns textContent to replacement headings. Preserve source-backed HTTP(S) links in retained headings without restoring redundant same-page permalink icons or guessing ambiguous matches. Verify all 20 destinations and rerun the existing article corpus checks, including image links and embedded cards.
+* DONE Preserve meaningful links inside headings
+The public [[https://sps.columbia.edu/academics/masters][Columbia program directory]] contains 20 linked program headings. All 20 destinations disappear during Defuddle extraction, before Pandoc. The installed Defuddle heading transform assigns textContent to replacement headings. Implemented source-backed restoration of HTTP(S) links in retained headings using exact normalized heading text and unambiguous link-text ranges. Redundant fragment/permalink icons are excluded; conflicting duplicate titles are left unlinked rather than assigned a guessed destination. All 20 program destinations survive the complete Emacs capture pipeline.
 
-* TODO Handle nested encoded icon images
-Pandoc converts retained inline SVG icons into base64 image links. The existing Org cleanup misses nested link descriptions containing these images and spacing characters. Repair the HTML-to-Org boundary while keeping surrounding link labels and destinations usable; do not broadly discard meaningful diagrams or photographs. Test a public social-link example from [[https://sps.columbia.edu/academics/masters/strategic-communication/full-time-master-science/curriculum-courses][the Columbia curriculum page]].
+* DONE Handle nested encoded icon images
+Pandoc converts retained inline SVG icons into base64 image links. The existing Org cleanup misses nested link descriptions containing these images and spacing characters. Implemented a repair before extraction: remove SVG/data-image icons explicitly marked aria-hidden inside links that already contain readable text. Icon-only links and unmarked artwork remain intact. This prevents the malformed nested image representation while preserving link labels and destinations. Tests use a public social-link example from [[https://sps.columbia.edu/academics/masters/strategic-communication/full-time-master-science/curriculum-courses][the Columbia curriculum page]].
 
-* TODO Remove the specific new-window accessibility label
-Remove the interface label “(opens in a new window)” when identified as a link’s accessibility annotation. Preserve meaningful hidden text and collapsed article content. The Columbia curriculum marks its course-description containers aria-hidden=true, so removing hidden elements generally would lose wanted material.
+* DONE Remove the specific new-window accessibility label
+Implemented exact-label removal only within recognized screen-reader-only spans inside links. The same phrase in ordinary prose is retained. Meaningful hidden text and collapsed article content are preserved. The Columbia curriculum marks its course-description containers aria-hidden=true, so removing hidden elements generally would lose wanted material.
 
 * Evidence and boundaries
 On 2026-11-23, all 20 program summaries and 29 course-description paragraphs compared against the two public source pages survived the extraction adapter. The mixed program heading levels and the curriculum’s skipped heading levels already occur in the source HTML; do not impose a global hierarchy rewrite to repair this site. Source tags include h2 and h3 on equivalent program cards and h5 on course metadata below h3 course titles.
 
 Test fixtures committed to this public repository use invented document context or public source material. The insertion-context fixture contains no private correspondence and has no dependency on a working note.
+
+* Verification, 2026-11-23
+All 12 Node tests and 25 Emacs capture/Pandoc tests passed. New public-source fixtures retain all 20 program cards and all 27 course panels, with their 29 description paragraphs; fixture construction checked source block counts and text equality. Negative tests cover ambiguous duplicated heading labels, ordinary prose containing the new-window phrase, icon-only links, and unmarked SVG artwork.
+
+Ran both full Columbia pages through the actual batch Emacs fetch, extraction, Pandoc, and cleanup functions. The directory produced 20 linked program headings; the curriculum retained all 27 course codes; neither contained data-image strings or the new-window annotation. The six earlier source snapshots (two Strobist pages, Photography Life, TIFF, Substack, and the alternate recipe) retained their existing paragraph/list/table/caption/heading text, links, and image sources compared with the previous adapter. That comparison disabled original-image network probes equally for both versions; the existing Node tests independently exercise image selection and bounded probing.

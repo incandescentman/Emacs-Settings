@@ -19,6 +19,9 @@ Install dependencies on another machine: ~npm ci --prefix /Users/jay/emacs/emacs
 
 The Emacs commands and their helpers live in [[file+emacs:/Users/jay/emacs/emacs-settings/web-capture.org][web-capture.org]], which tangles to [[file+emacs:/Users/jay/emacs/emacs-settings/web-capture.el][web-capture.el]]. The startup loader loads it immediately after Shared Functions; ~s-P~ still runs ~jay/org-web-tools-insert-web-page-as-entry-clean~. The capture tests load the complete module directly. Export settings and remote-resource trust remain outside it.
 
+* Reusable link and interface cleanup, 2026-11-23
+The adapter now restores meaningful HTTP(S) links that Defuddle strips from headings, using exact source text and unambiguous link ranges. It removes the exact new-window accessibility annotation only from recognized screen-reader spans inside links, and removes explicitly decorative SVG/data-image icons only from links that already have readable labels. This prevents encoded social-icon junk before Pandoc without deleting hidden course descriptions or flattening source heading levels. The EWW fallback is unchanged. See [[file+emacs:/Users/jay/emacs/emacs-settings/docs/web-capture-improvements.org][the implementation and verification record]] for the source comparisons, limitations, and tests.
+
 * Capture fixes versus document cleanup
 Fix recurring capture problems in the tool. Handle unusual, document-specific cleanup manually or with an agent. For example, preserving embedded videos belongs in the capture command; removing Strobist's uncommon ~COMING NEXT~ lines belongs in the individual note. Consider agent-assisted cleanup before adding permanent rules for an isolated page detail. This is Jay's approved scope decision, recorded 2026-10-26.
 

@@ -1,4 +1,4 @@
-#+title: Web capture image-header fixtures
+#+title: Web Capture Regression Fixtures
 
 These files contain only the first 65,536 bytes of larger Strobist JPEGs. They are partial binary fixtures for the range-limited resolution check, not complete photographs. The metadata was not changed.
 
@@ -6,3 +6,9 @@ These files contain only the first 65,536 bytes of larger Strobist JPEGs. They a
 - [[file+emacs:/Users/jay/emacs/emacs-settings/scripts/web-capture/fixtures/strobist-kassi-240dpi-header.jpg][strobist-kassi-240dpi-header.jpg]]: [[https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg5GMXwizpMY3ewqRmYonGo7AVK2HulhkTdePGLaXBDrpkL1iNxFu7wuopcjRZGJqaMNjjK1GRlxCRUzeJiq-DBLhhpoQ_V2YWP60I6h4oQXdZ8_VN6ZMTiK8SolouCvfx-3YPw/s1600/Kassi.jpg][source original]], 135,302 bytes in the original, JFIF 240 DPI. Prefix SHA-256: ~6cc20aa44f20797afa66bbd3aea9125d8872e93d65791faad355f841b4bbbb58~.
 
 The tests use ExifTool to create metadata variants in memory. They never modify the fixtures or the five corrected images in [[file+emacs:/Users/jay/Dropbox/roam/images/strobist/][the Strobist note image directory]].
+
+* Public Columbia HTML fixtures, saved 2026-11-23
+These are public website excerpts, not private notes or correspondence. Each selected source block is preserved as HTML; the minimal document wrapper is test scaffolding.
+
+- [[file+emacs:/Users/jay/emacs/emacs-settings/scripts/web-capture/fixtures/columbia-program-cards.html][Program cards]] contains all 20 .program-card elements from [[https://sps.columbia.edu/academics/masters][the public directory]]. Construction verified count and text equality against the downloaded source.
+- [[file+emacs:/Users/jay/emacs/emacs-settings/scripts/web-capture/fixtures/columbia-course-content.html][Course content]] contains all 27 .accordion-pane elements and the labeled LinkedIn link from [[https://sps.columbia.edu/academics/masters/strategic-communication/full-time-master-science/curriculum-courses][the public curriculum page]]. Construction verified panel count and text equality; tests check the 29 nonempty description paragraphs and course identifiers.

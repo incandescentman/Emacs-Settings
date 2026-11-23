@@ -7,6 +7,56 @@ import {Defuddle} from 'defuddle/node';
 
 const url = process.argv[2];
 const document = parseHTML(fs.readFileSync(0, 'utf8')).document;
+const normalizeText = text => text.replace(/\s+/g, ' ').trim();
+const headingSelector = 'h1,h2,h3,h4,h5,h6';
+// Remove only this exact interface annotation, not hidden content generally:
+// collapsed course descriptions and other article content can be aria-hidden.
+for (const label of document.querySelectorAll(
+  'a .visually-hidden,a .sr-only,a .screen-reader-text,a .screen-reader-only')) {
+  if (/^(?:\(opens in a new window\)|opens in a new window)$/i.test(normalizeText(label.textContent))) {
+    label.remove();
+  }
+}
+// Strip explicitly decorative icons from links that already have readable text.
+// Doing this before Pandoc avoids its malformed nested base64 Org image links.
+// Unmarked diagrams and icon-only links remain intact.
+for (const link of document.querySelectorAll('a[href]')) {
+  const textOnly = link.cloneNode(true);
+  for (const image of textOnly.querySelectorAll('svg,img')) image.remove();
+  if (!normalizeText(textOnly.textContent)) continue;
+  for (const icon of link.querySelectorAll('svg,img[src^="data:image/"]')) {
+    let node = icon;
+    while (node && node !== link && node.getAttribute('aria-hidden') !== 'true') node = node.parentElement;
+    if (node && node !== link) icon.remove();
+  }
+}
+// Defuddle simplifies heading children to text, dropping genuine destinations.
+// Remember only unambiguous text ranges; never infer links from similar titles.
+const headingLinks = new Map();
+for (const heading of document.querySelectorAll(headingSelector)) {
+  const clone = heading.cloneNode(true);
+  for (const link of clone.querySelectorAll('a')) {
+    if ((link.getAttribute('href') || '').startsWith('#') ||
+        /permalink/i.test(link.getAttribute('title') || '') ||
+        /permalink|heading-anchor|anchor-link/.test(link.className || '') ||
+        /^[#¶§🔗\uFEFF]$/.test(link.textContent.trim())) link.remove();
+  }
+  const text = normalizeText(clone.textContent);
+  const ranges = [];
+  for (const link of clone.querySelectorAll('a[href]')) {
+    const label = normalizeText(link.textContent);
+    let target;
+    try { target = new URL(link.getAttribute('href'), url); } catch { continue; }
+    if (!/^https?:$/.test(target.protocol) || !label) continue;
+    const start = text.indexOf(label);
+    if (start < 0 || text.indexOf(label, start + 1) !== -1) continue;
+    ranges.push({start, end: start + label.length, href: target.href});
+  }
+  ranges.sort((a, b) => a.start - b.start);
+  const record = ranges.some((range, i) => i && range.start < ranges[i - 1].end) ? [] : ranges;
+  if (!headingLinks.has(text)) headingLinks.set(text, record);
+  else if (JSON.stringify(headingLinks.get(text)) !== JSON.stringify(record)) headingLinks.set(text, null);
+}
 // Preserve standalone legacy HTML section titles before Defuddle strips size.
 // These are font-size headings in the source, not guessed from short prose.
 const boundaryTags = /^(BR|P|DIV|H[1-6]|HR|UL|OL|BLOCKQUOTE|TABLE)$/;
@@ -51,6 +101,23 @@ const result = await Defuddle(document, url, {
 });
 if (!result?.content?.trim()) throw new Error('Defuddle returned no article');
 const output = parseHTML('<html><body>' + result.content + '</body></html>').document;
+for (const heading of output.querySelectorAll(headingSelector)) {
+  if (heading.querySelector('a')) continue;
+  const text = normalizeText(heading.textContent);
+  const ranges = headingLinks.get(text);
+  if (!ranges?.length) continue;
+  heading.textContent = '';
+  let end = 0;
+  for (const range of ranges) {
+    heading.appendChild(output.createTextNode(text.slice(end, range.start)));
+    const link = output.createElement('a');
+    link.setAttribute('href', range.href);
+    link.textContent = text.slice(range.start, range.end);
+    heading.appendChild(link);
+    end = range.end;
+  }
+  heading.appendChild(output.createTextNode(text.slice(end)));
+}
 const checkedImages = new Map();
 function usableResolution(bytes, complete) {
   const metadata = spawnSync('exiftool', ['-j', '-G1', '-a',

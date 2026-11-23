@@ -16,7 +16,7 @@ function withResolution(x, y, unit = 'inches') {
 }
 const normalImage = withResolution(72, 72);
 
-function extract(body, response = {ok: true, type: 'image/jpeg'}, bytes = normalImage) {
+function extract(body, response = {ok: true, type: 'image/jpeg'}, bytes = normalImage, url = 'https://strobist.blogspot.com/2019/11/slc-0l-03-joker-cinematographer-on.html') {
   const script = fileURLToPath(new URL('./extract.mjs', import.meta.url));
   const setup = `globalThis.fetch = async (_url, options) => {
       if (options.headers.Range !== 'bytes=0-65535') throw new Error('Unbounded image request');
@@ -25,7 +25,7 @@ function extract(body, response = {ok: true, type: 'image/jpeg'}, bytes = normal
         headers: new Headers({'content-type': ${JSON.stringify(response.type)}, 'content-range': 'bytes 0-' + (bytes.length - 1) + '/${response.total ?? 124966}'}),
         body: ${response.status === 200 ? "{cancel: async () => {}, getReader: () => {process.exitCode = 71; throw new Error('Read ignored range response')}}" : 'new Response(bytes).body'}};
     };
-    process.argv = [process.execPath, ${JSON.stringify(script)}, 'https://strobist.blogspot.com/2019/11/slc-0l-03-joker-cinematographer-on.html'];
+    process.argv = [process.execPath, ${JSON.stringify(script)}, ${JSON.stringify(url)}];
     await import(${JSON.stringify(script)});`;
   const result = spawnSync(process.execPath, ['--input-type=module', '--eval', setup], {
     input: `<html><head><title>Strobist</title></head><body><article>${body}</article></body></html>`,
@@ -98,4 +98,90 @@ test('the guard checks both axes and physical units without rejecting aspect rat
 
 test('a server that ignores Range keeps the thumbnail without reading its body', () => {
   assert.equal(selectedImage(normalImage, {ok: true, status: 200, type: 'image/jpeg'}), umbrellaThumbnail);
+});
+
+const programsUrl = 'https://sps.columbia.edu/academics/masters';
+const curriculumUrl = programsUrl + '/strategic-communication/full-time-master-science/curriculum-courses';
+const normalize = text => text.replace(/\s+/g, ' ').trim();
+function fixture(name) {
+  return parseHTML(fs.readFileSync(new URL(`./fixtures/${name}.html`, import.meta.url), 'utf8')).document;
+}
+function convert(doc, url) {
+  const html = extract(doc.querySelector('main').innerHTML, undefined, undefined, url);
+  return parseHTML('<html><body>' + html + '</body></html>').document;
+}
+
+test('all 20 public Columbia program destinations and summaries survive', () => {
+  const source = fixture('columbia-program-cards');
+  const output = convert(source, programsUrl);
+  const expected = [...source.querySelectorAll('.program-card__title a')];
+  assert.equal(expected.length, 20);
+  const actual = [...output.querySelectorAll('h2 a,h3 a')];
+  assert.equal(actual.length, 20);
+  assert.deepEqual(actual.map(a => a.getAttribute('href')),
+    expected.map(a => new URL(a.getAttribute('href'), programsUrl).href));
+  for (const summary of source.querySelectorAll('.program-card__teaser')) {
+    assert.ok(normalize(output.body.textContent).includes(normalize(summary.textContent)));
+  }
+  assert.equal(output.body.textContent.includes('(opens in a new window)'), false);
+  const org = spawnSync('pandoc', ['-f', 'html', '-t', 'org', '--wrap=none'], {input: output.body.innerHTML, encoding: 'utf8'});
+  assert.equal(org.status, 0, org.stderr);
+  for (const anchor of actual) assert.ok(org.stdout.includes(`[[${anchor.getAttribute('href')}][${anchor.textContent}]]`));
+});
+
+test('hidden course descriptions survive and labeled decorative icons do not reach Pandoc', () => {
+  const source = fixture('columbia-course-content');
+  assert.equal(source.querySelectorAll('.accordion-pane').length, 27);
+  const output = convert(source, curriculumUrl);
+  const paragraphs = [...source.querySelectorAll('.accordion-pane__body p')].filter(p => normalize(p.textContent));
+  assert.equal(paragraphs.length, 29);
+  for (const paragraph of paragraphs) {
+    assert.ok(normalize(output.body.textContent).includes(normalize(paragraph.textContent)));
+  }
+  for (const detail of source.querySelectorAll('.accordion-pane__course-details-course-number')) {
+    const code = detail.textContent.replace('Course Number', '').trim();
+    assert.ok(output.body.textContent.includes(code), code);
+  }
+  const social = output.querySelector('a[href="https://www.linkedin.com/company/cu-sps-stratcomm/"]');
+  assert.equal(normalize(social.textContent), 'Visit us on LinkedIn');
+  assert.equal(social.querySelector('svg,img'), null);
+  const org = spawnSync('pandoc', ['-f', 'html', '-t', 'org', '--wrap=none'], {input: output.body.innerHTML, encoding: 'utf8'});
+  assert.equal(org.status, 0, org.stderr);
+  assert.ok(org.stdout.includes('[[https://www.linkedin.com/company/cu-sps-stratcomm/][Visit us on LinkedIn]]'));
+  assert.equal(org.stdout.includes('data:image'), false);
+});
+
+test('a new-window phrase in ordinary prose is retained', () => {
+  const source = fixture('columbia-program-cards');
+  const paragraph = source.createElement('p');
+  paragraph.textContent = 'The accessibility label says (opens in a new window).';
+  source.querySelector('main').prepend(paragraph);
+  assert.ok(convert(source, programsUrl).body.textContent.includes(paragraph.textContent));
+});
+
+test('ambiguous repeated heading labels never acquire a guessed destination', () => {
+  const source = fixture('columbia-program-cards');
+  const card = source.querySelector('.program-card').cloneNode(true);
+  card.querySelector('.program-card__title a').setAttribute('href', 'https://example.org/different-program');
+  source.querySelector('main').appendChild(card);
+  const output = convert(source, programsUrl);
+  const ambiguous = [...output.querySelectorAll('h2,h3')].filter(h => h.textContent === 'Actuarial Science');
+  assert.ok(ambiguous.length > 0);
+  for (const heading of ambiguous) assert.equal(heading.querySelector('a'), null);
+});
+
+test('unmarked SVG artwork and icon-only links are not treated as labeled decoration', () => {
+  const source = fixture('columbia-course-content');
+  const link = source.querySelector('a[href="https://www.linkedin.com/company/cu-sps-stratcomm/"]');
+  const iconOnly = link.cloneNode(true);
+  iconOnly.querySelector('.social-links__content').remove();
+  iconOnly.setAttribute('href', 'https://example.org/icon-only');
+  source.querySelector('main').appendChild(iconOnly);
+  const artworkLink = link.cloneNode(true);
+  artworkLink.querySelector('[aria-hidden]').removeAttribute('aria-hidden');
+  artworkLink.setAttribute('href', 'https://example.org/artwork');
+  source.querySelector('main').appendChild(artworkLink);
+  const output = convert(source, curriculumUrl);
+  assert.ok(output.querySelector('a[href="https://example.org/artwork"] svg'));
+  assert.ok(output.querySelector('a[href="https://example.org/icon-only"] svg'));
 });
